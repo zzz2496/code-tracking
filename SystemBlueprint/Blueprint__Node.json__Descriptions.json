@@ -1,0 +1,6 @@
+{
+	"id": "This is the unique ID for SurrealDB use. This is the main Index in SurrealDB",
+	"Properties": "This is the Properties object for the Node Object, it is made to simplify the Node Object. It contains properties OTHER than id, Dataset, and DataStatus",
+	"Dataset": "This is the Dataset Object, the main data container for Node Object",
+	"DataStatus": "The is the DataStatus object for the Node Object, it contains array of events when the object's status being updated"
+}

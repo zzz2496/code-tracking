@@ -1,0 +1,139 @@
+{
+  "rootTopicKey": "bc588b45-b391-4763-98be-483bce8e01fe",
+  "editorRootTopicKey": "bc588b45-b391-4763-98be-483bce8e01fe",
+  "focusKey": "24faacd9-3568-4904-b5f3-7fb537d9dda0",
+  "extData": {
+    "TOPIC_REFERENCE": {
+      "reference": {
+        "88544386-175c-4b05-af65-2c6334e73a31": {
+          "keyList": [],
+          "dataMap": {}
+        },
+        "24faacd9-3568-4904-b5f3-7fb537d9dda0": {
+          "keyList": [],
+          "dataMap": {}
+        }
+      }
+    }
+  },
+  "topics": [
+    {
+      "key": "bc588b45-b391-4763-98be-483bce8e01fe",
+      "parentKey": null,
+      "subKeys": [
+        "88544386-175c-4b05-af65-2c6334e73a31",
+        "24faacd9-3568-4904-b5f3-7fb537d9dda0"
+      ],
+      "collapse": false,
+      "style": null,
+      "blocks": [
+        {
+          "type": "CONTENT",
+          "data": "Node"
+        }
+      ]
+    },
+    {
+      "key": "88544386-175c-4b05-af65-2c6334e73a31",
+      "parentKey": "bc588b45-b391-4763-98be-483bce8e01fe",
+      "subKeys": [],
+      "collapse": false,
+      "style": null,
+      "blocks": [
+        {
+          "type": "CONTENT",
+          "data": "i﻿d"
+        }
+      ]
+    },
+    {
+      "key": "24faacd9-3568-4904-b5f3-7fb537d9dda0",
+      "parentKey": "bc588b45-b391-4763-98be-483bce8e01fe",
+      "subKeys": [
+        "1b840ddd-1112-474a-ba3e-4384a6ab8868"
+      ],
+      "collapse": false,
+      "style": null,
+      "blocks": [
+        {
+          "type": "CONTENT",
+          "data": "﻿Properties"
+        }
+      ]
+    },
+    {
+      "key": "1b840ddd-1112-474a-ba3e-4384a6ab8868",
+      "parentKey": "24faacd9-3568-4904-b5f3-7fb537d9dda0",
+      "subKeys": [],
+      "collapse": false,
+      "style": null,
+      "blocks": [
+        {
+          "type": "CONTENT",
+          "data": "B﻿lah"
+        }
+      ]
+    }
+  ],
+  "config": {
+    "readOnly": false,
+    "allowUndo": true,
+    "layoutDir": 0,
+    "theme": {
+      "name": "default",
+      "randomColor": true,
+      "background": "#161616",
+      "highlightColor": "#95e0e0",
+      "marginH": 60,
+      "marginV": 20,
+      "contentStyle": {
+        "lineHeight": "1.5"
+      },
+      "linkStyle": {
+        "lineRadius": 5,
+        "lineType": "curve",
+        "lineWidth": "3px"
+      },
+      "rootTopic": {
+        "contentStyle": {
+          "fontSize": "34px",
+          "borderRadius": "35px",
+          "padding": "16px 18px 16px 18px"
+        },
+        "subLinkStyle": {
+          "lineType": "curve",
+          "lineWidth": "3px",
+          "lineColor": "rgb(113, 203, 45)"
+        }
+      },
+      "primaryTopic": {
+        "contentStyle": {
+          "borderWidth": "1px",
+          "borderStyle": "solid",
+          "borderRadius": "20px",
+          "fontSize": "17px",
+          "padding": "10px 15px 10px 15px"
+        },
+        "subLinkStyle": {
+          "lineType": "curve",
+          "lineWidth": "3px",
+          "lineColor": "rgb(113, 203, 45)"
+        }
+      },
+      "normalTopic": {
+        "contentStyle": {
+          "border": "1px solid #e8eaec",
+          "borderRadius": "20px",
+          "fontSize": "17px",
+          "padding": "4px 10px"
+        },
+        "subLinkStyle": {
+          "lineType": "curve",
+          "lineWidth": "3px",
+          "lineColor": "white"
+        }
+      }
+    }
+  },
+  "formatVersion": "0.0"
+}

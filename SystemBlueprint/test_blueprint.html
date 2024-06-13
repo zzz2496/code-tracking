@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<script type="module" src="../node_modules/surrealdb.wasm/dist/full/index.js">
+		import { Surreal } from '../node_modules/surrealdb.wasm/dist/full/index.js';
+		if (typeof window !== 'undefined') {
+			window.Surreal = Surreal;
+			console.log('SurrealDB.wasm initialized');
+		}
+	</script>
+	<script src="test_blueprint.js"></script>
+</body>
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom Effect</title>
+</head>
+
+<body>
+	<script type="module" defer src="./CoreClasses.mjs"></script>
+    <script type="module" defer src="./NodeProperties.mjs"></script>
+	<!-- <script type="module" defer src="./localbase.dev.js"></script> -->
+    <script type="module">
+		// import { Utility, IndexedDBHandler, GraphSurface, Connection } from "./CoreClasses.mjs";
+		import { Utility, GraphSurface, Connection, FlowChart } from "./CoreClasses.mjs";
+		import { NodeProperties } from "./NodeProperties.mjs";
+
+		// let UtilityObject = new Utility;
+
+		function TestPasswords() {
+			(async () => {
+				const PasswordTools = new Utility().Passwords;
+				const { randomPassword, salt, hashedPassword } = await PasswordTools.generateSecurePassword();
+				// Store `hashedPassword` and `salt` in your database
+			})();
+		}
+		// TestPasswords();
+
+		function TestArray() {
+			const ArrayTools = new Utility().Array;
+			// const obj = {
+			// 	"Nama": "Damir",
+			// 	"Alamat": "DPS",
+			// 	"NoTelp": "081",
+			// };
+			// // // console.log(ArrayTools.ArrayKeys(obj));
+			// // // console.log(ArrayTools.ArrayKeys(obj, 'DPS'));
+			const people = [
+				{
+					"id": 1,
+					"name": "John Doe",
+					"hire_date": 15,
+					"hire_timestamp": '15/08/2023',
+					"for_operations": 2,
+					"wealth": 100000000,
+					"age": 30,
+					"email": "john.doe@example.com",
+					"occupation": "Software Engineer",
+				},
+				{
+					"id": 2,
+					"name": "Jane Doe",
+					"hire_date": 14,
+					"hire_timestamp": '14/08/2023',
+					"for_operations": 2,
+					"wealth": 150000000,
+					"age": 25,
+					"email": "jane.doe@example.com",
+					"occupation": "Data Analyst",
+				},
+				{
+					"id": 3,
+					"name": "Emily Smith",
+					"hire_date": 13,
+					"hire_timestamp": '13/08/2023',
+					"for_operations": 3,
+					"wealth": 200000000,
+					"age": 22,
+					"email": "emily.smith@example.com",
+					"occupation": "Student",
+				},
+				{
+					"id": 4,
+					"name": "Michael Brown",
+					"hire_date": 12,
+					"hire_timestamp": '12/08/2023',
+					"for_operations": 3,
+					"wealth": 250000000,
+					"age": 40,
+					"email": "michael.brown@example.com",
+					"occupation": "Project Manager",
+				},
+				{
+					"id": 5,
+					"name": "Sarah Williams",
+					"hire_date": 11,
+					"hire_timestamp": '11/08/2023',
+					"for_operations": 4,
+					"wealth": 300000000,
+					"age": 35,
+					"email": "sarah.williams@example.com",
+					"occupation": "Marketing Specialist",
+				},
+				{
+					"id": 6,
+					"name": "Damir Handoyo",
+					"hire_date": 10,
+					"hire_timestamp": '10/08/2023',
+					"for_operations": 4,
+					"wealth": 990000000,
+					"age": 42,
+					"email": "damir.handoyo@example.com",
+					"occupation": "Fullstack Developer",
+				},
+				{
+					"id": 7,
+					"name": "Putri Larasati",
+					"age": 25,
+					"hire_date": 9,
+					"hire_timestamp": '09/08/2023',
+					"for_operations": 5,
+					"wealth": 990000000,
+					"email": "putri.larasati@example.com",
+					"occupation": "Retail Specialist",
+				},
+				{
+					"id": 8,
+					"name": "Irwan Adinatha",
+					"age": 48,
+					"hire_date": 8,
+					"hire_timestamp": '08/08/2023',
+					"for_operations": 5,
+					"wealth": 999000000,
+					"email": "irwan.adinatha@example.com",
+					"occupation": "Big Boss",
+				},
+				{
+					"id": 9,
+					"name": "Damiri Handayani",
+					"hire_date": 7,
+					"hire_timestamp": '07/08/2023',
+					"for_operations": 6,
+					"wealth": 100000000,
+					"age": 35,
+					"email": "damiri.handayani@example.com",
+					"occupation": "Backend Developer",
+				},
+				{
+					"id": 10,
+					"name": "Robert Hadiwijaya",
+					"hire_date": 6,
+					"hire_timestamp": '06/08/2023',
+					"for_operations": 6,
+					"wealth": 350000000,
+					"age": 31,
+					"email": "robert.hadiwijaya@example.com",
+					"occupation": "Backend Developer",
+				},
+				{
+					"id": 11,
+					"name": "Robert Antasari",
+					"hire_date": 5,
+					"hire_timestamp": '05/08/2023',
+					"for_operations": 7,
+					"wealth": 400000000,
+					"age": 32,
+					"email": "robert.antasari@example.com",
+					"occupation": "Frontend Developer",
+				},
+				{
+					"id": 12,
+					"name": "Robert Francis",
+					"hire_date": 4,
+					"hire_timestamp": '04/08/2023',
+					"for_operations": 7,
+					"wealth": 450000000,
+					"age": 34,
+					"email": "robert.francis@example.com",
+					"occupation": "Backend Developer",
+				},
+				{
+					"id": 13,
+					"name": "Roberto Dino",
+					"hire_date": 3,
+					"hire_timestamp": '03/08/2023',
+					"for_operations": 8,
+					"wealth": 500000000,
+					"age": 34,
+					"email": "roberto.dino@example.com",
+					"occupation": "Middleware Developer",
+				},
+				{
+					"id": 14,
+					"name": "Roberto Dino",
+					"hire_date": 2,
+					"hire_timestamp": '02/08/2023',
+					"for_operations": 8,
+					"wealth": 550000000,
+					"age": 37,
+					"email": "roberto.dino@example.com",
+					"occupation": "Middleware Developer",
+				},
+				{
+					"id": 15,
+					"name": "Roberto Dino",
+					"hire_date": 1,
+					"hire_timestamp": '01/08/2023',
+					"for_operations": 10,
+					"wealth": 600000000,
+					"age": 30,
+					"email": "roberto.dino@example.com",
+					"occupation": "Middleware Developer",
+				},
+			];
+			// console.log(ArrayTools.DatasetTools('h'));
+			// console.log(ArrayTools.FindArrayElementsAllAdvanced(people, '*', 'contains', 'in', 1));
+
+
+			// let textDecorationDatetime = {
+			// 	"textOverlay": "TANGGAL %%%",
+			// 	"datetimeDecoration": {
+			// 		"date_separator": "/",
+			// 		"date_with_time": true
+			// 	}
+			// };
+			// let textDecorationName = {
+			// 	"textOverlay": "MISTER %%%",
+			// };
+			// let textDecorationWealth = {
+			// 	"textOverlay": "IDR %%%",
+			// 	"numberProcessing": {
+			// 		"thousandSeparator": true
+			// 	}
+			// };
+
+			// // console.log(people);
+			// let arrayToolsTest = ArrayTools.DatasetTools([
+			// 	{
+			// 		"Tool": "findArrayElmenetAll",
+			// 		"Column_name": "name",
+			// 		"Search_value": "rober",
+			// 		"FuzzySearch": 1, // or 0 for EXACTLY LOOK FOR 'rober'
+			// 	},
+			// 	{
+			// 		"Tool": "dynamicSort",
+			// 		"Column_names": "hire_date", // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool": "RearrangeColumns",
+			// 		"Column_array_or_name": [
+			// 			"id",
+			// 			["name", "nama"],
+			// 			["hire_date", "tanggal_kerja"],
+			// 			["age", "umur"],
+			// 			"wealth",
+			// 			"hire_timestamp"
+			// 		] //can accept a string, or an array of strings, the first element will be the column_name, the second element will be what the column_name to be renamed to
+			// 	},
+			// 	{
+			// 		"Tool": "OperationsForColumns",
+			// 		"Column_array":["umur", "tanggal_kerja", "id"], // can accept multiple column names
+			// 		"Operator": "+", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+			// 		"Column_result":"sum_umur_tanggal_kerja_id", // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool": "OperationsForColumns",
+			// 		"Column_array":["tanggal_kerja", "id"], // can accept multiple column names
+			// 		"Operator": "-", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+			// 		"Column_result":"reduce_umur_tanggal_kerja_id", // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool": "RunningBalance",
+			// 		"Column_array":["id", "tanggal_kerja"] // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool": "CastColumnDatatype",
+			// 		"Column_array": [
+			// 			["id", "text"],
+			// 			["nama", "text"],
+			// 			["tanggal_kerja", "text"],
+			// 			["umur", "text"],
+			// 			["wealth", "text", textDecorationWealth],
+			// 			["hire_timestamp", "text"]
+			// 		] //can accept a string, or an array of strings, the first element will be the column_name, the second element will be what the column_name to be renamed to
+			// 	},
+			// 	{
+			// 		"Tool": "Pagination",
+			// 		"Page_number": 1,
+			// 		"Rows_per_page": 3
+			// 	},
+			// 	{
+			// 		"Tool": "Average",
+			// 		"Column_array":["id", "tanggal_kerja"] // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool": "Min",
+			// 		"Column_array":["id", "tanggal_kerja"] // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool": "Max",
+			// 		"Column_array":["id", "tanggal_kerja"] // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool": "Sum",
+			// 		"Column_array":["id", "tanggal_kerja"] // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool":"Count",
+			// 		"Column_array":["id", "tanggal_kerja"] // can accept multiple column names
+			// 	},
+			// 	{
+			// 		"Tool": "Parameters",
+			// 	}
+			// ], people);
+			// // console.log(arrayToolsTest);
+			// // console.log(ArrayTools.IsArrayOK(people));
+			// // console.log(ArrayTools.findArrayElement(people, '*', 'in', 1));
+			// let arrayResult = ArrayTools.findArrayElementsAll(people, 'name', 'rober', 1);
+			// // console.log(arrayResult);
+			// // console.log(ArrayTools.dynamicSort("name, -age", arrayResult.rows));
+			// let filteredAR = ArrayTools.findArrayElementsAll(people, '*', 'an', 1);
+			// // console.log(filteredAR);
+			// arrayResult = ArrayTools.Pagination(ArrayTools.findArrayElementsAll(people, 'name', 'robert', 1).rows, 1, 4);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.Pagination(people, 3, 8);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.RearrangeColumns(["id", ["name", "nama"], ["hire_date", "tanggal_kerja"], ["age", "umur"]], people);
+			// // console.log(arrayResult);
+
+			// // console.log(people);
+			// arrayResult = ArrayTools.CastColumnDatatype([["id", "text"], ["name", "text"], ["hire_timestamp", "datetime"], ["wealth", "text"]], people);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.dynamicSort("hire_timestamp", arrayResult.rows);
+			// // console.log(arrayResult);
+			// 	// arrayResult = ArrayTools.RearrangeColumns(["id", "name", ["hire_timestamp", "tanggal_kerja"], "wealth"], arrayResult.rows);
+			// 	// // console.log(arrayResult);
+			// let textDecorationdatetime = {
+			// 	"textOverlay": "JAM %%% TITIK",
+			// 	"datetimeDecoration": {
+			// 		"date_separator": "/",
+			// 		"date_with_time": true
+			// 	}
+			// };
+			// let textDecorationname = {
+			// 	"textOverlay": "MISTER %%%",
+			// };
+			// let textDecorationwealth = {
+			// 	"textOverlay": "IDR %%%",
+			// 	"numberProcessing": {
+			// 		"thousandSeparator": true
+			// 	}
+			// };
+
+			// arrayResult = ArrayTools.CastColumnDatatype([["id", "number"], ["name", "text", textDecorationname], ["tanggal_kerja", "text", textDecorationdatetime], ["wealth", "text", textDecorationwealth]], arrayResult.rows);//["id", "number"], ["name", "text"],
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.RunningBalance(["id", "age", "for_operations"], people);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.Parameters(arrayResult.rows);
+			// // console.log(arrayResult);
+
+			// arrayResult = ArrayTools.Average(["id", "age"], people);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.Min(["id", "age"], people);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.Max(["id", "age"], people);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.Count(["id", "age", "name"], people);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.Sum(["id", "age"], people);
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.OperationsForColumns(["id", "age", "hire_date"], '+', people, "sumID_Age_HireDate");
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.OperationsForColumns(["age", "id", "hire_date"], '-', people, "minusID_Age_HireDate");
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.OperationsForColumns(["age", "id"], '-', people, "minusAge-HireDate");
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.OperationsForColumns(["hire_date", "for_operations"], '*', people, "multiplicationHireDate_ForOperations");
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.OperationsForColumns(["hire_date", "for_operations"], '/', people, "divisionHireDate_ForOperations");
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.OperationsForColumns(["hire_date", "for_operations", "for_operations"], '*', people, "multiplicationHireDate_ForOperations");
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.OperationsForColumns(["hire_date", "for_operations"], '%', people, "modHireDate_ForOperations");
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.OperationsForColumns(["hire_date", "age"], '%%', people, "HireDateVSAge_Percentage");
+			// // console.log(arrayResult);
+			// arrayResult = ArrayTools.RunningBalance(["id", "age", "for_operations"], people);
+			// arrayResult = ArrayTools.RunningBalance(["hire_date"], arrayResult.rows);
+			// // console.log(arrayResult);
+			// // console.log(arrayResult.rows[0].Running_Balance___age);
+
+			// arrayResult = ArrayTools.OperationsForColumns(["id", "age", "hire_date"], '+', arrayResult.rows, "sumID_Age_HireDate");
+			// // console.log(arrayResult);
+
+			// arrayResult = ArrayTools.Parameters(arrayResult.rows);
+			// // console.log(arrayResult);
+		}
+		// TestArray();
+
+		function TestObjects() {
+			//TEST OBJECTS
+			let obj = {
+				"Nama": "Damir",
+				"Alamat": "DPS",
+				"NoTelp": "081",
+				"Umur": 42,
+				"Family": {
+					"Istri": {
+						"Nama": "Putri",
+						"Umur": 26
+					},
+					"Anak": {
+						"Nama": "Olivia",
+						"Umur": 1
+					}
+				}
+			};
+			let obj2 = {};
+			let ObjectTools = new Utility().Objects;
+			// console.log(ObjectTools.print_r(obj));
+			// console.log(ObjectTools.cr(obj));
+			// console.log(obj);
+			// console.log(obj2);
+			obj2 = ObjectTools.copyObject(obj);
+			// console.log(obj2);
+			obj.Family.Anak['JenisKelamin'] = 'Perempuan';
+			// console.log(obj);
+			// console.log(obj2);
+		}
+		// TestObjects();
+
+		function TestNumbers() {
+			//TEST NUMBERS
+			const NumberTools = new Utility().Numbers;
+			// console.log(NumberTools.generateUUID())
+			let n = '123.4567890';
+			// console.log(NumberTools.Round1(n))
+			// console.log(NumberTools.Round2(n))
+			// console.log(NumberTools.Round3(n))
+			// console.log(NumberTools.Round4(n))
+			// console.log(NumberTools.Round5(n))
+			n = '-123.4567890';
+			// console.log(NumberTools.Round1(n))
+			// console.log(NumberTools.Round2(n))
+			// console.log(NumberTools.Round3(n))
+			// console.log(NumberTools.Round4(n))
+			// console.log(NumberTools.Round5(n))
+
+			// console.log(NumberTools.RoundToNearestBase(98, 10));
+			// console.log(NumberTools.ThousandSeparator('-1234567890'))
+			// console.log(NumberTools.ThousandSeparator('1234asdfg'))
+			for (let index = 1; index <= 20; index++) {
+				// console.log(NumberTools.ToRoman(index));
+			}
+			console.log(NumberTools.Pad(10, 5))
+			console.log(NumberTools.IsItANumber(10))
+			console.log(NumberTools.IsItANumber(-10))
+			console.log(NumberTools.IsItANumber('10'))
+			console.log(NumberTools.IsItANumber('10a'))
+
+			console.log(NumberTools.SafeNumber(-10))
+			console.log(NumberTools.SafeNumber(10))
+			console.log(NumberTools.SafeNumber('10a'))
+			console.log(NumberTools.SafeNumber('aaaa3'))
+			console.log(NumberTools.SafeNumber('12.345'))
+			console.log(NumberTools.SafeNumber('12,345'))
+			console.log(NumberTools.SafeNumber('12.3.4.5'))
+			console.log(NumberTools.SafeNumber('200,500.5'))
+			console.log(NumberTools.SafeNumber(''))
+			console.log(NumberTools.SafeNumber('a'))
+			console.log(NumberTools.SafeNumber(null))
+			console.log(NumberTools.SafeNumber({}))
+			console.log(NumberTools.SafeNumber([]))
+
+			console.log(NumberTools.SafeNumber(-10, true))
+			console.log(NumberTools.SafeNumber(10, true))
+			console.log(NumberTools.SafeNumber('10a', true))
+			console.log(NumberTools.SafeNumber('aaaa3', true))
+			console.log(NumberTools.SafeNumber('12.345', true))
+			console.log(NumberTools.SafeNumber('12,345', true))
+			console.log(NumberTools.SafeNumber('12.3.4.5', true))
+			console.log(NumberTools.SafeNumber('', true))
+			console.log(NumberTools.SafeNumber('a', true))
+			console.log(NumberTools.SafeNumber(null, true))
+			console.log(NumberTools.SafeNumber({}, true))
+			console.log(NumberTools.SafeNumber([], true))
+
+			console.log(NumberTools.Terbilang(11500))
+			console.log(NumberTools.Terbilang(120500))
+			console.log(NumberTools.Terbilang(44800))
+			console.log(NumberTools.Terbilang(44800, 'rupiah'))
+		}
+		// TestNumbers();
+
+
+		function TestStrings() {
+			//TEST STRINGS
+			const StringTools = new Utility().Strings;
+			let a = 'lorem_ipsum_dolor_amet_sit';
+			let an = 123213324;
+			let anx = 1234567890;
+			let as = 'lorem ipsum dolor amet_sit';
+			let a2 = 'Lorem Ipsum Dolor Amet Sit';
+
+			// console.log(StringTools.UCwords(as));
+			// console.log(StringTools.LCwords(as));
+			// console.log(StringTools.SafeString(a));
+			// console.log(StringTools.Readable(a));
+			// console.log(StringTools.ReadableUCWords(a));
+			// console.log(StringTools.UnReadable(a2));
+
+			// console.log(StringTools.UCwords(an));
+			// console.log(StringTools.LCwords(an));
+
+			// console.log(StringTools.SafeString(an, true));
+			// console.log(StringTools.Readable(an, true));
+			// console.log(StringTools.ReadableUCWords(an));
+			// console.log(StringTools.UnReadable(an));
+
+			// console.log(StringTools.SafeString('!@#$%^&*()_-+ ', false));
+			// console.log(StringTools.SafeString('', false));
+			// console.log(StringTools.SafeString(0, false));
+			// console.log(StringTools.SafeString(null, false));
+			// console.log(StringTools.SafeString(true, false));
+			// console.log(StringTools.SafeString(false, false));
+			// console.log(StringTools.SafeString({}, false));
+			// console.log(StringTools.SafeString([], false));
+
+			// console.log(StringTools.SafeString(anx, {
+			// 	"textOverlay": "Rp. %%%,-",
+			// 	"numberProcessing": {
+			// 		"thousandSeparator": true
+			// 	},
+			// 	"booleanReplace":{
+			// 		"mode":"ya" // "ya"/"tidak"/"yes"/"no"/"true"/"false"/"sudah"/"belum"
+			// 	}
+			// }));
+
+			let bt1 = true;
+			let bt2 = false;
+			let bt3 = 'true';
+			let bt4 = 'false';
+			let bt5 = 'ya';
+			let bt6 = 'tidak';
+			let bt7 = 'sudah';
+			let bt8 = 'belum';
+			let bt9 = 0;
+			let bt10 = 1;
+			let bt11 = null;
+			let bt12 = '';
+			// console.log(StringTools.SafeString(bt1, {
+			// 	"booleanReplace":{
+			// 		"mode":"sudah" // "ya"/"tidak"/"yes"/"no"/"true"/"false"/"sudah"/"belum"
+			// 	}
+			// }));
+		}
+		// TestStrings();
+
+		function TestTime() {
+			const TimeTools = new Utility().Time;
+			console.log('mode', TimeTools.mode);
+			console.log('initDate', TimeTools.initDate('01-01-2023 12:31:02'));
+			console.log('getNow()',TimeTools.getNow());
+			console.log('getNowDateTimeString()',TimeTools.getNowDateTimeString());
+			console.log('getNowDateTimeString()',TimeTools.getNowDateTimeString('DMY'));
+			console.log('getNowDateTimeString()',TimeTools.getNowDateTimeString('yMd'));
+			console.log('getNowDateTimeString()',TimeTools.getNowDateTimeString('mDY'));
+			console.log('parseDateParts()', TimeTools.parseDateParts(TimeTools.getNow(), 6));
+			console.log('getToday()',TimeTools.getToday());
+			console.log('getTodayDate()',TimeTools.getTodayDate());
+			console.log(TimeTools.getTodayDayOfWeek());
+			console.log(TimeTools.getTodayWeek());
+			console.log(TimeTools.getTodayMonth());
+			console.log(TimeTools.getTodayYear());
+			console.log(TimeTools.getTomorrow((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getYesterday((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getNextWeek((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getNextWeekStart((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getNextWeekEnd((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getLastWeek((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getLastWeekStart((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getNow().getDay());
+			console.log(TimeTools.getNextMonthStart((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getNextMonthEnd((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getLastMonthStart((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getLastMonthEnd((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getLastYear((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getNextYear((TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.getDiff.inSeconds((TimeTools.initDate('01-02-2023 12:31:02')), (TimeTools.initDate('28-02-2023 12:31:02'))));
+			console.log(TimeTools.formatDate((TimeTools.initDate('28-02-2023 12:31:02'))));
+
+			console.log(TimeTools.SafeDateTime(new Date()));  // Output: Current Date object
+			console.log(TimeTools.SafeDateTime(Date.now()));  // Output: Current Date object (from timestamp)
+			console.log(TimeTools.SafeDateTime("2023-08-23 00:00:00")); // Output: Date object for August 23, 2023
+			console.log(TimeTools.SafeDateTime("2023-08-23 00:00:00", 'ymd')); // Output: Date object for August 23, 2023
+
+			console.log(TimeTools.SafeDateTime("2023-08-23"));
+			console.log(TimeTools.SafeDateTime("2023-08-23 12:30:00"));
+			console.log(TimeTools.SafeDateTime("2023-08-23", 'ymd'));
+			console.log(TimeTools.SafeDateTime("2023-08-23 12:30:00", 'ymd'));
+			console.log(TimeTools.SafeDateTime("23/08/2023"));
+			console.log(TimeTools.SafeDateTime("23/08/2023 12:30:00"));
+			console.log(TimeTools.SafeDateTime("08/23/2023", 'dmy')); //ERROR, weleh
+			console.log(TimeTools.SafeDateTime("08/23/2023", 'mdy'));
+			console.log(TimeTools.SafeDateTime("08/23/2023 12:30:00", 'mdy'));
+			console.log(TimeTools.SafeDateTime("not a date"));
+			console.log(TimeTools.SafeDateTime("not a date"));
+
+			console.log(TimeTools.SafeDateTime("01-08-2023"));
+			console.log(TimeTools.SafeDateTime("01-08-2023", 'mdy'));
+			console.log(TimeTools.SafeDateTime("01-08-2023", 'ymd'));
+			console.log(TimeTools.SafeDateTime("2023-08-01", 'ymd'));
+
+			console.log(TimeTools.SafeDateTime("01-08-2023 12:30:00"));
+			console.log(TimeTools.SafeDateTime("01-08-2023 12:30:00", 'mdy'));
+			console.log(TimeTools.SafeDateTime("2023-08-01 12:30:00", 'ymd'));
+			console.log(TimeTools.SafeDateTime("2023-08-01", 'ymd'));
+
+			console.log(TimeTools.SafeDateTime("01/08/2023 12:30:00"));
+			console.log(TimeTools.SafeDateTime("01/08/2023 12:30:00", 'mdy'));
+			console.log(TimeTools.SafeDateTime("2023/08/01 12:30:00", 'ymd'));
+			console.log(TimeTools.SafeDateTime("2023/08/01", 'ymd'));
+
+
+			const defaultMode = 'dmy'; // set this to the default date format you'd like to use
+			// console.log(TimeTools.SafeDateTime("01-08-2023 12:30:00", defaultMode));
+
+			let dt = TimeTools.SafeDateTime("2023-08-01 12:30:00", 'ymd');
+			// console.log(dt);
+			dt = TimeTools.SafeDateTime("01-08-2023 12:30:00", 'dmy');
+			// console.log(dt);
+			// console.log(TimeTools.getTomorrow(dt));
+			// console.log(TimeTools.addDays(dt, 3));
+			// console.log(TimeTools.addDays(dt, 30));
+			// console.log(TimeTools.addDays(dt, 31));
+		}
+		TestTime();
+
+		function TestBoolean() {
+			const BooleanTools = new Utility().Booleans;
+			console.log(BooleanTools.SafeBoolean(true));
+			console.log(BooleanTools.SafeBoolean(false));
+			console.log(BooleanTools.SafeBoolean("true"));
+			console.log(BooleanTools.SafeBoolean("false"));
+			console.log(BooleanTools.SafeBoolean(null));
+			console.log(BooleanTools.SafeBoolean("true"));
+
+			console.log(BooleanTools.SafeBoolean(1));
+			console.log(BooleanTools.SafeBoolean(0));
+			console.log(BooleanTools.SafeBoolean({}));
+			console.log(BooleanTools.SafeBoolean([]));
+
+			console.log(BooleanTools.SafeBoolean("ya"));
+			console.log(BooleanTools.SafeBoolean("tidak"));
+			console.log(BooleanTools.SafeBoolean("sudah"));
+			console.log(BooleanTools.SafeBoolean("belum"));
+
+
+		}
+		// TestBoolean();
+	</script>
+</body>
+
+</html>

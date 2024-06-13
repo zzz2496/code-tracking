@@ -1,0 +1,14 @@
+{
+  "name": "paradigmrevolution",
+  "version": "1.0.0",
+  "description": "Flow programming based application generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Damir Handoyo",
+  "license": "ISC",
+  "dependencies": {
+    "surrealdb.wasm": "^1.0.0-beta.12"
+  }
+}

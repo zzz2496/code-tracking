@@ -1,0 +1,108 @@
+{
+  "main": {
+    "id": "4d1f182ae6139ed1",
+    "type": "split",
+    "children": [
+      {
+        "id": "f7060074a3b3c949",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Blips of thoughts.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "64310a7c43a18e1d",
+    "type": "split",
+    "children": [
+      {
+        "id": "93f73c2dd3fef014",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "69e3935f1856dd03",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "bb95d81d59f488f7",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "39b8661f8ad1b63d",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "06a8f0b62690caa6",
+    "type": "split",
+    "children": [
+      {
+        "id": "953f0c175b0b6e87",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1a5738d64bf0f71a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Blips of thoughts.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "active": "f7060074a3b3c949",
+  "lastOpenFiles": [
+    "Structures.md",
+    "Blips of thoughts.md",
+    "Pasted image 20211117152416.png",
+    "Untitled.md",
+    "Papa/Simulasi sama nonik.md",
+    "Papa/Analysis problem e papa.md",
+    "Papa/Masalah jual rumah.md",
+    "2021-10-05.md"
+  ]
+}

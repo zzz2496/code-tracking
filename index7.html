@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3, minimum-scale=0.1">
+    <link rel="stylesheet" href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/fontawesome.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/brands.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css">
+    <link rel="stylesheet" href="index_alt.css">
+    <title>Document</title>
+</head>
+
+<body class="graph-surface wavy-background ">
+	<div>
+		<button class="raised-element">
+			<i class="fas fa-plus"></i>
+		</button>
+	</div>
+    <div class="container-fluid" id="grph" style="padding: 0px; margin: 0px;"></div>
+    <div class="container-fluid" id="grph2" style="padding: 0px; margin: 0px;"></div>
+	<script type="module" defer src="./Classes/CoreClasses.mjs"></script>
+    <script type="module" defer src="./NodeProperties.mjs"></script>
+	<!-- <script type="module" defer src="./localbase.dev.js"></script> -->
+    <script type="module">
+		import { Utility, GraphSurface, Connection, FlowChart } from "./Classes/CoreClasses.mjs";
+		import { NodeProperties } from "./NodeProperties.mjs";
+		import { Surreal } from './node_modules/surrealdb.wasm/dist/embedded/index.js';
+
+		console.log('start on debugging');
+
+		let App = {
+			world:"Yggdrasil",
+			realm:"System_ParadigmREVOLUTION",
+			universe:"ParadigmREVOLUTION"
+		}
+
+		let UtilityObject = new Utility();
+
+
+		// let GraphSurfaceObject2 = new GraphSurface(storageClass);
+        // document.querySelector('#grph2').appendChild(GraphSurfaceObject2.initializeGraphSurface('blah2'));
+
+		window.UtilityObject = UtilityObject;
+
+		// let Storage = {
+		// 	SurrealDB:{
+		// 		Local: new Surreal(),
+		// 		Memory: new Surreal(),
+		// 		Server: new Surreal(),
+		// 	},
+		// 	Events:{
+		// 		indexedDBEvent: new Event('indexedDBEvent'),
+		// 		memoryDBEvent: new Event('memoryDBEvent'),
+		// 		serverDBEvent: new Event('serverDBEvent'),
+		// 	}
+		// }
+		// let SurrealDB = await UtilityObject.DataStore.SurrealDB.Initialize(Storage, App, {user:"damir", pass:"Zenith2001"}, "ws://127.0.0.1:8080");
+		// // let SurrealDB = await UtilityObject.DataStore.SurrealDB.InitializeNew(App, {user:"damir", pass:"Zenith2001"}, "ws://127.0.0.1:8080");
+		// console.log('SurrealDB', SurrealDB);
+		// window.SurrealDB = SurrealDB;
+
+		// let Storage2 = {
+		// 	SurrealDB:{
+		// 		Local: new Surreal(),
+		// 		Memory: new Surreal(),
+		// 		Server: new Surreal(),
+		// 	},
+		// 	Events:{
+		// 		indexedDBEvent: new Event('indexedDBEvent'),
+		// 		memoryDBEvent: new Event('memoryDBEvent'),
+		// 		serverDBEvent: new Event('serverDBEvent'),
+		// 	}
+		// }
+		// // let SurrealDB = await UtilityObject.DataStore.SurrealDB.Initialize(Storage, App, {user:"damir", pass:"Zenith2001"}, "ws://127.0.0.1:8080");
+		// let SurrealDB2 = await UtilityObject.DataStore.SurrealDB.InitializeNew(App, {user:"damir", pass:"Zenith2001"}, "ws://127.0.0.1:8080");
+		// console.log('SurrealDB2', SurrealDB2);
+
+		// window.SurrealDB2 = SurrealDB2;
+		
+		let GraphSurfaceObject = new GraphSurface({
+			name: "Yggdrasil",
+			label: "Yggdrasil The World Tree",
+			header: "",
+			footer: "",
+			type: "World Graph",
+			world: App.world,
+			realm: App.realm,
+			universe: App.universe
+		}, App);
+        document.querySelector('#grph').appendChild(GraphSurfaceObject.initializeGraphSurface('blah'));
+		window.GraphSurfaceObject = GraphSurfaceObject;
+
+		// // Initialize SurrealDB subsystem
+		// let SurrealDB = {
+		// 	Local: new Surreal(),
+		// 	Memory: new Surreal(),
+		// 	Server: new Surreal(),
+		// }
+		
+		// // Initiate IndexedDB
+		// try {
+		// 	console.info('Start SurrealDB IndexedDB connection...');
+		// 	// Connect to the database
+		// 	await SurrealDB.Local.connect('indxdb://ParadigmREVO', { user: { username: "damir", password: "Zenith2001" } });
+			
+		// 	// Select a specific namespace / database
+		// 	await SurrealDB.Local.use({ ns: App.universe, db: App.realm });
+			
+		// 	// Signin as a namespace, database, or root user
+		// 	const token = await SurrealDB.Local.signin({
+		// 		username: "damir",
+		// 		password: "Zenith2001",
+		// 	});
+			
+		// 	let infokv = await SurrealDB.Local.query('info for kv;');
+		// 	console.log('infokv', infokv);
+		// 	let infodb = await SurrealDB.Local.query('info for db;');
+		// 	console.log('infodb', JSON.stringify(infodb));
+		// 	console.log('>>>', infodb[0].tables);
+
+		// 	console.log('typeof infodb[0].tables.Yggdrasil', typeof infodb[0].tables.Yggdrasil);
+
+		// 	// if (Object.keys(infodb[0].tables).length == 0){
+		// 	if (typeof infodb[0].tables[App.world] == "undefined"){
+		// 		console.log('creating table App.world');
+		// 		SurrealDB.Local.query('define table App.world;');
+		// 		console.log('created table App.world;')
+		// 	}
+		// 	console.info('Done SurrealDB IndexedDB connection...');
+		// } catch (e) {
+		// 	console.error("ERROR SurrealDB IndexedDB, ", e);
+		// }
+
+		// //Initiate Mem
+		// try {
+		// 	console.info('Start SurrealDB Mem connection...');
+		// 	// Connect to the database
+		// 	await SurrealDB.Memory.connect('mem://', { user: { username: "root", password: "root" } });
+			
+		// 	// Select a specific namespace / database
+		// 	await SurrealDB.Memory.use({ ns: App.universe, db: App.realm });
+			
+		// 	// Signin as a namespace, database, or root user
+		// 	const token = await SurrealDB.Memory.signin({
+		// 		username: "root",
+		// 		password: "root",
+		// 	});
+
+		// 	let infokv = await SurrealDB.Local.query('info for kv;');
+		// 	console.log('infokv', infokv);
+		// 	let infodb = await SurrealDB.Local.query('info for db;');
+		// 	console.log('infodb', JSON.stringify(infodb));
+		// 	console.log('>>>', infodb[0].tables);
+
+		// 	console.log('typeof infodb[0].tables[App.world]', typeof infodb[0].tables[App.world]);
+
+		// 	// if (Object.keys(infodb[0].tables).length == 0){
+		// 	if (typeof infodb[0].tables[App.world] == "undefined"){
+		// 		console.log('creating table App.world');
+		// 		SurrealDB.Local.query('define table App.world;');
+		// 		console.log('created table App.world;')
+		// 	}
+		// 	console.info('Done SurrealDB Memory connection...');
+		// } catch (e) {
+		// 	console.error("ERROR SurrealDB Memory, ", e);
+		// }
+
+		// //Initiate Server
+		// try {
+		// 	console.info('Start SurrealDB Server connection...');
+		// 	// Connect to the database
+		// 	await SurrealDB.Server.connect('ws://localhost:8080');
+			
+		// 	// Select a specific namespace / database
+		// 	await SurrealDB.Server.use({ ns: App.universe, db: App.realm });
+			
+		// 	// Signin as a namespace, database, or root user
+		// 	const token = await SurrealDB.Server.signin({
+		// 		username: "root",
+		// 		password: "root",
+		// 	});
+
+		// 	let infokv = await SurrealDB.Local.query('info for kv;');
+		// 	console.log('infokv', infokv);
+		// 	let infodb = await SurrealDB.Local.query('info for db;');
+		// 	console.log('infodb', JSON.stringify(infodb));
+		// 	console.log('>>>', infodb[0].tables);
+
+		// 	console.log('typeof infodb[0].tables[App.world]', typeof infodb[0].tables[App.world]);
+
+
+		// 	// if (Object.keys(infodb[0].tables).length == 0){
+		// 	if (typeof infodb[0].tables[App.world] == "undefined"){
+		// 		console.log('creating table App.world');
+		// 		SurrealDB.Local.query('define table App.world;');
+		// 		console.log('created table App.world;')
+		// 	}
+		// 	console.info('Done SurrealDB Server connection...');			
+		// } catch (e) {
+		// 	console.error("ERROR SurrealDB Server, ", e);
+		// }
+		// // Initialize SurrealDB subsystem
+
+
+		// let qstr = '';
+		// graph_nodes.forEach(d=>{
+		// 	qstr += `
+		// 		CREATE Yggdrasil CONTENT ${JSON.stringify(d)};
+		// 	`;
+		// });
+		// console.log('qstr', qstr);
+		// console.log('query result', await SurrealDB.Server.query(qstr));
+
+		
+		
+		// console.log('query result', await SurrealDB.Server.query(`
+		// CREATE person CONTENT {
+		// 	name: 'Damir',
+		// 	company: 'DamirCorp',
+		// 	skills: ['HTML', 'PHP', 'JavaScript'],
+		// };`));
+
+
+		// console.log('query result', await SurrealDBlocal.query(`
+		// 	select * from person where name ~ "damir";
+		// `));
+
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+{
+	"Namespace": "ParadigmREVOLUTION",
+	"Tables": [
+		{
+			"Name":"SystemDB",
+			"Description":"ParadigmREVOLUTION internal system database, core application graphs, definitions, and blueprints are stored in here",
+			"Blueprints":{
+				"Node": "Blueprints__Node.json",
+				"Edge": "Blueprints__Edge.json",
+				"Schema":"Blueprints__SchemaElements.json"
+			}
+		},
+		{
+			"Name":"DatastoreDB",
+			"Description":"System",
+			"Blueprints":{
+
+			}
+		}
+	]
+}

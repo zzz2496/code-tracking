@@ -1,0 +1,413 @@
+[
+	{
+		"Name": "Layout",
+		"Type": "Layout",
+		"Description": "This defines the layout of the form element, does it contains a Schema (an actual form element), or just a container element",
+		"Definitions": [
+			{
+				"Name": "id",
+				"Datatype": "Text",
+				"CanBeEmpty": false,
+				"AcceptableValues":"Text",
+				"Description": "This describes the ID of the element in HTML form",
+				"Examples": [
+					{ "id": "id_input_1" },
+					{ "id": "id_input_2" }
+				]
+			},
+			{
+				"Name": "Name",
+				"Datatype": "Text",
+				"CanBeEmpty": false,
+				"AcceptableValues":"Text",
+				"Description": "This describes the name of the element in HTML form",
+				"Examples": [
+					{ "Name": "name_input_1" },
+					{ "Name": "name_input_2" }
+				]
+			},
+			{
+				"Name": "Shown",
+				"Datatype": "Number",
+				"CanBeEmpty": false,
+				"AcceptableValues":[0, 1],
+				"Description": "Signifies if this element is shown or not on the form, can be filled with number 0 or 1",
+				"Examples": [
+					{ "Shown": 0 },
+					{ "Shown": 1 }
+				]
+			},
+			{
+				"Name":"Presentation",
+				"Datatype":"Array",
+				"CanBeEmpty":false,
+				"AcceptableValues":[
+					{
+						"DisplaySize":{
+							"ExtraSmall":300, 
+							"Small":420, 
+							"Medium":640, 
+							"Large":900, 
+							"ExtraLarge":1300
+						},
+						"PanelHeight": {
+							"Datatype": "Number",
+							"CanBeEmpty": true,
+							"AcceptableValues":"Number",
+							"RegexFilter": [
+								{"RegexString":"\\D", "RegexFlags":"gmi"}
+							],
+										"Description": "The height of the container, in px, can be empty",
+							"Examples": [
+								{ "PanelHeightPX": "" }, 
+								{ "PanelHeightPX": 300 } 
+							]
+						},
+						"PanelWidth": {
+							"Datatype": "Number",
+							"CanBeEmpty": true,
+							"AcceptableValues":"",
+							"RegexFilter": [
+								{"RegexString":"\\D", "RegexFlags":"gmi"}
+							],
+										"Description": "The width of the container, in px, can be empty",
+							"Examples": [
+								{ "PanelWidth": "" },
+								{ "PanelWidth": 300 }
+							]
+						},
+						"PanelWidthCU": {
+							"Datatype": "Number",
+							"CanBeEmpty": true,
+							"AcceptableValues":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+							"RegexFilter": [
+								{"RegexString":"\\D", "RegexFlags":"gmi"}
+							],
+										"Description": "The width of the container, in CU (Column Unit), can be empty",
+							"Examples": [
+								{ "PanelWidthtCU": "" },
+								{ "PanelWidthtCU": 1 },
+								{ "PanelWidthtCU": 2 },
+								{ "PanelWidthtCU": 3 },
+								{ "PanelWidthtCU": 4 },
+								{ "PanelWidthtCU": 5 },
+								{ "PanelWidthtCU": 6 },
+								{ "PanelWidthtCU": 7 },
+								{ "PanelWidthtCU": 8 },
+								{ "PanelWidthtCU": 9 },
+								{ "PanelWidthtCU": 10 },
+								{ "PanelWidthtCU": 11 },
+								{ "PanelWidthtCU": 12 }
+							]
+						}
+					}
+				],
+				"Description": "Contains information about the presentation aspects of the form element, this will provide information about screen sizes that are used according to the Bootstrap specification",
+				"Examples": [
+
+				]
+			},
+			{
+				"Name": "Container",
+				"Datatype": "Array",
+				"CanBeEmpty": true,
+				"AcceptableValues": "Array",
+				"Description": "This is the part where this layout element can be configured as a container",
+				"Examples": [
+					[
+						{"Layout":"...contains an array of {Layout} object"},
+						{"Layout":"...contains an array of {Layout} object"},
+						{"Layout":"...contains an array of {Layout} object"}
+					]
+				]
+			}
+		]
+	},
+	{
+		"Name": "Schema",
+		"Type": "Schema",
+		"Description":"The actual data Schema, will define form fields",
+		"Definition": [
+			{
+				"Name":"OrderNumber",
+				"Datatype": "Number",
+				"CanBeEmpty": false,
+				"AcceptableValues":{
+					"Number":{
+						"Values":"",
+						"UseRegex": true,
+						"RegexFilter": [
+							{"RegexString":"\\D", "RegexFlags":"gmi"}
+						],
+						"RegexAction":"Match"
+					}
+				},
+				"Description": "This pin is used specifically to give order to the schema rows",
+				"Examples": [
+					{ "OrderNumber": 10 },
+					{ "OrderNumber": 20 },
+					{ "OrderNumber": 30 },
+					{ "OrderNumber": 40 },
+					{ "OrderNumber": 50 }
+				]
+			},
+			{
+				"Name":"Type",
+				"Datatype": "Text",
+				"CanBeEmpty": false,
+				"AcceptableValues":{
+					"Text": {
+						"Values": ["Text", "Number", "Object", "Date", "Time", "Datetime", "Boolean", "HR", "EMPTY"],
+						"UseRegex": false,
+						"RegexFilter": [
+							{"RegexString":"", "RegexFlags":""}
+						],
+						"RegexAction":""
+					}
+				},
+				"Description": "This pin can be filled with these options: 'Text', 'Number', 'Object', 'Date', 'Time', 'Datetime', 'Boolean', 'HR', 'EMPTY'. HR will show horizontal line instead of an input. EMPTY will show an empty space.",
+				"Examples": [
+					{ "Type": "Text" },
+					{ "Type": "Number" },
+					{ "Type": "Object" },
+					{ "Type": "Date" },
+					{ "Type": "Time" },
+					{ "Type": "Boolean" },
+					{ "Type": "Object" },
+					{ "Type": "HR" },
+					{ "Type": "EMPTY" }
+				]
+			},
+			{
+				"Name":"Label",
+				"Datatype": "Text",
+				"CanBeEmpty": true,
+				"AcceptableValues": {
+					"Text":{
+						"Values": null,
+						"UseRegex": true,
+						"RegexFilter": [
+							{"RegexString":"^\\s*[^a-zA-Z0-9',.]+|[^a-zA-Z0-9',.]+\\s*$", "RegexFlags":"gmi"}
+						],
+						"RegexAction":"Replace"
+					}
+				},
+				"Description": "This will be shown as the label of the input field. If this is not specified, then the 'SchemaObject' index text field will be used instead. Acceptable values are null and MUST USE REGEX to clean up the input",
+				"Examples": [
+					{ "Label": "Nama Pengguna" },
+					{ "Label": "Nama Barang" },
+					{ "Label": "Nomor Telepon" },
+					{ "Label": "Alamat Kantor" },
+					{ "Label": "Cari Barang" }
+				]
+			},
+			{
+				"Name":"Default",
+				"Datatype": [
+					"Text",
+					"Number",
+					"Boolean",
+					"Date",
+					"Time",
+					"Datetime"
+				],
+				"CanBeEmpty": true,
+				"AcceptableValues":{
+					"Text": {
+						"Values": null,
+						"UseRegex": true,
+						"RegexFilter": [
+							{"RegexString":"^\\s*[^a-zA-Z0-9',.]+|[^a-zA-Z0-9',.]+\\s*$", "RegexFlags":"gmi"}
+						],
+						"RegexAction":"Replace"
+					},
+					"Number": {
+						"Values": null,
+						"UseRegex": true,
+						"RegexFilter": [
+							{"RegexString":"\\D", "RegexFlags":"gmi"}
+						],
+						"RegexAction":"Replace"
+					},
+					"Boolean": {
+						"Values": [true, false],
+						"UseRegex": false,
+						"RegexFilter": [
+							{"RegexString":"", "RegexFlags":""}
+						],
+						"RegexAction":""
+					},
+					"Date": {
+						"Values": null,
+						"DateMode":["LastMonth", "LastWeek", "Yesterday", "Today", "Tomorrow", "NextWeek", "NextMonth"],
+						"UseRegex": true,
+						"RegexFilter": [
+							{"RegexString":"^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[0-2])[-/](19|20)\\d\\d$", "RegexFlags":"gmi"}
+						],
+						"RegexAction":"Match"
+					},
+					"Time": {
+						"Values": null,
+						"TimeMode":["2 hours ago", "1 hour ago", "Now", "1 hour", "2 hours"],
+						"UseRegex": false,
+						"RegexFilter": [
+							{"RegexString":"", "RegexFlags":""}
+						],
+						"RegexAction":""
+					},
+					"Datetime": ""
+				},
+				"RegexFilter": [
+					{"RegexString":"^\\s*[^a-zA-Z0-9',.]+|[^a-zA-Z0-9',.]+\\s*$", "RegexFlags":"gmi"}
+				],
+				"Description": {
+					"Text": "Default text can be filled with string, or an empty box",
+					"Number": "Default number can be filled with any number, or just leave the box empty",
+					"Date": "Default date can be filled with 'Now', 'Yesterday', 'Tomorrow', 'Last week', 'Next week', 'Last month', 'Next month', 'Specific Date'",
+					"Time": "Default time can be filled with 'Now', 'One hour ago', 'One hour later', 'Specific Hour'",
+					"Boolean": "Default Boolean can be filled with boolean 'true' or 'false' or just empty",
+					"Object": "Object has no default value"
+				},
+				"Examples": [
+					{ "Subtype": "" },
+					{ "Subtype": "Textarea" },
+					{ "Subtype": "Single" },
+					{ "Subtype": "Range" }
+				]
+			},
+			{
+				"Name":"Description",
+				"Datatype": "Text",
+				"CanBeEmpty": true,
+				"AcceptableValues":[0, 1],
+				"Description": "This will be shown as the Description of the input field",
+				"Examples": [
+					{ "Description": "Nama Pengguna" },
+					{ "Description": "Nama Barang" },
+					{ "Description": "Nomor Telepon" },
+					{ "Description": "Alamat Kantor" },
+					{ "Description": "Cari Barang" },
+					{ "Description": "Keterangan" }
+				]
+			},
+			{
+				"Name":"Shown",
+				"Datatype": "Text",
+				"CanBeEmpty": false,
+				"AcceptableValues":[0, 1],
+				"Description": "Signifies if this element is shown or not on the form, can be filled with number 0 or 1",
+				"Examples": [
+					{
+						"Shown": 0
+					},
+					{
+						"Shown": 1
+					}
+				]
+			},
+			{
+				"Name":"Subtype",
+				"Datatype": "Text",
+				"CanBeEmpty": true,
+				"AcceptableValues":[0, 1],
+				"Description": {
+					"Text": "Subtype of text can be a textbox (do not fill Subtype pin to get a normal textbox) or a textarea box, for example: empty, or 'Textarea'",
+					"Number": "Subtype of Number can be single numerical input, or a range of two numerical inputs, for example 'Single', 'Range'",
+					"Date": "Subtype of Date can be single date input, or a range of of two dates inputs, for example 'Single', 'Range'",
+					"Time": "Subtype of Time can be single time input, or a range of of two times inputs, for example 'Single', 'Range'",
+					"Boolean": "Subtype of Boolean can be a 'Checkbox', or a 'Switch', or a ...",
+					"Object": "Object has no subtype"
+				},
+				"Examples": [
+					{ "Subtype": "" },
+					{ "Subtype": "Textarea" },
+					{ "Subtype": "Single" },
+					{ "Subtype": "Range" },
+					{ "Subtype": "Checkbox" },
+					{ "Subtype": "Switch" }
+				]
+			},
+			{
+				"Name":"Minimum",
+				"Datatype": "Number",
+				"CanBeEmpty": true,
+				"AcceptableValues":[0, 1],
+				"Description": {
+					"Text": "Minimum length, numerical value, or empty string signifies no minimum",
+					"Number": "Minimum value, numerical value, or empty string signifies no minimum",
+					"Date": "Date have no minimum value",
+					"Time": "Time have no minimum value",
+					"Boolean": "Boolean have no minimum value",
+					"Object": "Object have no minimum value"
+				},
+				"Examples": [
+					{ "Minimum": "" },
+					{ "Minimum": 0 },
+					{ "Minimum": 1 },
+					{ "Minimum": 2 },
+					{ "Minimum": 5 },
+					{ "Minimum": 10 },
+					{ "Minimum": 35 }
+				]
+			},
+			{
+				"Name":"Maximum",
+				"Datatype": "Number",
+				"CanBeEmpty": true,
+				"AcceptableValues":["Numbers"],
+				"Description": {
+					"Text": "Maximum length, numerical value, or empty string signifies no maximum",
+					"Number": "Maximum value, numerical value, or empty string signifies no maximum",
+					"Date": "Date have no maximum value",
+					"Time": "Time have no maximum value",
+					"Boolean": "Boolean have no maximum value",
+					"Object": "Object have no maximum value"
+				},
+				"Examples": [
+					{ "Maximum": "" },
+					{ "Maximum": 0 },
+					{ "Maximum": 1 },
+					{ "Maximum": 2 },
+					{ "Maximum": 5 },
+					{ "Maximum": 10 },
+					{ "Maximum": 35 }
+				]
+			},
+			{
+				"Name":"Readonly",
+				"Datatype": "Number",
+				"CanBeEmpty": false,
+				"AcceptableValues":[0, 1],
+				"Description": "Signifies if this element can be changed/filled/altered in the form, can be filled with number 0 or 1",
+				"Examples": [
+					{ "Readonly": 0 },
+					{ "Readonly": 1 }
+				]
+			},
+			{
+				"Name":"HeadElementLabel",
+				"Datatype": "Text",
+				"CanBeEmpty": true,
+				"AcceptableValues":[0, 1],
+				"Description": "A string to be added BEFORE the input element",
+				"Examples": [
+					{ "HeadElementLabel": "" },
+					{ "HeadElementLabel": "IDR" }
+				]
+			},
+			{
+				"Name":"TailElementLabel",
+				"Datatype": "Text",
+				"CanBeEmpty": true,
+				"AcceptableValues":[0, 1],
+				"Description": "A string to be added AFTER the input element",
+				"Examples": [
+					{ "TailElementLabel": "" },
+					{ "TailElementLabel": "px" },
+					{ "TailElementLabel": ",00" },
+					{ "TailElementLabel": "box" }
+				]
+			}
+		]
+	}
+]

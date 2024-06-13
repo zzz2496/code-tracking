@@ -1,0 +1,2 @@
+Masalah dengan "MADUL".
+Menurut Putri, "MADUL" itu mengadu, kalau mengadu. Bahasanya jangan MADUL, itu kasar. Seperti "mengadulah sana ke orang tua mu". Yang dimaksud Putri adalah "curhatlah ke orang tuamu.". Tidak suka digunakan kata "MADUL".

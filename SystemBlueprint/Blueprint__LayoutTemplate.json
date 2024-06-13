@@ -1,0 +1,41 @@
+{
+	"Layout":{
+		"id": "__Layout__",
+		"Name": "__Name__",
+		"Shown":1,		
+		"Presentation":[
+			{
+				"DisplaySize":":ExtraSmall",
+				"PanelHeight":"",
+				"PanelWidthPX":"",
+				"PanelHeightCU":"12"
+			},
+			{
+				"DisplaySize":":Small",
+				"PanelHeight":"",
+				"PanelWidthPX":"",
+				"PanelHeightCU":"12"
+			},
+			{
+				"DisplaySize":":Medium",
+				"PanelHeight":"",
+				"PanelWidthPX":"",
+				"PanelHeightCU":"6"
+			},
+			{
+				"DisplaySize":":Large",
+				"PanelHeight":"",
+				"PanelWidthPX":"",
+				"PanelHeightCU":"4"
+			},
+			{
+				"DisplaySize":":ExtraLarge",
+				"PanelHeight":"",
+				"PanelWidthPX":"",
+				"PanelHeightCU":"3"
+			}
+		],
+		"Container":[]
+	},
+	"Schema":[]
+}

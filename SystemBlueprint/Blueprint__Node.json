@@ -1,0 +1,284 @@
+{
+	"id": "",
+	"PinDescriptions": "Blueprint__Desciptions__Node.json",
+	"Properties": {
+		"PID": "",
+		"BatchProcessingID": "",
+		"Name": "",
+		"Label": "",
+		"Header": "",
+		"Footer": "",
+		"Table": "",
+		"Database": "",
+		"Namespace": "",
+		"NodeInfo": {
+			"Type": "",
+			"isNew": true,
+			"isChanged": false,
+			"Document": {
+				"isReadonly": false
+			},
+			"Execution": {
+				"Status": "Run",
+				"RunOrder": null
+			}
+		},
+		"Presentation": {
+			"Perspectives": {
+				"GraphNode": {
+					"HeaderLabel": "",
+					"Header": "",
+					"ContentLabel": "",
+					"Content": "",
+					"Position": {
+						"x": 0,
+						"y": 0,
+						"z": "auto"
+					}
+				},
+				"List": {
+					"DatasetSource": ""
+				},
+				"DataGrid": {
+					"DatasetSource": ""
+				},
+				"Table": {
+					"DatasetSource": ""
+				},
+				"Grid": {
+					"ColumnList": []
+				},
+				"Card": {
+					"ExtraExtraSmall": {},
+					"ExtraSmall": {},
+					"Small": {},
+					"MediumSmall": {},
+					"Medium": {},
+					"MediumLarge": {},
+					"Large": {},
+					"ExtraLarge": {},
+					"ExtraExtraLarge": {}
+				},
+				"Calendar": {},
+				"Chart": {},
+				"CSV": {},
+				"Kanban": {},
+				"Timeline": {},
+				"JSON": {}
+			},
+			"DefaultContainer": {
+				"element": null,
+				"elementID": "",
+				"elementClass": ""
+			},
+			"Container": {
+				"element": null,
+				"elementID": "",
+				"elementClass": ""
+			}
+		},
+		"GeoSpatialInformation": {
+			"Coordinate": {
+				"Latitude": 0,
+				"Longitude": 0,
+				"Accuracy": 0,
+				"Altitude": 0,
+				"AltitudeAccuracy": 0,
+				"Heading": 0,
+				"Speed": 0,
+				"Timestamp": 0
+			},
+			"AddressInformation": {
+				"Home-address": "",
+				"Work-address": "",
+				"Street-address": "",
+				"Office-address": "",
+				"Warehouse-address": "",
+				"Headoffice-address": "",
+				"Backup-address": "",
+				"Default-address": ""
+			}
+		},
+		"LatestVersion": true,
+		"GarbageCollectionControl": false
+	},
+	"Dataset": {
+		"PinDescriptions": "Blueprint__Desciptions__Node.Dataset.json",
+		"Query": "",
+		"Layout": {
+			"show": 1,
+			"data_type": "form",
+			"panel_height": "auto",
+			"panel_width": "auto"
+		},
+		"Schema": {
+			"nomor_purchase_order": {
+				"type": [
+					"Text",
+					"Number",
+					"Object",
+					"Date",
+					"Time",
+					"Datetime",
+					"Boolean"
+				],
+				"form": 1
+			},
+			"tanggal": {
+				"type": "timestamp without time zone",
+				"form": 1
+			}
+		},
+		"Parameters": [
+			{
+				"FormElement": "FormID",
+				"Event": "Initialize State",
+				"Value": "",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID",
+				"Event": "Focus on Input",
+				"Value": "",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID",
+				"Event": "Get Input Value",
+				"Value": "SomeValue",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID",
+				"Event": "Leave Input, modify state",
+				"Value": "SomeValue",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID2",
+				"Event": "Focus on Input",
+				"Value": "",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID2",
+				"Event": "Get Input Value",
+				"Value": "SomeValue2",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID2",
+				"Event": "Leave Input, modify state",
+				"Value": "SomeValue2",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID3",
+				"Event": "Focus on Input",
+				"Value": "",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID3",
+				"Event": "Get Input Value",
+				"Value": "SomeValue3",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID3",
+				"Event": "Leave Input, modify state",
+				"Value": "SomeValue3",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID",
+				"Event": "Focus on Input",
+				"Value": "SomeValue",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID",
+				"Event": "Get Input Value",
+				"Value": "SomeValueX",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID",
+				"Event": "Leave Input, modify state",
+				"Value": "SomeValueX",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID4",
+				"Event": "Focus on Input",
+				"Value": "",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID4",
+				"Event": "Get Input Value",
+				"Value": "SomeValue4",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "elementID4",
+				"Event": "Leave Input, modify state",
+				"Value": "SomeValue4",
+				"Timestamp": "[timestamp]"
+			},
+			{
+				"FormElement": "ConfirmButton",
+				"Event": "Click Button",
+				"Value": "SomeValueZ",
+				"Timestamp": "[timestamp]"
+			}
+		],
+		"Data": {},
+		"Checksum": "",
+		"DataType": "",
+		"ExternalResource": [
+			{
+				"Document": {
+					"Type": "",
+					"Path": ""
+				}
+			}
+		],
+		"ProcessingParameters": {
+			"EnableNextProcessLocking": {
+				"Enable": false,
+				"MinimumSigns": 1,
+				"Signage": [
+					{
+						"Contact": "",
+						"Sign": ""
+					}
+				]
+			},
+			"BlockChain": ""
+		}
+	},
+	"DataStatus": [
+		{
+			"Status": "[Live, Active, Locked, Void, Old Archive, Dead]",
+			"Reason": "[onCreate, onConfirmed, onAddendum, onApproved, onVoid]",
+			"Timestamp": "[timestamp]",
+			"User": "[user_id]",
+			"UserPID": "[user_pid]"
+		},
+		{
+			"Status": "Live",
+			"Reason": "onCreate",
+			"Timestamp": "[timestamp]",
+			"User": "[user_id]",
+			"UserPID": "[user_pid]"
+		},
+		{
+			"Status": "Active",
+			"Reason": "onConfirmed",
+			"Timestamp": "[timestamp]",
+			"User": "[user_id]",
+			"UserPID": "[user_pid]"
+		}
+	]
+}

@@ -1,0 +1,210 @@
+{
+  "main": {
+    "id": "acf354db1b30297d",
+    "type": "split",
+    "children": [
+      {
+        "id": "fbc530e9a0be2f51",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5f7b42798187001e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "PARADIGM_REVOLUTION/Structures.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "878057f3dbc222ba",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "PARADIGM_REVOLUTION/FRAMEWORK PARADIGM REVOLUTION.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "24a67319ab80de60",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Pasted image 20230109164912.png"
+              }
+            }
+          },
+          {
+            "id": "9469352bc3577e6a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "PARADIGM_REVOLUTION/Blips of thoughts.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "dc7d154ff2845c16",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.3.5"
+              }
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7b9ce00b7141daa0",
+    "type": "split",
+    "children": [
+      {
+        "id": "4394ee0c9471e1fe",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e5b0abb2b7b707b7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "b95ab4f2342491d2",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "375142b41c86475d",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          },
+          {
+            "id": "13bd27024f8337a5",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "150de0d2661de484",
+    "type": "split",
+    "children": [
+      {
+        "id": "b619a841ca7a3ec3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "00c37a7621fa64fe",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "PARADIGM_REVOLUTION/Blips of thoughts.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "4d6e7616a187c822",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "PARADIGM_REVOLUTION/Blips of thoughts.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "5cc71bfb68acb700",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "75c917e45961eb61",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "PARADIGM_REVOLUTION/Blips of thoughts.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "dc7d154ff2845c16",
+  "lastOpenFiles": [
+    "PARADIGM_REVOLUTION/Structures.md",
+    "PARADIGM_REVOLUTION/FRAMEWORK PARADIGM REVOLUTION.md",
+    "Pasted image 20230109164912.png",
+    "PARADIGM_REVOLUTION/Blips of thoughts.md",
+    "PARADIGM_REVOLUTION/Pasted image 20211117152416.png"
+  ]
+}

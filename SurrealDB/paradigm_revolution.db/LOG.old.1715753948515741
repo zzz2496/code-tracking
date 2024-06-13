@@ -1,0 +1,106 @@
+2024/05/15-13:18:43.839381 2e50 RocksDB version: 8.1.1
+2024/05/15-13:18:43.840103 2e50 Compile date 2023-04-06 16:38:52
+2024/05/15-13:18:43.840122 2e50 DB SUMMARY
+2024/05/15-13:18:43.840133 2e50 DB Session ID:  YT34Z1JLD1MVRS1WYKO9
+2024/05/15-13:18:43.841451 2e50 CURRENT file:  CURRENT
+2024/05/15-13:18:43.841469 2e50 IDENTITY file:  IDENTITY
+2024/05/15-13:18:43.841583 2e50 MANIFEST file:  MANIFEST-000279 size: 614 Bytes
+2024/05/15-13:18:43.841607 2e50 SST files in C:\Users\damir\Documents\Work\PARADIGM_REVO\SurrealDB\paradigm_revolution.db dir, Total Num: 4, files: 000264.sst 000267.sst 000272.sst 000277.sst 
+2024/05/15-13:18:43.841619 2e50 Write Ahead Log file in C:\Users\damir\Documents\Work\PARADIGM_REVO\SurrealDB\paradigm_revolution.db: 000278.log size: 5253 ; 
+2024/05/15-13:18:43.841961 2e50                         Options.error_if_exists: 0
+2024/05/15-13:18:43.841970 2e50                       Options.create_if_missing: 1
+2024/05/15-13:18:43.841975 2e50                         Options.paranoid_checks: 1
+2024/05/15-13:18:43.841979 2e50             Options.flush_verify_memtable_count: 1
+2024/05/15-13:18:43.841983 2e50                               Options.track_and_verify_wals_in_manifest: 0
+2024/05/15-13:18:43.841987 2e50        Options.verify_sst_unique_id_in_manifest: 1
+2024/05/15-13:18:43.841992 2e50                                     Options.env: 0000023F5B58B150
+2024/05/15-13:18:43.841996 2e50                                      Options.fs: WinFS
+2024/05/15-13:18:43.842000 2e50                                Options.info_log: 0000023F5B5917B0
+2024/05/15-13:18:43.842004 2e50                Options.max_file_opening_threads: 16
+2024/05/15-13:18:43.842008 2e50                              Options.statistics: 0000000000000000
+2024/05/15-13:18:43.842012 2e50                               Options.use_fsync: 0
+2024/05/15-13:18:43.842016 2e50                       Options.max_log_file_size: 0
+2024/05/15-13:18:43.842020 2e50                  Options.max_manifest_file_size: 1073741824
+2024/05/15-13:18:43.842024 2e50                   Options.log_file_time_to_roll: 0
+2024/05/15-13:18:43.842028 2e50                       Options.keep_log_file_num: 1000
+2024/05/15-13:18:43.842032 2e50                    Options.recycle_log_file_num: 0
+2024/05/15-13:18:43.842036 2e50                         Options.allow_fallocate: 1
+2024/05/15-13:18:43.842040 2e50                        Options.allow_mmap_reads: 0
+2024/05/15-13:18:43.842044 2e50                       Options.allow_mmap_writes: 0
+2024/05/15-13:18:43.842048 2e50                        Options.use_direct_reads: 0
+2024/05/15-13:18:43.842052 2e50                        Options.use_direct_io_for_flush_and_compaction: 0
+2024/05/15-13:18:43.842056 2e50          Options.create_missing_column_families: 0
+2024/05/15-13:18:43.842060 2e50                              Options.db_log_dir: 
+2024/05/15-13:18:43.842064 2e50                                 Options.wal_dir: 
+2024/05/15-13:18:43.842068 2e50                Options.table_cache_numshardbits: 6
+2024/05/15-13:18:43.842072 2e50                         Options.WAL_ttl_seconds: 0
+2024/05/15-13:18:43.842076 2e50                       Options.WAL_size_limit_MB: 0
+2024/05/15-13:18:43.842079 2e50                        Options.max_write_batch_group_size_bytes: 1048576
+2024/05/15-13:18:43.842083 2e50             Options.manifest_preallocation_size: 4194304
+2024/05/15-13:18:43.842087 2e50                     Options.is_fd_close_on_exec: 1
+2024/05/15-13:18:43.842091 2e50                   Options.advise_random_on_open: 1
+2024/05/15-13:18:43.842095 2e50                    Options.db_write_buffer_size: 0
+2024/05/15-13:18:43.842099 2e50                    Options.write_buffer_manager: 0000023F5B5B0A90
+2024/05/15-13:18:43.842103 2e50         Options.access_hint_on_compaction_start: 1
+2024/05/15-13:18:43.842107 2e50           Options.random_access_max_buffer_size: 1048576
+2024/05/15-13:18:43.842111 2e50                      Options.use_adaptive_mutex: 0
+2024/05/15-13:18:43.842115 2e50                            Options.rate_limiter: 0000000000000000
+2024/05/15-13:18:43.842142 2e50     Options.sst_file_manager.rate_bytes_per_sec: 0
+2024/05/15-13:18:43.842148 2e50                       Options.wal_recovery_mode: 2
+2024/05/15-13:18:43.842152 2e50                  Options.enable_thread_tracking: 0
+2024/05/15-13:18:43.842156 2e50                  Options.enable_pipelined_write: 0
+2024/05/15-13:18:43.842160 2e50                  Options.unordered_write: 0
+2024/05/15-13:18:43.842163 2e50         Options.allow_concurrent_memtable_write: 1
+2024/05/15-13:18:43.842167 2e50      Options.enable_write_thread_adaptive_yield: 1
+2024/05/15-13:18:43.842171 2e50             Options.write_thread_max_yield_usec: 100
+2024/05/15-13:18:43.842175 2e50            Options.write_thread_slow_yield_usec: 3
+2024/05/15-13:18:43.842179 2e50                               Options.row_cache: None
+2024/05/15-13:18:43.842182 2e50                              Options.wal_filter: None
+2024/05/15-13:18:43.842186 2e50             Options.avoid_flush_during_recovery: 0
+2024/05/15-13:18:43.842190 2e50             Options.allow_ingest_behind: 0
+2024/05/15-13:18:43.842194 2e50             Options.two_write_queues: 0
+2024/05/15-13:18:43.842198 2e50             Options.manual_wal_flush: 0
+2024/05/15-13:18:43.842202 2e50             Options.wal_compression: 0
+2024/05/15-13:18:43.842205 2e50             Options.atomic_flush: 0
+2024/05/15-13:18:43.842209 2e50             Options.avoid_unnecessary_blocking_io: 0
+2024/05/15-13:18:43.842213 2e50                 Options.persist_stats_to_disk: 0
+2024/05/15-13:18:43.842217 2e50                 Options.write_dbid_to_manifest: 0
+2024/05/15-13:18:43.842220 2e50                 Options.log_readahead_size: 0
+2024/05/15-13:18:43.842224 2e50                 Options.file_checksum_gen_factory: Unknown
+2024/05/15-13:18:43.842228 2e50                 Options.best_efforts_recovery: 0
+2024/05/15-13:18:43.842232 2e50                Options.max_bgerror_resume_count: 2147483647
+2024/05/15-13:18:43.842236 2e50            Options.bgerror_resume_retry_interval: 1000000
+2024/05/15-13:18:43.842240 2e50             Options.allow_data_in_errors: 0
+2024/05/15-13:18:43.842243 2e50             Options.db_host_id: __hostname__
+2024/05/15-13:18:43.842247 2e50             Options.enforce_single_del_contracts: true
+2024/05/15-13:18:43.842251 2e50             Options.max_background_jobs: 2
+2024/05/15-13:18:43.842255 2e50             Options.max_background_compactions: -1
+2024/05/15-13:18:43.842259 2e50             Options.max_subcompactions: 1
+2024/05/15-13:18:43.842263 2e50             Options.avoid_flush_during_shutdown: 0
+2024/05/15-13:18:43.842266 2e50           Options.writable_file_max_buffer_size: 1048576
+2024/05/15-13:18:43.842270 2e50             Options.delayed_write_rate : 16777216
+2024/05/15-13:18:43.842274 2e50             Options.max_total_wal_size: 0
+2024/05/15-13:18:43.842278 2e50             Options.delete_obsolete_files_period_micros: 21600000000
+2024/05/15-13:18:43.842282 2e50                   Options.stats_dump_period_sec: 600
+2024/05/15-13:18:43.842286 2e50                 Options.stats_persist_period_sec: 600
+2024/05/15-13:18:43.842289 2e50                 Options.stats_history_buffer_size: 1048576
+2024/05/15-13:18:43.842293 2e50                          Options.max_open_files: -1
+2024/05/15-13:18:43.842297 2e50                          Options.bytes_per_sync: 0
+2024/05/15-13:18:43.842301 2e50                      Options.wal_bytes_per_sync: 0
+2024/05/15-13:18:43.842305 2e50                   Options.strict_bytes_per_sync: 0
+2024/05/15-13:18:43.842308 2e50       Options.compaction_readahead_size: 0
+2024/05/15-13:18:43.842312 2e50                  Options.max_background_flushes: -1
+2024/05/15-13:18:43.842316 2e50 Compression algorithms supported:
+2024/05/15-13:18:43.842326 2e50 	kZSTD supported: 1
+2024/05/15-13:18:43.842330 2e50 	kSnappyCompression supported: 1
+2024/05/15-13:18:43.842334 2e50 	kBZip2Compression supported: 1
+2024/05/15-13:18:43.842338 2e50 	kZlibCompression supported: 1
+2024/05/15-13:18:43.842342 2e50 	kLZ4Compression supported: 1
+2024/05/15-13:18:43.842345 2e50 	kXpressCompression supported: 0
+2024/05/15-13:18:43.842365 2e50 	kLZ4HCCompression supported: 1
+2024/05/15-13:18:43.842372 2e50 	kZSTDNotFinalCompression supported: 1
+2024/05/15-13:18:43.842379 2e50 Fast CRC32 supported: Not supported on x86
+2024/05/15-13:18:43.842383 2e50 DMutex implementation: std::mutex
+2024/05/15-13:18:43.843126 2e50 [WARN] [db/db_impl/db_impl_open.cc:2075] DB::Open() failed: IO error: Failed to create lock file: C:\Users\damir\Documents\Work\PARADIGM_REVO\SurrealDB\paradigm_revolution.db/LOCK: The process cannot access the file because it is being used by another process.
+2024/05/15-13:18:43.843146 2e50 [db/db_impl/db_impl.cc:490] Shutdown: canceling all background work
+2024/05/15-13:18:43.843183 2e50 [db/db_impl/db_impl.cc:692] Shutdown complete

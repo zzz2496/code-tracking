@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3, minimum-scale=0.1">
+    <link rel="stylesheet" href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/fontawesome.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/brands.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css">
+    <link rel="stylesheet" href="index_alt.css">
+    <title>Document</title>
+</head>
+
+<body class="graph-surface wavy-background ">
+	<div>
+		<button class="raised-element">
+			<i class="fas fa-plus"></i>
+		</button>
+	</div>
+    <div class="container-fluid" id="grph" style="padding: 0px; margin: 0px;"></div>
+    <div class="container-fluid" id="grph2" style="padding: 0px; margin: 0px;"></div>
+	<script type="module" defer src="./Classes/CoreClasses.mjs"></script>
+    <script type="module" defer src="./NodeProperties.mjs"></script>
+	<!-- <script type="module" defer src="./localbase.dev.js"></script> -->
+    <script type="module">
+		import { Utility, GraphSurface, Connection, FlowChart } from "./Classes/CoreClasses.mjs";
+		import { NodeProperties } from "./NodeProperties.mjs";
+		// import { Surreal } from './node_modules/surrealdb.wasm/dist/embedded/index.js';
+		import { Surreal } from 'surrealdb.js';
+		import { surrealdbWasmEngines } from 'surrealdb.wasm';
+
+		// Enable the WebAssembly engines
+		const db = new Surreal({
+			engines: surrealdbWasmEngines(),
+		});
+
+		// Now we can start SurrealDB as an in-memory database
+		await db.connect("mem://");
+		// Or we can start a persisted IndexedDB database
+		await db.connect("indxdb://demo");
+
+		// Now use the JavaScript SDK as normal.
+
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap.min.css">
+	<link href="paradigm_modules/fontawesome-free-6.4.0-web/css/fontawesome.min.css" rel="stylesheet">
+	<link href="paradigm_modules/fontawesome-free-6.4.0-web/css/brands.min.css" rel="stylesheet">
+	<link href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css" rel="stylesheet">
+	<link href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="index_alt.css">
+</head>
+
+<body>
+	<!-- <i class="fa-solid fa-arrows-to-dot" style="color:white;position: fixed;top:400px; left:400px;z-index: 10000;font-size: 200%;" id="titik"></i> -->
+	<div class="container-fluid" id="grph" style="padding: 0px; margin: 0px;"></div>
+	<div class="container-fluid" id="container"></div>
+	<script type="module" src="UtilityClass.mjs"></script>	
+	<script type="module" defer src="GraphComposer.js"></script>
+	<script src="localbase/dist/localbase.min.js"></script>
+	<script type="module">
+		import { Utility } from "/UtilityClass.mjs";
+		import { GraphSurface } from "/GraphComposer.mjs";
+		
+		let UtilityObject = new Utility();
+		const inputs = {
+			"Utility": new Utility(),
+			"Storage": {
+				LocalStore: new Localbase('paradigm_revolution'),
+				SurrealDBStore: null
+			},
+		};
+		let GraphSurfaceObject = new GraphSurface(inputs);
+		document.querySelector('#grph').appendChild(GraphSurfaceObject.initializeGraphSurface('blah'));
+
+		// UtilityObject.DOMElements.DragElement(document.getElementById('titik'));
+		
+		// let GraphSurfaceObject2 = new GraphSurface(new Utility());
+		// document.body.appendChild(GraphSurfaceObject2.initializeGraphSurface('nyet'));
+		// let GraphSurfaceObject3 = new GraphSurface(new Utility());
+		// document.body.appendChild(GraphSurfaceObject3.initializeGraphSurface('blahblaha'));
+		// let GraphSurfaceObject4 = new GraphSurface(new Utility());
+		// document.body.appendChild(GraphSurfaceObject.initializeGraphSurface('blahblahb'));
+		// let GraphSurfaceObject5 = new GraphSurface(new Utility());
+		// document.body.appendChild(GraphSurfaceObject.initializeGraphSurface('blahblac'));
+
+		const ArrayTools = new Utility().Array;
+		const obj = {
+			"Nama": "Damir",
+			"Alamat": "DPS",
+			"NoTelp": "081",
+		};
+		const people = [
+			{
+				"id": 1,
+				"name": "John Doe",
+				"hire_date": 15,
+				"married": "yes",
+				"sudah_punya_rumah": "sudah",
+				"have_kids": false,
+				"hire_timestamp": '15/08/2023',
+				"for_operations": 2,
+				"wealth": 100000000,
+				"age": 30,
+				"email": "john.doe@example.com",
+				"occupation": "Software Engineer",
+			},
+			{
+				"id": 2,
+				"name": "Jane Doe",
+				"hire_date": 14,
+				"married": "no",
+				"sudah_punya_rumah": "sudah",
+				"have_kids": true,
+				"hire_timestamp": '14/08/2023',
+				"for_operations": 2,
+				"wealth": 150000000,
+				"age": 25,
+				"email": "jane.doe@example.com",
+				"occupation": "Data Analyst",
+			},
+			{
+				"id": 3,
+				"name": "Emily Smith",
+				"hire_date": 13,
+				"married": "yes",
+				"sudah_punya_rumah": "sudah",
+				"have_kids": false,
+				"hire_timestamp": '13/08/2023',
+				"for_operations": 3,
+				"wealth": 200000000,
+				"age": 22,
+				"email": "emily.smith@example.com",
+				"occupation": "Student",
+			},
+			{
+				"id": 4,
+				"name": "Michael Brown",
+				"hire_date": 12,
+				"married": "no",
+				"sudah_punya_rumah": "belum",
+				"have_kids": true,
+				"hire_timestamp": '12/08/2023',
+				"for_operations": 3,
+				"wealth": 250000000,
+				"age": 40,
+				"email": "michael.brown@example.com",
+				"occupation": "Project Manager",
+			},
+			{
+				"id": 5,
+				"name": "Sarah Williams",
+				"hire_date": 11,
+				"married": "yes",
+				"sudah_punya_rumah": "sudah",
+				"have_kids": false,
+				"hire_timestamp": '11/08/2023',
+				"for_operations": 4,
+				"wealth": 300000000,
+				"age": 35,
+				"email": "sarah.williams@example.com",
+				"occupation": "Marketing Specialist",
+			},
+			{
+				"id": 6,
+				"name": "Damir Handoyo",
+				"hire_date": 10,
+				"married": "no",
+				"sudah_punya_rumah": "belum",
+				"have_kids": true,
+				"hire_timestamp": '10/08/2023',
+				"for_operations": 4,
+				"wealth": 990000000,
+				"age": 42,
+				"email": "damir.handoyo@example.com",
+				"occupation": "Fullstack Developer",
+			},
+			{
+				"id": 7,
+				"name": "Putri Larasati",
+				"age": 25,
+				"hire_date": 9,
+				"married": "yes",
+				"sudah_punya_rumah": "belum",
+				"have_kids": false,
+				"hire_timestamp": '09/08/2023',
+				"for_operations": 5,
+				"wealth": 990000000,
+				"email": "putri.larasati@example.com",
+				"occupation": "Retail Specialist",
+			},
+			{
+				"id": 8,
+				"name": "Irwan Adinatha",
+				"age": 48,
+				"hire_date": 8,
+				"married": "no",
+				"sudah_punya_rumah": "belum",
+				"have_kids": true,
+				"hire_timestamp": '08/08/2023',
+				"for_operations": 5,
+				"wealth": 999000000,
+				"email": "irwan.adinatha@example.com",
+				"occupation": "Big Boss",
+			},
+			{
+				"id": 9,
+				"name": "Damiri Handayani",
+				"hire_date": 7,
+				"married": "yes",
+				"sudah_punya_rumah": "sudah",
+				"have_kids": false,
+				"hire_timestamp": '07/08/2023',
+				"for_operations": 6,
+				"wealth": 100000000,
+				"age": 35,
+				"email": "damiri.handayani@example.com",
+				"occupation": "Backend Developer",
+			},
+			{
+				"id": 10,
+				"name": "Robert Hadiwijaya",
+				"hire_date": 6,
+				"married": "no",
+				"sudah_punya_rumah": "belum",
+				"have_kids": false,
+				"hire_timestamp": '06/08/2023',
+				"for_operations": 6,
+				"wealth": 350000000,
+				"age": 31,
+				"email": "robert.hadiwijaya@example.com",
+				"occupation": "Backend Developer",
+			},
+			{
+				"id": 11,
+				"name": "Robert Antasari",
+				"hire_date": 5,
+				"married": "yes",
+				"sudah_punya_rumah": "sudah",
+				"have_kids": true,
+				"hire_timestamp": '05/08/2023',
+				"for_operations": 7,
+				"wealth": 400000000,
+				"age": 32,
+				"email": "robert.antasari@example.com",
+				"occupation": "Frontend Developer",
+			},
+			{
+				"id": 12,
+				"name": "Robert Francis",
+				"hire_date": 4,
+				"married": "no",
+				"sudah_punya_rumah": "sudah",
+				"have_kids": false,
+				"hire_timestamp": '04/08/2023',
+				"for_operations": 7,
+				"wealth": 450000000,
+				"age": 34,
+				"email": "robert.francis@example.com",
+				"occupation": "Backend Developer",
+			},
+			{
+				"id": 13,
+				"name": "Roberto Dino",
+				"hire_date": 3,
+				"married": "yes",
+				"sudah_punya_rumah": "sudah",
+				"have_kids": true,
+				"hire_timestamp": '03/08/2023',
+				"for_operations": 8,
+				"wealth": 500000000,
+				"age": 34,
+				"email": "roberto.dino@example.com",
+				"occupation": "Middleware Developer",
+			},
+			{
+				"id": 14,
+				"name": "Roberto Dino",
+				"hire_date": 2,
+				"married": "no",
+				"sudah_punya_rumah": "belum",
+				"have_kids": false,
+				"hire_timestamp": '02/08/2023',
+				"for_operations": 8,
+				"wealth": 550000000,
+				"age": 37,
+				"email": "roberto.dino@example.com",
+				"occupation": "Middleware Developer",
+			},
+			{
+				"id": 15,
+				"name": "Roberto Dino",
+				"hire_date": 1,
+				"married": "yes",
+				"sudah_punya_rumah": "belum",
+				"have_kids": false,
+				"hire_timestamp": '01/08/2023',
+				"for_operations": 10,
+				"wealth": 600000000,
+				"age": 30,
+				"email": "roberto.dino@example.com",
+				"occupation": "Middleware Developer",
+			},
+		];
+
+		let textDecorationDatetime = {
+			"textOverlay": "TANGGAL %%%",
+			"datetimeDecoration": {
+				"date_separator": "/",
+				"date_with_time": true
+			}
+		};
+		let textDecorationName = {
+			"textOverlay": "MISTER %%%",
+		};
+		let textDecorationWealth = {
+			"textOverlay": "Rp. %%%,-",
+			"numberProcessing": {
+				"thousandSeparator": true
+			}
+		};
+		let Tools = [
+			{
+				"Tool": "findArrayElmenetAll",
+				"Column_name": "name",
+				"Search_value": "rober",
+				"FuzzySearch": 1, // or 0 for EXACTLY LOOK FOR 'rober'
+			},
+			{
+				"Tool": "dynamicSort",
+				"Column_names": "hire_date, name", // can accept multiple column names
+			},
+			{
+				"Tool": "RearrangeColumns",
+				"Column_array_or_name": [
+					"id",
+					["name", "nama"],
+					["hire_date", "tanggal_kerja"],
+					["age", "umur"],
+					"wealth",
+					"hire_timestamp"
+				] //can accept a string, or an array of strings, the first element will be the column_name, the second element will be what the column_name to be renamed to
+			},
+			{
+				"Tool": "OperationsForColumns",
+				"Column_array": ["umur", "tanggal_kerja", "id"], // can accept multiple column names
+				"Operator": "+", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+				"Column_result": "sum_umur_tanggal_kerja_id", // can accept multiple column names
+			},
+			{
+				"Tool": "OperationsForColumns",
+				"Column_array": ["tanggal_kerja", "id"], // can accept multiple column names
+				"Operator": "-", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+				"Column_result": "reduce_umur_tanggal_kerja_id", // can accept multiple column names
+			},
+			{
+				"Tool": "RunningBalance",
+				"Column_array": ["id", "tanggal_kerja"] // can accept multiple column names
+			},
+			{
+				"Tool": "CastColumnDatatype",
+				"Column_array": [
+					["id", "text"],
+					["nama", "text"],
+					["tanggal_kerja", "text"],
+					["umur", "text"],
+					["wealth", "text", textDecorationWealth],
+					["hire_timestamp", "text"]
+				] //can accept a string, or an array of strings, the first element will be the column_name, the second element will be what the column_name to be renamed to
+			},
+			{
+				"Tool": "Pagination",
+				"Page_number": 1,
+				"Rows_per_page": 3
+			},
+		];
+		let ToolsStatistics = [
+			{
+				"Tool": "Average",
+				"Column_array": ["id", "tanggal_kerja"] // can accept multiple column names
+			},
+			{
+				"Tool": "Min",
+				"Column_array": ["id", "tanggal_kerja"] // can accept multiple column names
+			},
+			{
+				"Tool": "Max",
+				"Column_array": ["id", "tanggal_kerja"] // can accept multiple column names
+			},
+			{
+				"Tool": "Sum",
+				"Column_array": ["id", "tanggal_kerja"] // can accept multiple column names
+			},
+			{
+				"Tool": "Count",
+				"Column_array": ["id", "tanggal_kerja"] // can accept multiple column names
+			},
+			{
+				"Tool": "Parameters",
+			}
+		]
+		let Dataset = people;
+		let utility = new Utility();
+		console.log("Tools", Tools);
+		function refreshTable(tTools, tToolsStatistics) {
+			// console.log('tTools', tTools);
+			// console.log(arguments);
+			if (arguments.length === 0) {
+				document.getElementById('container').innerHTML = CORE_buat_table('zz', Dataset);
+				return;
+			}
+			let tempTools = tTools;
+			let tempToolsStatistics = (arguments.length == 2) ? tToolsStatistics : false;
+			// console.log('tempTools', tempTools);
+			let arrayToolsTest = ArrayTools.DatasetTools(tempTools, people);
+
+			if (tempToolsStatistics !== false) {
+				let stats = ArrayTools.DatasetTools(tempToolsStatistics, arrayToolsTest);
+				// console.log('>>Stats>>', stats);
+			}
+			// console.log('>>arrayToolsTest>>', arrayToolsTest);
+
+			document.getElementById('container').innerHTML = UtilityObject.DOMElements.GenerateTableV2('zz', arrayToolsTest.result.rows) + arrayToolsTest.executionTime;
+			// let tablestr = UtilityObject.DOMElements.makeXpanel({
+			//	 id: 'test_table',
+			//	 class: '',
+			//	 title: 'Test Table',
+			//	 smalltitle: 'small title',
+			//	 contentid: 'id_test_table',
+			//	 content_overflow: 1,
+			//	 content: UtilityObject.DOMElements.GenerateTableV2('zz', arrayToolsTest.result.rows) + arrayToolsTest.executionTime,
+			// });
+			// console.log(tablestr);
+
+			// document.getElementById('container').appendChild(tablestr);
+		}
+		refreshTable([
+			// {
+			// 	"Tool": "dynamicSort",
+			// 	"Column_names": "hire_date", // can accept multiple column names
+			// },
+			// {
+			// 	"Tool": "Sum",
+			// 	"Column_array":["id", "tanggal_kerja"] // can accept multiple column names
+			// },
+			{
+				"Tool": "OperationsForColumns",
+				"Column_array": ["name", "occupation"], // can accept multiple column names
+				"Operator": "concat", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+				"Column_result": "concat_name_and_occupation", // can accept multiple column names
+			},
+			// {
+			// 	"Tool": "OperationsForColumns",
+			// 	"Column_array":["sum_id_and_for_operations", "hire_date"], // can accept multiple column names
+			// 	"Operator": "-", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+			// 	"Column_result":"reduce_sum_min_hiredate", // can accept multiple column names
+			// },
+			// {
+			// 	"Tool": "RunningBalance",
+			// 	"Column_array":["id"] // can accept multiple column names
+			// },
+			// {
+			// 	"Tool": "OperationsForColumns",
+			// 	"Column_array":["Running_Balance___id", "for_operations"], // can accept multiple column names
+			// 	"Operator": "+", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+			// 	"Column_result":"Running_Balance___id_plus_for_operations", // can accept multiple column names
+			// },
+			// {
+			// 	"Tool": "OperationsForColumns",
+			// 	"Column_array":["wealth", "for_operations"], // can accept multiple column names
+			// 	"Operator": "*", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+			// 	"Column_result":"wealth_times_for_operations", // can accept multiple column names
+			// },
+			// {
+			// 	"Tool": "OperationsForColumns",
+			// 	"Column_array":["wealth_times_for_operations", "age"], // can accept multiple column names
+			// 	"Operator": "+", // Operator, selections are: [+], [-], [/], [*], {%}, [%%]
+			// 	"Column_result":"wealth_times_for_operations_plus_age", // can accept multiple column names
+			// },
+			// {
+			// 	"Tool": "CastColumnDatatype",
+			// 	"Column_array": [
+			// 		["wealth_times_for_operations_plus_age", "text", textDecorationWealth],
+			// 	] //can accept a string, or an array of strings, the first element will be the column_name, the second element will be what the column_name to be renamed to
+			// },
+			// {
+			// 	"Tool": "CastColumnDatatype",
+			// 	"Column_array": [
+			// 		["wealth_times_for_operations", "text", textDecorationWealth],
+			// 	] //can accept a string, or an array of strings, the first element will be the column_name, the second element will be what the column_name to be renamed to
+			// },
+			// {
+			// 	"Tool": "dynamicSort",
+			// 	"Column_names": "-name, wealth", // can accept multiple column names
+			// },
+			// {
+			// 	"Tool": "FindArrayElementsAllAdvanced",
+			// 	"Column_name": "married",
+			// 	"Operator":"is",
+			// 	"Search_value": false,
+			// 	"Limit":0,
+			// },
+			// {
+			// 	"Tool": "FindArrayElementsAllAdvanced",
+			// 	"Column_name": "name",
+			// 	"Operator":"contains",
+			// 	"Search_value": "rob",
+			// 	"Limit":0,
+			// },
+			// {
+			// 	"Tool": "FindArrayElementsAllAdvanced",
+			// 	"Column_name": "wealth",
+			// 	"Operator":">",
+			// 	"Search_value": "450000000",
+			// 	"Limit":0,
+			// },
+			// {
+			// 	"Tool": "dynamicSort",
+			// 	"Column_names": "wealth", // can accept multiple column names
+			// },
+			{
+				"Tool": "TextDecoration",
+				"Column_array": [
+					["married", {
+						"booleanReplace": {
+							"mode": "no"
+						}
+					}
+					],
+					["have_kids", {
+						"booleanReplace": {
+							"mode": "no"
+						}
+					}
+					],
+					["sudah_punya_rumah", {
+						"textOverlay": "%%% punya rumah"
+					}
+					],
+					["wealth", {
+						"textOverlay": "Rp. %%%,-",
+						"numberProcessing": {
+							"thousandSeparator": true
+						},
+						"booleanReplace": {
+							"mode": "ya" // "ya"/"tidak"/"yes"/"no"/"true"/"false"/"sudah"/"belum"
+						}
+					}
+					],
+				] //can accept a string, or an array of strings, the first element will be the column_name, the second element will be what the column_name to be renamed to
+			},
+
+
+			// {
+			// 	"Tool": "findArrayElmenetAll",
+			// 	"Column_name": "*",
+			// 	"Search_value": "ro",
+			// 	"FuzzySearch": 1, // or 0 for EXACTLY LOOK FOR 'rober'
+			// },
+
+			// {
+			// 	"Tool": "CastColumnDatatype",
+			// 	"Column_array": [
+			// 		["Running_Balance___wealth", "text", textDecorationWealth],
+			// 	] //can accept a string, or an array of strings, the first element will be the column_name, the second element will be what the column_name to be renamed to
+			// },
+
+		]);
+	</script>
+</body>
+
+</html>

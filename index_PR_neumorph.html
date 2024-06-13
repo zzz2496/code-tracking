@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, user-scalable=yes, maximum-scale=10, minimum-scale=0.1">
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<title>Document</title>
+	<link href="index.css" rel="stylesheet">
+	<link href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- <link href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap-reboot.min.css" rel="stylesheet"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="GraphComposer.css"> -->
+	<link href="paradigm_modules/fontawesome-free-6.4.0-web/css/fontawesome.min.css" rel="stylesheet">
+	<link href="paradigm_modules/fontawesome-free-6.4.0-web/css/brands.min.css" rel="stylesheet">
+	<link href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css" rel="stylesheet">
+	<link href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css" rel="stylesheet">
+	<link href="paradigm_modules/neumorphism-ui-v1.0.0/html&css/css/neumorphism.css" rel="stylesheet">
+</head>
+
+<body>
+	<div id="graph-surface" class="graph-surface grid2020-background" style="width: 10000px; height: 10000px; min-width:100vw; min-height:100vh;">
+		<i class="fa fa-circle" style="position: fixed; top: 1; left: 1;" id="titik"></i>
+		<div id="graph"></div>
+		<svg id="connsvg" style="width:100%; height:100%;">
+			<defs>
+				<marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto-start-reverse">
+					<path d="M 0 0 L 10 5 L 0 10 z" fill="#2f344cd2" />
+				</marker>
+			</defs>
+
+			<!-- The rest of your SVG content goes here -->
+		</svg>
+	</div>
+	<p style="color:#a0a0a0; bottom:1px; position:fixed; right:50%;">
+		Page <span id="coordX"></span>, <span id="coordY"></span><br>
+		Client <span id="clientX"></span>, <span id="clientY"></span><br>
+		Touch <span id="touchevent"></span><br>
+		TouchDrag <span id="touchdrag"></span><br>
+		TouchElement <span id="touchelement"></span><br>
+		Distance <span id="distance"></span><br>
+		Start <span id="startX"></span>, <span id="startY"></span><br>
+	</p>
+	<div class="top-panel" id="top-panel">
+		<div class="container">
+			<p>TOP</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+		</div>
+	</div>
+	<div class="right-panel" id="right-panel">
+		<div class="container">
+			<p>RIGHT</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+		</div>
+	</div>
+	<div class="bottom-panel" id="bottom-panel">
+		<div class="container">
+			<p>BOTTOM</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+		</div>
+	</div>
+	<div class="left-panel" id="left-panel">
+		<div class="container">
+			<p>LEFT</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quasi necessitatibus eum perspiciatis
+				doloribus quidem, recusandae tempore architecto. Quo doloribus delectus hic voluptatibus deleniti
+				aliquid distinctio, quod error obcaecati numquam.</p>
+		</div>
+	</div>
+	<div id="graph-control-palette"></div>
+</body>
+<!-- <script src="paradigm_modules/jquery/code.jquery.com_jquery-3.7.0.min.js"></script> -->
+<script src="paradigm_modules/bootstrap-5.3.0-dist/js/bootstrap.min.js"></script>
+<script src="paradigm_modules/bootstrap-5.3.0-dist/js/bootstrap.bundle.min.js"></script>
+<script src="core_properties_class.js"></script>
+<script src="core_methods_class.js"></script>
+<script src="UtilityClass.js"></script>
+<script src="GraphComposer.js"></script>
+<script>
+	class Combined {
+		constructor() {
+			this.properties = new node_properties;
+			this.methods = new node_methods;
+		}
+	}
+	let node_test = new Combined;
+	let connections = [];
+
+	let mousedown = false;
+	let startPosX = 0;
+	let startPosY = 0;
+	let startElement = '';
+	let newConn = false;
+	let tempConn = null;
+	let distance = 0;
+
+	// const largeDiv = document.getElementById('graph-surface');
+		
+	// // Calculate the position to scroll to
+	// const horizontalCenter = (largeDiv.offsetWidth - window.innerWidth) / 2;
+	// const verticalCenter = (largeDiv.offsetHeight - window.innerHeight) / 2;
+
+	// // Scroll to the center of the div
+	// window.scrollTo(horizontalCenter, verticalCenter);
+
+	let utility = new Utility;
+	let graphSurface = new GraphSurface('connsvg');
+	let temp;
+	utility.zoom_level = 1;
+	utility.DOMElements.DragElement(document.getElementById('titik'), 1);
+
+	let nodes = [
+		// { "id": "node_test", "class": "graph-node", "str": "" },
+		// { "id": "node_test2", "class": "graph-node", "str": "" },
+		// { "id": "node_test3", "class": "graph-node", "str": "" },
+		// { "id": "node_test4", "class": "graph-node", "str": "" },
+		// { "id": "node_test5", "class": "graph-node", "str": "" },
+		// { "id": "node_test6", "class": "graph-node", "str": "" },
+		// { "id": "node_test7", "class": "graph-node", "str": "" },
+		// { "id": "node_test8", "class": "graph-node", "str": "" },
+		// { "id": "node_test9", "class": "graph-node", "str": "" },
+		// { "id": "node_test10", "class": "graph-node", "str": "" },
+		// { "id": "node_test11", "class": "graph-node", "str": "" },
+		// { "id": "node_test12", "class": "graph-node", "str": "" },
+		// { "id": "node_test13", "class": "graph-node", "str": "" },
+		// { "id": "node_test14", "class": "graph-node", "str": "" },
+		// { "id": "node_test15", "class": "graph-node", "str": "" },
+		// { "id": "node_test16", "class": "graph-node", "str": "" },
+		// { "id": "node_test17", "class": "graph-node", "str": "" },
+		// { "id": "node_test18", "class": "graph-node", "str": "" },
+		// { "id": "node_test19", "class": "graph-node", "str": "" },
+		// { "id": "node_test20", "class": "graph-node", "str": "" },
+	];
+	function initConnectorEvents(){
+		function inputEvents(d, i, arr) {
+			d.addEventListener('click', function (e) {
+				// console.log('top input ' + i);
+				if (!utility.makingConnection) {
+					// console.error('Not in Making Connection mode');
+					return;
+				}
+				if (utility.ConnectionDirection != d.dataset.ConnectionDirection ){
+					console.error('Connection direction is '+utility.ConnectionDirection);
+					// utility.ConnectionDirection = null;
+					return;
+				}
+				let element = utility.DOMElements.FindPosition(this);
+				let endElement = element.element.id;
+				console.log('element', element, endElement);
+
+				if (connections.length>0){
+					console.log('startElement', startElement, 'endElement', endElement);
+					let sourceFound = false;
+					let destinationFound = false;			
+					connections.forEach(elmt => {
+						if ((elmt.Source == startElement)&&(elmt.Destination == endElement)) {
+							console.error(`Connection from ${startElement} to ${endElement} already exist!`);
+							return;
+						}
+					});
+				}
+
+				if (utility.activeElement == null) utility.activeElement = element.element.id;
+				if (utility.activeElement != this.id) return;
+
+				let endPosX = parseFloat(element.x);
+				let endPosY = parseFloat(element.y);
+
+				tempConn = new Connection(utility.Numbers.generateUUID(), graphSurface);
+
+				// tempConn.startPos = { "x": startPosX, "y": startPosY };
+				tempConn.Source = startElement;
+				tempConn.pathMode = utility.ConnectionDirection;
+
+				tempConn.endPos = { x: (endPosX), y: (endPosY) };
+				console.log('startPos', tempConn.startPos);
+				console.log('endPos', tempConn.endPos);
+				tempConn.Destination = element.element.id;
+				if (tempConn !== null) connections.push(tempConn);
+				
+				document.getElementById(tempConn.Source).dataset.Connected = 'true';
+				document.getElementById(tempConn.Destination).dataset.Connected = 'true';
+				
+				tempConn = null;
+				startPosX = 0;
+				startPosY = 0;
+				distance = 0;
+				utility.DOMElements.renderGraphConnections(connections, graphSurface);
+				utility.makingConnection = false;
+				utility.ConnectionDirection = null;
+				utility.activeElement = null;
+			});
+		}
+		function outputEvents(d, i, arr) {
+			d.addEventListener('click', function (e) {
+				// console.log('right output ' + i);
+				utility.makingConnection = true;
+				utility.ConnectionDirection = d.dataset.ConnectionDirection;
+
+				let element = utility.DOMElements.FindPosition(this);
+				startPosX = parseFloat(element.x);
+				startPosY = parseFloat(element.y);
+				startElement = element.element.id;
+				console.log(`startX: ${startPosX}, startY: ${startPosY}`);
+			});
+		}
+		document.querySelectorAll(".graph-node > div > div.top-row > div.connection-container > i.add-connection").forEach(function (d, i, arr) {
+			d.addEventListener('click', function () {
+				// console.log('Click add connection top container', this.nextElementSibling.nextElementSibling.children.length);
+				if (this.nextElementSibling.children.length >= 10) return;
+				this.nextElementSibling.innerHTML += `<i class="fa-solid fa-circle-chevron-down text-danger" style="--bs-text-opacity: .5;" id="in-${utility.Numbers.generateUUID()}" data--connected="false" data--connection-direction="v"></i>`;
+				document.querySelectorAll(".graph-node > div > div.top-row > div.connection-container > span.top-input > i").forEach(inputEvents);
+			});
+		});
+		document.querySelectorAll(".graph-node > div > div.top-row > div.connection-container > i.remove-connection").forEach(d => {
+			d.addEventListener('click', () => {
+				let inputsArray = Array.from(d.parentElement.querySelectorAll('span.top-input > i')).reverse();
+				let inputToDelete = inputsArray.find(input => input.dataset.Connected == 'false');
+				if (inputToDelete) {
+					inputToDelete.remove();
+				}
+			});
+		});
+
+		document.querySelectorAll(".graph-node > div > div.mid-row > div.left-column > div.connection-container > i.add-connection").forEach(function (d, i, arr) {
+			d.addEventListener('click', function () {
+				// console.log('Click add connection left container', this.nextElementSibling.nextElementSibling.children.length);
+				if (this.nextElementSibling.nextElementSibling.children.length >= 20) return;
+				this.nextElementSibling.nextElementSibling.innerHTML += `<i class="fa-solid fa-circle-chevron-right text-warning" style="--bs-text-opacity: .8; display:block;" id="in-${utility.Numbers.generateUUID()}" data--connected="false" data--connection-direction="h"></i>`;
+				document.querySelectorAll(".graph-node > div > div.mid-row > div.left-column > div.connection-container > span.left-input > i").forEach(inputEvents);
+			});
+		});
+		document.querySelectorAll(".graph-node > div > div.mid-row > div.left-column > div.connection-container > i.remove-connection").forEach(function (d, i, arr) {
+			d.addEventListener('click', function () {
+				let inputsArray = Array.from(d.parentElement.querySelectorAll('span.left-input > i')).reverse();
+				let inputToDelete = inputsArray.find(input => input.dataset.Connected == 'false');
+				if (inputToDelete) {
+					inputToDelete.remove();
+				}
+			});
+		});
+		document.querySelectorAll(".graph-node > div > div.mid-row > div.right-column > div.connection-container > i.add-connection").forEach(function (d, i, arr) {
+			d.addEventListener('click', function () {
+				// console.log('Click add connection right container', this.nextElementSibling.nextElementSibling.children.length);
+				if (this.nextElementSibling.nextElementSibling.children.length >= 20) return;
+				this.nextElementSibling.nextElementSibling.innerHTML += `<i class="fa-solid fa-circle-arrow-right text-success" style="--bs-text-opacity: .5; display:block;" id="out-${utility.Numbers.generateUUID()}" data--connected="false" data--connection-direction="h"></i>`;
+				document.querySelectorAll(".graph-node > div > div.mid-row > div.right-column > div.connection-container > span.right-output > i").forEach(outputEvents);
+			});
+		});
+		document.querySelectorAll(".graph-node > div > div.mid-row > div.right-column > div.connection-container > i.remove-connection").forEach(function (d, i, arr) {
+			d.addEventListener('click', function () {
+				let inputsArray = Array.from(d.parentElement.querySelectorAll('span.right-output > i')).reverse();
+				let inputToDelete = inputsArray.find(input => input.dataset.Connected == 'false');
+				if (inputToDelete) {
+					inputToDelete.remove();
+				}
+			});
+		});
+		document.querySelectorAll(".graph-node > div > div.bottom-row > div.connection-container > i.add-connection").forEach(function (d, i, arr) {
+			d.addEventListener('click', function () {
+				// console.log('Click add connection bottom container', this.nextElementSibling.nextElementSibling.children.length);
+				if (this.nextElementSibling.children.length >= 100) return;
+				this.nextElementSibling.innerHTML += `<i class="fa-solid fa-circle-arrow-down text-primary-emphasis" style="--bs-text-opacity: .5;" id="out-${utility.Numbers.generateUUID()}" data--connected="false" data--connection-direction="v"></i>`;
+				document.querySelectorAll(".graph-node > div > div.bottom-row > div.connection-container > span.bottom-output > i").forEach(outputEvents);
+			});
+		});
+		document.querySelectorAll(".graph-node > div > div.bottom-row > div.connection-container > i.remove-connection").forEach(function (d, i, arr) {
+			d.addEventListener('click', function () {
+				console.log('clicked remove conn bottom');
+				let inputsArray = Array.from(d.parentElement.querySelectorAll('span.bottom-output> i')).reverse();
+				let inputToDelete = inputsArray.find(input => input.dataset.Connected == 'false');
+				if (inputToDelete) {
+					inputToDelete.remove();
+				}
+			});
+		});
+
+		document.querySelectorAll(".graph-node > div > div.top-row > div.connection-container > span.top-input > i").forEach(inputEvents);
+		document.querySelectorAll(".graph-node > div > div.mid-row > div.left-column > div.connection-container > span.left-input > i").forEach(inputEvents);
+		document.querySelectorAll(".graph-node > div > div.mid-row > div.right-column > div.connection-container > span.right-output > i").forEach(outputEvents);
+		document.querySelectorAll(".graph-node > div > div.bottom-row > div.connection-container > span.bottom-output > i").forEach(outputEvents);
+	}
+	
+	function attachPathEvent(conns, cr = 1) {
+		if (cr) console.log('Masuk attachPathEvent');
+		if (arguments.length == 0) {
+			console.error('Connections array needed!');
+			return;
+		}
+		if (conns.length > 0) {
+			conns.forEach(function (conn, idx, arr) {
+				conns[idx].path.addEventListener('click', function (e) {
+					e.preventDefault();
+					console.log('clicked on ' + this.getAttribute('id'));
+					console.log('conns[idx].path', conns[idx].path);
+					let z = utility.Array.findArrayElementAll(conns[idx].path, 'id', this.getAttribute('id'));
+					conns[idx].path[z.index].hasEvent.Select = true;
+					if (z !== false) {
+						conns[idx].path[z.index].isActive = true;
+						if (conns[idx].path[z.index].isVertical) {
+							this.setAttribute('stroke', (conns[idx].path[z.index].isActive) ? conns[idx].path[z.index].pathColorVertical.Selected : conns[idx].path[z.index].pathColorVertical.Normal);
+						} else {
+							this.setAttribute('stroke', (conns[idx].path[z.index].isActive) ? conns[idx].path[z.index].pathColorHorizontal.Selected : conns[idx].path[z.index].pathColorHorizontal.Normal);
+						}
+					} else {
+						console.error('Ndak ketemu element e');
+					}
+				}, false);
+			});
+		}
+	}
+	document.querySelectorAll(`[class*="panel"]`).forEach(el => el.style.display = "block");
+	let controlPalette = `
+			<table width='100%' class="toolbar-kit">
+				<tr>
+					<td><button class="btn btn-sm btn-outline-primary" id="zoom-out"><i class="fa-solid fa-minus"></i></button></td>
+					<td>ZOOM (<label id='zoom-level'>${utility.zoom_level}</label>)</td>
+					<td><button class="btn btn-sm btn-outline-primary" id="zoom-in"><i class="fa-solid fa-plus"></i></button></td>
+				</tr>
+				<tr>
+					<td><button class="btn btn-sm btn-outline-primary" id="node-reduce"><i class="fa-solid fa-minus"></i></button></td>
+					<td>NODE</td>
+					<td><button class="btn btn-sm btn-outline-primary" id="node-add"><i class="fa-solid fa-plus"></i></button></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Vertical Link</td>
+					<td><input type='checkbox' id='vertical_link'></td>
+				</tr>
+				<tr>
+					<td colspan='3'>Tilt Control</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="animateTilt(document.getElementById('control-palette'), '', 'up')">Up</button></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="animateTilt(document.getElementById('control-palette'), 'left')">Left</button></td>
+					<td></td>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="animateTilt(document.getElementById('control-palette'), 'right')">Right</button></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="animateTilt(document.getElementById('control-palette'), '', 'down')">Down</button></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan='3'>Slide Control</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="animateSlide(document.getElementById('top-panel'), 'top')">Up</button></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="animateSlide(document.getElementById('left-panel'), 'left')">Left</button></td>
+					<td></td>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="animateSlide(document.getElementById('right-panel'), 'right')">Right</button></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="animateSlide(document.getElementById('bottom-panel'), 'bottom')">Down</button></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan='3'>Switch Theme</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><button class="btn btn-sm btn-outline-secondary" onclick="switchTheme(document.getElementById('control-palette'))"><i class="fa-solid fa-repeat"></i></button></td>
+					<td></td>
+				</tr>
+
+			</table>
+		`;
+	document.getElementById('graph-control-palette').innerHTML = utility.DOMElements.MakeDraggableDiv('control-palette', 'control-palette' + ' DIV', controlPalette, 10, 10);
+	utility.DOMElements.DragElement(document.getElementById('control-palette'));
+
+	function animateZoom(el){
+		let element = el;
+		if (typeof el == 'string'){
+			element = document.getElementById(el);
+		}
+		// // Get the element's scrollable height and current scrollTop position.
+		// const scrollableHeight = element.scrollHeight - element.clientHeight;
+		// const scrollPosition = element.scrollTop;
+
+		// // Calculate the percentage of the current scroll position.
+		// const verticalScrollPercentage = (scrollPosition / scrollableHeight) * 100;
+
+		// // Get the element's scrollable width and current scrollLeft position.
+		// const scrollableWidth = element.scrollWidth - element.clientWidth;
+		// const horizontalScrollPosition = element.scrollLeft;
+
+		// // Calculate the percentage of the current scroll position.
+		// const horizontalScrollPercentage = (horizontalScrollPosition / scrollableWidth) * 100;
+
+		// // Apply the transform based on the calculated percentages.
+		// element.style.transform = `scale3D(${utility.zoom_level}, ${utility.zoom_level}, ${utility.zoom_level})`;
+		// element.style.transformOrigin = `${horizontalScrollPercentage}% ${verticalScrollPercentage}%`;
+
+		// utility.zoom_level = utility.Numbers.Round1(utility.zoom_level);
+		// document.getElementById('zoom-level').innerHTML = utility.zoom_level;
+		
+		document.getElementById('graph-surface').style.transform = `scale3D(${utility.zoom_level}, ${utility.zoom_level}, ${utility.zoom_level})`;
+		document.getElementById('graph-surface').style.transformOrigin = '0 0';
+		utility.zoom_level = utility.Numbers.Round1(utility.zoom_level);
+		document.getElementById('zoom-level').innerHTML = utility.zoom_level;
+	}
+	document.getElementById('zoom-in').addEventListener('click', function () {
+		if (utility.zoom_level < 3) utility.zoom_level += 0.1;
+		animateZoom('graph-surface');
+
+	});
+	document.getElementById('zoom-out').addEventListener('click', function () {
+		if (utility.zoom_level > 0.2) utility.zoom_level -= 0.1;
+		animateZoom('graph-surface');
+	});
+
+	document.getElementById('node-add').addEventListener('click', function () {
+		let id = "test" + (nodes.length + 1);
+		nodes.push({ "id": id, "str": "" });
+		let n = 280;
+		// let temp = utility.DOMElements.MakeDraggableNode(id, 'graph-node', 'Node TEST '+id + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', horizontalCenter + (window.innerWidth/2) + (document.getElementById('control-palette').offsetHeight/2), (n * nodes.length-1)+verticalCenter - (document.getElementById('control-palette').offsetWidth), 1);
+		// let temp = utility.DOMElements.MakeDraggableNode(id, 'graph-node', 'Node TEST '+id + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', verticalCenter+ (window.innerHeight/2) - 300, (n * nodes.length-1)+horizontalCenter+ (window.innerHeight/2) - 400, 1);
+		let temp = utility.DOMElements.MakeDraggableNode(id, 'graph-node', 'Node TEST '+id + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', 200, (n * nodes.length-1), 1);
+		document.getElementById('graph').innerHTML = temp + document.getElementById('graph').innerHTML;
+		// n = Math.ceil(document.getElementById(id).offsetWidth) + 100;
+		nodes[nodes.length - 1].str = temp;
+		nodes.forEach((segment, idx, array) => {
+			utility.DOMElements.DragElement(document.getElementById(segment.id), 1, 10, function () {
+				if (connections.length > 0)  utility.DOMElements.renderGraphConnections(connections, graphSurface);
+			});
+		});
+		initConnectorEvents();
+		document.getElementById(id).querySelectorAll('.add-connection').forEach(function(d, i, arr){
+			d.click();
+			d.click();
+			d.click();
+			d.click();
+			d.click();
+		});	
+	});
+
+	let n = 1;
+	nodes.forEach((segment, idx, array) => {
+		let temp = utility.DOMElements.MakeDraggableNode(segment.id, segment.class, segment.id + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', 200, (n * idx) + 300, 1);
+		document.getElementById('graph').innerHTML = temp + document.getElementById('graph').innerHTML;
+		n = Math.ceil(document.getElementById(segment.id).offsetWidth) + 100;
+		nodes[idx].str = temp;
+	});
+	n = 1;
+	nodes.forEach((segment, idx, array) => {
+		utility.DOMElements.DragElement(document.getElementById(segment.id), 1, 10, function () {
+			if (connections.length > 0)  utility.DOMElements.renderGraphConnections(connections, graphSurface);
+		});
+	});
+
+	
+	initConnectorEvents();
+
+	document.querySelectorAll('.add-connection').forEach(function(d, i, arr){
+		d.click();
+		d.click();
+		d.click();
+		d.click();
+		d.click();
+		// testing on making commits to github
+		// another commit test!
+		//Looking good...
+	});
+	function animateTilt(animatedDiv, horizontal, vertical) {
+		// Step 1: Zoom out the div
+		let tempC;
+		if (typeof animatedDiv.dataset.paradigm_data == 'undefined') {
+			tempC = {
+				"HorizontalAngle": 0,
+				"VerticalAngle": 0,
+				"perspective": 1000
+			};
+		} else {
+			tempC = JSON.parse(animatedDiv.dataset.paradigm_data);
+		}
+		let Hinc = 5;
+		let Vinc = 5;
+
+		switch (horizontal) {
+			case 'left':
+				tempC.HorizontalAngle -= Hinc;
+				break;
+			case 'right':
+				tempC.HorizontalAngle += Hinc;
+				break;
+		}
+		switch (vertical) {
+			case 'up':
+				tempC.VerticalAngle += Vinc;
+				break;
+			case 'down':
+				tempC.VerticalAngle -= Vinc;
+				break;
+		}
+		let str = ` perspective(${tempC.perspective}px) rotateY(${tempC.HorizontalAngle}deg) rotateX(${tempC.VerticalAngle}deg)`;
+		console.log('str', str);
+		animatedDiv.style.transform = str;
+		animatedDiv.dataset.paradigm_data = JSON.stringify(tempC);
+	}
+	function animateSlide(animatedDiv, position) {
+		// Step 1: Zoom out the div
+		// animatedDiv.style.transform = 'scale3d(0.8, 0.8, 1)';
+		console.log(animatedDiv);
+		let tempC;
+		if (typeof animatedDiv.dataset.paradigm_data == 'undefined') {
+			tempC = {
+				"Visible": false
+			};
+		} else {
+			tempC = JSON.parse(animatedDiv.dataset.paradigm_data);
+		}
+		let str = '';
+		let height = animatedDiv.clientHeight;
+		let width = animatedDiv.clientWidth;
+
+		switch (position) {
+			case 'top':
+				// console.log('masuk top');
+				str = (tempC.Visible) ? `perspective(1000px) rotateX(90deg) translate(0px, -${height}px)` : `perspective(1000px) rotateX(0deg) translate(0px, ${height}px)`;
+				tempC.Visible = !tempC.Visible;
+				break;
+			case 'right':
+				str = (tempC.Visible) ? `perspective(1000px) rotateY(-90deg) translate(${width}px)` : `perspective(1000px) rotateY(0deg) translate(-${width}px)`;
+				tempC.Visible = !tempC.Visible;
+				break;
+			case 'bottom':
+				str = (tempC.Visible) ? `perspective(1000px) rotateX(90deg) translate(0px, ${height}px)` : `perspective(1000px) rotateX(0deg) translate(0px, -${height}px)`;
+				tempC.Visible = !tempC.Visible;
+				break;
+			case 'left':
+				str = (tempC.Visible) ? `perspective(1000px) rotateY(-90deg) translate(-${width}px)` : `perspective(1000px) rotateY(0deg) translate(${width}px)`;
+				tempC.Visible = !tempC.Visible;
+				break;
+		}
+		// console.log('str', str);
+		animatedDiv.style.transform = str;
+		animatedDiv.style.opacity = (tempC.Visible)? "1" : "0";
+		animatedDiv.dataset.paradigm_data = JSON.stringify(tempC);
+	}
+	function switchTheme(div) {
+		// Step 1: Zoom out the div
+		// animatedDiv.style.transform = 'scale3d(0.8, 0.8, 1)';
+		if (div.classList.contains('light-mode-translucent')) {
+			div.classList.remove('light-mode-translucent');
+			div.classList.add('dark-mode-translucent');
+		} else {
+			div.classList.remove('dark-mode-translucent');
+			div.classList.add('light-mode-translucent');
+		}
+	}
+</script>
+
+</html>

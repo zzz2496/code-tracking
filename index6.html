@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/fontawesome.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/brands.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css">
+    <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css">
+
+	<link rel="stylesheet" href="index_alt.css">
+    <title>Zoomable and Draggable 3D Div</title>
+    <style>
+        body {
+            margin: 0;
+            /* overflow: hidden; */
+        }
+
+        .zoomable-container {
+            width: 100vw;
+            height: 100vh;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .zoomable-div {
+            background-color: lightgray;
+            position: absolute;
+            transform-origin: center center;
+            transition: transform 0.3s;
+        }
+
+        /* .grid2020-background {
+            background-image: linear-gradient(rgb(47, 47, 47) 1px, transparent 1px),
+                linear-gradient(to right, rgb(47, 47, 47) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-color: rgb(22, 22, 22);
+        } */
+
+        .testdiv {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="zoomable-container" id="zoomableContainer">
+        <div id="zoomableDiv" class="zoomable-div grid2020-background" style="width: 10000px; height: 10000px;background-color: rgb(22, 22, 22);">
+            <div class="testdiv" style="top: 100px; left: 120px;"></div>
+            <div class="testdiv" style="top: 100px; left: 240px;"></div>
+            <div class="testdiv" style="top: 100px; left: 360px;"></div>
+            <div class="testdiv" style="top: 100px; left: 480px;"></div>
+            <div class="testdiv" style="top: 100px; left: 600px;"></div>
+        </div>
+    </div>
+    <script>
+        const zoomableDiv = document.getElementById('zoomableDiv');
+            const zoomableContainer = document.getElementById('zoomableContainer');
+        let isDragging = false;
+        let initialX, initialY, scrollX = 0, scrollY = 0;
+        let scale = 1;
+
+        zoomableContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            initialX = e.clientX;
+            initialY = e.clientY;
+            zoomableDiv.classList.add('grabbing');
+        });
+
+        zoomableContainer.addEventListener('mouseup', () => {
+            isDragging = false;
+            zoomableDiv.classList.remove('grabbing');
+        });
+
+        zoomableContainer.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.clientX - initialX;
+            const deltaY = e.clientY - initialY;
+            scrollX -= deltaX;
+            scrollY -= deltaY;
+            updateScroll();
+            initialX = e.clientX;
+            initialY = e.clientY;
+        });
+
+        // zoomableDiv.addEventListener('wheel', (e) => {
+        //     const zoomIntensity = 0.02; // Adjust this for zoom speed
+        //     e.preventDefault();
+        //     scale += e.deltaY * zoomIntensity;
+        //     scale = Math.min(Math.max(0.5, scale), 3); // Limit zoom scale
+        //     updateTransform();
+        // });
+
+        function updateScroll() {
+            zoomableContainer.scroll(scrollX, scrollY);
+        }
+
+        function updateTransform() {
+            const maxX = (scale - 1) * zoomableDiv.clientWidth / 2;
+            const maxY = (scale - 1) * zoomableDiv.clientHeight / 2;
+            scrollX = Math.min(Math.max(scrollX, -maxX), maxX);
+            scrollY = Math.min(Math.max(scrollY, -maxY), maxY);
+            updateScroll();
+        }
+    </script>
+</body>
+
+</html>
