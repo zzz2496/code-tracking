@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css">
     <link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css">
     <link rel="stylesheet" href="index_alt.css">
+	<link rel="shortcut icon" href="#">
+
     <title>Document</title>
 </head>
 
@@ -23,25 +25,134 @@
     <div class="container-fluid" id="grph2" style="padding: 0px; margin: 0px;"></div>
 	<script type="module" defer src="./Classes/CoreClasses.mjs"></script>
     <script type="module" defer src="./NodeProperties.mjs"></script>
-	<!-- <script type="module" defer src="./localbase.dev.js"></script> -->
-    <script type="module">
+	<script type="module" type="application/wasm" defer src="./node_modules/surrealdb.wasm/dist/embedded/index_bg.wasm"></script>
+
+	<script type="module">
 		import { Utility, GraphSurface, Connection, FlowChart } from "./Classes/CoreClasses.mjs";
 		import { NodeProperties } from "./NodeProperties.mjs";
 		// import { Surreal } from './node_modules/surrealdb.wasm/dist/embedded/index.js';
-		import { Surreal } from 'surrealdb.js';
-		import { surrealdbWasmEngines } from 'surrealdb.wasm';
+		// import { Surreal } from './paradigm_modules/surrealdb.wasm/dist/full/index.js';
+		// import { surrealdbWasmEngines } from './node_modules/surrealdb.wasm/dist/embedded/index_bg.wasm';
+		const importObject = {
+			imports: { imported_func: (arg) => console.log('>>>>>', arg) },
+		};
+		fetch("./node_modules/surrealdb.wasm/dist/embedded/index_bg.wasm")
+			.then((response) => response.arrayBuffer())
+			.then((bytes) => WebAssembly.instantiate(bytes, importObject))
+			.then((results) => {
+				results.instance.exports.exported_func();
+			});
 
-		// Enable the WebAssembly engines
-		const db = new Surreal({
-			engines: surrealdbWasmEngines(),
-		});
+		// let SurrealDB = {
+		// 	Local: new Surreal(),
+		// 	Memory: new Surreal(),
+		// 	Server: new Surreal(),
+		// }
+		// window.SurrealDB = SurrealDB;
+		// // Initiate IndexedDB
+		// try {
+		// 	console.info('Start SurrealDB IndexedDB connection...');
+		// 	// Connect to the database
+		// 	await SurrealDB.Local.connect('indxdb://ParadigmREVO', { user: { username: "damir", password: "Zenith2001" } });
+			
+		// 	// Select a specific namespace / database
+		// 	await SurrealDB.Local.use({ ns: App.universe, db: App.realm });
+			
+		// 	// Signin as a namespace, database, or root user
+		// 	const token = await SurrealDB.Local.signin({
+		// 		username: "damir",
+		// 		password: "Zenith2001",
+		// 	});
+			
+		// 	let infokv = await SurrealDB.Local.query('info for kv;');
+		// 	console.log('infokv', infokv);
+		// 	let infodb = await SurrealDB.Local.query('info for db;');
+		// 	console.log('infodb', JSON.stringify(infodb));
+		// 	console.log('>>>', infodb[0].tables);
 
-		// Now we can start SurrealDB as an in-memory database
-		await db.connect("mem://");
-		// Or we can start a persisted IndexedDB database
-		await db.connect("indxdb://demo");
+		// 	console.log('typeof infodb[0].tables.Yggdrasil', typeof infodb[0].tables.Yggdrasil);
 
-		// Now use the JavaScript SDK as normal.
+		// 	// if (Object.keys(infodb[0].tables).length == 0){
+		// 	if (typeof infodb[0].tables[App.world] == "undefined"){
+		// 		console.log('creating table App.world');
+		// 		SurrealDB.Local.query('define table App.world;');
+		// 		console.log('created table App.world;')
+		// 	}
+		// 	console.info('Done SurrealDB IndexedDB connection...');
+		// } catch (e) {
+		// 	console.error("ERROR SurrealDB IndexedDB, ", e);
+		// }
+
+		// //Initiate Mem
+		// try {
+		// 	console.info('Start SurrealDB Mem connection...');
+		// 	// Connect to the database
+		// 	await SurrealDB.Memory.connect('mem://', { user: { username: "root", password: "root" } });
+			
+		// 	// Select a specific namespace / database
+		// 	await SurrealDB.Memory.use({ ns: App.universe, db: App.realm });
+			
+		// 	// Signin as a namespace, database, or root user
+		// 	const token = await SurrealDB.Memory.signin({
+		// 		username: "root",
+		// 		password: "root",
+		// 	});
+
+		// 	let infokv = await SurrealDB.Local.query('info for kv;');
+		// 	console.log('infokv', infokv);
+		// 	let infodb = await SurrealDB.Local.query('info for db;');
+		// 	console.log('infodb', JSON.stringify(infodb));
+		// 	console.log('>>>', infodb[0].tables);
+
+		// 	console.log('typeof infodb[0].tables[App.world]', typeof infodb[0].tables[App.world]);
+
+		// 	// if (Object.keys(infodb[0].tables).length == 0){
+		// 	if (typeof infodb[0].tables[App.world] == "undefined"){
+		// 		console.log('creating table App.world');
+		// 		SurrealDB.Local.query('define table App.world;');
+		// 		console.log('created table App.world;')
+		// 	}
+		// 	console.info('Done SurrealDB Memory connection...');
+		// } catch (e) {
+		// 	console.error("ERROR SurrealDB Memory, ", e);
+		// }
+
+		// //Initiate Server
+		// try {
+		// 	console.info('Start SurrealDB Server connection...');
+		// 	// Connect to the database
+		// 	await SurrealDB.Server.connect('ws://localhost:8080');
+			
+		// 	// Select a specific namespace / database
+		// 	await SurrealDB.Server.use({ ns: App.universe, db: App.realm });
+			
+		// 	// Signin as a namespace, database, or root user
+		// 	const token = await SurrealDB.Server.signin({
+		// 		username: "root",
+		// 		password: "root",
+		// 	});
+
+		// 	let infokv = await SurrealDB.Local.query('info for kv;');
+		// 	console.log('infokv', infokv);
+		// 	let infodb = await SurrealDB.Local.query('info for db;');
+		// 	console.log('infodb', JSON.stringify(infodb));
+		// 	console.log('>>>', infodb[0].tables);
+
+		// 	console.log('typeof infodb[0].tables[App.world]', typeof infodb[0].tables[App.world]);
+
+
+		// 	// if (Object.keys(infodb[0].tables).length == 0){
+		// 	if (typeof infodb[0].tables[App.world] == "undefined"){
+		// 		console.log('creating table App.world');
+		// 		SurrealDB.Local.query('define table App.world;');
+		// 		console.log('created table App.world;')
+		// 	}
+		// 	console.info('Done SurrealDB Server connection...');			
+		// } catch (e) {
+		// 	console.error("ERROR SurrealDB Server, ", e);
+		// }
+		// Initialize SurrealDB subsystem
+
 
 	</script>
 </body>

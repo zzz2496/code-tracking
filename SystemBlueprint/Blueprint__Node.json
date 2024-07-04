@@ -1,6 +1,6 @@
 {
 	"id": "",
-	"PinDescriptions": "Blueprint__Desciptions__Node.json",
+	"PinDescriptions": "Blueprint__NodeDesciptions.json",
 	"Properties": {
 		"PID": "",
 		"BatchProcessingID": "",
@@ -103,7 +103,16 @@
 		"GarbageCollectionControl": false
 	},
 	"Dataset": {
-		"PinDescriptions": "Blueprint__Desciptions__Node.Dataset.json",
+		"PinDescriptions": {
+			"Query": "The Query string to get the data to be stored in this object, for example: select * from Yggdrasil where Dataset.DataType = 'something'",
+			"Schema": "The data Schema, will define form fields and segments",
+			"Parameters": "The data entry process, sort by timestamp of input event",
+			"Data": "The State of the form, the actual data object",
+			"Checksum": "The Data checksum string, containing MD5 checksum of the [Dataset > Data] as string",
+			"DataType": "Data classification string, for example: Transaksi Penjualan",
+			"ExternalResource": "This is an array containing the external resource, for example image files, PDF files, Spreadsheet files, etc",
+			"ProcessingParameters": "This is the Processing Parameters object, containing the Next Process Locking , Signage, etc"
+		},
 		"Query": "",
 		"Layout": {
 			"show": 1,
@@ -129,110 +138,7 @@
 				"form": 1
 			}
 		},
-		"Parameters": [
-			{
-				"FormElement": "FormID",
-				"Event": "Initialize State",
-				"Value": "",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID",
-				"Event": "Focus on Input",
-				"Value": "",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID",
-				"Event": "Get Input Value",
-				"Value": "SomeValue",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID",
-				"Event": "Leave Input, modify state",
-				"Value": "SomeValue",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID2",
-				"Event": "Focus on Input",
-				"Value": "",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID2",
-				"Event": "Get Input Value",
-				"Value": "SomeValue2",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID2",
-				"Event": "Leave Input, modify state",
-				"Value": "SomeValue2",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID3",
-				"Event": "Focus on Input",
-				"Value": "",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID3",
-				"Event": "Get Input Value",
-				"Value": "SomeValue3",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID3",
-				"Event": "Leave Input, modify state",
-				"Value": "SomeValue3",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID",
-				"Event": "Focus on Input",
-				"Value": "SomeValue",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID",
-				"Event": "Get Input Value",
-				"Value": "SomeValueX",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID",
-				"Event": "Leave Input, modify state",
-				"Value": "SomeValueX",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID4",
-				"Event": "Focus on Input",
-				"Value": "",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID4",
-				"Event": "Get Input Value",
-				"Value": "SomeValue4",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "elementID4",
-				"Event": "Leave Input, modify state",
-				"Value": "SomeValue4",
-				"Timestamp": "[timestamp]"
-			},
-			{
-				"FormElement": "ConfirmButton",
-				"Event": "Click Button",
-				"Value": "SomeValueZ",
-				"Timestamp": "[timestamp]"
-			}
-		],
+		"Parameters": [],
 		"Data": {},
 		"Checksum": "",
 		"DataType": "",

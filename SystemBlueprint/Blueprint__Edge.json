@@ -1,4 +1,4 @@
-{	
+{
 	"id":"",
 	"in":"",
 	"out":"",
@@ -6,12 +6,24 @@
 	"Name":"",
 	"Value":"",
 	"ConnectionType":"",
-	"PinType":"",
+	"PinType":"Blueprints__EdgePinType.json",
+	"PinTypeSelected":"HistoryPin",
 	"Timestamp":"",
 	"UserId":"",
 	"UserPid":"",
 	"Presentation":{
-		"PositionOnNode":"top",
+		"InputPin":{
+			"Position":["Top", "TopRight", "Right", "BottomRight", "Bottom", "BottomLeft", "Left", "TopLeft"],
+			"PositionSelected": 0,
+			"ColorMode":["Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+			"Color":"#000000"
+		},
+		"OutputPin":{
+			"Position":["Top", "TopRight", "Right", "BottomRight", "Bottom", "BottomLeft", "Left", "TopLeft"],
+			"PositionSelected": 0,
+			"ColorMode":["Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+			"Color":"#000000"
+		},
 		"Path":{
 			"ColorMode":["Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
 			"Color":"#000000",
@@ -19,35 +31,5 @@
 			"PathDashArray":20,
 			"PathThickness":["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 		}
-	},
-	"HistoryPinData":{
-		"Past":"",
-		"Future":""
-	},
-	"ContainerPinData":{
-		"Query":"",
-		"Dataset":[]
-	},
-	"DocumentPinData":{
-		"PID":"",
-		"BatchProcessingID":"",
-		"input_value_label":"",
-		"input_value":""
-	},
-	"FunctionPinData":{
-		"input_PID":"",
-		"input_BatchProcessingID":"",
-		"input_value_label":"",
-		"input_value":"",
-
-		"output_PID":"",
-		"output_BatchProcessingID":"",
-		"output_value_label":"",
-		"output_value":"",
-		"function_block_id":"",
-		
-		"get_return":true,
-		"trigger":false,
-		"trigger_PID":""
 	}
 }
