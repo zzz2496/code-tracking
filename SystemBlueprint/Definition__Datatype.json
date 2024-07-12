@@ -1,27 +1,51 @@
 {
-	"DatatypeDefinitions":[
-		"Array",
-		"Object",
-		"Number",
-		"Text",
-		"Boolean",
-		"Date",
-		"Time",
-		"DateTime"
-	],
-	"RegexAction":[
-		"Match",
-		"MatchAll",
-		"Replace",
-		"Test",
-		""
-	],
-	"RegexFilters":{
-		"Text":{"RegexString":"^\\s*[^a-zA-Z0-9',.]+|[^a-zA-Z0-9',.]+\\s*$", "RegexFlags":"gmi"},
-		"Number": {"RegexString":"\\D", "RegexFlags":"gmi"},
-		"Date": {"RegexString":"^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[0-2])[-/](19|20)\\d\\d$", "RegexFlags":"gmi"}
-
-	},
-	"DateMode":["LastMonth", "LastWeek", "Yesterday", "Today", "Tomorrow", "NextWeek", "NextMonth"],
-	"TimeMode":["2 hours ago", "1 hour ago", "Now", "1 hour", "2 hours"]
+	"Datatype": {
+		"DatatypeDefinitions": [
+			"Array",
+			"Object",
+			"Number",
+			"Text",
+			"Boolean",
+			"Date",
+			"Time",
+			"DateTime"
+		],
+		"RegexAction": [
+			"Match",
+			"MatchAll",
+			"Replace",
+			"Test",
+			""
+		],
+		"RegexFilters": {
+			"Text": {
+				"RegexString": "^\\s*[^a-zA-Z0-9',.]+|[^a-zA-Z0-9',.]+\\s*$",
+				"RegexFlags": "gmi"
+			},
+			"Number": {
+				"RegexString": "\\D",
+				"RegexFlags": "gmi"
+			},
+			"Date": {
+				"RegexString": "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[0-2])[-/](19|20)\\d\\d$",
+				"RegexFlags": "gmi"
+			}
+		},
+		"DateMode": [
+			"LastMonth",
+			"LastWeek",
+			"Yesterday",
+			"Today",
+			"Tomorrow",
+			"NextWeek",
+			"NextMonth"
+		],
+		"TimeMode": [
+			"2 hours ago",
+			"1 hour ago",
+			"Now",
+			"1 hour",
+			"2 hours"
+		]
+	}
 }
