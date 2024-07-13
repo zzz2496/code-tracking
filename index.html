@@ -22,160 +22,30 @@
 </head>
 
 <body>
-	<script type="module" defer src="./Classes/CoreClasses.mjs"></script>
-	<script type="module" defer src="./NodeProperties.mjs"></script>
-	<script type="module" defer src="./index.js"></script>
-	<script type="module">
+	<button id="btn1">Run Function</button>
+	<br>
+	<br>
+	<br>
+	<button id="btn2">Check Values</button>
+
+	<script type="module" id="loader" defer>
 		import { Utility, GraphSurface, Connection, FlowChart } from "./Classes/CoreClasses.mjs";
 		import { NodeProperties } from "./NodeProperties.mjs";
 		import { Surreal } from './paradigm_modules/surrealdb.wasm/dist/full/index.js';
 
-		// const db = new Surreal('http://localhost:8080/rpc');
-		let SysUtil = new Utility();
-		console.log('SysUtil:>> ', SysUtil);
-		let Yggdrasil = [];
-		let Blueprints = {};
-		
-		const BlueprintsURL = {
-			"API_test": {
-				"URL": "http://localhost/testrequest.php", 
-				"Method": 'GET',
-				"Params": { name: 'some name', number: 1234 },
-				"ContentType": 'application/json'
-			},				
-			"System": {"URL": "./SystemBlueprint/Blueprint__System.json"},
-			"Datastore": {"URL": "./SystemBlueprint/Blueprint__Datastore.json"},
-			"Node": {"URL": "./SystemBlueprint/Blueprint__Node.json"},
-			"Edge": {"URL": "./SystemBlueprint/Blueprint__Edge.json"},
-			"Schema": {"URL": "./SystemBlueprint/Validator__Schema.json"},
+		window.ParadigmModules = {
+			"Utility": Utility,
+			"GraphSurface":  GraphSurface,
+			"Connection":  Connection,
+			"FlowChart": FlowChart,
+			"NodeProperties":  NodeProperties,
+			"Surreal":  Surreal
 		};
-		let BlueprintsDATA = {};
-				
-		/**
-		* Fetches data from the given API with the specified parameters.
-		* @param {string} url - The API endpoint.
-		* @param {Object} params - An object containing the parameters to be sent.
-		* @param {string} [method='GET'] - The HTTP method to use (GET or POST).
-		* @returns {Promise<Object>} - A promise that resolves to the response data.
-		*/
-		async function fetchData(Fdata = {"URL":"", "Method": 'GET', "Params": {}, "contentType": "application/json"}, key, cr=0) {
-			const options = {
-				method: Fdata.Method ?? 'GET',
-				headers: {
-					'Content-Type': Fdata.ContentType
-				}
-			};
-			if (cr){
-				console.log(`Request ${key} started: ${Fdata.URL}`);
-				console.log('Fdata :>> ', Fdata);
-				console.log('options :>> ', options);
-			}
-
-			switch (Fdata.Method) {
-				case 'POST':
-					if (Fdata.ContentType === 'application/json') {
-						options.body = JSON.stringify(Fdata.Params);
-					} else if (Fdata.ContentType === 'application/x-www-form-urlencoded') {
-						options.body = new URLSearchParams(Fdata.Params).toString();
-					}
-					if (cr) console.log('OPTIONS after append:>> ', options);
-					break;
-				case 'GET':
-					const queryString = new URLSearchParams(Fdata.Params).toString();
-					Fdata.URL += `?${queryString}`;
-					if (cr) console.log('URL after append:>> ', Fdata.URL);
-					
-					break;
-			}
-
-			try {
-				const response = await fetch(Fdata.URL, options);
-				if (!response.ok) {
-					throw new Error(`Error: ${response.status} ${response.statusText}`);
-				}
-				if (cr) console.log(`Request ${key} done: ${Fdata.URL}`);
-				return await response.json();
-			} catch (error) {
-				console.error(`Fetch error for Request ${key}:`, error);
-				throw error;
-			}
-		}
-		/**
-		* Processes an array of blueprints and fetches their data.
-		* @param {Object} blueprints - An object containing blueprint configurations.
-		* @param {Function} callback - A callback function to execute after all requests are completed.
-		* @returns {Promise<void>}
-		*/
-		async function fetchRequests(blueprints, callback) {
-			const requests = Object.keys(blueprints).map(key => {
-				return fetchData(blueprints[key], key, 0)
-					.then(data => ({ key, data }))
-					.catch(error => ({ key, error }));
-			});
-
-			try {
-				const results = await Promise.all(requests);
-				callback(results);
-			} catch (error) {
-				console.error('Error with Promise.all:', error);
-			}
-		}
-
-		(async () => {
-			try{
-				fetchRequests(BlueprintsURL, (results)=>{
-					console.log('All fetch requests completed.');
-					results.forEach(({ key, data, error }) => {
-						if (error) {
-							console.error(`Error fetching ${key}:`, error);
-						} else {
-							console.log(`Data for ${key}:`, data);
-						}
-					});
-					console.log('Fetch requests handling complete. All requests are DONE', results);
-					callback(results);
-					BlueprintsDATA = results;
-				});
-			} catch (error) {
-				console.log('error :>> ', error);
-			}
-		})();
-		
-		
-		function callback(res){
-			console.log('res>>>>>>> ', res);
-		}
-
-		let App = {
-			world:"Yggdrasil",
-			realm:"System_ParadigmREVOLUTION",
-			universe:"ParadigmREVOLUTION"
-		}
-		let SurrealDB = new Surreal();
-		window.SurrealDB = SurrealDB;
-		console.log('SurrealDB :>> ', SurrealDB);
-		//Initiate Mem
-		try {
-			console.info('Start SurrealDB Mem connection...');
-			// Connect to the database
-			await SurrealDB.connect('mem://');
-			await SurrealDB.use({ namespace: App.universe, database: App.realm });
-
-			let tabletest = await SurrealDB.query('define table test;');
-			console.log('tabletest', tabletest);
-			
-			let query = await SurrealDB.query('create satu:test content {nama:"Damir"}');
-			query = await SurrealDB.query('create satu:test2 content {nama:"Putri"}');
-			query = await SurrealDB.query('select * from satu');
-			console.log('query', query);
-			
-
-			console.info('Done SurrealDB Memory connection...');
-		} catch (e) {
-			console.error("ERROR SurrealDB Memory, ", e);
-		}
-		
+		document.dispatchEvent(new Event('modulesLoaded'));
 	</script>
+	<script type="text/javascript" id="sw_loader" defer src="./ParadigmScripts/sw_loader.js"></script>
+	<script type="text/javascript" id="blueprint_loader" defer src="./ParadigmScripts/blueprint_loader.js"></script>
+	<script type="text/javascript" id="surrealdb_loader" defer src="./ParadigmScripts/surrealdb_loader.js"></script>
 </body>
 
 </html>

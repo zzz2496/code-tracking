@@ -740,62 +740,82 @@ export class Utility {
 	};
 	// NOTE - Objects related methods
 	Objects = {
-		"fetchRequests": function (RequestURL, callback, progressCallback) {
-			// Function to fetch a URL with optional parameters and parse it as JSON
-			const fetchJson = (url, params) => {
-				// Create options for fetch
-				const fetchOptions = {
-					method: params.method || 'GET',
+		"fetchData": async function (DataARRAY, callback, progressCallback, cr=0){
+			async function fetchJSON(Fdata = {"URL":"", "Method": 'GET', "Params": {}, "ContentType": "application/json"}, key) {
+				const options = {
+					method: Fdata.Method ?? 'GET',
 					headers: {
-						'Content-Type': 'application/json',
-						...params.headers,
-					},
-					body: params.method === 'POST' ? JSON.stringify(params.body) : null,
-				};
-
-				console.log('url :>> ', url);
-				console.log('fetchOptions :>> ', fetchOptions);
-				return fetch(url, fetchOptions).then(response => {
-					if (!response.ok) {
-						throw new Error(`Failed to fetch ${url}`);
+						'Content-Type': Fdata.ContentType
 					}
-					console.log('response :>> ', response);
-					return response.json();
+				};
+				if (progressCallback) progressCallback(key, Fdata.URL, 'STARTED');				
+				switch (Fdata.Method) {
+					case 'POST':
+						if (Fdata.ContentType === 'application/json') {
+							options.body = JSON.stringify(Fdata.Params);
+						} else if (Fdata.ContentType === 'application/x-www-form-urlencoded') {
+							options.body = new URLSearchParams(Fdata.Params).toString();
+						}
+						if (cr){
+							console.log('OPTIONS after append:>> ', options);
+						}
+						break;
+					case 'GET':
+						const queryString = new URLSearchParams(Fdata.Params).toString();
+						Fdata.URL += `?${queryString}`;
+						if (cr){
+							console.log('URL after append:>> ', Fdata.URL);
+						}
+						break;
+				}
+
+				try {
+					const response = await fetch(Fdata.URL, options);
+					if (!response.ok) {
+						throw new Error(`Error: ${response.status} ${response.statusText}`);
+					}
+					if (progressCallback) progressCallback(key, Fdata.URL, 'DONE');
+					return await response.json();
+				} catch (error) {
+					console.error(`Fetch error for Request ${key}:`, error);
+					throw error;
+				}
+			}
+
+			/**
+			* Processes an array of blueprints and fetches their data.
+			* @param {Object} blueprints - An object containing blueprint configurations.
+			* @param {Function} callback - A callback function to execute after all requests are completed.
+			* @returns {Promise<void>}
+			*/
+			async function fetchRequestsArray(blueprints, callback, progressCallback) {
+				const results = {};
+				const requests = Object.keys(blueprints).map(async key => {
+					try {
+						const data = await fetchJSON(blueprints[key], key, progressCallback);
+						results[key] = { data };
+					} catch (error) {
+						results[key] = { error };
+					}
 				});
-			};
-			
-			const totalRequests = Object.keys(RequestURL).length;
-			let completedRequests = 0;
 
-			// Array of fetch promises and keys
-			const fetchPromises = Object.keys(RequestURL).map(key => {
-				const [url, params] = RequestURL[key];
-				return fetchJson(url, params).then(data => {
-					completedRequests += 1;
-					if (progressCallback) progressCallback(completedRequests, totalRequests);
-					return { key, data };
+				try {
+					await Promise.all(requests);
+					callback(results);
+				} catch (error) {
+					console.error('Error with the Promise.all:', error);
+				}
+			}
+			// Start the FETCH DATA request
+			try {
+				await fetchRequestsArray(DataARRAY, (results) => {
+					if (callback) callback(results);
+				}, (progress) => {
+					if (progressCallback) progressCallback(progress);
 				});
-			});
-
-			// Use Promise.all to wait for all fetches to complete
-			Promise.all(fetchPromises)
-				.then(results => {
-					// Convert results array back into an object
-					const fetchedData = results.reduce((acc, { key, data }) => {
-						acc[key] = data;
-						return acc;
-					}, {});
-
-					// console.log('All JSON files fetched:', fetchedData);
-
-					// Call the callback function with the fetched data
-					callback(null, fetchedData);
-				})
-				.catch(error => {
-					console.error('Failed to fetch all JSON files:', error);
-					// Call the callback function with the error
-					callback(error, null);
-				});
+			} catch (error) {
+				console.error('Error with fetchRequestsArray:', error);
+			}
 		},
 		"print_r": (function (obj, tab, depth = 0) {
 			// Guard against null or undefined
