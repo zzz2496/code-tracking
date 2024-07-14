@@ -1,5 +1,6 @@
 // import { NodeProperties } from "./NodeProperties.mjs";
 // import { Surreal } from './node_modules/surrealdb.wasm/dist/full/index.js';
+import { Surreal } from '../paradigm_modules/surrealdb.wasm/dist/full/index.js';
 
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
@@ -3987,7 +3988,7 @@ export class Utility {
 				//GET NODES FROM LOCALSTORE
 			}
 		},
-		/*
+		
 		"SurrealDB": {
 			// "initiateSurrealDB": async function(storage, namespace, database, server, user, pass) {
 			"Initialize": async function (storage, App, userinfo, server, what) {
@@ -4158,7 +4159,7 @@ export class Utility {
 					await Storage.SurrealDB.Memory.connect('mem://', { user: { username: userinfo.user, password: userinfo.pass } });
 
 					// Select a specific namespace / database
-					await Storage.SurrealDB.Memory.use({ ns: App.universe, db: App.realm });
+					await Storage.SurrealDB.Memory.use({ namespace: App.universe, database: App.realm });
 
 					// Signin as a namespace, database, or root user
 					const token = await Storage.SurrealDB.Memory.signin({
@@ -4180,7 +4181,7 @@ export class Utility {
 					await Storage.SurrealDB.Local.connect('indxdb://' + App.universe, { user: { username: userinfo.user, password: userinfo.pass } });
 
 					// Select a specific namespace / database
-					await Storage.SurrealDB.Local.use({ ns: App.universe, db: App.realm });
+					await Storage.SurrealDB.Local.use({ namespace: App.universe, database: App.realm });
 
 					// Signin as a namespace, database, or root user
 					const token = await Storage.SurrealDB.Local.signin({
@@ -4203,7 +4204,7 @@ export class Utility {
 					await Storage.SurrealDB.Server.connect(server);
 
 					// Select a specific namespace / database
-					await Storage.SurrealDB.Server.use({ ns: App.universe, db: App.realm });
+					await Storage.SurrealDB.Server.use({ namespace: App.universe, database: App.realm });
 
 					// Signin as a namespace, database, or root user
 					await Storage.SurrealDB.Server.signin({
@@ -4434,7 +4435,7 @@ export class Utility {
 						break;
 				}
 			}, 
-		} */
+		} 
 	}
 };
 //SECTION -  Graph Surface Class
@@ -4444,13 +4445,13 @@ export class GraphSurface {
 		self.svg = null;//SVG where the line paths are drawn
 		// console.log('arguments', arguments);
 		self.Utility = new Utility();
-		self.Storage = {
-			SurrealDB: {
-				Local: new Surreal(),
-				Server: new Surreal(),
-				Memory: new Surreal(),
-			},
-		}
+		// self.Storage = {
+		// 	SurrealDB: {
+		// 		Local: new Surreal(),
+		// 		Server: new Surreal(),
+		// 		Memory: new Surreal(),
+		// 	},
+		// }
 
 		self.DocumentName = GraphInfo.name;
 		self.DocumentLabel = GraphInfo.label;

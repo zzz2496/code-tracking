@@ -27,7 +27,8 @@
     <script type="module">
 		import { Utility, GraphSurface, Connection, FlowChart } from "./Classes/CoreClasses.mjs";
 		import { NodeProperties } from "./NodeProperties.mjs";
-		import { Surreal } from './node_modules/surrealdb.wasm/dist/embedded/index.js';
+		// import { Surreal } from './node_modules/surrealdb.wasm/dist/embedded/index.js';
+		import { Surreal } from './paradigm_modules/surrealdb.wasm/dist/full/index.js';
 
 		console.log('start on debugging');
 
@@ -93,46 +94,46 @@
         document.querySelector('#grph').appendChild(GraphSurfaceObject.initializeGraphSurface('blah'));
 		window.GraphSurfaceObject = GraphSurfaceObject;
 
-		// // Initialize SurrealDB subsystem
-		// let SurrealDB = {
-		// 	Local: new Surreal(),
-		// 	Memory: new Surreal(),
-		// 	Server: new Surreal(),
-		// }
+		// Initialize SurrealDB subsystem
+		let SurrealDB = {
+			Local: new Surreal(),
+			Memory: new Surreal(),
+			Server: new Surreal(),
+		}
 		
-		// // Initiate IndexedDB
-		// try {
-		// 	console.info('Start SurrealDB IndexedDB connection...');
-		// 	// Connect to the database
-		// 	await SurrealDB.Local.connect('indxdb://ParadigmREVO', { user: { username: "damir", password: "Zenith2001" } });
+		// Initiate IndexedDB
+		try {
+			console.info('Start SurrealDB IndexedDB connection...');
+			// Connect to the database
+			await SurrealDB.Local.connect('indxdb://ParadigmREVO', { user: { username: "damir", password: "Zenith2001" } });
 			
-		// 	// Select a specific namespace / database
-		// 	await SurrealDB.Local.use({ ns: App.universe, db: App.realm });
+			// Select a specific namespace / database
+			await SurrealDB.Local.use({ namespace: App.universe, database: App.realm });
 			
-		// 	// Signin as a namespace, database, or root user
-		// 	const token = await SurrealDB.Local.signin({
-		// 		username: "damir",
-		// 		password: "Zenith2001",
-		// 	});
+			// Signin as a namespace, database, or root user
+			const token = await SurrealDB.Local.signin({
+				username: "damir",
+				password: "Zenith2001",
+			});
 			
-		// 	let infokv = await SurrealDB.Local.query('info for kv;');
-		// 	console.log('infokv', infokv);
-		// 	let infodb = await SurrealDB.Local.query('info for db;');
-		// 	console.log('infodb', JSON.stringify(infodb));
-		// 	console.log('>>>', infodb[0].tables);
+			let infokv = await SurrealDB.Local.query('info for kv;');
+			console.log('infokv', infokv);
+			let infodb = await SurrealDB.Local.query('info for db;');
+			console.log('infodb', JSON.stringify(infodb));
+			console.log('>>>', infodb[0].tables);
 
-		// 	console.log('typeof infodb[0].tables.Yggdrasil', typeof infodb[0].tables.Yggdrasil);
+			console.log('typeof infodb[0].tables.Yggdrasil', typeof infodb[0].tables.Yggdrasil);
 
-		// 	// if (Object.keys(infodb[0].tables).length == 0){
-		// 	if (typeof infodb[0].tables[App.world] == "undefined"){
-		// 		console.log('creating table App.world');
-		// 		SurrealDB.Local.query('define table App.world;');
-		// 		console.log('created table App.world;')
-		// 	}
-		// 	console.info('Done SurrealDB IndexedDB connection...');
-		// } catch (e) {
-		// 	console.error("ERROR SurrealDB IndexedDB, ", e);
-		// }
+			// if (Object.keys(infodb[0].tables).length == 0){
+			if (typeof infodb[0].tables[App.world] == "undefined"){
+				console.log('creating table App.world');
+				SurrealDB.Local.query('define table App.world;');
+				console.log('created table App.world;')
+			}
+			console.info('Done SurrealDB IndexedDB connection...');
+		} catch (e) {
+			console.error("ERROR SurrealDB IndexedDB, ", e);
+		}
 
 		// //Initiate Mem
 		// try {

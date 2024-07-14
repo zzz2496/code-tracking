@@ -1,4 +1,8 @@
 {
+	"DefaultUser":{
+		"Username": "damir",
+		"Password": "Zenith2001"
+	},
 	"Namespace": "ParadigmREVOLUTION",
 	"Tables": {
 		"SystemDB": {
