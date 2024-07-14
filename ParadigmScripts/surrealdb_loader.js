@@ -10,12 +10,13 @@ document.addEventListener('BlueprintsLoaded', () => {
 	// NOTE: SURREALDB SUBSECTION
 	(async () => {
 		SurrealDB = {
-			"Memory": new window.ParadigmModules.Surreal(),
-			"IndexedDB": new window.ParadigmModules.Surreal(),
-			"TestServer": new window.ParadigmModules.Surreal(),
-			"ProductionServer": new window.ParadigmModules.Surreal(),
-			"BackupServer": new window.ParadigmModules.Surreal()
+			"Memory": new window.ParadigmREVOLUTION.Modules.Surreal(),
+			"IndexedDB": new window.ParadigmREVOLUTION.Modules.Surreal(),
+			"TestServer": new window.ParadigmREVOLUTION.Modules.Surreal(),
+			"ProductionServer": new window.ParadigmREVOLUTION.Modules.Surreal(),
+			"BackupServer": new window.ParadigmREVOLUTION.Modules.Surreal()
 		};
+		const BlueprintsDATA = window.ParadigmREVOLUTION.Blueprints.Data;
 		console.log('SurrealDB :>> ', SurrealDB);
 		try {
 			//Initiate MEMORY
@@ -44,15 +45,15 @@ document.addEventListener('BlueprintsLoaded', () => {
 			//Initiate INDEXEDDB
 			console.info('Start SurrealDB.IndexedDB connection...');
 			// Connect to the database
-			await SurrealDB.IndexedDB.connect(`indxdb://${BlueprintsDATA.Datastore.data.Namespace}`, { user: { username: BlueprintsDATA.DefaultUser.Username, password: BlueprintsDATA.DefaultUser.Username } });
+			await SurrealDB.IndexedDB.connect(`indxdb://${BlueprintsDATA.Datastore.data.Namespace}`, { user: { username: BlueprintsDATA.Datastore.data.DefaultUser.Username, password: BlueprintsDATA.Datastore.data.DefaultUser.Password } });
 			
 			// Select a specific namespace / database
 			await SurrealDB.IndexedDB.use({ namespace: BlueprintsDATA.Datastore.data.Namespace, database: BlueprintsDATA.Datastore.data.Tables.SystemDB.Name });
 			
 			// Signin as a namespace, database, or root user
 			const tokenIndexedDB = await SurrealDB.IndexedDB.signin({
-				username: BlueprintsDATA.DefaultUser.Username,
-				password: BlueprintsDATA.DefaultUser.Password,
+				username: BlueprintsDATA.Datastore.data.DefaultUser.Username,
+				password: BlueprintsDATA.Datastore.data.DefaultUser.Password,
 			});
 			
 			let infokv = await SurrealDB.IndexedDB.query('info for kv;');
@@ -70,36 +71,36 @@ document.addEventListener('BlueprintsLoaded', () => {
 	
 			console.info('Done SurrealDB.IndexedDB IndexedDB connection...');
 
-			// ------------------------------------------------------------------------------
-			//Initiate TESTSERVER/*  */
-			console.info('Start SurrealDB.TestServer connection...');
-			// Connect to the database
-			await SurrealDB.TestServer.connect(`ws://localhost:8080`, { user: { username: BlueprintsDATA.DefaultUser.Username, password: BlueprintsDATA.DefaultUser.Password } });
+			// // ------------------------------------------------------------------------------
+			// //Initiate TESTSERVER
+			// console.info('Start SurrealDB.TestServer connection...');
+			// // Connect to the database
+			// await SurrealDB.TestServer.connect(`ws://localhost:8080`, { user: { username: BlueprintsDATA.Datastore.data.DefaultUser.Username, password: BlueprintsDATA.Datastore.data.DefaultUser.Password } });
 			
-			// Select a specific namespace / database
-			await SurrealDB.TestServer.use({ namespace: BlueprintsDATA.Datastore.data.Namespace, database: BlueprintsDATA.Datastore.data.Tables.SystemDB.Name });
+			// // Select a specific namespace / database
+			// await SurrealDB.TestServer.use({ namespace: BlueprintsDATA.Datastore.data.Namespace, database: BlueprintsDATA.Datastore.data.Tables.SystemDB.Name });
 			
-			// Signin as a namespace, database, or root user
-			tokenTestServer = await SurrealDB.TestServer.signin({
-				username: BlueprintsDATA.DefaultUser.Username,
-				password: BlueprintsDATA.DefaultUser.Password,
-			});
-			console.log('tokenTestServer :>> ', tokenTestServer);
+			// // Signin as a namespace, database, or root user
+			// tokenTestServer = await SurrealDB.TestServer.signin({
+			// 	username: BlueprintsDATA.Datastore.data.DefaultUser.Username,
+			// 	password: BlueprintsDATA.Datastore.data.DefaultUser.Password,
+			// });
+			// console.log('tokenTestServer :>> ', tokenTestServer);
 			
-			infokv = await SurrealDB.TestServer.query('info for kv;');
+			// infokv = await SurrealDB.TestServer.query('info for kv;');
 
-			// tabletest = await SurrealDB.TestServer.query('define table test;');
-			// console.log('tabletest', tabletest);/*  */
+			// // tabletest = await SurrealDB.TestServer.query('define table test;');
+			// // console.log('tabletest', tabletest);/*  */
 	
-			// query = await SurrealDB.TestServer.query('create test:data1 content {nama:BlueprintsDATA.DefaultUser.Username}');
-			// query = await SurrealDB.TestServer.query('create test:data2 content {nama:"Putri"}');
-			// query = await SurrealDB.TestServer.query('create test:data3 content {nama:"Olive"}');
-			// query = await SurrealDB.TestServer.query('create test:data4 content {nama:"Puji"}');
-			// query = await SurrealDB.TestServer.query('create test:data5 content {nama:"Listyono"}');
-			// query = await SurrealDB.TestServer.query('select * from test');
-			// console.log('query', query);
+			// // query = await SurrealDB.TestServer.query('create test:data1 content {nama:BlueprintsDATA.Datastore.data.DefaultUser.Username}');
+			// // query = await SurrealDB.TestServer.query('create test:data2 content {nama:"Putri"}');
+			// // query = await SurrealDB.TestServer.query('create test:data3 content {nama:"Olive"}');
+			// // query = await SurrealDB.TestServer.query('create test:data4 content {nama:"Puji"}');
+			// // query = await SurrealDB.TestServer.query('create test:data5 content {nama:"Listyono"}');
+			// // query = await SurrealDB.TestServer.query('select * from test');
+			// // console.log('query', query);
 	
-			console.info('Done SurrealDB.TestServer connection...');
+			// console.info('Done SurrealDB.TestServer connection...');
 
 		} catch (e) {
 			console.error("ERROR SurrealDB on initialization, ", e);
