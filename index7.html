@@ -21,11 +21,11 @@
 	</div>
     <div class="container-fluid" id="grph" style="padding: 0px; margin: 0px;"></div>
     <div class="container-fluid" id="grph2" style="padding: 0px; margin: 0px;"></div>
-	<script type="module" defer src="./Classes/CoreClasses.mjs"></script>
+	<!-- <script type="module" defer src="./Classes/CoreClasses_old_file.mjs"></script> -->
     <script type="module" defer src="./NodeProperties.mjs"></script>
 	<!-- <script type="module" defer src="./localbase.dev.js"></script> -->
     <script type="module">
-		import { Utility, GraphSurface, Connection, FlowChart } from "./Classes/CoreClasses.mjs";
+		import { Utility, GraphSurface, Connection, FlowChart } from "./Classes/CoreClasses_old_file.mjs";
 		import { NodeProperties } from "./NodeProperties.mjs";
 		// import { Surreal } from './node_modules/surrealdb.wasm/dist/embedded/index.js';
 		import { Surreal } from './paradigm_modules/surrealdb.wasm/dist/full/index.js';
@@ -81,18 +81,18 @@
 
 		// window.SurrealDB2 = SurrealDB2;
 		
-		let GraphSurfaceObject = new GraphSurface({
-			name: "Yggdrasil",
-			label: "Yggdrasil The World Tree",
-			header: "",
-			footer: "",
-			type: "World Graph",
-			world: App.world,
-			realm: App.realm,
-			universe: App.universe
-		}, App);
-        document.querySelector('#grph').appendChild(GraphSurfaceObject.initializeGraphSurface('blah'));
-		window.GraphSurfaceObject = GraphSurfaceObject;
+		// let GraphSurfaceObject = new GraphSurface({
+		// 	name: "Yggdrasil",
+		// 	label: "Yggdrasil The World Tree",
+		// 	header: "",
+		// 	footer: "",
+		// 	type: "World Graph",
+		// 	world: App.world,
+		// 	realm: App.realm,
+		// 	universe: App.universe
+		// }, App);
+        // document.querySelector('#grph').appendChild(GraphSurfaceObject.initializeGraphSurface('blah'));
+		// window.GraphSurfaceObject = GraphSurfaceObject;
 
 		// Initialize SurrealDB subsystem
 		let SurrealDB = {
@@ -105,7 +105,7 @@
 		try {
 			console.info('Start SurrealDB IndexedDB connection...');
 			// Connect to the database
-			await SurrealDB.Local.connect('indxdb://ParadigmREVO', { user: { username: "damir", password: "Zenith2001" } });
+			await SurrealDB.Local.connect('indxdb://ParadigmREVOLUTION', { user: { username: "damir", password: "Zenith2001" } });
 			
 			// Select a specific namespace / database
 			await SurrealDB.Local.use({ namespace: App.universe, database: App.realm });

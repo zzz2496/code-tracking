@@ -1,22 +1,18 @@
-let SysUtil;
 document.addEventListener('modulesLoaded', () => {
-	SysUtil = new window.ParadigmREVOLUTION.Modules.Utility();
-	
-	SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.Blueprints.URL, function (results) {
-		window.ParadigmREVOLUTION.Blueprints.Data = results;
-		console.log('All requests are done!');
-		document.dispatchEvent(new Event('BlueprintsLoaded'));
-	}, function(key, url, status){
-		console.log('progress :>> ', status, key, url);
-	});
-
-	document.getElementById('btn1').addEventListener('click', function(){
-		SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.Blueprints.URL, function(results){
+	console.log('Start Blueprint Loader >>>>');
+	let SysUtil = new window.ParadigmREVOLUTION.Modules.Utility();
+	let initBlueprints = function(){
+		SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.Blueprints.URL, function (results) {
 			window.ParadigmREVOLUTION.Blueprints.Data = results;
-			console.log('All requests are done!');
+			console.log('All requests are done!', results);
+			document.dispatchEvent(new Event('BlueprintsLoaded'));
 		}, function(key, url, status){
 			console.log('progress :>> ', status, key, url);
 		});
+	}
+	initBlueprints();
+	document.getElementById('btn1').addEventListener('click', function () {
+		initBlueprints();
 	});
 	document.getElementById('btn2').addEventListener('click', () => {
 		console.log('Checking Datasets');

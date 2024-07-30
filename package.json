@@ -11,6 +11,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "surrealdb.wasm": "^1.0.0-beta.12"
+    "surrealdb.js": "^1.0.0-beta.15",
+    "surrealdb.wasm": "^1.0.0-beta.15"
   }
 }

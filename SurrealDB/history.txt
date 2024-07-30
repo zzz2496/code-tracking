@@ -1,7 +1,0 @@
-#V2
-create user:1 set name='Damir', email='zzz2496@gmail.com', age=41;
-select * from tables;
-info for kv
-info for kv;
-info for db;
-info for ns;

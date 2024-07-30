@@ -3,21 +3,40 @@
 		"Username": "damir",
 		"Password": "Zenith2001"
 	},
-	"Namespace": "ParadigmREVOLUTION",
-	"Tables": {
-		"SystemDB": {
-			"Name": "SystemDB",
-			"Description": "ParadigmREVOLUTION internal system database, core application graphs, definitions, and blueprints are stored in here",
-			"Blueprints": {
-				"Node": "Blueprints__Node.json",
-				"Edge": "Blueprints__Edge.json",
-				"Schema": "Blueprints__SchemaElements.json"
+	"TestServer": "http://localhost:8080",
+	"ProductionServer": "http://localhost:8080",
+	"BackupServer": "http://localhost:8080",
+	"Namespaces": {
+		"ParadigmREVOLUTION":{
+			"Name": "ParadigmREVOLUTION",
+			"Databases": {
+				"SystemDB": {
+					"Name": "SystemDB",
+					"Description": "ParadigmREVOLUTION internal system database, core application graphs, definitions, and blueprints are stored in here",
+					"Blueprint": "",
+					"Tables":{
+						"Blueprints": {
+							"Name": "Blueprints",
+							"Description": "Contains all the defined blueprints",
+							"Contains":{
+								"Node": "Blueprints__Node.json",
+								"Edge": "Blueprints__Edge.json",
+								"Schema": "Blueprints__SchemaElements.json"
+							}
+						},
+						"Yggdrasil": {
+							"Name": "Yggdrasil",
+							"Description": "Contains all the defined System Graphs",
+							"Contains": {}
+						}
+					}
+				},
+				"DatastoreDB": {
+					"Name": "DatastoreDB",
+					"Description": "System",
+					"Blueprint": ""
+				}
 			}
-		},
-		"DatastoreDB": {
-			"Name": "DatastoreDB",
-			"Description": "System",
-			"Blueprints": {}
 		}
 	}
 }
