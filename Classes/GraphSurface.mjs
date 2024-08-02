@@ -1,53 +1,232 @@
 //SECTION - Graph Surface Class
-export class GraphSurface{
+export class GraphSurface {
 	//SECTION - GraphSurface Constructor
-	constructor (GraphInfo, AppInfo, Utility) {
+	constructor (GraphInfo, AppInfo, Utility, Datastores) {
 		//NOTE - Graph Info metadata
-		console.log('arguments :>> ', arguments);
-		this.DocumentName = GraphInfo.name;
-		this.DocumentLabel = GraphInfo.label;
-		this.DocumentHeader = GraphInfo.header;
-		this.DocumentFooter = GraphInfo.footer;
-		this.DocumentType = GraphInfo.type;
-		this.DocumentWorld = GraphInfo.world;;
-		this.DocumentRealm = GraphInfo.realm;;
-		this.DocumentUniverse = GraphInfo.universe;;
-			
-		//NOTE - SVG Section variables
-		this.svg = null;
+		// console.log('arguments :>> ', arguments);
+		// console.log('Utility :>> ', Utility);
 
-		this.zoom_level = 1;
-		this.activeElements = [];
-		this.makingConnection = false;
-		// this.ConnectionDirection = null;
-		this.id_graph_surface = null;
-		this.div_graph_surface = null;
-		this.controlPalette = null;
-		this.panel = null;
-		this.id_graph_control_palette = null;
-		this.control_palette_xpanel = null;
-		
-		this.nodes = [];
-		this.connections = [];
-		this.startPosX = 0;
-		this.startPosY = 0;
-		this.startElement = null;
-		this.mousedown = false;
-		this.newConn = false;
-		this.tempConn = null;
-		this.centerPointOfDocumentRelativeToViewport = null;
-		this.graph_canvas_dimension = {
-			width: 20000,
-			height: 20000
+		this.Utility = Utility;
+		this.Datastores = Datastores;
+		this.Metadata = {
+			"DocumentName": GraphInfo.name,
+			"DocumentLabel": GraphInfo.label,
+			"DocumentHeader": GraphInfo.header,
+			"DocumentFooter": GraphInfo.footer,
+			"DocumentType": GraphInfo.type,
+			"DocumentWorld": GraphInfo.world,
+			"DocumentRealm": GraphInfo.realm,
+			"DocumentUniverse": GraphInfo.universe
 		};
-		this.divs = null;
-		this.selectedDivs = null;
-		this.snapEvery = 10;
+			
+		//NOTE - Initialization of SVG Section variables
+		this.GraphElement = {
+			"svg": null,
+			"id_graph_surface": null,
+			"div_graph_surface": null,
+			"id_graph_control_palette": null,
+			"control_palette_xpanel": null,
+			"panel": null,
 
-		//NOTE - SVG Section variables
-		this.Utility = new Utility();
+			"zoom_level": 1,
+			"activeElements": [],
+			"makingConnection": false,
+			"controlPalette": null,
+			"nodes": [],
+			"connections": [],
+			"startPosX": 0,
+			"startPosY": 0,
+			"startElement": null,
+			"mousedown": false,
+			"newConn": false,
+			"tempConn": null,
+			"centerPointOfDocumentRelativeToViewport": null,
+			"graph_canvas_dimension": {
+				width: 20000,
+				height: 20000
+			},
+			"divs": null,
+			"selectedDivs": null,
+			"snapEvery": 10,
+		};
 
-	}	
+		this.GraphElement.svg = this.initializeGraphSurface(this);
+	};
+	InitializeGraphSurfaceContainer = (function (GraphObject) {
+		// console.log('GraphObject :>> ', GraphObject);
+		let id_str = 'id_' + GraphObject.Utility.Strings.UnReadable(GraphObject.Metadata.DocumentName) + '-';
+		let div = document.createElement('div');
+		div.id = id_str + 'graph-surface';
+		div.className = 'graph-surface grid2020-background'
+		div.style.cssText = `width: ${GraphObject.GraphElement.graph_canvas_dimension.width}px; height: ${GraphObject.GraphElement.graph_canvas_dimension.height}px; z-index:100;`;
+		div.innerHTML = `
+			<div id="${id_str}graph"></div>
+			<svg id="${id_str}connsvg" style="width:100%; height:100%;">
+				<defs>
+					<marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto-start-reverse">
+						<path class="arrowhead-path" d="M 0 0 L 10 5 L 0 10 z" fill="#2f344cd2"/>
+					</marker>
+				</defs>
+			</svg>`; 
+		// console.log('>>> div :>> ', div);
+		return div;
+	});
+	createControlPalette = (function (GraphObject, GraphElement) {
+		//Creation and Initialization Graph Control Palette
+		//ID of the Graph Control Palette
+		GraphObject.GraphElement.id_graph_control_palette_container = GraphElement.id + '_control_palette_container';
+
+		GraphObject.GraphElement.div_graph_control_palette = document.createElement('div');
+		GraphObject.GraphElement.div_graph_control_palette.id = GraphObject.GraphElement.id_graph_control_palette_container;
+
+		//Prepend Graph Control Palette into Graph Container
+		// GraphObject.div_graph_surface.querySelector('#' + GraphObject. + '-graph-surface').appendChild(GraphObject.div_graph_control_palette);
+		GraphElement.appendChild(GraphObject.GraphElement.div_graph_control_palette);
+		
+		
+		//NOTE - Atatch GraphElement variable to GraphObject
+		GraphObject.GraphElement.div_graph_surface = GraphElement;
+
+		//Creation of Graph Surface in Graph Container
+		GraphObject.GraphElement.zoom_level = 1;
+		GraphObject.GraphElement.controlPalette = document.createElement('table');
+		
+		GraphObject.GraphElement.controlPalette.className = 'toolbar-kit';
+		GraphObject.GraphElement.controlPalette.style.width = '100%';
+		GraphObject.GraphElement.controlPalette.innerHTML = `
+			<tr>
+				<td colspan="3">RUNTIME CONTROLS</td>
+			</tr>
+				<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset"><i class="fa-solid fa-refresh"></i></button></td>
+				<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--play"><i class="fa-solid fa-play"></i></button></td>
+				<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step"><i class="fa-solid fa-step-forward"></i></button></td>
+			<tr>
+				<td colspan="3">DATASTORE STATUS</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<div id= "datastore_status"></div>
+				</td>				
+			</tr>
+			<tr>
+				<td colspan="3">ZOOM Level (<label id='zoom-level'>${GraphObject.GraphElement.zoom_level}</label>)</td>
+			</tr>
+			<tr>
+				<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-out"><i class="fa-solid fa-minus"></i></button></td>
+				<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-reset">RESET</button></td>
+				<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-in"><i class="fa-solid fa-plus"></i></button></td>
+			<tr>
+				<td colspan="3">NODE</td>
+			</tr>
+			<tr>
+				<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-remove"><i class="fa-solid fa-minus"></i></button></td>
+				<td>
+					<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-savetoserver">SAVE</button>
+					<br>
+					<br>
+					<select id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-type">
+						<option value="Node">Memory</option>
+						<option value="Node">Local</option>
+						<option value="Node">Server</option>
+					</select>
+					<br>
+					<br>
+					<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-loadfromserver">LOAD</button>
+				</td>
+				<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-add"><i class="fa-solid fa-plus"></i></button></td>
+			</tr>
+			<tr>
+				<td colspan='3'>Switch Theme</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}___theme-switch" style="color:red;"><i class="fa-solid fa-repeat"></i></button>
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+					<label>Mouse X</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-x"></span><br>
+					<label>Mouse Y</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-y"></span>
+				</td>
+			</tr>
+			`;
+
+		GraphObject.GraphElement.panel = GraphObject.Utility.DOMElements.makeXpanel({
+			id: '',
+			class: '',
+			// title: 'Control Palette',
+			title: '',
+			smalltitle: '',
+			contentid: 'control_palette',
+			content: GraphObject.GraphElement.controlPalette
+		});
+
+		GraphObject.GraphElement.id_graph_control_palette = GraphObject.GraphElement.id_graph_control_palette_container + '___control_palette';
+		GraphObject.GraphElement.control_palette_xpanel = GraphObject.Utility.DOMElements.MakeDraggableDiv(GraphObject.GraphElement.id_graph_control_palette, 'Control Palette', GraphObject.GraphElement.panel, 10, 10, 'auto');
+		GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette_container).appendChild(GraphObject.GraphElement.control_palette_xpanel)
+		
+		//NOTE - Make Control Palette Draggable
+		GraphObject.Utility.DOMElements.DragElement(GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette));
+
+	})
+	attachEvent_ControlSurfaceLightSwitch(GraphObject) {
+		// LIGHT/DARK THEME SWITCHER
+		console.log('#' + GraphObject.GraphElement.id_graph_control_palette_container + '___theme-switch');
+		GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette_container + '___theme-switch').addEventOnce('click', function () {
+			console.log('theme switch');
+			let root = document.documentElement;
+			this.dataset.count = this.dataset.count ? parseInt(this.dataset.count) : 0;
+			// console.log('this.dataset.count', this.dataset.count);
+
+			if (this.dataset.count < 2) {
+				// console.log('masuk < 2');
+				if (root.classList.contains('light-theme')) {
+					// console.log('masuk dark');
+					root.classList.replace('light-theme', 'dark-theme');
+				} else if (root.classList.contains('dark-theme')) {
+					// console.log('masuk light');
+					root.classList.replace('dark-theme', 'light-theme');
+				} else {
+					// console.log('masuk default');
+					let isCurrentThemeDark = GraphObject.Utility.DOMElements.detectLightDarkMode();
+					root.classList.add(isCurrentThemeDark.matches ? 'light-theme' : 'dark-theme');
+				}
+				this.style.color = '';
+				this.dataset.count++;
+			} else {
+				// console.log('masuk reset');
+				root.classList.remove('dark-theme', 'light-theme');
+				this.style.color = 'red';
+				this.dataset.count = 0;
+			}
+		});
+		//LIGHT/DARK THEME SWITCHER
+	};
+	initializeGraphSurface = function (GraphObject) {
+		//SECTION - Initialize Graph Surface
+		
+		//NOTE - Create Graph Surface and set it's styles
+		let GraphElement = document.createElement('div');
+		GraphElement.id = 'id_' + GraphObject.Utility.Strings.UnReadable(GraphObject.Metadata.DocumentName);
+		GraphElement.style.width = '100vw';
+		GraphElement.style.height = '100vh';
+		GraphElement.style.overflow = 'scroll';
+		GraphElement.style.position = 'relative';
+		
+		//Creation of Graph Surface in Graph Container
+		GraphElement.appendChild(GraphObject.InitializeGraphSurfaceContainer(GraphObject));
+
+		//Initialization of Graph Surface SVG elements in Graph Container
+		GraphObject.GraphElement.svg = GraphElement.querySelector('#' + GraphElement.id + '-connsvg');
+		GraphObject.GraphElement.svg.ns = GraphObject.GraphElement.svg.namespaceURI;
+
+		GraphObject.createControlPalette(GraphObject, GraphElement);
+		GraphObject.attachEvent_ControlSurfaceLightSwitch(GraphObject);
+
+		return GraphObject;
+	}
 }
 
 export class GraphSurfaceOld {
@@ -99,44 +278,6 @@ export class GraphSurfaceOld {
 		self.divs = null;
 		self.selectedDivs = null;
 		self.snapEvery = 10;
-
-		// Create custom events
-		// self.indexedDBEvent = new Event('indexedDBEvent');
-		// self.memoryDBEvent = new Event('memoryDBEvent');
-		// self.serverDBEvent = new Event('serverDBEvent');
-
-		// {
-		// 	name:"Yggdrasil",
-		// 	label:"Yggdrasil The World Tree",
-		// 	header:"",
-		// 	footer:"",
-		// 	type:"World Graph",
-		// 	world:"Yggdrasil",
-		// 	realm:"System_ParadigmREVOLUTION",
-		// 	universe:"ParadigmREVOLUTION"
-		// }
-
-		// (async () => {
-		// 	console.log('Start SurrealDB Initialization');
-		// 	// self.Storage = await this.initiateSurrealDB(self.Storage, self.DocumentUniverse, self.DocumentRealm, "ws://10.26.0.26:8080", "damir", "Zenith2001");
-		// 	// self.Storage = await this.Utility.DataStore.SurrealDB.Initialize(self.Storage, self.DocumentUniverse, self.DocumentRealm, "ws://10.26.0.26:8080", "damir", "Zenith2001");
-		// 	self.Storage = await this.Utility.DataStore.SurrealDB.InitializeNew(App, { user: "damir", pass: "Zenith2001" }, "ws://127.0.0.1:8080", null, {
-		// 		Memory: function () {
-		// 			console.log('Callback for Memory');
-		// 			// self.Utility.DataStore.SurrealDB.Get(self, 'Memory');
-		// 		},
-		// 		Local: async function (Storage) {
-		// 			console.log('Callback for Local');
-		// 			await self.Utility.DataStore.SurrealDB.Get(self, 'Local');
-		// 		},
-		// 		Server: function () {
-		// 			console.log('Callback for Server');
-		// 			// self.Utility.DataStore.SurrealDB.Get(self, 'Server');
-		// 		}
-		// 	});
-
-		// 	console.log('Done SurrealDB Initialization');
-		// })();
 	};
 	initiateGraphSurfaceContainer = (function (id = '') {
 			let id_str = (id.length > 0) ? id + '-' : '';
@@ -307,475 +448,475 @@ export class GraphSurfaceOld {
 		//Creation Graph Container
 		//ID of the Graph Container
 		
-		// // NEW EVENT METHODS TO ENABLE REMOVAL OF EVENT
-		// let EventMethods = {
-		// 	"div_graph_surface_wheel": function (event) {
-		// 		event.preventDefault();
-		// 		if (event.deltaY < 0) {
-		// 			if (self.zoom_level < 3) self.zoom_level += 0.1;
-		// 		} else {
-		// 			if (self.zoom_level > 0.2) self.zoom_level -= 0.1;
-		// 		}
-		// 		self.zoom_level = self.Utility.Numbers.Round1(self.zoom_level);
-		// 		animateZoom(self.div_graph_surface, event);
-		// 		console.log('masuk event wheel di new EventMethods');
-		// 	},
-		// 	"div_graph_surface_zoom_in": function (event) {
-		// 		if (self.zoom_level < 3) self.zoom_level += 0.1;
-		// 		animateZoom(self.div_graph_surface);
-		// 		console.log('masuk event zoom in di new EventMethods');
-		// 	},
-		// 	"div_graph_surface_zoom_out": function (event) {
-		// 		if (self.zoom_level > 0.2) self.zoom_level -= 0.1;
-		// 		animateZoom(self.div_graph_surface);
-		// 		console.log('masuk event zoom out di new EventMethods');
-		// 	},
-		// 	"div_graph_surface_zoom_reset": function (event) {
-		// 		self.zoom_level = 1;
-		// 		animateZoom(self.div_graph_surface);
-		// 		console.log('masuk event zoom reset di new EventMethods');
-		// 	}
-		// }
-		// // NEW EVENT METHODS TO ENABLE REMOVAL OF EVENT
+		// NEW EVENT METHODS TO ENABLE REMOVAL OF EVENT
+		let EventMethods = {
+			"div_graph_surface_wheel": function (event) {
+				event.preventDefault();
+				if (event.deltaY < 0) {
+					if (self.zoom_level < 3) self.zoom_level += 0.1;
+				} else {
+					if (self.zoom_level > 0.2) self.zoom_level -= 0.1;
+				}
+				self.zoom_level = self.Utility.Numbers.Round1(self.zoom_level);
+				animateZoom(self.div_graph_surface, event);
+				console.log('masuk event wheel di new EventMethods');
+			},
+			"div_graph_surface_zoom_in": function (event) {
+				if (self.zoom_level < 3) self.zoom_level += 0.1;
+				animateZoom(self.div_graph_surface);
+				console.log('masuk event zoom in di new EventMethods');
+			},
+			"div_graph_surface_zoom_out": function (event) {
+				if (self.zoom_level > 0.2) self.zoom_level -= 0.1;
+				animateZoom(self.div_graph_surface);
+				console.log('masuk event zoom out di new EventMethods');
+			},
+			"div_graph_surface_zoom_reset": function (event) {
+				self.zoom_level = 1;
+				animateZoom(self.div_graph_surface);
+				console.log('masuk event zoom reset di new EventMethods');
+			}
+		}
+		// NEW EVENT METHODS TO ENABLE REMOVAL OF EVENT
 
-		// //HANDLE ON CANVAS NAVIGATION, CLICK TO SCROLL LEFT RIGHT UP DOWN, SCROLL TO ZOOM IN OR OUT
-		// //ZOOM EVENT HANDLER
-		// function animateZoom(el, event) {
-		// 	let element = el;
-		// 	let centers;
-		// 	if (typeof el == 'string') {
-		// 		element = self.div_graph_surface.querySelector('#' + el);
-		// 	}
-		// 	self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-graph-surface').style.transform = `scale(${self.zoom_level}, ${self.zoom_level})`;
-		// 	self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-graph-surface').style.transformOrigin = '0px 0px';
-		// 	self.zoom_level = self.Utility.Numbers.Round1(self.zoom_level);
-		// 	self.div_graph_surface.querySelector('#zoom-level').innerHTML = self.zoom_level;
-		// }
+		//HANDLE ON CANVAS NAVIGATION, CLICK TO SCROLL LEFT RIGHT UP DOWN, SCROLL TO ZOOM IN OR OUT
+		//ZOOM EVENT HANDLER
+		function animateZoom(el, event) {
+			let element = el;
+			let centers;
+			if (typeof el == 'string') {
+				element = self.div_graph_surface.querySelector('#' + el);
+			}
+			self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-graph-surface').style.transform = `scale(${self.zoom_level}, ${self.zoom_level})`;
+			self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-graph-surface').style.transformOrigin = '0px 0px';
+			self.zoom_level = self.Utility.Numbers.Round1(self.zoom_level);
+			self.div_graph_surface.querySelector('#zoom-level').innerHTML = self.zoom_level;
+		}
 
-		// self.div_graph_surface.addEventOnce('wheel', EventMethods.div_graph_surface_wheel);
+		self.div_graph_surface.addEventOnce('wheel', EventMethods.div_graph_surface_wheel);
 
-		// this.div_graph_surface.querySelector('#' + this.id_graph_control_palette_container + '-zoom-in').addEventOnce('click', EventMethods.div_graph_surface_zoom_in);
-		// this.div_graph_surface.querySelector('#' + this.id_graph_control_palette_container + '-zoom-reset').addEventOnce('click', EventMethods.div_graph_surface_zoom_reset);
-		// this.div_graph_surface.querySelector('#' + this.id_graph_control_palette_container + '-zoom-out').addEventOnce('click', EventMethods.div_graph_surface_zoom_out);;
-		// //ZOOM EVENT HANDLER
+		this.div_graph_surface.querySelector('#' + this.id_graph_control_palette_container + '-zoom-in').addEventOnce('click', EventMethods.div_graph_surface_zoom_in);
+		this.div_graph_surface.querySelector('#' + this.id_graph_control_palette_container + '-zoom-reset').addEventOnce('click', EventMethods.div_graph_surface_zoom_reset);
+		this.div_graph_surface.querySelector('#' + this.id_graph_control_palette_container + '-zoom-out').addEventOnce('click', EventMethods.div_graph_surface_zoom_out);;
+		//ZOOM EVENT HANDLER
 
-		// // Initialize variables for selection
-		// let isSelecting = false;
-		// let BoxStart = { x: 0, y: 0 };
-		// let selectionStart = { x: 0, y: 0 };
-		// let BoxEnd = { x: 0, y: 0 };
-		// let selectionEnd = { x: 0, y: 0 };
-		// self.selectedDivs = new Set(); // Keep track of selected divs
-		// let selectionBox; // The visual selection area element
+		// Initialize variables for selection
+		let isSelecting = false;
+		let BoxStart = { x: 0, y: 0 };
+		let selectionStart = { x: 0, y: 0 };
+		let BoxEnd = { x: 0, y: 0 };
+		let selectionEnd = { x: 0, y: 0 };
+		self.selectedDivs = new Set(); // Keep track of selected divs
+		let selectionBox; // The visual selection area element
 
-		// self.divs = document.querySelectorAll('.graph-node'); // Replace 'your-div-class' with the class name of your divs
+		self.divs = document.querySelectorAll('.graph-node'); // Replace 'your-div-class' with the class name of your divs
 
-		// function createSelectionBox() {
-		// 	selectionBox = document.createElement('div');
-		// 	selectionBox.classList.add('selection-box'); // Apply CSS styling for the selection box
-		// 	self.div_graph_surface.appendChild(selectionBox);
-		// }
+		function createSelectionBox() {
+			selectionBox = document.createElement('div');
+			selectionBox.classList.add('selection-box'); // Apply CSS styling for the selection box
+			self.div_graph_surface.appendChild(selectionBox);
+		}
 
-		// function updateSelection() {
-		// 	self.divs.forEach(div => {
-		// 		const rect = div.getBoundingClientRect();
-		// 		const divX = rect.left + window.scrollX;
-		// 		const divY = rect.top + window.scrollY;
+		function updateSelection() {
+			self.divs.forEach(div => {
+				const rect = div.getBoundingClientRect();
+				const divX = rect.left + window.scrollX;
+				const divY = rect.top + window.scrollY;
 
-		// 		if (
-		// 			divX >= Math.min(selectionStart.x, selectionEnd.x) &&
-		// 			divX + rect.width <= Math.max(selectionStart.x, selectionEnd.x) &&
-		// 			divY >= Math.min(selectionStart.y, selectionEnd.y) &&
-		// 			divY + rect.height <= Math.max(selectionStart.y, selectionEnd.y)
-		// 		) {
-		// 			div.classList.add('onselect');
-		// 			self.selectedDivs.add(div);
-		// 		} else {
-		// 			div.classList.remove('onselect');
-		// 			self.selectedDivs.delete(div);
-		// 		}
-		// 	});
-		// }
+				if (
+					divX >= Math.min(selectionStart.x, selectionEnd.x) &&
+					divX + rect.width <= Math.max(selectionStart.x, selectionEnd.x) &&
+					divY >= Math.min(selectionStart.y, selectionEnd.y) &&
+					divY + rect.height <= Math.max(selectionStart.y, selectionEnd.y)
+				) {
+					div.classList.add('onselect');
+					self.selectedDivs.add(div);
+				} else {
+					div.classList.remove('onselect');
+					self.selectedDivs.delete(div);
+				}
+			});
+		}
 
-		// self.dragSelectedDivs = function (e, selectedDivs, callBackOnDrag, callBackOnDone) {
-		// 	e.preventDefault();
-		// 	console.log('start on drag, mousedown >>');
+		self.dragSelectedDivs = function (e, selectedDivs, callBackOnDrag, callBackOnDone) {
+			e.preventDefault();
+			console.log('start on drag, mousedown >>');
 
-		// 	// Store the initial mouse/touch position
-		// 	let initialX, initialY;
-		// 	if (e.type === "touchstart") {
-		// 		initialX = e.changedTouches[0].clientX;
-		// 		initialY = e.changedTouches[0].clientY;
-		// 	} else {
-		// 		initialX = e.clientX;
-		// 		initialY = e.clientY;
-		// 	}
+			// Store the initial mouse/touch position
+			let initialX, initialY;
+			if (e.type === "touchstart") {
+				initialX = e.changedTouches[0].clientX;
+				initialY = e.changedTouches[0].clientY;
+			} else {
+				initialX = e.clientX;
+				initialY = e.clientY;
+			}
 
-		// 	const dragHandler = function (event) {
-		// 		event.preventDefault();
-		// 		console.log('start on drag, mousemove >>');
+			const dragHandler = function (event) {
+				event.preventDefault();
+				console.log('start on drag, mousemove >>');
 
-		// 		// Calculate the distance moved by the mouse/touch
-		// 		let deltaX;
-		// 		let deltaY;
-		// 		if (event.type === "touchmove") {
-		// 			deltaX = event.changedTouches[0].clientX - initialX;
-		// 			deltaY = event.changedTouches[0].clientY - initialY;
-		// 		} else {
-		// 			deltaX = event.clientX - initialX;
-		// 			deltaY = event.clientY - initialY;
-		// 		}
+				// Calculate the distance moved by the mouse/touch
+				let deltaX;
+				let deltaY;
+				if (event.type === "touchmove") {
+					deltaX = event.changedTouches[0].clientX - initialX;
+					deltaY = event.changedTouches[0].clientY - initialY;
+				} else {
+					deltaX = event.clientX - initialX;
+					deltaY = event.clientY - initialY;
+				}
 
-		// 		console.log('delta', deltaX, deltaY);
+				console.log('delta', deltaX, deltaY);
 
-		// 		// Update the position of each selected div without snapping for smooth movement
-		// 		selectedDivs.forEach((div) => {
-		// 			const currentLeft = parseInt(div.style.left) || 0;
-		// 			const currentTop = parseInt(div.style.top) || 0;
+				// Update the position of each selected div without snapping for smooth movement
+				selectedDivs.forEach((div) => {
+					const currentLeft = parseInt(div.style.left) || 0;
+					const currentTop = parseInt(div.style.top) || 0;
 
-		// 			// Calculate new positions without snapping
-		// 			let divider = self.zoom_level;
-		// 			const newLeft = currentLeft + deltaX / divider;
-		// 			const newTop = currentTop + deltaY / divider;
+					// Calculate new positions without snapping
+					let divider = self.zoom_level;
+					const newLeft = currentLeft + deltaX / divider;
+					const newTop = currentTop + deltaY / divider;
 
-		// 			div.style.left = newLeft + "px";
-		// 			div.style.top = newTop + "px";
-		// 		});
+					div.style.left = newLeft + "px";
+					div.style.top = newTop + "px";
+				});
 
-		// 		// Update the initial mouse/touch position
-		// 		if (event.type === "touchmove") {
-		// 			console.log('masuk touch move')
-		// 			initialX = event.changedTouches[0].clientX;
-		// 			initialY = event.changedTouches[0].clientY;
-		// 		} else {
-		// 			console.log('masuk mouse move')
-		// 			initialX = event.clientX;
-		// 			initialY = event.clientY;
-		// 		}
-		// 		if (typeof callBackOnDrag === 'function') callBackOnDrag();
-		// 	};
+				// Update the initial mouse/touch position
+				if (event.type === "touchmove") {
+					console.log('masuk touch move')
+					initialX = event.changedTouches[0].clientX;
+					initialY = event.changedTouches[0].clientY;
+				} else {
+					console.log('masuk mouse move')
+					initialX = event.clientX;
+					initialY = event.clientY;
+				}
+				if (typeof callBackOnDrag === 'function') callBackOnDrag();
+			};
 
-		// 	const stopDragHandler = function () {
-		// 		console.log('start on drag, mouseup >>');
-		// 		document.removeEventListener("mousemove", dragHandler);
-		// 		document.removeEventListener("touchmove", dragHandler);
-		// 		document.removeEventListener("mouseup", stopDragHandler);
-		// 		document.removeEventListener("touchend", stopDragHandler);
+			const stopDragHandler = function () {
+				console.log('start on drag, mouseup >>');
+				document.removeEventListener("mousemove", dragHandler);
+				document.removeEventListener("touchmove", dragHandler);
+				document.removeEventListener("mouseup", stopDragHandler);
+				document.removeEventListener("touchend", stopDragHandler);
 
-		// 		// Perform snapping after the drag is complete
-		// 		selectedDivs.forEach((div) => {
-		// 			const currentLeft = parseInt(div.style.left) || 0;
-		// 			const currentTop = parseInt(div.style.top) || 0;
+				// Perform snapping after the drag is complete
+				selectedDivs.forEach((div) => {
+					const currentLeft = parseInt(div.style.left) || 0;
+					const currentTop = parseInt(div.style.top) || 0;
 
-		// 			// Snap to the nearest grid position
-		// 			const snappedLeft = Math.round(currentLeft / self.snapEvery) * self.snapEvery;
-		// 			const snappedTop = Math.round(currentTop / self.snapEvery) * self.snapEvery;
+					// Snap to the nearest grid position
+					const snappedLeft = Math.round(currentLeft / self.snapEvery) * self.snapEvery;
+					const snappedTop = Math.round(currentTop / self.snapEvery) * self.snapEvery;
 
-		// 			div.style.left = snappedLeft + "px";
-		// 			div.style.top = snappedTop + "px";
+					div.style.left = snappedLeft + "px";
+					div.style.top = snappedTop + "px";
 
-		// 			let found = self.Utility.Array.findArrayElement(self.nodes, 'id', div.id, 0);
-		// 			// console.log('self.nodes[found.array_index]', self.nodes[found.array_index].node);
-		// 			if (found != undefined) {
-		// 				console.log('found.array_index', found.array_index);
-		// 				console.log('id', self.nodes[found.array_index].id, snappedLeft, snappedTop);
-		// 				self.nodes[found.array_index].node.Presentation.Perspectives.GraphNode.Position = { x: snappedLeft, y: snappedTop };
-		// 				console.log(found.array_index, self.nodes[found.array_index].id, self.nodes[found.array_index].node.Presentation.Perspectives.GraphNode.Position);
-		// 			}
-		// 		});
-		// 		if (typeof callBackOnDone === 'function') callBackOnDone();
-		// 	};
-		// 	// Add event listeners to handle dragging
-		// 	document.addEventListener("mousemove", dragHandler);
-		// 	document.addEventListener("touchmove", dragHandler, { passive: false });
-		// 	document.addEventListener("mouseup", stopDragHandler);
-		// 	document.addEventListener("touchend", stopDragHandler, { passive: false });
-		// }
-		// self.onMouseDownHandler = function (e) {
-		// 	console.log('>>> Start self.onMouseDownHandler');
-		// 	self.dragSelectedDivs(e, self.selectedDivs, function () {
-		// 		if (self.connections.length > 0) self.DOMElements.renderGraphConnections(self.connections, self);
-		// 	}, function () {
-		// 		if (self.connections.length > 0) self.DOMElements.renderGraphConnections(self.connections, self);
-		// 		// self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
-		// 		// self.Utility.DataStore.SurrealDB.Put(self, 'Local');
+					let found = self.Utility.Array.findArrayElement(self.nodes, 'id', div.id, 0);
+					// console.log('self.nodes[found.array_index]', self.nodes[found.array_index].node);
+					if (found != undefined) {
+						console.log('found.array_index', found.array_index);
+						console.log('id', self.nodes[found.array_index].id, snappedLeft, snappedTop);
+						self.nodes[found.array_index].node.Presentation.Perspectives.GraphNode.Position = { x: snappedLeft, y: snappedTop };
+						console.log(found.array_index, self.nodes[found.array_index].id, self.nodes[found.array_index].node.Presentation.Perspectives.GraphNode.Position);
+					}
+				});
+				if (typeof callBackOnDone === 'function') callBackOnDone();
+			};
+			// Add event listeners to handle dragging
+			document.addEventListener("mousemove", dragHandler);
+			document.addEventListener("touchmove", dragHandler, { passive: false });
+			document.addEventListener("mouseup", stopDragHandler);
+			document.addEventListener("touchend", stopDragHandler, { passive: false });
+		}
+		self.onMouseDownHandler = function (e) {
+			console.log('>>> Start self.onMouseDownHandler');
+			self.dragSelectedDivs(e, self.selectedDivs, function () {
+				if (self.connections.length > 0) self.DOMElements.renderGraphConnections(self.connections, self);
+			}, function () {
+				if (self.connections.length > 0) self.DOMElements.renderGraphConnections(self.connections, self);
+				// self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Local');
 
-		// 		let storeNodes = [];
-		// 		self.nodes.forEach((d, i) => {
-		// 			storeNodes.push(d.node);
-		// 		});
-		// 		console.log('storeNodes >> ', storeNodes);
+				let storeNodes = [];
+				self.nodes.forEach((d, i) => {
+					storeNodes.push(d.node);
+				});
+				console.log('storeNodes >> ', storeNodes);
 
-		// 		self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-		// 		// self.Utility.DataStore.SurrealDB.Put(self, 'Server', 'Yggdrasil', storeNodes);
-		// 		// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-		// 	});
-		// 	console.log('<<< Done self.onMouseDownHandler');
-		// }
-		// function finalizeSelection() {
-		// 	// FINALIZE SELECTION FROM SHIFT CLICK DRAG
-		// 	self.selectedDivs.forEach((div) => {
-		// 		div.classList.replace("onselect", "active");
-		// 		div.dataset.isActive = true;
-		// 		div.addEventListener("mousedown", self.onMouseDownHandler);
-		// 		div.addEventListener("touchstart", self.onMouseDownHandler);
-		// 	});
-		// }
+				self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Server', 'Yggdrasil', storeNodes);
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+			});
+			console.log('<<< Done self.onMouseDownHandler');
+		}
+		function finalizeSelection() {
+			// FINALIZE SELECTION FROM SHIFT CLICK DRAG
+			self.selectedDivs.forEach((div) => {
+				div.classList.replace("onselect", "active");
+				div.dataset.isActive = true;
+				div.addEventListener("mousedown", self.onMouseDownHandler);
+				div.addEventListener("touchstart", self.onMouseDownHandler);
+			});
+		}
 
-		// // Reset selection when connsvg is clicked
-		// self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg').addEventOnce('click', function (e) {
-		// 	// Clear the previous selection
-		// 	if (e.shiftKey) return;
-		// 	self.divs = document.querySelectorAll('.graph-node');
-		// 	self.divs.forEach((div) => {
-		// 		div.removeEventListener("mousedown", self.onMouseDownHandler);
-		// 		div.removeEventListener("touchstart", self.onMouseDownHandler);
-		// 		div.removeEventListener("mousedown", self.onNodeClick);
-		// 	});
-		// 	self.resetSelection(self);
-		// });
-		// self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg').addEventOnce('touchstart', function (e) {
-		// 	// Clear the previous selection
-		// 	self.divs = document.querySelectorAll('.graph-node');
-		// 	self.divs.forEach((div) => {
-		// 		div.removeEventListener("mousedown", self.onMouseDownHandler);
-		// 		div.removeEventListener("touchstart", self.onMouseDownHandler);
-		// 		div.removeEventListener("mousedown", self.onNodeClick);
-		// 	});
-		// 	self.resetSelection(self);
-		// });
+		// Reset selection when connsvg is clicked
+		self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg').addEventOnce('click', function (e) {
+			// Clear the previous selection
+			if (e.shiftKey) return;
+			self.divs = document.querySelectorAll('.graph-node');
+			self.divs.forEach((div) => {
+				div.removeEventListener("mousedown", self.onMouseDownHandler);
+				div.removeEventListener("touchstart", self.onMouseDownHandler);
+				div.removeEventListener("mousedown", self.onNodeClick);
+			});
+			self.resetSelection(self);
+		});
+		self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg').addEventOnce('touchstart', function (e) {
+			// Clear the previous selection
+			self.divs = document.querySelectorAll('.graph-node');
+			self.divs.forEach((div) => {
+				div.removeEventListener("mousedown", self.onMouseDownHandler);
+				div.removeEventListener("touchstart", self.onMouseDownHandler);
+				div.removeEventListener("mousedown", self.onNodeClick);
+			});
+			self.resetSelection(self);
+		});
 
-		// let pos = { top: 0, left: 0, x: 0, y: 0 };
-		// const mouseDownHandler = function (e) {
-		// 	// Check if the event target is the div itself and not any other element within the div
-		// 	if (e.target !== self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg')) return;
+		let pos = { top: 0, left: 0, x: 0, y: 0 };
+		const mouseDownHandler = function (e) {
+			// Check if the event target is the div itself and not any other element within the div
+			if (e.target !== self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg')) return;
 
-		// 	// Check if the shift key is held down
-		// 	if (e.shiftKey) {
-		// 		isSelecting = true;
-		// 		BoxStart = { x: e.clientX + self.div_graph_surface.scrollLeft, y: e.clientY + self.div_graph_surface.scrollTop };
-		// 		BoxEnd = { x: e.clientX + self.div_graph_surface.scrollLeft, y: e.clientY + self.div_graph_surface.scrollTop };
-		// 		selectionStart = { x: e.clientX, y: e.clientY };
-		// 		selectionEnd = { x: e.clientX, y: e.clientY };
+			// Check if the shift key is held down
+			if (e.shiftKey) {
+				isSelecting = true;
+				BoxStart = { x: e.clientX + self.div_graph_surface.scrollLeft, y: e.clientY + self.div_graph_surface.scrollTop };
+				BoxEnd = { x: e.clientX + self.div_graph_surface.scrollLeft, y: e.clientY + self.div_graph_surface.scrollTop };
+				selectionStart = { x: e.clientX, y: e.clientY };
+				selectionEnd = { x: e.clientX, y: e.clientY };
 
-		// 		createSelectionBox();
-		// 	} else {
-		// 		// console.log('masuk moousedown handler biasa');
-		// 		self.div_graph_surface.style.cursor = 'grabbing';
-		// 		self.div_graph_surface.style.userSelect = 'none';
+				createSelectionBox();
+			} else {
+				// console.log('masuk moousedown handler biasa');
+				self.div_graph_surface.style.cursor = 'grabbing';
+				self.div_graph_surface.style.userSelect = 'none';
 
-		// 		pos = {
-		// 			left: self.div_graph_surface.scrollLeft,
-		// 			top: self.div_graph_surface.scrollTop,
-		// 			// Get the current mouse position
-		// 			x: e.clientX,
-		// 			y: e.clientY,
-		// 		};
+				pos = {
+					left: self.div_graph_surface.scrollLeft,
+					top: self.div_graph_surface.scrollTop,
+					// Get the current mouse position
+					x: e.clientX,
+					y: e.clientY,
+				};
 
-		// 	}
-		// 	document.addEventListener('mousemove', mouseMoveHandler);
-		// 	document.addEventListener('mouseup', mouseUpHandler);
-		// };
+			}
+			document.addEventListener('mousemove', mouseMoveHandler);
+			document.addEventListener('mouseup', mouseUpHandler);
+		};
 
-		// const mouseMoveHandler = function (e) {
-		// 	e.preventDefault();
-		// 	if (isSelecting) {
-		// 		selectionEnd = { x: e.clientX, y: e.clientY };
-		// 		BoxEnd = { x: e.clientX + self.div_graph_surface.scrollLeft, y: e.clientY + self.div_graph_surface.scrollTop };
+		const mouseMoveHandler = function (e) {
+			e.preventDefault();
+			if (isSelecting) {
+				selectionEnd = { x: e.clientX, y: e.clientY };
+				BoxEnd = { x: e.clientX + self.div_graph_surface.scrollLeft, y: e.clientY + self.div_graph_surface.scrollTop };
 
-		// 		// Update the visual selection box
-		// 		const left = Math.min(BoxStart.x, BoxEnd.x);
-		// 		const top = Math.min(BoxStart.y, BoxEnd.y);
-		// 		const width = Math.abs(BoxStart.x - BoxEnd.x);
-		// 		const height = Math.abs(BoxStart.y - BoxEnd.y);
-		// 		selectionBox.style.left = left + 'px';
-		// 		selectionBox.style.top = top + 'px';
-		// 		selectionBox.style.width = width + 'px';
-		// 		selectionBox.style.height = height + 'px';
+				// Update the visual selection box
+				const left = Math.min(BoxStart.x, BoxEnd.x);
+				const top = Math.min(BoxStart.y, BoxEnd.y);
+				const width = Math.abs(BoxStart.x - BoxEnd.x);
+				const height = Math.abs(BoxStart.y - BoxEnd.y);
+				selectionBox.style.left = left + 'px';
+				selectionBox.style.top = top + 'px';
+				selectionBox.style.width = width + 'px';
+				selectionBox.style.height = height + 'px';
 
-		// 		updateSelection();
-		// 	} else {
-		// 		// Calculate the distance moved by the mouse
-		// 		const dx = e.clientX - pos.x;
-		// 		const dy = e.clientY - pos.y;
+				updateSelection();
+			} else {
+				// Calculate the distance moved by the mouse
+				const dx = e.clientX - pos.x;
+				const dy = e.clientY - pos.y;
 
-		// 		// Scroll the element only if the distance moved is significant
-		// 		if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-		// 			self.div_graph_surface.scrollTop = pos.top - dy;
-		// 			self.div_graph_surface.scrollLeft = pos.left - dx;
-		// 		}
-		// 	}
-		// };
+				// Scroll the element only if the distance moved is significant
+				if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+					self.div_graph_surface.scrollTop = pos.top - dy;
+					self.div_graph_surface.scrollLeft = pos.left - dx;
+				}
+			}
+		};
 
-		// const mouseUpHandler = function () {
-		// 	if (isSelecting) {
-		// 		isSelecting = false;
-		// 		updateSelection();
-		// 		finalizeSelection();
-		// 		// Remove the visual selection box
-		// 		self.div_graph_surface.removeChild(selectionBox);
-		// 		selectionBox = null;
-		// 	} else {
-		// 		self.div_graph_surface.style.cursor = 'grab';
-		// 		self.div_graph_surface.style.removeProperty('user-select');
-		// 	}
-		// 	document.removeEventListener('mousemove', mouseMoveHandler);
-		// 	document.removeEventListener('mouseup', mouseUpHandler);
-		// };
+		const mouseUpHandler = function () {
+			if (isSelecting) {
+				isSelecting = false;
+				updateSelection();
+				finalizeSelection();
+				// Remove the visual selection box
+				self.div_graph_surface.removeChild(selectionBox);
+				selectionBox = null;
+			} else {
+				self.div_graph_surface.style.cursor = 'grab';
+				self.div_graph_surface.style.removeProperty('user-select');
+			}
+			document.removeEventListener('mousemove', mouseMoveHandler);
+			document.removeEventListener('mouseup', mouseUpHandler);
+		};
 
-		// // Attach the handler
-		// self.div_graph_surface.addEventOnce('mousedown', mouseDownHandler);
-		// self.div_graph_surface.addEventOnce('touchstart', mouseDownHandler);
-		// self.div_graph_surface.addEventOnce('dblclick', function (e) {
-		// 	// console.log('doubleclick');
-		// 	self.Utility.DOMElements.scrollTo(self.div_graph_surface, e);
-		// });
+		// Attach the handler
+		self.div_graph_surface.addEventOnce('mousedown', mouseDownHandler);
+		self.div_graph_surface.addEventOnce('touchstart', mouseDownHandler);
+		self.div_graph_surface.addEventOnce('dblclick', function (e) {
+			// console.log('doubleclick');
+			self.Utility.DOMElements.scrollTo(self.div_graph_surface, e);
+		});
 
-		// // Add mouseover and mouseout handlers to change cursor style
-		// // console.log(`self.div_graph_surface.querySelector('#' + self.id_graph_surface + ' - connsvg'`, self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg'));
-		// self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg').addEventOnce('mouseover', function (e) {
-		// 	self.div_graph_surface.style.cursor = 'grab';
-		// });
-		// self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg').addEventOnce('mouseout', function () {
-		// 	self.div_graph_surface.style.cursor = 'default';
-		// });
+		// Add mouseover and mouseout handlers to change cursor style
+		// console.log(`self.div_graph_surface.querySelector('#' + self.id_graph_surface + ' - connsvg'`, self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg'));
+		self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg').addEventOnce('mouseover', function (e) {
+			self.div_graph_surface.style.cursor = 'grab';
+		});
+		self.div_graph_surface.querySelector('#' + self.id_graph_surface + '-connsvg').addEventOnce('mouseout', function () {
+			self.div_graph_surface.style.cursor = 'default';
+		});
 
 
-		// //LIGHT/DARK THEME SWITCHER
-		// this.div_graph_surface.querySelector('#' + this.id_graph_control_palette_container + '___theme-switch').addEventOnce('click', function () {
-		// 	// console.log('theme switch');
-		// 	let root = document.documentElement;
-		// 	this.dataset.count = this.dataset.count ? parseInt(this.dataset.count) : 0;
-		// 	// console.log('this.dataset.count', this.dataset.count);
+		//LIGHT/DARK THEME SWITCHER
+		this.div_graph_surface.querySelector('#' + this.id_graph_control_palette_container + '___theme-switch').addEventOnce('click', function () {
+			// console.log('theme switch');
+			let root = document.documentElement;
+			this.dataset.count = this.dataset.count ? parseInt(this.dataset.count) : 0;
+			// console.log('this.dataset.count', this.dataset.count);
 
-		// 	if (this.dataset.count < 2) {
-		// 		// console.log('masuk < 2');
-		// 		if (root.classList.contains('light-theme')) {
-		// 			// console.log('masuk dark');
-		// 			root.classList.replace('light-theme', 'dark-theme');
-		// 		} else if (root.classList.contains('dark-theme')) {
-		// 			// console.log('masuk light');
-		// 			root.classList.replace('dark-theme', 'light-theme');
-		// 		} else {
-		// 			// console.log('masuk default');
-		// 			let isCurrentThemeDark = UtilityObject.DOMElements.detectLightDarkMode();
-		// 			root.classList.add(isCurrentThemeDark.matches ? 'light-theme' : 'dark-theme');
-		// 		}
-		// 		this.style.color = '';
-		// 		this.dataset.count++;
-		// 	} else {
-		// 		// console.log('masuk reset');
-		// 		root.classList.remove('dark-theme', 'light-theme');
-		// 		this.style.color = 'red';
-		// 		this.dataset.count = 0;
-		// 	}
-		// });
-		// //LIGHT/DARK THEME SWITCHER
+			if (this.dataset.count < 2) {
+				// console.log('masuk < 2');
+				if (root.classList.contains('light-theme')) {
+					// console.log('masuk dark');
+					root.classList.replace('light-theme', 'dark-theme');
+				} else if (root.classList.contains('dark-theme')) {
+					// console.log('masuk light');
+					root.classList.replace('dark-theme', 'light-theme');
+				} else {
+					// console.log('masuk default');
+					let isCurrentThemeDark = UtilityObject.DOMElements.detectLightDarkMode();
+					root.classList.add(isCurrentThemeDark.matches ? 'light-theme' : 'dark-theme');
+				}
+				this.style.color = '';
+				this.dataset.count++;
+			} else {
+				// console.log('masuk reset');
+				root.classList.remove('dark-theme', 'light-theme');
+				this.style.color = 'red';
+				this.dataset.count = 0;
+			}
+		});
+		//LIGHT/DARK THEME SWITCHER
 
-		// //MAKE GRAPH CONTROL PALETTE DRAGABLE
-		// this.DOMElements.DragElement(this.div_graph_surface.querySelector('#' + this.id_graph_control_palette));
+		//MAKE GRAPH CONTROL PALETTE DRAGABLE
+		this.DOMElements.DragElement(this.div_graph_surface.querySelector('#' + this.id_graph_control_palette));
 
-		// //ADD NODE
-		// this.div_graph_surface.querySelectorAll(`#${self.id_graph_control_palette_container}-node-add`).forEach((d, i) => {
-		// 	d.addEventOnce('click', function (e) {
-		// 		let newNode = new NodeProperties();
-		// 		// newNode.id = 'Node/'+self.Utility.Numbers.generateUUID();
-		// 		newNode.UID = 'GraphNode__' + self.Utility.Numbers.generateUUID();
-		// 		// newNode.id = newNode.UID;
+		//ADD NODE
+		this.div_graph_surface.querySelectorAll(`#${self.id_graph_control_palette_container}-node-add`).forEach((d, i) => {
+			d.addEventOnce('click', function (e) {
+				let newNode = new NodeProperties();
+				// newNode.id = 'Node/'+self.Utility.Numbers.generateUUID();
+				newNode.UID = 'GraphNode__' + self.Utility.Numbers.generateUUID();
+				// newNode.id = newNode.UID;
 
-		// 		newNode.DocumentID = newNode.UID;
-		// 		newNode.DocumentName = self.DocumentName;
-		// 		newNode.DocumentLabel = self.DocumentLabel;
-		// 		newNode.DocumentHeader = self.DocumentHeader;
-		// 		newNode.DocumentFooter = self.DocumentFooter;
-		// 		newNode.DocumentType = self.DocumentType; //REALM, World, Data Node, Processing Node
-		// 		newNode.DocumentWorld = self.DocumentWorld; //KnowledgeBase, BusinessLogic, ApplicationUserInterface, Data
-		// 		newNode.DocumentUniverse = self.DocumentUniverse; //KnowledgeBase, BusinessLogic, ApplicationUserInterface, Data
-		// 		newNode.Timestamp = self.Utility.Time.getNowDateTimeString('YMD');
-		// 		console.log('self.Utility.Time.initDate()', self.Utility.Time.getNowDateTimeString('YMD'));
-		// 		console.log('newNode >>>', newNode);
+				newNode.DocumentID = newNode.UID;
+				newNode.DocumentName = self.DocumentName;
+				newNode.DocumentLabel = self.DocumentLabel;
+				newNode.DocumentHeader = self.DocumentHeader;
+				newNode.DocumentFooter = self.DocumentFooter;
+				newNode.DocumentType = self.DocumentType; //REALM, World, Data Node, Processing Node
+				newNode.DocumentWorld = self.DocumentWorld; //KnowledgeBase, BusinessLogic, ApplicationUserInterface, Data
+				newNode.DocumentUniverse = self.DocumentUniverse; //KnowledgeBase, BusinessLogic, ApplicationUserInterface, Data
+				newNode.Timestamp = self.Utility.Time.getNowDateTimeString('YMD');
+				console.log('self.Utility.Time.initDate()', self.Utility.Time.getNowDateTimeString('YMD'));
+				console.log('newNode >>>', newNode);
 
-		// 		let n = 20;
-		// 		newNode.Presentation.Perspectives.GraphNode.Position = { x: 350 + (n * self.nodes.length - 1), y: 300 + (n * self.nodes.length - 1) };
-		// 		let temp = self.Utility.DOMElements.MakeDraggableNode(newNode.UID, 'graph-node fade-in', 'Node TEST ' + newNode.UID + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', newNode.Presentation.Perspectives.GraphNode.Position.x, newNode.Presentation.Perspectives.GraphNode.Position.y, self.nodes.length);
-		// 		self.nodes.push({ id: newNode.UID, node: newNode, element: temp });
-		// 		self.DOMElements.renderGraph(self);
-		// 		// self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
-		// 		// self.Utility.DataStore.SurrealDB.Put(self, 'Local');
+				let n = 20;
+				newNode.Presentation.Perspectives.GraphNode.Position = { x: 350 + (n * self.nodes.length - 1), y: 300 + (n * self.nodes.length - 1) };
+				let temp = self.Utility.DOMElements.MakeDraggableNode(newNode.UID, 'graph-node fade-in', 'Node TEST ' + newNode.UID + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', newNode.Presentation.Perspectives.GraphNode.Position.x, newNode.Presentation.Perspectives.GraphNode.Position.y, self.nodes.length);
+				self.nodes.push({ id: newNode.UID, node: newNode, element: temp });
+				self.DOMElements.renderGraph(self);
+				// self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Local');
 
-		// 		let storeNodes = [];
-		// 		self.nodes.forEach((d, i) => {
-		// 			storeNodes.push(d.node);
-		// 		});
-		// 		console.log('storeNodes >> ', storeNodes);
+				let storeNodes = [];
+				self.nodes.forEach((d, i) => {
+					storeNodes.push(d.node);
+				});
+				console.log('storeNodes >> ', storeNodes);
 
-		// 		self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-		// 		// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-		// 		// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-		// 	});
-		// });
-		// //ADD NODE
-		// //SAVE NODE TO SERVER
-		// this.div_graph_surface.querySelectorAll(`#${self.id_graph_control_palette_container}-node-savetoserver`).forEach((d, i) => {
-		// 	d.addEventOnce('click', function (e) {
-		// 		let storeNodes = [];
-		// 		self.nodes.forEach((d, i) => {
-		// 			storeNodes.push(d.node);
-		// 		});
-		// 		console.log('storeNodes >> ', storeNodes);
-		// 		self.Utility.DataStore.SurrealDB.Put(self, 'Server', 'Yggdrasil', storeNodes);
-		// 	});
-		// });
-		// //SAVE NODE TO SERVER
+				self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+			});
+		});
+		//ADD NODE
+		//SAVE NODE TO SERVER
+		this.div_graph_surface.querySelectorAll(`#${self.id_graph_control_palette_container}-node-savetoserver`).forEach((d, i) => {
+			d.addEventOnce('click', function (e) {
+				let storeNodes = [];
+				self.nodes.forEach((d, i) => {
+					storeNodes.push(d.node);
+				});
+				console.log('storeNodes >> ', storeNodes);
+				self.Utility.DataStore.SurrealDB.Put(self, 'Server', 'Yggdrasil', storeNodes);
+			});
+		});
+		//SAVE NODE TO SERVER
 
-		// //REMOVE NODE
-		// this.div_graph_surface.querySelectorAll(`#${self.id_graph_control_palette_container}-node-remove`).forEach((d, i) => {
-		// 	d.addEventOnce('click', function (e) {
-		// 		let found = [];
-		// 		let foundID = [];
-		// 		self.nodes.forEach((d, i) => {
-		// 			if (d.element.dataset.isActive === 'true') {
-		// 				found.push({ element: d.element, index: i });
-		// 				foundID.push(d.element.id);
-		// 			}
-		// 		});
-		// 		// console.log('found', found);
-		// 		// console.log('foundID', foundID);
-		// 		if (found.length > 0) {
-		// 			if (confirm(`Apakah anda yakin ingin menghapus ${found.length} node yang anda pilih?`)) {
-		// 				(async () => {
-		// 					console.log('masuk async');
-		// 					await self.Utility.DataStore.SurrealDB.Delete(self, 'Local', 'Yggdrasil', foundID);
-		// 					found = found.reverse();
-		// 					found.forEach(el => {
-		// 						el.element.classList.add('fade-out');
-		// 					});
-		// 					setTimeout(function () {
-		// 						found.forEach(el => {
-		// 							el.element.remove()
-		// 							self.nodes.splice(el.index, 1);
+		//REMOVE NODE
+		this.div_graph_surface.querySelectorAll(`#${self.id_graph_control_palette_container}-node-remove`).forEach((d, i) => {
+			d.addEventOnce('click', function (e) {
+				let found = [];
+				let foundID = [];
+				self.nodes.forEach((d, i) => {
+					if (d.element.dataset.isActive === 'true') {
+						found.push({ element: d.element, index: i });
+						foundID.push(d.element.id);
+					}
+				});
+				// console.log('found', found);
+				// console.log('foundID', foundID);
+				if (found.length > 0) {
+					if (confirm(`Apakah anda yakin ingin menghapus ${found.length} node yang anda pilih?`)) {
+						(async () => {
+							console.log('masuk async');
+							await self.Utility.DataStore.SurrealDB.Delete(self, 'Local', 'Yggdrasil', foundID);
+							found = found.reverse();
+							found.forEach(el => {
+								el.element.classList.add('fade-out');
+							});
+							setTimeout(function () {
+								found.forEach(el => {
+									el.element.remove()
+									self.nodes.splice(el.index, 1);
 
-		// 						});
-		// 						self.divs = document.querySelectorAll('.graph-node'); // Replace 'your-div-class' with the class name of your divs
-		// 						// self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
+								});
+								self.divs = document.querySelectorAll('.graph-node'); // Replace 'your-div-class' with the class name of your divs
+								// self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
 
-		// 						// let storeNodes = [];
-		// 						// self.nodes.forEach((d, i) => {
-		// 						// 	storeNodes.push(d.node);
-		// 						// });
-		// 						// console.log('storeNodes >> ', storeNodes);			
-		// 						// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-		// 					}, 200);
-		// 				})();
-		// 			}
-		// 		} else {
-		// 			console.error('Pilih node dulu!');
-		// 		}
-		// 		// self.DOMElements.renderGraph(self);
-		// 		// self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
-		// 	});
-		// });
-		// //REDUCE NODE
+								// let storeNodes = [];
+								// self.nodes.forEach((d, i) => {
+								// 	storeNodes.push(d.node);
+								// });
+								// console.log('storeNodes >> ', storeNodes);			
+								// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+							}, 200);
+						})();
+					}
+				} else {
+					console.error('Pilih node dulu!');
+				}
+				// self.DOMElements.renderGraph(self);
+				// self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
+			});
+		});
+		//REDUCE NODE
 
 		return this.div_graph_surface;
 	}

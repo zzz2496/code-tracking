@@ -1,11 +1,12 @@
 document.addEventListener('modulesLoaded', () => {
 	console.log('Start Blueprint Loader >>>>');
-	let SysUtil = new window.ParadigmREVOLUTION.Modules.Utility();
+	let SysUtil = window.ParadigmREVOLUTION.Utility;
 	let initBlueprints = function(){
 		SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.Blueprints.URL, function (results) {
 			window.ParadigmREVOLUTION.Blueprints.Data = results;
 			console.log('All requests are done!', results);
 			document.dispatchEvent(new Event('BlueprintsLoaded'));
+			console.log('Done Blueprint Loader >>>>');
 		}, function(key, url, status){
 			console.log('progress :>> ', status, key, url);
 		});

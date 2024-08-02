@@ -1,6 +1,6 @@
 // import { NodeProperties } from "./NodeProperties.mjs";
 // import { Surreal } from './node_modules/surrealdb.wasm/dist/full/index.js';
-import { Surreal } from '../paradigm_modules/surrealdb.wasm/dist/full/index.js';
+// import { Surreal } from '../paradigm_modules/surrealdb.wasm/dist/full/index.js';
 
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
@@ -3943,47 +3943,82 @@ export class Utility {
 	};
 	// NOTE - Datastore related methods
 	DataStore = {
-		"LocalStore": {
-			"saveGraphToLocalStore": function (self, collection, document_id) {
-				//Save to Storage.LocalStore
-				// console.log('Save Nodes to LocalStore');
-				let storeNodes = [];
-				let storeNewNodes = [];
-				self.nodes.forEach((d, i) => {
-					if (d.node.NewNode) {
-						d.node.NewNode = false;
-						storeNewNodes.push(d.node);
-					} else {
-						storeNodes.push(d.node);
-					}
-				});
-				console.log('storeNodes', storeNodes);
-				console.log('storeNewNodes', storeNewNodes);
-				self.Storage.IndexedDB.LocalStore.collection(collection).doc(document_id).set({
-					Revision: 0,
-					Nodes: storeNodes
-				});
-				//Save to Storage.LocalStore
-
-			},
-			"getGraphFromLocalStore": function (self, collection, document_id) {
-				//GET NODES FROM LOCALSTORE
-				console.log('Get Nodes from LocalStore');
-				self.Storage.IndexedDB.LocalStore.collection(collection).doc(document_id).get().then(res => {
-					// console.log(res);
-					if (res == null) return;
-					res.Nodes.forEach(d => {
-						// console.log('d >>>>>>', d.Presentation.Perspectives.GraphNode.Position);
-						self.nodes.push({ id: d.UID, node: d, element: null, position: { x: d.Presentation.Perspectives.GraphNode.Position.x, y: d.Presentation.Perspectives.GraphNode.Position.y } });
-					});
-					self.DOMElements.renderGraph(self);
-				});
-				//GET NODES FROM LOCALSTORE
-			}
-		},
-		
 		"SurrealDB": {
 			// "initiateSurrealDB": async function(storage, namespace, database, server, user, pass) {
+			initSurrealDB: async function (mode = 'Memory', SurrealDB, BlueprintsDATA) {
+				let token = mode;
+				switch (mode) { 
+					case 'Memory':
+						try {
+							//Initiate MEMORY
+							console.info('Start SurrealDB.Memory connection...');
+			
+							// Connect to the database
+							await SurrealDB.Memory.connect('mem://');
+							await SurrealDB.Memory.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name});
+		
+							//NOTE - CREATE DUMMY DATA 
+							let query;
+							query = await SurrealDB.Memory.query('create test:data1 content {nama:"Damir"}');
+							query = await SurrealDB.Memory.query('create test:data2 content {nama:"Putri"}');
+							query = await SurrealDB.Memory.query('create test:data3 content {nama:"Olive"}');
+							query = await SurrealDB.Memory.query('create test:data4 content {nama:"Puji"}');
+							query = await SurrealDB.Memory.query('create test:data5 content {nama:"Listyono"}');
+							// query = await SurrealDB.Memory.query('select * from test');
+							// console.log('query', query);
+					
+							console.info('Done SurrealDB.Memory connection...');
+						} catch (e) {
+							console.error("ERROR SurrealDB.Memory on initialization, ", e);
+						}
+						break;
+					case 'IndexedDB':
+						try {
+							//Initiate INDEXEDDB
+							console.info('Start SurrealDB.IndexedDB connection...');
+							
+							// Connect to the database
+							await SurrealDB.IndexedDB.connect(`indxdb://${BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name}`, { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
+					
+							// Select a specific namespace / database
+							await SurrealDB.IndexedDB.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name});
+		
+							console.info('Done SurrealDB.IndexedDB connection...');
+						} catch (e) {
+							console.error("ERROR SurrealDB.IndexedDB on initialization, ", e);
+						}
+						break;
+					default:
+						try{
+							//Initiate TESTSERVER
+							console.info('Start SurrealDB.TestServer connection...');
+		
+							// Initialize SurrealDB Server Connection subsystem if UNDEFINED
+							if (typeof SurrealDB[mode] == "undefined"){
+								SurrealDB[mode] = new window.ParadigmREVOLUTION.Modules.Surreal({
+									engines: window.ParadigmREVOLUTION.Modules.surrealdbWasmEngines()
+								});
+							}
+							// Connect to the database
+							await SurrealDB[mode].connect(BlueprintsDATA.Datastore[mode] , { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
+							
+							// Select a specific namespace / database
+							await SurrealDB[mode].use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name});
+							
+							// Signin as a namespace, database, or root user
+							token = await SurrealDB[mode].signin({
+								username: BlueprintsDATA.Datastore.DefaultUser.Username,
+								password: BlueprintsDATA.Datastore.DefaultUser.Password,
+							});
+							
+							console.info(`Done SurrealDB.${mode}. connection...`);
+						} catch (e) {
+							console.error(`ERROR SurrealDB.${mode} on initialization, `, e);
+						}
+						break;
+				}
+				return token;
+			},
 			"Initialize": async function (storage, App, userinfo, server, what) {
 				console.log('start debug initialize surrealdb');
 				// let App = {

@@ -14,6 +14,9 @@ function cr(data) {
   console.log(JSON.stringify(data, null, 2));
 }
 
+// Serve static files from the specified directory
+app.use(express.static('.'));
+
 // Route to handle requests
 app.all('*', (req, res) => {
   cr(req.query); // Log query parameters
@@ -24,3 +27,6 @@ app.all('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+
+

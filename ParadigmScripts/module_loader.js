@@ -1,4 +1,5 @@
-import { Utility } 		from "../Classes/Utility.mjs";
+console.log('Start Module Loader');
+import { Utility } from "../Classes/Utility.mjs";
 import { GraphSurface } from "../Classes/GraphSurface.mjs";
 import { Connection} 	from "../Classes/GraphConnection.mjs";
 import { WorkerThread } from "../Classes/WorkerThread.mjs";
@@ -17,6 +18,7 @@ let ParadigmREVOLUTION = {
 		"Surreal": Surreal,
 		"surrealdbWasmEngines": surrealdbWasmEngines
 	},
+	"Utility": new Utility(),
 	"Blueprints": {
 		"URL": {
 			// "API_test": {
@@ -38,5 +40,5 @@ let ParadigmREVOLUTION = {
 };
 // console.log('window.ParadigmREVOLUTION :>> ', window.ParadigmREVOLUTION);
 window.ParadigmREVOLUTION = ParadigmREVOLUTION;
-console.log('Modules LOADED >>>>');
+console.log('Done Module Loader >>>>');
 document.dispatchEvent(new Event('modulesLoaded'));

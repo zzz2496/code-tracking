@@ -835,7 +835,7 @@ path.arrowhead-path {
 }
 .toolbar-kit{
 	width: 100%;
-
+	border-collapse: collapse;
 }
 .toolbar-kit th,
 td {
