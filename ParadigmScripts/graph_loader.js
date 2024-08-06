@@ -22,13 +22,27 @@ document.addEventListener('SurrealDBLoaded', () => {
 	let datastore_status = '';
 	console.log('>>>>>', window.ParadigmREVOLUTION.Datastores.SurrealDB);
 	Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
-		console.log(idx, window.ParadigmREVOLUTION.Datastores.SurrealDB[idx], entry);
-		if (typeof entry.connection != "undefined") {
-			datastore_status += `<button class="toolbar-kit btn btn-primary">${idx}</button><br>` ;
+		// console.log('>>>>>>', idx, window.ParadigmREVOLUTION.Datastores.SurrealDB[idx].Instance, entry);
+		console.log('>>>>>>', idx, entry);
+		if (entry.Instance == false) { 
+			datastore_status += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-outline-secondary" value="${idx}">${entry.Metadata.ShortLabel}</button>` ;
+		} else if (typeof entry.Instance.connection != "undefined") {
+			datastore_status += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary" value="${idx}">${entry.Metadata.ShortLabel}</button>` ;
 		} else {
-			datastore_status += `<button class="toolbar-kit btn btn-secondary">${idx}</button><br>` ;
+			datastore_status += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-outline-danger" value="${idx}">${entry.Metadata.ShortLabel}</button>` ;
 		}
 	});
 	console.log('datastore_status', datastore_status);
-	ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = datastore_status;
+	ParadigmREVOLUTION.Utility.DOMElements.hide(ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status'), function () { 
+		ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = datastore_status;
+		ParadigmREVOLUTION.Utility.DOMElements.show(ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status'), function () { 
+			ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelectorAll('#datastore_status .datastore-status-light').forEach(element => {
+				element.addEventListener('click', function () { 
+					// console.log(this.value);
+					// ParadigmREVOLUTION.
+					// ParadigmREVOLUTION.Utility.DataStor.SurrealDB.initSurrealDB(this.value, entity.Metadata.Label, entity.Metadata.ShortLabel, entity.Metadata.Connect, entity.Metadata.Instance, window.ParadigmREVOLUTION.Blueprints.Data)
+				});
+			});	
+		});
+	});
 });

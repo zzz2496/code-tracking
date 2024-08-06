@@ -704,7 +704,7 @@ div {
 	-webkit-backdrop-filter: blur(4px);
 
 	transition: transform 0.3s;
-	/* transform-style: preserve-3d; */
+	transform-style: preserve-3d;
 	/* background: var(--subtle-color-a05); */
 	/* background-color: var(--color-white-a06); */
 	/* border: 1px solid #d3d3d3; */
@@ -717,8 +717,42 @@ div {
 	-webkit-user-select: none;
 	user-select: none;
 	box-shadow: var(--soft-box-shadow-l10);
+	min-width: 200px;
+	width: 260px;
+	resize: both;
+	overflow: auto;
+}
+.toolbar-panel::resize {
+	background-color: #ccc;
+	cursor: col-resize;
 }
 
+ /* Initial hidden state */
+.hidden {
+    display: none;
+    opacity: 0;
+    height: 0; 
+    transition: opacity 1s ease;
+}
+/*
+.show {
+    display: block;
+    animation: fadeInH 1s forwards;
+}
+
+.hide {
+    display: block; 
+    animation: fadeOutH 1s forwards;
+}
+@keyframes fadeInH {
+    from { opacity: 0; height: 0; }
+    to { opacity: 1; height: auto; }
+}
+
+@keyframes fadeOutH {
+    from { opacity: 1; height: auto; }
+    to { opacity: 0; height: 0; }
+} */
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -784,28 +818,36 @@ div {
 	border-radius:8px;
 	/* cursor: default; */
 }
-.graph-node.active{
+
+.active{
 	box-shadow: 
 		0 0 0 3px var(--outline-color),
 		var(--soft-box-shadow-l10);
 	cursor: grab;
 	/* border: solid #72a836 4px; */
 }
-.graph-node.onselect{
+.selecting{
 	box-shadow:
 		0 0 0 3px var(--outline-color),
 		var(--soft-box-shadow-l10);
 	/* border: solid #72a836 4px; */
 }
+.disabled{
+	box-shadow:
+		0 0 0 3px var(--outline-color),
+		var(--soft-box-shadow-l10);
+	/* border: solid #72a836 4px; */
+}
+
 path.arrowhead-path {
-    fill: var( --text-soft-color);
+	fill: var( --text-soft-color);
 }
 
 .graph-surface {
-	transition: all 1s;
+	/* transition: all 1s;
 	transform-style: preserve-3d;
 	transform: scale3d(1, 1, 1);
-	transform-origin: center center;
+	transform-origin: center center; */
 	width: 100%;
 	height: 100%;
 }
@@ -833,6 +875,7 @@ path.arrowhead-path {
 		30px 96px 157px rgba(0, 0, 0, 0.07);
 
 }
+
 .toolbar-kit{
 	width: 100%;
 	border-collapse: collapse;
@@ -840,6 +883,14 @@ path.arrowhead-path {
 .toolbar-kit th,
 td {
 	padding: 5px;
+}
+.datastore-status-light{
+	width: auto;
+	border-collapse: collapse;
+	margin: 0.15rem;
+}
+.datastore-status-light-wide{
+	width: 100%;
 }
 
 .diamond-shape {
@@ -1080,6 +1131,26 @@ td {
 	transform-style: preserve-3d;
 	transform-origin: center center;
 	transition-timing-function: cubic-bezier(0, 0, 0, 1);
+	resize: both;
+	overflow: auto;
+
+	/* border: solid var(--border-color) 1px;
+	position: absolute; */
+	/* backdrop-filter: blur(4px); */
+	-webkit-backdrop-filter: blur(4px);
+
+	/*transition: transform 0.3s;
+	background-image: linear-gradient(158deg, var(--subtle-color-a02), var(--subtle-color) 80%);
+	color: var(--text-color);
+	text-align: center;
+	border-radius: 16px;
+	-webkit-user-select: none;
+	user-select: none;
+	box-shadow: var(--soft-box-shadow-l10);
+	width: 260px;
+	resize: both;
+	overflow: auto; */
+
 }
 /* .card:hover {
 	width: 500px;
@@ -1103,4 +1174,8 @@ svg {
 	border-radius: 1rem;
 	position: absolute;
 	background-color: var(--outline-color-a02);
+}
+.runtime-controls-button{
+	min-width: 35px;
+	cursor: pointer;
 }

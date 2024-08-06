@@ -2720,6 +2720,51 @@ export class Utility {
 	};
 	// NOTE - DOMElements related methods
 	DOMElements = {
+		"hide": ((element, callback) => {
+			const originalHeight = element.scrollHeight + 'px';
+
+            element.style.height = originalHeight; // Set to original height
+            element.style.opacity = '1'; // Ensure opacity is at 1
+
+            // Trigger a reflow
+            void element.offsetHeight;
+
+            element.style.transition = 'opacity 1s ease, height 0.5s ease';
+            element.style.height = '0';
+            element.style.opacity = '0';
+
+            element.addEventListener('transitionend', function handler(e) {
+                if (e.propertyName === 'height') {
+                    element.classList.add('hidden');
+                    element.style.transition = ''; // Clear transition
+                    if (callback) callback();
+                }
+                element.removeEventListener('transitionend', handler);
+            });
+		}),
+		"show": ((element, callback)=> {
+			element.classList.remove('hidden');
+            const autoHeight = element.scrollHeight + 'px';
+
+            element.style.height = '0'; // Start from height 0
+            element.style.opacity = '0'; // Start from opacity 0
+
+            // Trigger a reflow
+            void element.offsetHeight;
+
+            element.style.transition = 'opacity 1s ease, height 0.5s ease';
+            element.style.height = autoHeight;
+            element.style.opacity = '1';
+
+            element.addEventListener('transitionend', function handler(e) {
+                if (e.propertyName === 'height') {
+                    element.style.height = 'auto'; // Set height to auto after transition
+                    element.style.transition = ''; // Clear transition
+                }
+				element.removeEventListener('transitionend', handler);
+				if (callback) callback();
+            });
+		}),
 		"addEventOnce": function (element, eventName, eventHandler) {
 			const eventKey = `data-event-${eventName}-initialized`;
 
@@ -3257,6 +3302,93 @@ export class Utility {
 			};
 		}).bind(this),
 		"DragElement": (function (elmnt, zoomed = false, snap_every = 1, callback) {
+			let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+		  
+			if (document.getElementById(elmnt.id + "-header")) {
+				document.getElementById(elmnt.id + "-header").onmousedown = dragMouseDown.bind(this);
+				document.getElementById(elmnt.id + "-header").addEventListener("touchstart", touchStart.bind(this), { passive: false });
+			} else {
+				elmnt.onmousedown = dragMouseDown.bind(this);
+				elmnt.addEventListener("touchstart", touchStart.bind(this), { passive: false });
+			}
+		  
+			function dragMouseDown(e) {
+				if (this.activeElement == null) this.activeElement = elmnt.id;
+				if (this.activeElement != elmnt.id) return;
+		  
+				e = e || window.event;
+				e.preventDefault();
+		  
+				let divider = (zoomed) ? this.zoom_level : 1;
+				pos3 = this.Numbers.RoundToNearestBase((e.clientX / divider), snap_every);
+				pos4 = this.Numbers.RoundToNearestBase((e.clientY / divider), snap_every);
+		  
+				document.onmouseup = closeDragElement.bind(this);
+				document.onmousemove = elementDrag.bind(this);
+			}
+		  
+			function touchStart(e) {
+				if (this.activeElement == null) this.activeElement = elmnt.id;
+				if (this.activeElement != elmnt.id) return;
+		  
+				e = e || window.event;
+				e.preventDefault();
+		  
+				const touch = e.changedTouches[0];
+				let divider = (zoomed) ? this.zoom_level : 1;
+				pos3 = this.Numbers.RoundToNearestBase((touch.clientX / divider), snap_every);
+				pos4 = this.Numbers.RoundToNearestBase((touch.clientY / divider), snap_every);
+		  
+				document.removeEventListener("touchend", closeDragElement);
+				document.removeEventListener("touchmove", elementDrag);
+		  
+				document.addEventListener("touchend", closeDragElement.bind(this), { passive: false });
+				document.addEventListener("touchmove", elementDrag.bind(this), { passive: false });
+			}
+		  
+			function elementDrag(e) {
+				if (this.activeElement != elmnt.id) return;
+		  
+				e = e || window.event;
+				e.preventDefault();
+		  
+				let clientX, clientY;
+				let divider = (zoomed) ? this.zoom_level : 1;
+		  
+				if (e.type === "touchmove") {
+					const touch = e.changedTouches[0];
+					clientX = this.Numbers.RoundToNearestBase((touch.clientX / divider), snap_every);
+					clientY = this.Numbers.RoundToNearestBase((touch.clientY / divider), snap_every);
+				} else {
+					clientX = this.Numbers.RoundToNearestBase((e.clientX / divider), snap_every);
+					clientY = this.Numbers.RoundToNearestBase((e.clientY / divider), snap_every);
+				}
+		  
+				pos1 = pos3 - clientX;
+				pos2 = pos4 - clientY;
+				pos3 = clientX;
+				pos4 = clientY;
+		  
+				let cY = elmnt.offsetTop - pos2;
+				let cX = elmnt.offsetLeft - pos1;
+				if (cY >= 0) elmnt.style.top = cY + "px";
+				if (cX >= 0) elmnt.style.left = cX + "px";
+				if (typeof callback != 'undefined') callback();
+			}
+		  
+			function closeDragElement() {
+				pos3 = 0;
+				pos4 = 0;
+				this.activeElement = null;
+		  
+				document.onmouseup = null;
+				document.onmousemove = null;
+				document.removeEventListener("touchend", closeDragElement);
+				document.removeEventListener("touchmove", elementDrag);
+				if (typeof callback != 'undefined') callback();
+			}
+		}).bind(this),
+		"DragElement_pre_resize": (function (elmnt, zoomed = false, snap_every = 1, callback) {
 			//DragElement in Utility
 			let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0, touchOffsetX = 0, touchOffsetY = 0;
 			if (document.getElementById(elmnt.id + "-header")) {
@@ -3945,28 +4077,36 @@ export class Utility {
 	DataStore = {
 		"SurrealDB": {
 			// "initiateSurrealDB": async function(storage, namespace, database, server, user, pass) {
-			initSurrealDB: async function (mode = 'Memory', SurrealDB, BlueprintsDATA) {
+			initSurrealDB: async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA) {
 				let token = mode;
-				switch (mode) { 
+				switch (mode) {
 					case 'Memory':
 						try {
 							//Initiate MEMORY
 							console.info('Start SurrealDB.Memory connection...');
+							if (Connect) {
+								// Connect to the database
+								SurrealDB.Memory.Metadata = {
+									"Name": mode,
+									"Label": Label,
+									"ShortLabel": ShortLabel,
+									"Connect": Connect
+								}
+								await SurrealDB.Memory.Instance.connect('mem://');
+								await SurrealDB.Memory.Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
 			
-							// Connect to the database
-							await SurrealDB.Memory.connect('mem://');
-							await SurrealDB.Memory.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name});
-		
-							//NOTE - CREATE DUMMY DATA 
-							let query;
-							query = await SurrealDB.Memory.query('create test:data1 content {nama:"Damir"}');
-							query = await SurrealDB.Memory.query('create test:data2 content {nama:"Putri"}');
-							query = await SurrealDB.Memory.query('create test:data3 content {nama:"Olive"}');
-							query = await SurrealDB.Memory.query('create test:data4 content {nama:"Puji"}');
-							query = await SurrealDB.Memory.query('create test:data5 content {nama:"Listyono"}');
-							// query = await SurrealDB.Memory.query('select * from test');
-							// console.log('query', query);
-					
+								//NOTE - CREATE DUMMY DATA 
+								let query;
+								query = await SurrealDB.Memory.Instance.query('create test:data1 content {nama:"Damir"}');
+								query = await SurrealDB.Memory.Instance.query('create test:data2 content {nama:"Putri"}');
+								query = await SurrealDB.Memory.Instance.query('create test:data3 content {nama:"Olive"}');
+								query = await SurrealDB.Memory.Instance.query('create test:data4 content {nama:"Puji"}');
+								query = await SurrealDB.Memory.Instance.query('create test:data5 content {nama:"Listyono"}');
+								// query = await SurrealDB.Memory.query('select * from test');
+								// console.log('query', query);								
+							} else {
+								SurrealDB.Memory.Instance = false;
+							}
 							console.info('Done SurrealDB.Memory connection...');
 						} catch (e) {
 							console.error("ERROR SurrealDB.Memory on initialization, ", e);
@@ -3976,41 +4116,68 @@ export class Utility {
 						try {
 							//Initiate INDEXEDDB
 							console.info('Start SurrealDB.IndexedDB connection...');
-							
-							// Connect to the database
-							await SurrealDB.IndexedDB.connect(`indxdb://${BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name}`, { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
-					
-							// Select a specific namespace / database
-							await SurrealDB.IndexedDB.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name});
-		
+							if (Connect) {
+								// Connect to the database
+								SurrealDB.IndexedDB.Metadata = {
+									"Name": mode,
+									"Label": Label,
+									"ShortLabel": ShortLabel,
+									"Connect": Connect
+								}
+								await SurrealDB.IndexedDB.Instance.connect(`indxdb://${BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name}`, { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
+						
+								// Select a specific namespace / database
+								await SurrealDB.IndexedDB.Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
+							} else {
+								SurrealDB.IndexedDB.Instance = false;
+							}
 							console.info('Done SurrealDB.IndexedDB connection...');
 						} catch (e) {
 							console.error("ERROR SurrealDB.IndexedDB on initialization, ", e);
 						}
 						break;
 					default:
-						try{
+						try {
 							//Initiate TESTSERVER
 							console.info('Start SurrealDB.TestServer connection...');
-		
-							// Initialize SurrealDB Server Connection subsystem if UNDEFINED
-							if (typeof SurrealDB[mode] == "undefined"){
-								SurrealDB[mode] = new window.ParadigmREVOLUTION.Modules.Surreal({
-									engines: window.ParadigmREVOLUTION.Modules.surrealdbWasmEngines()
+							if (Connect) {
+								// Initialize SurrealDB Server Connection subsystem if UNDEFINED
+								if (typeof SurrealDB[mode]== "undefined") {
+									SurrealDB[mode] = {
+										"Metadata": {
+											"Name": mode,
+											"Label": Label,
+											"ShortLabel": ShortLabel,
+											"Connect": Connect
+										},
+										"Instance": new window.ParadigmREVOLUTION.Modules.Surreal({
+											engines: window.ParadigmREVOLUTION.Modules.surrealdbWasmEngines()
+										})
+									}
+								}
+								// Connect to the database
+								await SurrealDB[mode].Instance.connect(BlueprintsDATA.Datastore[mode], { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
+
+								// Select a specific namespace / database
+								await SurrealDB[mode].Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
+
+								// Signin as a namespace, database, or root user
+								token = await SurrealDB[mode].Instance.signin({
+									username: BlueprintsDATA.Datastore.DefaultUser.Username,
+									password: BlueprintsDATA.Datastore.DefaultUser.Password,
 								});
+							} else {
+								SurrealDB[mode] = {
+									"Metadata": {
+										"Name": mode,
+										"Label": Label,
+										"ShortLabel": ShortLabel,
+										"Connect": Connect
+									},
+									"Instance": false
+								};
 							}
-							// Connect to the database
-							await SurrealDB[mode].connect(BlueprintsDATA.Datastore[mode] , { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
-							
-							// Select a specific namespace / database
-							await SurrealDB[mode].use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name});
-							
-							// Signin as a namespace, database, or root user
-							token = await SurrealDB[mode].signin({
-								username: BlueprintsDATA.Datastore.DefaultUser.Username,
-								password: BlueprintsDATA.Datastore.DefaultUser.Password,
-							});
-							
+
 							console.info(`Done SurrealDB.${mode}. connection...`);
 						} catch (e) {
 							console.error(`ERROR SurrealDB.${mode} on initialization, `, e);

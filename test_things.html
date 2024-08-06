@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Select and Drag Divs</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<button id="addRows">Add rows</button>
+    <div class="container">
+        <div class="selectable" style="left: 50px;  top: 50px;">Item 1</div>
+        <div class="selectable" style="left: 150px; top: 50px;">Item 2</div>
+        <div class="selectable" style="left: 250px; top: 50px;">Item 3</div>
+        <div class="selectable" style="left: 350px; top: 50px;">Item 4</div>
+        <div class="selectable" style="left: 450px; top: 50px;">Item 5</div>
+        <div class="selectable" style="left: 550px; top: 50px;">Item 6</div>
+        <div class="selectable" style="left: 650px; top: 50px;">Item 7</div>
+        <div class="selectable" style="left: 750px; top: 50px;">Item 8</div>
+        <div class="selectable" style="left: 850px; top: 50px;">Item 9</div>
+        <div class="selectable" style="left: 950px; top: 50px;">Item 10</div>
+        <div class="selectable" style="left: 50px;  top: 150px;">Item 11</div>
+        <div class="selectable" style="left: 150px; top: 150px;">Item 12</div>
+        <div class="selectable" style="left: 250px; top: 150px;">Item 13</div>
+        <div class="selectable" style="left: 350px; top: 150px;">Item 14</div>
+        <div class="selectable" style="left: 450px; top: 150px;">Item 15</div>
+        <div class="selectable" style="left: 550px; top: 150px;">Item 16</div>
+        <div class="selectable" style="left: 650px; top: 150px;">Item 17</div>
+        <div class="selectable" style="left: 750px; top: 150px;">Item 18</div>
+        <div class="selectable" style="left: 850px; top: 150px;">Item 19</div>
+        <div class="selectable" style="left: 950px; top: 150px;">Item 20</div>
+        <div class="selectable" style="left: 50px;  top: 250px;">Item 21</div>
+        <div class="selectable" style="left: 150px; top: 250px;">Item 22</div>
+        <div class="selectable" style="left: 250px; top: 250px;">Item 23</div>
+        <div class="selectable" style="left: 350px; top: 250px;">Item 24</div>
+        <div class="selectable" style="left: 450px; top: 250px;">Item 25</div>
+        <div class="selectable" style="left: 550px; top: 250px;">Item 26</div>
+        <div class="selectable" style="left: 650px; top: 250px;">Item 27</div>
+        <div class="selectable" style="left: 750px; top: 250px;">Item 28</div>
+        <div class="selectable" style="left: 850px; top: 250px;">Item 29</div>
+        <div class="selectable" style="left: 950px; top: 250px;">Item 30</div>
+    </div>
+    <script>
+let rows = 3;
+document.querySelector('#addRows').addEventListener('click', () => {
+	rows++;
+	let y = ((rows -1)*100)+50;
+	let num = (rows -1)*10;
+	console.log('y', y);
+	document.querySelector('.container').innerHTML += `
+        <div class="selectable" style="left: 50px;  top: ${y}px;">Item ${num+1}</div>
+        <div class="selectable" style="left: 150px; top: ${y}px;">Item ${num+2}</div>
+        <div class="selectable" style="left: 250px; top: ${y}px;">Item ${num+3}</div>
+        <div class="selectable" style="left: 350px; top: ${y}px;">Item ${num+4}</div>
+        <div class="selectable" style="left: 450px; top: ${y}px;">Item ${num+5}</div>
+        <div class="selectable" style="left: 550px; top: ${y}px;">Item ${num+6}</div>
+        <div class="selectable" style="left: 650px; top: ${y}px;">Item ${num+7}</div>
+        <div class="selectable" style="left: 750px; top: ${y}px;">Item ${num+8}</div>
+        <div class="selectable" style="left: 850px; top: ${y}px;">Item ${num+9}</div>
+        <div class="selectable" style="left: 950px; top: ${y}px;">Item ${num+10}</div>
+	`;
+	document.querySelector('.container').querySelectorAll('.selectable.active').forEach(item => {
+		console.log('>>>>>', item);
+		item.classList.remove('active');
+	});
+
+	dragAndSelect.reinitialize();
+});
+
+function initializeDragAndSelect(options = {}) {
+    const { snapSize = 20, containerSelector = '.container', itemSelector = '.selectable' } = options;
+
+    const container = document.querySelector(containerSelector);
+    let selectedItems = new Set();
+    let isDraggingSelection = false;
+    let isDraggingItem = false;
+    let isResizing = false;
+    let startX, startY, currentX, currentY;
+    let selectionBox = null;
+    let initialPositions = new Map();
+
+    function snapToGrid(value, gridSize) {
+        return Math.round(value / gridSize) * gridSize;
+    }
+
+    function toggleSelection(item) {
+        if (selectedItems.has(item)) {
+            item.classList.remove('active');
+            selectedItems.delete(item);
+        } else {
+            item.classList.add('active');
+            selectedItems.add(item);
+        }
+        console.log(Array.from(selectedItems));  // Log selected items for debugging
+    }
+
+    function startDraggingSelection(event) {
+        isDraggingSelection = true;
+        startX = event.clientX;
+        startY = event.clientY;
+
+        selectionBox = document.createElement('div');
+        selectionBox.className = 'selection-box';
+        selectionBox.style.left = `${startX}px`;
+        selectionBox.style.top = `${startY}px`;
+        container.appendChild(selectionBox);
+    }
+
+    function updateSelectionBox(event) {
+        currentX = event.clientX;
+        currentY = event.clientY;
+
+        selectionBox.style.left = `${Math.min(startX, currentX)}px`;
+        selectionBox.style.top = `${Math.min(startY, currentY)}px`;
+        selectionBox.style.width = `${Math.abs(currentX - startX)}px`;
+        selectionBox.style.height = `${Math.abs(currentY - startY)}px`;
+
+        const rect = selectionBox.getBoundingClientRect();
+
+        document.querySelectorAll(itemSelector).forEach(item => {
+            const itemRect = item.getBoundingClientRect();
+            if (rect.right >= itemRect.left &&
+                rect.left <= itemRect.right &&
+                rect.bottom >= itemRect.top &&
+                rect.top <= itemRect.bottom) {
+                if (!selectedItems.has(item)) {
+                    item.classList.add('active');
+                    selectedItems.add(item);
+                }
+            } else {
+                if (selectedItems.has(item)) {
+                    item.classList.remove('active');
+                    selectedItems.delete(item);
+                }
+            }
+        });
+    }
+
+    function finalizeSelection() {
+        isDraggingSelection = false;
+        if (selectionBox) {
+            selectionBox.remove();
+            selectionBox = null;
+        }
+        console.log(Array.from(selectedItems));  // Log selected items for debugging
+    }
+
+    function startDraggingItem(event, item) {
+        if (!selectedItems.has(item)) {
+            selectedItems.forEach(selectedItem => {
+                selectedItem.classList.remove('active');
+            });
+            selectedItems.clear();
+            selectedItems.add(item);
+            item.classList.add('active');
+        }
+        
+        isDraggingItem = true;
+        startX = event.clientX;
+        startY = event.clientY;
+        
+        selectedItems.forEach(selectedItem => {
+            initialPositions.set(selectedItem, {
+                left: selectedItem.offsetLeft,
+                top: selectedItem.offsetTop
+            });
+        });
+    }
+
+    function dragItem(event) {
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+
+        selectedItems.forEach(item => {
+            const initialPosition = initialPositions.get(item);
+            item.style.left = `${snapToGrid(initialPosition.left + dx, snapSize)}px`;
+            item.style.top = `${snapToGrid(initialPosition.top + dy, snapSize)}px`;
+        });
+    }
+
+    function stopDraggingItem() {
+        isDraggingItem = false;
+        initialPositions.clear();
+        console.log(Array.from(selectedItems));  // Log selected items for debugging
+    }
+
+    function deselectAll() {
+        selectedItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        selectedItems.clear();
+        console.log(Array.from(selectedItems));  // Log selected items for debugging
+    }
+
+    function setupEventListeners() {
+        const selectableItems = document.querySelectorAll(itemSelector);
+
+        selectableItems.forEach(item => {
+            item.addEventListener('mousedown', (event) => {
+                const resizeHandleSize = 10;
+                const rect = item.getBoundingClientRect();
+
+                if (event.clientX >= rect.right - resizeHandleSize && event.clientY >= rect.bottom - resizeHandleSize) {
+                    isResizing = true;
+                    item.style.cursor = 'se-resize';
+                } else {
+                    isResizing = false;
+                    item.style.cursor = 'pointer';
+                    if (event.ctrlKey || event.metaKey) {
+                        toggleSelection(event.target);
+                    } else if (selectedItems.has(event.target)) {
+                        startDraggingItem(event, item);
+                    } else {
+                        deselectAll();
+                        toggleSelection(event.target);
+                        startDraggingItem(event, item);
+                    }
+                }
+                event.stopPropagation();
+            });
+
+            item.addEventListener('mousemove', (event) => {
+                const resizeHandleSize = 10;
+                const rect = item.getBoundingClientRect();
+                if (event.clientX >= rect.right - resizeHandleSize && event.clientY >= rect.bottom - resizeHandleSize) {
+                    item.style.cursor = 'se-resize';
+                } else {
+                    item.style.cursor = 'pointer';
+                }
+            });
+
+            item.addEventListener('mouseup', () => {
+                isResizing = false;
+            });
+        });
+
+        container.addEventListener('mousedown', (event) => {
+            if (!event.ctrlKey && !event.metaKey && !event.target.classList.contains(itemSelector.substring(1))) {
+                deselectAll();
+                startDraggingSelection(event);
+            }
+        });
+
+        container.addEventListener('mousemove', (event) => {
+            if (isDraggingSelection) {
+                updateSelectionBox(event);
+            } else if (isDraggingItem) {
+                dragItem(event);
+            }
+        });
+
+        container.addEventListener('mouseup', () => {
+            if (isDraggingSelection) {
+                finalizeSelection();
+            } else if (isDraggingItem) {
+                stopDraggingItem();
+            }
+        });
+    }
+
+    setupEventListeners();
+
+    return {
+        reinitialize() {
+            // Call deselectAll before reinitializing
+            deselectAll();
+
+            // Remove all previous event listeners and reinitialize
+            const selectableItems = document.querySelectorAll(itemSelector);
+            selectableItems.forEach(item => {
+                item.removeEventListener('mousedown', startDraggingItem);
+                item.removeEventListener('mousemove', (event) => { /* Add corresponding event listener removal logic here */ });
+                item.removeEventListener('mouseup', () => { /* Add corresponding event listener removal logic here */ });
+            });
+
+            container.removeEventListener('mousedown', startDraggingSelection);
+            container.removeEventListener('mousemove', updateSelectionBox);
+            container.removeEventListener('mouseup', finalizeSelection);
+
+            setupEventListeners();
+        },
+        addItem(html) {
+            deselectAll();
+            container.insertAdjacentHTML('beforeend', html);
+            this.reinitialize();
+        },
+        removeItem(item) {
+            deselectAll();
+            item.remove();
+            this.reinitialize();
+        }
+    };
+}
+
+// Initialize with options
+const dragAndSelect = initializeDragAndSelect({
+    snapSize: 25,
+    containerSelector: '.container',
+    itemSelector: '.selectable'
+});
+
+// Usage examples for adding and removing items
+// const newDivHTML = '<div class="selectable" style="width: 100px; height: 100px; background: red;"></div>';
+// dragAndSelect.addItem(newDivHTML);
+
+// const itemToRemove = document.querySelector('.selectable');
+// dragAndSelect.removeItem(itemToRemove);
+
+
+
+
+
+	</script>
+</body>
+</html>
