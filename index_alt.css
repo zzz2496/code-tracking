@@ -698,6 +698,7 @@ div {
 
 .toolbar-panel {
 	border: solid var(--border-color) 1px;
+	color: var(--text-color);
 	/* padding: 10px; */
 	position: absolute;
 	backdrop-filter: blur(4px);
@@ -711,14 +712,14 @@ div {
 	/* background-image: linear-gradient(158deg, var(--color-dark1), var(--color-dark2) 100%); */
 	background-image: linear-gradient(158deg, var(--subtle-color-a02), var(--subtle-color) 80%);
 	/* background-color: var(--bg-dark-color-primary); */
-	color: var(--text-color);
+	
 	text-align: center;
 	border-radius: 16px;
 	-webkit-user-select: none;
 	user-select: none;
 	box-shadow: var(--soft-box-shadow-l10);
-	min-width: 200px;
-	width: 260px;
+	min-width: 240px;
+	/* width: 260px; */
 	resize: both;
 	overflow: auto;
 }
@@ -1176,6 +1177,37 @@ svg {
 	background-color: var(--outline-color-a02);
 }
 .runtime-controls-button{
-	min-width: 35px;
+	min-width: 50px;
 	cursor: pointer;
+}
+
+fieldset {
+	border: solid var(--border-color) 1px !important;
+	padding-bottom: 0em;
+	margin-top: 1.5em;
+	border-radius: 0.5em;
+	position: relative;
+}
+legend {
+	font-size: 1.25em;
+	font-weight: bold;
+	padding: 0 0.5em;
+	text-align: center;
+	width: auto;
+	position: absolute;
+	top: -0.75em;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: transparent;
+}
+
+.group-container{
+
+}
+
+.group-head{
+	cursor: pointer;
+}
+.group-body{
+
 }

@@ -17,14 +17,14 @@ document.addEventListener('BlueprintsLoaded', async () => {
 	SurrealDB = {
 		"Memory": {
 			"Metadata": {},
-			"Instance": new window.ParadigmREVOLUTION.Modules.Surreal({
-				engines: window.ParadigmREVOLUTION.Modules.surrealdbWasmEngines()
+			"Instance": new window.ParadigmREVOLUTION.SystemCore.Modules.Surreal({
+				engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
 			})
 		},
 		"IndexedDB": {
 			"Metadata": {},
-			"Instance": new window.ParadigmREVOLUTION.Modules.Surreal({
-				engines: window.ParadigmREVOLUTION.Modules.surrealdbWasmEngines()
+			"Instance": new window.ParadigmREVOLUTION.SystemCore.Modules.Surreal({
+				engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
 			})
 		}
 		
@@ -32,11 +32,11 @@ document.addEventListener('BlueprintsLoaded', async () => {
 
 	 // NOTE: SURREALDB SUBSECTION - MEMORY INITIALIZATION
 	 const initConfigs = [
-        { name: 'Memory', label:'Memory', shortlabel:'MEMD', connect:1, instance: SurrealDB },
-        { name: 'IndexedDB', label:'IndexedDB', shortlabel:'IDXD', connect:1, instance: SurrealDB },
-        { name: 'TestServer', label:'TestServer', shortlabel:'TEST', connect:1, instance: SurrealDB },
-        { name: 'BackupServer', label:'BackupServer', shortlabel:'BCKP', connect:0, instance: SurrealDB },
-        { name: 'ProductionServer', label:'ProductionServer', shortlabel:'PROD', connect:0, instance: SurrealDB }
+        { name: 'Memory', label:'Memory Datastore', shortlabel:'MEMD', connect:1, instance: SurrealDB },
+        { name: 'IndexedDB', label:'IndexedDB Datastore', shortlabel:'IDXD', connect:1, instance: SurrealDB },
+        { name: 'TestServer', label:'TestServer Datastore', shortlabel:'TEST', connect:1, instance: SurrealDB },
+        { name: 'BackupServer', label:'BackupServer Datastore', shortlabel:'BCKP', connect:0, instance: SurrealDB },
+        { name: 'ProductionServer', label:'ProductionServer Datastore', shortlabel:'PROD', connect:0, instance: SurrealDB }
 	];
 	window.ParadigmREVOLUTION.Datastores = {
 		Tokens: Tokens,
@@ -45,7 +45,7 @@ document.addEventListener('BlueprintsLoaded', async () => {
 	};	
 
     const promises = initConfigs.map(config => 
-        ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.Blueprints.Data)
+        ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules)
     );
 
     const results = await Promise.all(promises);
@@ -53,7 +53,7 @@ document.addEventListener('BlueprintsLoaded', async () => {
     initConfigs.forEach((config, index) => {
         Tokens[config.name] = results[index];
     });
-	
+	window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
     document.dispatchEvent(new Event('SurrealDBLoaded'));
     console.log('Done SurrealDB Initialization!');
 });

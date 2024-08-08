@@ -2,9 +2,9 @@ document.addEventListener('modulesLoaded', () => {
 	console.log('Start Blueprint Loader >>>>');
 	let SysUtil = window.ParadigmREVOLUTION.Utility;
 	let initBlueprints = function(){
-		SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.Blueprints.URL, function (results) {
-			window.ParadigmREVOLUTION.Blueprints.Data = results;
-			console.log('All requests are done!', results);
+		SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Blueprints.URL, function (results) {
+			window.ParadigmREVOLUTION.SystemCore.Blueprints.Data = results;
+			window.ParadigmREVOLUTION.SystemCore.CoreStatus.Blueprints = "LOADED";
 			document.dispatchEvent(new Event('BlueprintsLoaded'));
 			console.log('Done Blueprint Loader >>>>');
 		}, function(key, url, status){
@@ -12,12 +12,4 @@ document.addEventListener('modulesLoaded', () => {
 		});
 	}
 	initBlueprints();
-	document.getElementById('btn1').addEventListener('click', function () {
-		initBlueprints();
-	});
-	document.getElementById('btn2').addEventListener('click', () => {
-		console.log('Checking Datasets');
-		console.log('window.ParadigmREVOLUTION.Blueprints.URL :>> ', window.ParadigmREVOLUTION.Blueprints.URL);
-		console.log('window.ParadigmREVOLUTION.Blueprints.Data :>> ', window.ParadigmREVOLUTION.Blueprints.Data);
-	});
 });

@@ -90,100 +90,153 @@ export class GraphSurface {
 		//Creation of Graph Surface in Graph Container
 		GraphObject.GraphElement.zoom_level = 1;
 		GraphObject.GraphElement.controlPalette = document.createElement('div');
-		
+				
 		GraphObject.GraphElement.controlPalette.className = 'toolbar-kit';
-		GraphObject.GraphElement.controlPalette.style = 'text-align: center';
+		GraphObject.GraphElement.controlPalette.style = 'text-align: center; margin-bottom: 10px;';
 		GraphObject.GraphElement.controlPalette.innerHTML = `
-			<table border="0" align="center">
-				<tr>
-					<td colspan="3">RUNTIME CONTROLS</td>
-				</tr>
-				<tr>
-					<td><button class="raised-element btn" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset"><label class="runtime-controls-button"><i class="fa-solid fa-refresh"></i></label></button></td>
-					<td><button class="raised-element btn" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--play"><label class="runtime-controls-button"><i class="fa-solid fa-play"></i> <i class="fa-solid fa-pause"></i></label></button></td>
-					<td><button class="raised-element btn" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step"><label class="runtime-controls-button"><i class="fa-solid fa-step-forward"></i></label></button></td>
-				</tr>
-			</table>
-			<table border="0" align="center">
-
-				<tr>
-					<td colspan="3">DATASTORE STATUS</td>
-				</tr>
-				<tr>
-					<td colspan="3">
-						<div id= "datastore_status">Loading...</div>
-					</td>				
-				</tr>
-			</table>
-			<table border="0" align="center">
-
-				<tr>
-					<td colspan="3">ZOOM Level (<label id='zoom-level'>${GraphObject.GraphElement.zoom_level}</label>)</td>
-				</tr>
-				<tr>
-					<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-out"><i class="p-2 fa-solid fa-minus"></i></button></td>
-					<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-reset">RESET</button></td>
-					<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-in"><i class="p-2 fa-solid fa-plus"></i></button></td>
-				</tr>
-			</table>
-			<table border="0" align="center">
-				<tr>
-					<td colspan="3">NODE</td>
-				</tr>
-				<tr>
-					<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-remove"><i class="p-2 fa-solid fa-minus"></i></button></td>
-					<td>
-						<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-savetoserver">SAVE</button>
-						<br>
-						<br>
-						<select id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-type">
-							<option value="Node">Memory</option>
-							<option value="Node">Local</option>
-							<option value="Node">Server</option>
-						</select>
-						<br>
-						<br>
-						<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-loadfromserver">LOAD</button>
-					</td>
-					<td><button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-add"><i class="p-2 fa-solid fa-plus"></i></button></td>
-				</tr>
-			</table>
-			<table border="0" align="center">
-				<tr>
-					<td colspan='3'>Switch Theme</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}___theme-switch" style="color:red;"><i class="p-2 fa-solid fa-repeat"></i></button>
-					</td>
-					<td></td>
-				</tr>
-				<tr>
-					<td colspan='3'>
-						<label>Mouse X</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-x"></span><br>
-						<label>Mouse Y</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-y"></span>
-					</td>
-				</tr>
-			</table>
+			<fieldset class="group-container">
+				<legend class="w-auto align-content-center group-head">STATUS</legend>
+				<div style="padding:10px;" class="group-body">
+					<table border="0" align="center" style="margin-top:5px;">
+						<tr>
+							<td colspan="3"><i class="fa-solid fa-cube"></i> &nbsp;&nbsp;SYSTEM CORE</td>
+						</tr>
+						<tr>
+							<td colspan = "3">
+								<div id= "core_status" style="width: 230px;">Loading...</div>
+							</td>
+						</tr>
+					</table>
+					<table border="0" align="center" style="margin-top:5px;">
+						<tr>
+							<td colspan="3"><i class="fa-solid fa-database"></i> &nbsp;&nbsp;DATASTORE</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<div id= "datastore_status" style="width: 230px;">Loading...</div>
+							</td>
+						</tr>
+					</table>
+					<table border="0" align="center" style="margin-top:5px;">
+						<tr>
+							<td colspan="3"><i class="fa-solid fa-mouse"></i> &nbsp;&nbsp;MOUSE POSITION</td>
+						</tr>
+						<tr>
+							<td colspan='3'>
+								<label>Mouse X</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-x"></span><br>
+								<label>Mouse Y</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-y"></span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</fieldset>
+			<fieldset class="group-container">
+				<legend class="w-auto align-content-center group-head">CONTROLS</legend>
+				<div style="padding:10px;" class="group-body">
+					<table border="0" align="center" style="margin-top:5px;">
+						<tr>
+							<td colspan="3"><i class="fa-solid fa-play"></i> <i class="fa-solid fa-pause"></i> &nbsp;&nbsp;RUNTIME</td>
+						</tr>
+						<tr>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset" title="Reset Form"><i class="p-2 fa-solid fa-refresh"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--play" title="Run Form"><span ><i class="pt-2 pl-2 pb-2 fa-solid fa-play"></i> <i class="pt-2 pr-2 pb-2 fa-solid fa-pause"></i></span></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step" title="Step Into"><i class="p-2 fa-solid fa-diagram-successor"></i></button></td>
+						</tr>
+						<tr>
+							<td colspan="3"><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--debug" title="Debug Mode" style="width:70%;"><i class="fa-solid fa-bug"></i></button></td>
+						</tr>
+					</table>
+					<table border="0" align="center" style="margin-top:5px;">
+						<tr>
+							<td colspan="3"><i class="fa-solid fa-magnifying-glass"></i> &nbsp;&nbsp;ZOOM LEVEL [<label id='zoom-level'>${GraphObject.GraphElement.zoom_level}</label>]</td>
+						</tr>
+						<tr>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-out"><i class="p-2 fa-solid fa-minus"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-reset"><i class="p-2 fa-solid fa-refresh"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-in"><i class="p-2 fa-solid fa-plus"></i></button></td>
+						</tr>
+					</table>
+					<table border="0" align="center" style="margin-top:5px;">
+						<tr>
+							<td colspan='3'><i class="fa-solid fa-circle-half-stroke"></i> &nbsp;&nbsp;DARK / LIGHT MODE</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}___theme-switch" style="color:red;"><i class="p-2 fa-solid fa-repeat"></i></button>
+							</td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+			</fieldset>
+			<fieldset class="group-container">
+				<legend class="w-auto align-content-center group-head">GRAPH</legend>
+				<div style="padding:10px;" class="group-body">
+					<table border="0" align="center" style="margin-top:5px;">
+						<tr>
+							<td colspan="4">NODES</td>
+						</tr>
+						<tr>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-loadfromserver"><i class="p-2 fa-solid fa-file-arrow-up"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-remove"><i class="p-2 fa-solid fa-minus"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-add"><i class="p-2 fa-solid fa-plus"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-savetoserver"><i class="p-2 fa-solid fa-file-arrow-down"></i></button></td>
+						</tr>
+					</table>
+					<table border="0" align="center" style="margin-top:5px;">
+						<tr>
+							<td colspan="4">ARRANGE</td>
+						</tr>
+						<tr>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-loadfromserver"><i class="fa-solid fa-grip-lines-vertical"></i><i class="fa-solid fa-arrow-left"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-align-top"><i class="p-2 fa-solid fa-arrows-up-to-line"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-align-bottom"><i class="p-2 fa-solid fa-arrows-down-to-line"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-savetoserver"><i class="fa-solid fa-arrow-right"></i><i class="fa-solid fa-grip-lines-vertical"></i></button></td>
+						</tr>
+					</table>
+				</div>
+			</fieldset>
+			
 			`;
 
-		GraphObject.GraphElement.panel = GraphObject.Utility.DOMElements.makeXpanel({
-			id: '',
-			class: '',
-			// title: 'Control Palette',
-			title: '',
-			smalltitle: '',
-			contentid: 'control_palette',
-			content: GraphObject.GraphElement.controlPalette
-		});
+		// GraphObject.GraphElement.panel = GraphObject.Utility.DOMElements.makeXpanel({
+		// 	id: '',
+		// 	class: '',
+		// 	// title: 'Control Palette',
+		// 	title: '',
+		// 	smalltitle: '',
+		// 	contentid: 'control_palette',
+		// 	content: GraphObject.GraphElement.controlPalette
+		// });
+		GraphObject.GraphElement.panel = GraphObject.GraphElement.controlPalette;
 
 		GraphObject.GraphElement.id_graph_control_palette = GraphObject.GraphElement.id_graph_control_palette_container + '___control_palette';
 		GraphObject.GraphElement.control_palette_xpanel = GraphObject.Utility.DOMElements.MakeDraggableDiv(GraphObject.GraphElement.id_graph_control_palette, 'Control Palette', GraphObject.GraphElement.panel, 10, 10, 'auto');
 		GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette_container).appendChild(GraphObject.GraphElement.control_palette_xpanel)
 		
 		//NOTE - Make Control Palette Draggable
-		// GraphObject.Utility.DOMElements.DragElement(GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette));
+		GraphObject.Utility.DOMElements.DragElement(GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette));
+
+		console.log('GraphObject.GraphElement.controlPalette :>> ', GraphObject.GraphElement.controlPalette.querySelectorAll('.group-container'));
+		GraphObject.GraphElement.controlPalette.querySelectorAll('.group-container').forEach((element) => {
+			const groupHead = element.querySelector('.group-head');
+			const groupBody = element.querySelector('.group-body');
+		
+			const toggleView = () => {
+				GraphObject.Utility.DOMElements.viewToggle(groupBody);
+			};
+		
+			groupHead.addEventListener('click', toggleView);
+			groupHead.addEventListener('touchstart', toggleView, { passive: true });
+		});
+		
+		// GraphObject.GraphElement.controlPalette.querySelectorAll('.group-container').forEach((element) => {
+		// 	console.log(element);
+		// 	element.querySelector('.group-head').addEventListener('click', function () {
+		// 		GraphObject.Utility.DOMElements.viewToggle(element.querySelector('.group-body'));
+		// 	});
+		// });
 
 	})
 	attachEvent_ControlSurfaceLightSwitch(GraphObject) {

@@ -9,6 +9,7 @@
  * @param int dowOffset
  * @return int
  */
+
 // NOTE - HTML addEventOnce function
 HTMLElement.prototype.addEventOnce = function (eventName, eventHandler) {
 	const element = this;
@@ -2720,6 +2721,57 @@ export class Utility {
 	};
 	// NOTE - DOMElements related methods
 	DOMElements = {
+		"viewToggle": ((element, callback) => {
+			// Check if the element is currently hidden
+			const isHidden = element.classList.contains('hidden') || getComputedStyle(element).height === '0px' || getComputedStyle(element).opacity === '0';
+
+			if (isHidden) {
+				// If the element is hidden, show it
+				element.classList.remove('hidden');
+				element.style.height = '0'; // Start from height 0
+				element.style.opacity = '0'; // Start from opacity 0
+
+				// Trigger a reflow
+				void element.offsetHeight;
+
+				const autoHeight = element.scrollHeight + 'px';
+				element.style.transition = 'opacity 1s ease, height 0.5s ease';
+				element.style.height = autoHeight;
+				element.style.opacity = '1';
+
+				element.addEventListener('transitionend', function handler(e) {
+					if (e.propertyName === 'height') {
+						element.style.height = 'auto'; // Set height to auto after transition
+						element.style.transition = ''; // Clear transition
+						element.removeEventListener('transitionend', handler);
+						if (callback) callback();
+					}
+				});
+			} else {
+				// If the element is visible, hide it
+				const originalHeight = element.scrollHeight + 'px';
+
+				element.style.height = originalHeight; // Set to original height
+				element.style.opacity = '1'; // Ensure opacity is at 1
+
+				// Trigger a reflow
+				void element.offsetHeight;
+
+				element.style.transition = 'opacity 1s ease, height 0.5s ease';
+				element.style.height = '0';
+				element.style.opacity = '0';
+
+				element.addEventListener('transitionend', function handler(e) {
+					if (e.propertyName === 'height') {
+						element.classList.add('hidden');
+						element.style.transition = ''; // Clear transition
+						element.removeEventListener('transitionend', handler);
+						if (callback) callback();
+					}
+				});
+			}
+		}),
+
 		"hide": ((element, callback) => {
 			const originalHeight = element.scrollHeight + 'px';
 
@@ -2801,6 +2853,230 @@ export class Utility {
 				vertical: hasVerticalScrollbar,
 			};
 		},
+		"initializeDragAndSelect":((options = {}) => {
+			const { snapSize = 20, containerSelector = '.container', itemSelector = '.selectable' } = options;
+		
+			const container = document.querySelector(containerSelector);
+			let selectedItems = new Set();
+			let isDraggingSelection = false;
+			let isDraggingItem = false;
+			let isResizing = false;
+			let startX, startY, currentX, currentY;
+			let selectionBox = null;
+			let initialPositions = new Map();
+		
+			function snapToGrid(value, gridSize) {
+				return Math.round(value / gridSize) * gridSize;
+			}
+		
+			function toggleSelection(item) {
+				if (selectedItems.has(item)) {
+					item.classList.remove('active');
+					selectedItems.delete(item);
+				} else {
+					item.classList.add('active');
+					selectedItems.add(item);
+				}
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+			}
+		
+			function startDraggingSelection(event) {
+				isDraggingSelection = true;
+				startX = event.clientX;
+				startY = event.clientY;
+		
+				selectionBox = document.createElement('div');
+				selectionBox.className = 'selection-box';
+				selectionBox.style.left = `${startX}px`;
+				selectionBox.style.top = `${startY}px`;
+				container.appendChild(selectionBox);
+			}
+		
+			function updateSelectionBox(event) {
+				currentX = event.clientX;
+				currentY = event.clientY;
+		
+				selectionBox.style.left = `${Math.min(startX, currentX)}px`;
+				selectionBox.style.top = `${Math.min(startY, currentY)}px`;
+				selectionBox.style.width = `${Math.abs(currentX - startX)}px`;
+				selectionBox.style.height = `${Math.abs(currentY - startY)}px`;
+		
+				const rect = selectionBox.getBoundingClientRect();
+		
+				document.querySelectorAll(itemSelector).forEach(item => {
+					const itemRect = item.getBoundingClientRect();
+					if (rect.right >= itemRect.left &&
+						rect.left <= itemRect.right &&
+						rect.bottom >= itemRect.top &&
+						rect.top <= itemRect.bottom) {
+						if (!selectedItems.has(item)) {
+							item.classList.add('active');
+							selectedItems.add(item);
+						}
+					} else {
+						if (selectedItems.has(item)) {
+							item.classList.remove('active');
+							selectedItems.delete(item);
+						}
+					}
+				});
+			}
+		
+			function finalizeSelection() {
+				isDraggingSelection = false;
+				if (selectionBox) {
+					selectionBox.remove();
+					selectionBox = null;
+				}
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+			}
+		
+			function startDraggingItem(event, item) {
+				if (!selectedItems.has(item)) {
+					selectedItems.forEach(selectedItem => {
+						selectedItem.classList.remove('active');
+					});
+					selectedItems.clear();
+					selectedItems.add(item);
+					item.classList.add('active');
+				}
+				
+				isDraggingItem = true;
+				startX = event.clientX;
+				startY = event.clientY;
+				
+				selectedItems.forEach(selectedItem => {
+					initialPositions.set(selectedItem, {
+						left: selectedItem.offsetLeft,
+						top: selectedItem.offsetTop
+					});
+				});
+			}
+		
+			function dragItem(event) {
+				const dx = event.clientX - startX;
+				const dy = event.clientY - startY;
+		
+				selectedItems.forEach(item => {
+					const initialPosition = initialPositions.get(item);
+					item.style.left = `${snapToGrid(initialPosition.left + dx, snapSize)}px`;
+					item.style.top = `${snapToGrid(initialPosition.top + dy, snapSize)}px`;
+				});
+			}
+		
+			function stopDraggingItem() {
+				isDraggingItem = false;
+				initialPositions.clear();
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+			}
+		
+			function deselectAll() {
+				selectedItems.forEach(item => {
+					item.classList.remove('active');
+				});
+				selectedItems.clear();
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+			}
+		
+			function setupEventListeners() {
+				const selectableItems = document.querySelectorAll(itemSelector);
+		
+				selectableItems.forEach(item => {
+					item.addEventListener('mousedown', (event) => {
+						const resizeHandleSize = 10;
+						const rect = item.getBoundingClientRect();
+		
+						if (event.clientX >= rect.right - resizeHandleSize && event.clientY >= rect.bottom - resizeHandleSize) {
+							isResizing = true;
+							item.style.cursor = 'se-resize';
+						} else {
+							isResizing = false;
+							item.style.cursor = 'pointer';
+							if (event.ctrlKey || event.metaKey) {
+								toggleSelection(event.target);
+							} else if (selectedItems.has(event.target)) {
+								startDraggingItem(event, item);
+							} else {
+								deselectAll();
+								toggleSelection(event.target);
+								startDraggingItem(event, item);
+							}
+						}
+						event.stopPropagation();
+					});
+		
+					item.addEventListener('mousemove', (event) => {
+						const resizeHandleSize = 10;
+						const rect = item.getBoundingClientRect();
+						if (event.clientX >= rect.right - resizeHandleSize && event.clientY >= rect.bottom - resizeHandleSize) {
+							item.style.cursor = 'se-resize';
+						} else {
+							item.style.cursor = 'pointer';
+						}
+					});
+		
+					item.addEventListener('mouseup', () => {
+						isResizing = false;
+					});
+				});
+		
+				container.addEventListener('mousedown', (event) => {
+					if (!event.ctrlKey && !event.metaKey && !event.target.classList.contains(itemSelector.substring(1))) {
+						deselectAll();
+						startDraggingSelection(event);
+					}
+				});
+		
+				container.addEventListener('mousemove', (event) => {
+					if (isDraggingSelection) {
+						updateSelectionBox(event);
+					} else if (isDraggingItem) {
+						dragItem(event);
+					}
+				});
+		
+				container.addEventListener('mouseup', () => {
+					if (isDraggingSelection) {
+						finalizeSelection();
+					} else if (isDraggingItem) {
+						stopDraggingItem();
+					}
+				});
+			}
+		
+			setupEventListeners();
+		
+			return {
+				reinitialize() {
+					// Call deselectAll before reinitializing
+					deselectAll();
+		
+					// Remove all previous event listeners and reinitialize
+					const selectableItems = document.querySelectorAll(itemSelector);
+					selectableItems.forEach(item => {
+						item.removeEventListener('mousedown', startDraggingItem);
+						item.removeEventListener('mousemove', (event) => { /* Add corresponding event listener removal logic here */ });
+						item.removeEventListener('mouseup', () => { /* Add corresponding event listener removal logic here */ });
+					});
+		
+					container.removeEventListener('mousedown', startDraggingSelection);
+					container.removeEventListener('mousemove', updateSelectionBox);
+					container.removeEventListener('mouseup', finalizeSelection);
+		
+					setupEventListeners();
+				},
+				addItem(html) {
+					deselectAll();
+					container.insertAdjacentHTML('beforeend', html);
+					this.reinitialize();
+				},
+				removeItem(item) {
+					deselectAll();
+					item.remove();
+					this.reinitialize();
+				}
+			};
+		}),
 		// "renderGraphConnections": (function (conns, graphSurface, cr = false) {
 		// 	if (cr) console.log('Masuk renderGraphConnections');
 		// 	// if (cr) console.log('this', this.DOMElements.FindPosition());
@@ -4077,7 +4353,7 @@ export class Utility {
 	DataStore = {
 		"SurrealDB": {
 			// "initiateSurrealDB": async function(storage, namespace, database, server, user, pass) {
-			initSurrealDB: async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA) {
+			initSurrealDB: async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA, Modules) {
 				let token = mode;
 				switch (mode) {
 					case 'Memory':
@@ -4150,8 +4426,8 @@ export class Utility {
 											"ShortLabel": ShortLabel,
 											"Connect": Connect
 										},
-										"Instance": new window.ParadigmREVOLUTION.Modules.Surreal({
-											engines: window.ParadigmREVOLUTION.Modules.surrealdbWasmEngines()
+										"Instance": new Modules.Surreal({
+											engines: Modules.surrealdbWasmEngines()
 										})
 									}
 								}
