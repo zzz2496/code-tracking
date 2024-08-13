@@ -995,12 +995,16 @@ div {
 	/* transform-style: preserve-3d; */
 	/* transform: perspective(1000px) scale3d(1.2, 1.2, 1.2); */
 	/* transform: scale(1); */
+	resize: both;
+	overflow: auto;
+
 }
 .graph-node .graph-node-content {
 	background-color: var(--text-color);
 	border-radius: 8px;
-	min-width: 70px;
-	min-height: 70px;
+	min-width: 30px;
+	min-height: 60px;
+	height: 86%;
 }
 .graph-node .active{
 	box-shadow: 

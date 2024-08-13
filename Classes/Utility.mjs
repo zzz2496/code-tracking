@@ -3021,7 +3021,14 @@ export class Utility {
 				});
 				selectedItems.clear();
 				console.log(Array.from(selectedItems));  // Log selected items for debugging
-			}
+
+				// FORCE RESET SELECTION
+				const selectableItems = document.querySelectorAll(itemSelector);
+				selectableItems.forEach(item => {
+					item.classList.remove('active');
+				});
+				monitorSelection(selectedItems, "#selected_elements_status");
+		}
 
 			function setupEventListeners() {
 				const selectableItems = document.querySelectorAll(itemSelector);
@@ -3215,7 +3222,7 @@ export class Utility {
 				console.log('arrSelected :>> ', arrSelected);
 				arrSelected.forEach(item => {
 					console.log(item.innerHTML);
-					str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary runtime-controls-button" id="" title="">${item.innerHTML}</button>`;
+					str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary runtime-controls-button" id="" title="">${item.id}</button>`;
 				});
 				document.querySelector(monitorDiv).innerHTML = str;
 			}
@@ -3270,10 +3277,20 @@ export class Utility {
 			}
 		
 			function deselectAll() {
+				console.log('start deselectAll');
 				selectedItems.forEach(item => {
 					item.classList.remove('active');
 				});
 				selectedItems.clear();
+
+				// FORCE RESET
+				console.log('start force reset');
+				const selectableItems = document.querySelectorAll(itemSelector);
+				console.log('selectableItems :>> ', selectableItems);
+				selectableItems.forEach(item => {
+					item.classList.remove('active');
+				});
+
 				console.log(Array.from(selectedItems));  // Log selected items for debugging
 			}
 		
@@ -3349,7 +3366,7 @@ export class Utility {
 		
 			return {
 				reinitialize() {
-					console.log('Start debug initializeDragAndSelect');
+					console.log('Start debug reinitialize initializeDragAndSelect');
 					console.log('snapSize :>> ', snapSize);
 					console.log('containerSelector :>> ', containerSelector);
 					console.log('itemSelector :>> ', itemSelector);

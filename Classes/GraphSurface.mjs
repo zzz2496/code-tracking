@@ -95,7 +95,7 @@ export class GraphSurface {
 		GraphObject.GraphElement.controlPalette.style = 'text-align: center; margin-bottom: 10px;';
 		GraphObject.GraphElement.controlPalette.innerHTML = `
 			<fieldset class="group-container">
-				<legend class="w-auto align-content-center group-head outlined-text" id="id_group_controls">CONTROLS</legend>
+				<legend class="w-auto align-content-center group-head outlined-text">CONTROLS</legend>
 				<div style="padding:10px;" class="group-body">
 					<table border="0" align="center" style="margin-top:5px;">
 						<tr>
@@ -135,7 +135,7 @@ export class GraphSurface {
 				</div>
 			</fieldset>
 			<fieldset class="group-container">
-				<legend class="w-auto align-content-center group-head outlined-text" id="id_group_graph">GRAPH</legend>
+				<legend class="w-auto align-content-center group-head outlined-text">GRAPH</legend>
 				<div style="padding:10px;" class="group-body">
 					<table border="0" align="center" style="margin-top:5px;">
 						<tr>
@@ -166,7 +166,7 @@ export class GraphSurface {
 				</div>
 			</fieldset>
 			<fieldset class="group-container">
-				<legend class="w-auto align-content-center group-head outlined-text" id="id_group_status">STATUS</legend>
+				<legend class="w-auto align-content-center group-head outlined-text">STATUS</legend>
 				<div style="padding:10px;" class="group-body">
 					<div style="margin:5px;">
 						<div style="margin:5px;" class="outlined-text"><i class="fa-solid fa-cube"></i> &nbsp;&nbsp;SYSTEM CORE</div>

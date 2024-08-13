@@ -68,18 +68,24 @@ document.addEventListener('BlueprintsLoaded', () => {
 		let num = (rows - 1) * 10;
 		console.log('y', y);
 		document.querySelector('#id_yggdrasil-graph').innerHTML += `
-			<div class="graph-node" style="left: 350px;  top: ${y}px;">Item ${num + 1}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 450px; top: ${y}px;">Item ${num + 2}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 550px; top: ${y}px;">Item ${num + 3}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 650px; top: ${y}px;">Item ${num + 4}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 750px; top: ${y}px;">Item ${num + 5}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 850px; top: ${y}px;">Item ${num + 6}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 950px; top: ${y}px;">Item ${num + 7}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 1050px; top: ${y}px;">Item ${num + 8}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 1150px; top: ${y}px;">Item ${num + 9}<br><div class="graph-node-content"></div></div>
-			<div class="graph-node" style="left: 1250px; top: ${y}px;">Item ${num + 10}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 350px;  top: ${y}px;" id="item_${num+1}">Item ${num + 1}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 450px; top: ${y}px;" id="item_${num+2}">Item ${num + 2}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 550px; top: ${y}px;" id="item_${num+3}">Item ${num + 3}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 650px; top: ${y}px;" id="item_${num+4}">Item ${num + 4}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 750px; top: ${y}px;" id="item_${num+5}">Item ${num + 5}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 850px; top: ${y}px;" id="item_${num+6}">Item ${num + 6}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 950px; top: ${y}px;" id="item_${num+7}">Item ${num + 7}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 1050px; top: ${y}px;" id="item_${num+8}">Item ${num + 8}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 1150px; top: ${y}px;" id="item_${num+9}">Item ${num + 9}<br><div class="graph-node-content"></div></div>
+			<div class="graph-node" style="left: 1250px; top: ${y}px;" id="item_${num+10}">Item ${num + 10}<br><div class="graph-node-content"></div></div>
 		`;
 		rows++;
+		dragAndSelect.reinitialize();
+	});
+	document.querySelector('#id_yggdrasil_control_palette_container-node-remove').addEventListener('click', () => {
+		ParadigmREVOLUTION.GraphSurface.GraphElement.selectedNodes.forEach(element => {
+			element.remove();
+		});
 		dragAndSelect.reinitialize();
 	});
 
