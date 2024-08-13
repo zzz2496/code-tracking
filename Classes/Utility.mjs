@@ -2910,50 +2910,6 @@ export class Utility {
 				monitorSelection(selectedItems, "#selected_elements_status");
 			}
 
-			// function startDraggingSelection(event) {
-			// 	isDraggingSelection = true;
-			// 	startX = event.clientX;
-			// 	startY = event.clientY;
-			// }
-
-			// function updateSelectionBox(event) {
-			// 	currentX = event.clientX;
-			// 	currentY = event.clientY;
-
-			// 	if (!selectionBox && (Math.abs(currentX - startX) >= minDragDistance || Math.abs(currentY - startY) >= minDragDistance)) {
-			// 		// Create the selection box only if the drag distance exceeds the minimum threshold
-			// 		selectionBox = document.createElement('div');
-			// 		selectionBox.className = 'selection-box';
-			// 		container.appendChild(selectionBox);
-			// 	}
-
-			// 	if (selectionBox) {
-			// 		selectionBox.style.left = `${Math.min(startX, currentX)}px`;
-			// 		selectionBox.style.top = `${Math.min(startY, currentY)}px`;
-			// 		selectionBox.style.width = `${Math.abs(currentX - startX)}px`;
-			// 		selectionBox.style.height = `${Math.abs(currentY - startY)}px`;
-
-			// 		const rect = selectionBox.getBoundingClientRect();
-
-			// 		document.querySelectorAll(itemSelector).forEach(item => {
-			// 			const itemRect = item.getBoundingClientRect();
-			// 			if (rect.right >= itemRect.left &&
-			// 				rect.left <= itemRect.right &&
-			// 				rect.bottom >= itemRect.top &&
-			// 				rect.top <= itemRect.bottom) {
-			// 				if (!selectedItems.has(item)) {
-			// 					item.classList.add('active');
-			// 					selectedItems.add(item);
-			// 				}
-			// 			} else {
-			// 				if (selectedItems.has(item)) {
-			// 					item.classList.remove('active');
-			// 					selectedItems.delete(item);
-			// 				}
-			// 			}
-			// 		});
-			// 	}
-			// }
 			function startDraggingSelection(event) {
 				isDraggingSelection = true;
 			
@@ -3205,273 +3161,150 @@ export class Utility {
 				}
 			};
 		}),
+		"enableDragAndDropGroup": ((selector) => {
+            const fieldsets = document.querySelectorAll(selector);
 
+            fieldsets.forEach(fieldset => {
+                fieldset.setAttribute('draggable', 'true');
 
-		"initializeDragAndSelectV1":((options = {}, selectedDivs) => {
-			const { snapSize = 20, containerSelector = '.container', itemSelector = '.selectable' } = options;
+                fieldset.addEventListener('dragstart', dragStart);
+                fieldset.addEventListener('dragover', dragOver);
+                fieldset.addEventListener('dragleave', dragLeave);
+                fieldset.addEventListener('drop', drop);
+                fieldset.addEventListener('dragend', dragEnd);
+            });
 
-			console.log('Start debug initializeDragAndSelect');
-			console.log('snapSize :>> ', snapSize);
-			console.log('containerSelector :>> ', containerSelector);
-			console.log('itemSelector :>> ', itemSelector);
-			console.log('selectedDivs :>> ', selectedDivs);
+            let draggedFieldset = null;
 
-		
-			const container = document.querySelector(containerSelector);
-			// let selectedItems = new Set();
-			let selectedItems = selectedDivs;
-			let isDraggingSelection = false;
-			let isDraggingItem = false;
-			let isResizing = false;
-			let startX, startY, currentX, currentY;
-			let selectionBox = null;
-			let initialPositions = new Map();
-		
-			function snapToGrid(value, gridSize) {
-				return Math.round(value / gridSize) * gridSize;
-			}
-		
-			function toggleSelection(item) {
-				if (selectedItems.has(item)) {
-					item.classList.remove('active');
-					selectedItems.delete(item);
-				} else {
-					item.classList.add('active');
-					selectedItems.add(item);
-				}
-				console.log(Array.from(selectedItems));  // Log selected items for debugging
-				monitorSelection(selectedItems, "#selected_elements_status");
-			}
-		
-			function startDraggingSelection(event) {
-				isDraggingSelection = true;
-				startX = event.clientX;
-				startY = event.clientY;
-		
-				selectionBox = document.createElement('div');
-				selectionBox.className = 'selection-box';
-				selectionBox.style.left = `${startX}px`;
-				selectionBox.style.top = `${startY}px`;
-				container.appendChild(selectionBox);
+            function dragStart(event) {
+                draggedFieldset = this;
+                this.classList.add('dragging');
+                setTimeout(() => {
+                    this.style.display = 'none';
+                }, 0);
+            }
+
+            function dragOver(event) {
+                event.preventDefault();
+                this.classList.add('drag-over');
+
+                // Check if the dragged element is above or below the current element
+                const bounding = this.getBoundingClientRect();
+                const offset = event.clientY - bounding.top - bounding.height / 2;
+
+                if (offset < 0) {
+                    this.classList.add('move-up');
+                    this.classList.remove('move-down');
+                } else {
+                    this.classList.add('move-down');
+                    this.classList.remove('move-up');
+                }
+            }
+
+            function dragLeave(event) {
+                this.classList.remove('drag-over', 'move-up', 'move-down');
+            }
+
+            function drop(event) {
+                event.preventDefault();
+                this.classList.remove('drag-over', 'move-up', 'move-down');
+
+                if (draggedFieldset !== this) {
+                    const allFieldsets = Array.from(document.querySelectorAll(selector));
+                    const draggedIndex = allFieldsets.indexOf(draggedFieldset);
+                    const targetIndex = allFieldsets.indexOf(this);
+
+                    if (draggedIndex > targetIndex) {
+                        this.parentNode.insertBefore(draggedFieldset, this);
+                    } else {
+                        this.parentNode.insertBefore(draggedFieldset, this.nextSibling);
+                    }
+                }
+            }
+
+            function dragEnd(event) {
+                this.classList.remove('dragging');
+                setTimeout(() => {
+                    draggedFieldset.style.display = 'block';
+                    draggedFieldset = null;
+
+                    // Remove animation classes after the drop
+                    document.querySelectorAll('.move-up, .move-down').forEach(el => {
+                        el.classList.remove('move-up', 'move-down');
+                    });
+                }, 0);
+            }
+		}),
+		"enableDragAndDropGroupAllDirection": ((selector) => {
+			const items = document.querySelectorAll(selector);
+
+            items.forEach(item => {
+                item.setAttribute('draggable', 'true');
+
+                item.addEventListener('dragstart', dragStart);
+                item.addEventListener('dragover', dragOver);
+                item.addEventListener('dragleave', dragLeave);
+                item.addEventListener('drop', drop);
+                item.addEventListener('dragend', dragEnd);
+            });
+
+            let draggedItem = null;
+
+            function dragStart(event) {
+                draggedItem = this;
+                this.classList.add('dragging');
+            }
+
+            function dragOver(event) {
+                event.preventDefault();
+                this.classList.add('drag-over');
+
+                const bounding = this.getBoundingClientRect();
+                const offsetX = event.clientX - bounding.left - bounding.width / 2;
+                const offsetY = event.clientY - bounding.top - bounding.height / 2;
+
+                if (offsetX < 0) {
+                    this.classList.add('move-right');
+                    this.classList.remove('move-left');
+                } else {
+                    this.classList.add('move-left');
+                    this.classList.remove('move-right');
+                }
+                if (offsetY < 0) {
+                    this.classList.add('move-up');
+                    this.classList.remove('move-down');
+                } else {
+                    this.classList.add('move-down');
+                    this.classList.remove('move-up');
+                }
 			}
 
-			function updateSelectionBox(event) {
-				currentX = event.clientX;
-				currentY = event.clientY;
-		
-				selectionBox.style.left = `${Math.min(startX, currentX)}px`;
-				selectionBox.style.top = `${Math.min(startY, currentY)}px`;
-				selectionBox.style.width = `${Math.abs(currentX - startX)}px`;
-				selectionBox.style.height = `${Math.abs(currentY - startY)}px`;
-		
-				const rect = selectionBox.getBoundingClientRect();
-		
-				document.querySelectorAll(itemSelector).forEach(item => {
-					const itemRect = item.getBoundingClientRect();
-					if (rect.right >= itemRect.left &&
-						rect.left <= itemRect.right &&
-						rect.bottom >= itemRect.top &&
-						rect.top <= itemRect.bottom) {
-						if (!selectedItems.has(item)) {
-							item.classList.add('active');
-							selectedItems.add(item);
-						}
-					} else {
-						if (selectedItems.has(item)) {
-							item.classList.remove('active');
-							selectedItems.delete(item);
-						}
-					}
-				});
-			}
+            function dragLeave(event) {
+                this.classList.remove('drag-over', 'move-left', 'move-right', 'move-up', 'move-down');
+            }
 
-			
-			
+            function drop(event) {
+                event.preventDefault();
+                this.classList.remove('drag-over', 'move-left', 'move-right', 'move-up', 'move-down');
 
-			function monitorSelection(selectedItems, monitorDiv) { 
-				let arrSelected = Array.from(selectedItems);
-				let str = '';
-				console.log('arrSelected :>> ', arrSelected);
-				arrSelected.forEach(item => {
-					console.log(item.innerHTML);
-					str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary runtime-controls-button" id="" title="">${item.id}</button>`;
-				});
-				document.querySelector(monitorDiv).innerHTML = str;
-			}
-		
-			function finalizeSelection() {
-				isDraggingSelection = false;
-				if (selectionBox) {
-					selectionBox.remove();
-					selectionBox = null;
-				}
-				console.log(Array.from(selectedItems));
-				monitorSelection(selectedItems, "#selected_elements_status");
-			}
-		
-			function startDraggingItem(event, item) {
-				if (!selectedItems.has(item)) {
-					selectedItems.forEach(selectedItem => {
-						selectedItem.classList.remove('active');
-					});
-					selectedItems.clear();
-					selectedItems.add(item);
-					item.classList.add('active');
-				}
-				
-				isDraggingItem = true;
-				startX = event.clientX;
-				startY = event.clientY;
-				
-				selectedItems.forEach(selectedItem => {
-					initialPositions.set(selectedItem, {
-						left: selectedItem.offsetLeft,
-						top: selectedItem.offsetTop
-					});
-				});
-			}
-		
-			function dragItem(event) {
-				const dx = event.clientX - startX;
-				const dy = event.clientY - startY;
-		
-				selectedItems.forEach(item => {
-					const initialPosition = initialPositions.get(item);
-					item.style.left = `${snapToGrid(initialPosition.left + dx, snapSize)}px`;
-					item.style.top = `${snapToGrid(initialPosition.top + dy, snapSize)}px`;
-				});
-			}
-		
-			function stopDraggingItem() {
-				isDraggingItem = false;
-				initialPositions.clear();
-				console.log(Array.from(selectedItems));  // Log selected items for debugging
-			}
-		
-			function deselectAll() {
-				console.log('start deselectAll');
-				selectedItems.forEach(item => {
-					item.classList.remove('active');
-				});
-				selectedItems.clear();
+                if (draggedItem !== this) {
+                    const allItems = Array.from(document.querySelectorAll(selector));
+                    const draggedIndex = allItems.indexOf(draggedItem);
+                    const targetIndex = allItems.indexOf(this);
 
-				// FORCE RESET
-				console.log('start force reset');
-				const selectableItems = document.querySelectorAll(itemSelector);
-				console.log('selectableItems :>> ', selectableItems);
-				selectableItems.forEach(item => {
-					item.classList.remove('active');
-				});
+                    if (draggedIndex > targetIndex) {
+                        this.parentNode.insertBefore(draggedItem, this);
+                    } else {
+                        this.parentNode.insertBefore(draggedItem, this.nextSibling);
+                    }
+                }
+            }
 
-				console.log(Array.from(selectedItems));  // Log selected items for debugging
-			}
-		
-			function setupEventListeners() {
-				const selectableItems = document.querySelectorAll(itemSelector);
-		
-				selectableItems.forEach(item => {
-					item.addEventListener('mousedown', (event) => {
-						console.log('mousedown');
-						const resizeHandleSize = 10;
-						const rect = item.getBoundingClientRect();
-		
-						if (event.clientX >= rect.right - resizeHandleSize && event.clientY >= rect.bottom - resizeHandleSize) {
-							isResizing = true;
-							item.style.cursor = 'se-resize';
-						} else {
-							isResizing = false;
-							item.style.cursor = 'pointer';
-							if (event.ctrlKey || event.metaKey) {
-								toggleSelection(event.target);
-							} else if (selectedItems.has(event.target)) {
-								startDraggingItem(event, item);
-							} else {
-								deselectAll();
-								toggleSelection(event.target);
-								startDraggingItem(event, item);
-							}
-						}
-						event.stopPropagation();
-					});
-		
-					item.addEventListener('mousemove', (event) => {
-						const resizeHandleSize = 10;
-						const rect = item.getBoundingClientRect();
-						if (event.clientX >= rect.right - resizeHandleSize && event.clientY >= rect.bottom - resizeHandleSize) {
-							item.style.cursor = 'se-resize';
-						} else {
-							item.style.cursor = 'pointer';
-						}
-					});
-		
-					item.addEventListener('mouseup', () => {
-						isResizing = false;
-					});
-				});
-		
-				container.addEventListener('mousedown', (event) => {
-					console.log('mousedown on container'); // Debugging
-					if (!event.ctrlKey && !event.metaKey && !event.target.classList.contains(itemSelector.substring(1))) {
-						deselectAll();
-						startDraggingSelection(event);
-					}
-				});
-						
-				container.addEventListener('mousemove', (event) => {
-					if (isDraggingSelection) {
-						updateSelectionBox(event);
-					} else if (isDraggingItem) {
-						dragItem(event);
-					}
-				});
-		
-				container.addEventListener('mouseup', () => {
-					if (isDraggingSelection) {
-						finalizeSelection();
-					} else if (isDraggingItem) {
-						stopDraggingItem();
-					}
-				});
-			}
-		
-			setupEventListeners();
-		
-			return {
-				reinitialize() {
-					console.log('Start debug reinitialize initializeDragAndSelect');
-					console.log('snapSize :>> ', snapSize);
-					console.log('containerSelector :>> ', containerSelector);
-					console.log('itemSelector :>> ', itemSelector);
-					console.log('selectedDivs :>> ', selectedDivs);
-
-					// Call deselectAll before reinitializing
-					deselectAll();
-		
-					// Remove all previous event listeners and reinitialize
-					const selectableItems = document.querySelectorAll(itemSelector);
-					selectableItems.forEach(item => {
-						item.removeEventListener('mousedown', startDraggingItem);
-						item.removeEventListener('mousemove', (event) => { /* Add corresponding event listener removal logic here */ });
-						item.removeEventListener('mouseup', () => { /* Add corresponding event listener removal logic here */ });
-					});
-		
-					container.removeEventListener('mousedown', startDraggingSelection);
-					container.removeEventListener('mousemove', updateSelectionBox);
-					container.removeEventListener('mouseup', finalizeSelection);
-		
-					setupEventListeners();
-				},
-				addItem(html) {
-					deselectAll();
-					container.insertAdjacentHTML('beforeend', html);
-					this.reinitialize();
-				},
-				removeItem(item) {
-					deselectAll();
-					item.remove();
-					this.reinitialize();
-				}
-			};
+            function dragEnd(event) {
+                this.classList.remove('dragging');
+                draggedItem.style.visibility = 'visible';
+                draggedItem = null;
+            }
 		}),
 		// "renderGraphConnections": (function (conns, graphSurface, cr = false) {
 		// 	if (cr) console.log('Masuk renderGraphConnections');

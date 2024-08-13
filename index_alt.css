@@ -1401,17 +1401,6 @@ legend {
 	background-color: transparent;
 }
 
-.group-container{
-
-}
-
-.group-head{
-	cursor: pointer;
-}
-.group-body{
-
-}
-
 .selectable {
     position: absolute;
     width: 90px;
@@ -1443,4 +1432,46 @@ legend {
 		1px -1px 0 var(--outline-color-a04),
 		-1px 1px 0 var(--outline-color-a04),
 		1px 1px 0 var(--outline-color-a04);
+}
+
+.group-head{
+	cursor: pointer;
+}
+.group-body{
+
+}
+
+.group-container {
+	margin: 10px 0;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	transition: transform 0.3s ease, opacity 0.3s ease;
+	display: flex; /* Adjust based on your layout */
+	justify-content: center;
+	align-items: center;
+}
+
+.drag-over {
+	border: 2px dashed #000;
+}
+
+.dragging {
+	opacity: 0.5;
+}
+
+.move-up {
+	transform: translateY(-20px);
+}
+
+.move-down {
+	transform: translateY(20px);
+}
+
+.move-left {
+	transform: translateX(-20px);
+}
+
+.move-right {
+	transform: translateX(20px);
 }

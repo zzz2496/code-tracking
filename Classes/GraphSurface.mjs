@@ -94,7 +94,7 @@ export class GraphSurface {
 		GraphObject.GraphElement.controlPalette.className = 'toolbar-kit';
 		GraphObject.GraphElement.controlPalette.style = 'text-align: center; margin-bottom: 10px;';
 		GraphObject.GraphElement.controlPalette.innerHTML = `
-			<fieldset class="group-container">
+			<fieldset class="group-container" draggable="true">
 				<legend class="w-auto align-content-center group-head outlined-text">CONTROLS</legend>
 				<div style="padding:10px;" class="group-body">
 					<table border="0" align="center" style="margin-top:5px;">
@@ -134,7 +134,7 @@ export class GraphSurface {
 					</table>
 				</div>
 			</fieldset>
-			<fieldset class="group-container">
+			<fieldset class="group-container" draggable="true">
 				<legend class="w-auto align-content-center group-head outlined-text">GRAPH</legend>
 				<div style="padding:10px;" class="group-body">
 					<table border="0" align="center" style="margin-top:5px;">
@@ -165,7 +165,7 @@ export class GraphSurface {
 					</div>
 				</div>
 			</fieldset>
-			<fieldset class="group-container">
+			<fieldset class="group-container" draggable="true">
 				<legend class="w-auto align-content-center group-head outlined-text">STATUS</legend>
 				<div style="padding:10px;" class="group-body">
 					<div style="margin:5px;">
@@ -184,7 +184,7 @@ export class GraphSurface {
 						</div>
 					</div>
 				</div>
-			</fieldset>			
+			</fieldset>
 			`;
 
 		// GraphObject.GraphElement.panel = GraphObject.Utility.DOMElements.makeXpanel({
@@ -203,7 +203,7 @@ export class GraphSurface {
 		GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette_container).appendChild(GraphObject.GraphElement.control_palette_xpanel)
 		
 		//NOTE - Make Control Palette Draggable
-		GraphObject.Utility.DOMElements.DragElement(GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette));
+		// GraphObject.Utility.DOMElements.DragElement(GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette));
 
 		console.log('GraphObject.GraphElement.controlPalette :>> ', GraphObject.GraphElement.controlPalette.querySelectorAll('.group-container'));
 		GraphObject.GraphElement.controlPalette.querySelectorAll('.group-container').forEach((element) => {

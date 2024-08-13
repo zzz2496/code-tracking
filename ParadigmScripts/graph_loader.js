@@ -89,6 +89,7 @@ document.addEventListener('BlueprintsLoaded', () => {
 		dragAndSelect.reinitialize();
 	});
 
+	ParadigmREVOLUTION.Utility.DOMElements.enableDragAndDropGroupAllDirection('.group-container');
 
 	console.log('Done Graph Loader >>>>');
 
