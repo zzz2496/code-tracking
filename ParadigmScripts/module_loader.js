@@ -111,7 +111,7 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
         import("../Classes/WorkerThread.mjs"),
         import("../Classes/Flowchart.mjs"),
         import('../../node_modules/surrealdb.js/dist/index.bundled.mjs'),
-        import('../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js')
+        import('../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js'),
     ];
 
     const results = await Promise.allSettled(importPromises);
@@ -131,7 +131,7 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
     const ConnectionModule = ConnectionResult.status === "fulfilled" ? ConnectionResult.value : null;
     const WorkerThreadModule = WorkerThreadResult.status === "fulfilled" ? WorkerThreadResult.value : null;
     const FlowchartModule = FlowchartResult.status === "fulfilled" ? FlowchartResult.value : null;
-    const SurrealModule = SurrealResult.status === "fulfilled" ? SurrealResult.value : null;
+	const SurrealModule = SurrealResult.status === "fulfilled" ? SurrealResult.value : null;
     const SurrealdbWasmEnginesModule = SurrealdbWasmEnginesResult.status === "fulfilled" ? SurrealdbWasmEnginesResult.value : null;
 
     if (UtilityModule) {
@@ -140,11 +140,30 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
 		// Use Utility class
         ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "LOADED";
         ParadigmREVOLUTION.SystemCore.Modules.Utility = Utility;
-        ParadigmREVOLUTION.Utility = new Utility();
-        // Do something with utilityInstance
+		ParadigmREVOLUTION.Utility = new Utility();
+
+		console.log('Start Blueprint Loader >>>>');
+		let SysUtil = window.ParadigmREVOLUTION.Utility;
+	
+		if (ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status == 'LOADED') { 
+			let initBlueprints = function(){
+				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Blueprints.URL, function (results) {
+					window.ParadigmREVOLUTION.SystemCore.Blueprints.Data = results;
+					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Blueprints = "LOADED";
+					document.dispatchEvent(new Event('BlueprintsLoaded'));
+					console.log('Done Blueprint Loader >>>>');
+				}, function(key, url, status){
+					console.log('progress :>> ', status, key, url);
+				});
+			}
+			initBlueprints();	
+		} else {
+			console.error('');
+		}	
     } else {
-        console.error("Failed to import Utility.");
+		document.querySelector('#debugging').innerHTML += "Failed to import Utility.<br>";
         ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "FAILED TO LOAD";
+		console.error("Failed to import Utility.");
     }
 
     if (GraphSurfaceModule) {
@@ -154,8 +173,9 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
         ParadigmREVOLUTION.SystemCore.Modules.GraphSurface = GraphSurface;
         // Use GraphSurface module
     } else {
-        console.error("Failed to import GraphSurface.");
+		document.querySelector('#debugging').innerHTML += "Failed to import GraphSurface.<br>";
         ParadigmREVOLUTION.SystemCore.CoreStatus.GraphSurface.Status = "FAILED TO LOAD";
+        console.error("Failed to import GraphSurface.");
     }
 
     if (ConnectionModule) {
@@ -165,8 +185,9 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
 		ParadigmREVOLUTION.SystemCore.Modules.Connection = Connection;
         // Use Connection module
     } else {
-        console.error("Failed to import Connection.");
+		document.querySelector('#debugging').innerHTML += "Failed to import Connection.<br>";
         ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "FAILED TO LOAD";
+        console.error("Failed to import Connection.");
     }
 
     if (WorkerThreadModule) {
@@ -176,8 +197,9 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
         console.log("WorkerThread imported successfully.");
         // Use WorkerThread module
     } else {
-        console.error("Failed to import WorkerThread.");
+		document.querySelector('#debugging').innerHTML += "Failed to import WorkerThread.<br>";
         ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "FAILED TO LOAD";
+        console.error("Failed to import WorkerThread.");
     }
 
     if (FlowchartModule) {
@@ -187,8 +209,9 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
 		ParadigmREVOLUTION.SystemCore.Modules.Flowchart = Flowchart;
         // Use Flowchart module
     } else {
-        console.error("Failed to import Flowchart.");
+		document.querySelector('#debugging').innerHTML += "Failed to import Flowchart.<br>";
         ParadigmREVOLUTION.SystemCore.CoreStatus.Flowchart.Status = "FAILED TO LOAD";
+        console.error("Failed to import Flowchart.");
     }
 
     if (SurrealModule) {
@@ -198,8 +221,9 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
 		ParadigmREVOLUTION.SystemCore.Modules.Surreal = Surreal;
         // Use Surreal module
     } else {
-        console.error("Failed to import Surreal.");
+		document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.js<br>";
         ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "FAILED TO LOAD";
+        console.error("Failed to import Surreal.");
     }
 
     if (SurrealdbWasmEnginesModule) {
@@ -209,13 +233,13 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
 		ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines = surrealdbWasmEngines;
         // Use surrealdbWasmEngines module
     } else {
-        console.error("Failed to import surrealdbWasmEngines.");
+		document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.wasm.<br>";
         ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "FAILED TO LOAD";
+        console.error("Failed to import surrealdbWasmEngines.");
     }
 
     // Execute something else after checking all imports
 	console.log('Done Module Loader >>>>');
-	document.dispatchEvent(new Event('modulesLoaded'));
 })();
 
 

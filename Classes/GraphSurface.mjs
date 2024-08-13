@@ -46,7 +46,7 @@ export class GraphSurface {
 				height: 20000
 			},
 			"divs": null,
-			"selectedDivs": null,
+			"selectedNodes": new Set(),
 			"snapEvery": 10,
 		};
 
@@ -57,17 +57,17 @@ export class GraphSurface {
 		let id_str = 'id_' + GraphObject.Utility.Strings.UnReadable(GraphObject.Metadata.DocumentName) + '-';
 		let div = document.createElement('div');
 		div.id = id_str + 'graph-surface';
-		div.className = 'graph-surface grid2020-background'
-		div.style.cssText = `width: ${GraphObject.GraphElement.graph_canvas_dimension.width}px; height: ${GraphObject.GraphElement.graph_canvas_dimension.height}px; z-index:100;`;
+		// div.style.cssText = `width: ${GraphObject.GraphElement.graph_canvas_dimension.width}px; height: ${GraphObject.GraphElement.graph_canvas_dimension.height}px; z-index:100;`;
 		div.innerHTML = `
-			<div id="${id_str}graph"></div>
-			<svg id="${id_str}connsvg" style="width:100%; height:100%;">
+			<div id="${id_str}graph" class="graph-surface grid2020-background" style="width: ${GraphObject.GraphElement.graph_canvas_dimension.width}px; height: ${GraphObject.GraphElement.graph_canvas_dimension.height}px; z-index:100;"></div>
+			<svg id="${id_str}connsvg" style="width:100%; height:100%; pointer-events: none;">
 				<defs>
 					<marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto-start-reverse">
-						<path class="arrowhead-path" d="M 0 0 L 10 5 L 0 10 z" fill="#2f344cd2"/>
+						<path class="arrowhead-path" d="M 0 0 L 10 5 L 0 10 z" fill="#2f344cd2" style="pointer-events: auto;"/>
 					</marker>
 				</defs>
-			</svg>`; 
+			</svg>
+			`; 
 		// console.log('>>> div :>> ', div);
 		return div;
 	});
@@ -95,47 +95,11 @@ export class GraphSurface {
 		GraphObject.GraphElement.controlPalette.style = 'text-align: center; margin-bottom: 10px;';
 		GraphObject.GraphElement.controlPalette.innerHTML = `
 			<fieldset class="group-container">
-				<legend class="w-auto align-content-center group-head">STATUS</legend>
+				<legend class="w-auto align-content-center group-head outlined-text" id="id_group_controls">CONTROLS</legend>
 				<div style="padding:10px;" class="group-body">
 					<table border="0" align="center" style="margin-top:5px;">
 						<tr>
-							<td colspan="3"><i class="fa-solid fa-cube"></i> &nbsp;&nbsp;SYSTEM CORE</td>
-						</tr>
-						<tr>
-							<td colspan = "3">
-								<div id= "core_status" style="width: 230px;">Loading...</div>
-							</td>
-						</tr>
-					</table>
-					<table border="0" align="center" style="margin-top:5px;">
-						<tr>
-							<td colspan="3"><i class="fa-solid fa-database"></i> &nbsp;&nbsp;DATASTORE</td>
-						</tr>
-						<tr>
-							<td colspan="3">
-								<div id= "datastore_status" style="width: 230px;">Loading...</div>
-							</td>
-						</tr>
-					</table>
-					<table border="0" align="center" style="margin-top:5px;">
-						<tr>
-							<td colspan="3"><i class="fa-solid fa-mouse"></i> &nbsp;&nbsp;MOUSE POSITION</td>
-						</tr>
-						<tr>
-							<td colspan='3'>
-								<label>Mouse X</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-x"></span><br>
-								<label>Mouse Y</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-y"></span>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</fieldset>
-			<fieldset class="group-container">
-				<legend class="w-auto align-content-center group-head">CONTROLS</legend>
-				<div style="padding:10px;" class="group-body">
-					<table border="0" align="center" style="margin-top:5px;">
-						<tr>
-							<td colspan="3"><i class="fa-solid fa-play"></i> <i class="fa-solid fa-pause"></i> &nbsp;&nbsp;RUNTIME</td>
+							<td colspan="3" class="outlined-text"><i class="fa-solid fa-play"></i> <i class="fa-solid fa-pause"></i> &nbsp;&nbsp;RUNTIME</td>
 						</tr>
 						<tr>
 							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset" title="Reset Form"><i class="p-2 fa-solid fa-refresh"></i></button></td>
@@ -148,7 +112,7 @@ export class GraphSurface {
 					</table>
 					<table border="0" align="center" style="margin-top:5px;">
 						<tr>
-							<td colspan="3"><i class="fa-solid fa-magnifying-glass"></i> &nbsp;&nbsp;ZOOM LEVEL [<label id='zoom-level'>${GraphObject.GraphElement.zoom_level}</label>]</td>
+							<td colspan="3" class="outlined-text"><i class="fa-solid fa-magnifying-glass"></i> &nbsp;&nbsp;ZOOM LEVEL [<label id='zoom-level'>${GraphObject.GraphElement.zoom_level}</label>]</td>
 						</tr>
 						<tr>
 							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-out"><i class="p-2 fa-solid fa-minus"></i></button></td>
@@ -158,7 +122,7 @@ export class GraphSurface {
 					</table>
 					<table border="0" align="center" style="margin-top:5px;">
 						<tr>
-							<td colspan='3'><i class="fa-solid fa-circle-half-stroke"></i> &nbsp;&nbsp;DARK / LIGHT MODE</td>
+							<td colspan='3' class="outlined-text"><i class="fa-solid fa-circle-half-stroke"></i> &nbsp;&nbsp;DARK / LIGHT MODE</td>
 						</tr>
 						<tr>
 							<td></td>
@@ -171,11 +135,11 @@ export class GraphSurface {
 				</div>
 			</fieldset>
 			<fieldset class="group-container">
-				<legend class="w-auto align-content-center group-head">GRAPH</legend>
+				<legend class="w-auto align-content-center group-head outlined-text" id="id_group_graph">GRAPH</legend>
 				<div style="padding:10px;" class="group-body">
 					<table border="0" align="center" style="margin-top:5px;">
 						<tr>
-							<td colspan="4">NODES</td>
+							<td colspan="4" class="outlined-text">NODES</td>
 						</tr>
 						<tr>
 							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-loadfromserver"><i class="p-2 fa-solid fa-file-arrow-up"></i></button></td>
@@ -195,9 +159,32 @@ export class GraphSurface {
 							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-node-savetoserver"><i class="fa-solid fa-arrow-right"></i><i class="fa-solid fa-grip-lines-vertical"></i></button></td>
 						</tr>
 					</table>
+					<div style="margin:5px;">
+						<div style="margin:5px;" class="outlined-text"><i class="fa-solid fa-square"></i> &nbsp;&nbsp;SELECTED ELEMENTS MONITOR</div>
+						<div id= "selected_elements_status" style="width: 230px;"></div>
+					</div>
 				</div>
 			</fieldset>
-			
+			<fieldset class="group-container">
+				<legend class="w-auto align-content-center group-head outlined-text" id="id_group_status">STATUS</legend>
+				<div style="padding:10px;" class="group-body">
+					<div style="margin:5px;">
+						<div style="margin:5px;" class="outlined-text"><i class="fa-solid fa-cube"></i> &nbsp;&nbsp;SYSTEM CORE</div>
+						<div id= "core_status" style="width: 230px;">NOT READY</div>
+					</div>
+					<div style="margin:5px;">
+						<div style="margin:5px;" class="outlined-text"><i class="fa-solid fa-database"></i> &nbsp;&nbsp;DATASTORE</div>
+						<div id= "datastore_status" style="width: 230px;">NOT READY</div>
+					</div>
+					<div style="margin:5px;">
+						<div style="margin:5px;" class="outlined-text"><i class="fa-solid fa-mouse"></i> &nbsp;&nbsp;MOUSE POSITION</div>
+						<div id="mouse_position" style="width: 230px;">
+							<label>Mouse X</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-x"></span><br>
+							<label>Mouse Y</label>: <span id="${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-y"></span>
+						</div>
+					</div>
+				</div>
+			</fieldset>			
 			`;
 
 		// GraphObject.GraphElement.panel = GraphObject.Utility.DOMElements.makeXpanel({
@@ -230,7 +217,14 @@ export class GraphSurface {
 			groupHead.addEventListener('click', toggleView);
 			groupHead.addEventListener('touchstart', toggleView, { passive: true });
 		});
-		
+		// GraphObject.GraphElement.div_graph_surface.addEventListener('mousemove', (e) => { 
+		// 	let rect = e.target.getBoundingClientRect();
+		// 	let x = e.clientX - rect.left; //x position within the element.
+		// 	let y = e.clientY - rect.top;  //y position within the element.
+      
+		// 	document.querySelector(`#${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-x`).innerHTML = x;
+		// 	document.querySelector(`#${GraphObject.GraphElement.id_graph_control_palette_container}___mouse-y`).innerHTML = y;
+		// });
 		// GraphObject.GraphElement.controlPalette.querySelectorAll('.group-container').forEach((element) => {
 		// 	console.log(element);
 		// 	element.querySelector('.group-head').addEventListener('click', function () {

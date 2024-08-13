@@ -1,5 +1,17 @@
 document.addEventListener('BlueprintsLoaded', async () => {
 	console.log('Start SurrealDB Initialization!');
+
+	if (ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status != 'LOADED') {
+		console.error('SurrealDB Module failed to load. Aborting. (SurrealDB Status : ' + ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status + ')');
+		document.querySelector('#debugging').innerHTML += "SurrealDB Module failed to load. Aborting. (SurrealDB Status : " + ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status + ")<br>";
+		return;
+	}
+	if (ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status != 'LOADED') {
+		console.error('suuraldbWasmEngines Module failed to load. Aborting. (surrealdbWasmEngines Status : ' + ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status + ')');
+		document.querySelector('#debugging').innerHTML += "suuraldbWasmEngines Module failed to load. Aborting. (surrealdbWasmEngines Status : " + ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status + ")<br>";
+		return;
+	}
+
 	let SurrealDB = {
 		"Memory": {
 			"Metadata":{},
@@ -43,6 +55,8 @@ document.addEventListener('BlueprintsLoaded', async () => {
 		Parameters: initConfigs,
 		SurrealDB: SurrealDB
 	};	
+
+	// window.ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = 'Loading...';
 
     const promises = initConfigs.map(config => 
         ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules)

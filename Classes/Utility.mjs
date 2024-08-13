@@ -770,7 +770,6 @@ export class Utility {
 						}
 						break;
 				}
-
 				try {
 					const response = await fetch(Fdata.URL, options);
 					if (!response.ok) {
@@ -2735,7 +2734,7 @@ export class Utility {
 				void element.offsetHeight;
 
 				const autoHeight = element.scrollHeight + 'px';
-				element.style.transition = 'opacity 1s ease, height 0.5s ease';
+				element.style.transition = 'opacity 1s cubic-bezier(0, 0, 0, 1), height 0.5s cubic-bezier(0, 0, 0, 1)';
 				element.style.height = autoHeight;
 				element.style.opacity = '1';
 
@@ -2757,7 +2756,7 @@ export class Utility {
 				// Trigger a reflow
 				void element.offsetHeight;
 
-				element.style.transition = 'opacity 1s ease, height 0.5s ease';
+				element.style.transition = 'opacity 1s cubic-bezier(0, 0, 0, 1), height 0.5s cubic-bezier(0, 0, 0, 1)';
 				element.style.height = '0';
 				element.style.opacity = '0';
 
@@ -2771,7 +2770,6 @@ export class Utility {
 				});
 			}
 		}),
-
 		"hide": ((element, callback) => {
 			const originalHeight = element.scrollHeight + 'px';
 
@@ -2781,7 +2779,7 @@ export class Utility {
             // Trigger a reflow
             void element.offsetHeight;
 
-            element.style.transition = 'opacity 1s ease, height 0.5s ease';
+            element.style.transition = 'opacity 1s cubic-bezier(0, 0, 0, 1), height 0.5s cubic-bezier(0, 0, 0, 1)';
             element.style.height = '0';
             element.style.opacity = '0';
 
@@ -2792,30 +2790,60 @@ export class Utility {
                     if (callback) callback();
                 }
                 element.removeEventListener('transitionend', handler);
-            });
+			});
+			if (originalHeight == '0px') {
+				if (callback) callback();
+			}
 		}),
-		"show": ((element, callback)=> {
+		"show": ((element, callback) => {
 			element.classList.remove('hidden');
-            const autoHeight = element.scrollHeight + 'px';
+			const autoHeight = element.scrollHeight + 'px';
 
-            element.style.height = '0'; // Start from height 0
-            element.style.opacity = '0'; // Start from opacity 0
+			// Capture initial styles
+			const initialHeight = element.style.height;
+			const initialOpacity = element.style.opacity;
 
-            // Trigger a reflow
-            void element.offsetHeight;
+			element.style.height = '0'; // Start from height 0
+			element.style.opacity = '0'; // Start from opacity 0
 
-            element.style.transition = 'opacity 1s ease, height 0.5s ease';
-            element.style.height = autoHeight;
-            element.style.opacity = '1';
+			// Trigger a reflow
+			void element.offsetHeight;
 
-            element.addEventListener('transitionend', function handler(e) {
-                if (e.propertyName === 'height') {
-                    element.style.height = 'auto'; // Set height to auto after transition
-                    element.style.transition = ''; // Clear transition
-                }
+			element.style.transition = 'opacity 1s cubic-bezier(0, 0, 0, 1), height 0.5s cubic-bezier(0, 0, 0, 1)';
+			element.style.height = autoHeight;
+			element.style.opacity = '1';
+
+			// Fallback timeout to check if the transition started
+			let transitionStarted = false;
+			const checkTransitionStart = setTimeout(() => {
+				const computedStyle = getComputedStyle(element);
+				if (computedStyle.height !== initialHeight || computedStyle.opacity !== initialOpacity) {
+					transitionStarted = true;
+				} else {
+					// Transition didn't start, call the callback
+					if (callback) callback();
+				}
+			}, 50); // 50ms delay to check if transition started
+
+			// Set a fallback timeout to call the callback if transitionend doesn't fire
+			const fallbackTimeout = setTimeout(() => {
+				if (!transitionStarted) {
+					element.style.height = 'auto'; // Set height to auto if timeout happens
+					element.style.transition = ''; // Clear transition
+					if (callback) callback();
+				}
+			}, 1000); // Max transition time in milliseconds (1s for opacity)
+
+			element.addEventListener('transitionend', function handler(e) {
+				if (e.propertyName === 'height') {
+					element.style.height = 'auto'; // Set height to auto after transition
+					element.style.transition = ''; // Clear transition
+					transitionStarted = true;
+					clearTimeout(fallbackTimeout); // Clear the fallback timeout
+				}
 				element.removeEventListener('transitionend', handler);
 				if (callback) callback();
-            });
+			});
 		}),
 		"addEventOnce": function (element, eventName, eventHandler) {
 			const eventKey = `data-event-${eventName}-initialized`;
@@ -2853,11 +2881,269 @@ export class Utility {
 				vertical: hasVerticalScrollbar,
 			};
 		},
-		"initializeDragAndSelect":((options = {}) => {
+		"initializeDragAndSelect": ((options = {}, selectedDivs) => {
 			const { snapSize = 20, containerSelector = '.container', itemSelector = '.selectable' } = options;
+
+			const container = document.querySelector(containerSelector);
+			let selectedItems = selectedDivs;
+			let isDraggingSelection = false;
+			let isDraggingItem = false;
+			let isResizing = false;
+			let startX, startY, currentX, currentY;
+			let selectionBox = null;
+			let initialPositions = new Map();
+			const minDragDistance = 5; // Minimum distance to consider as a drag
+
+			function snapToGrid(value, gridSize) {
+				return Math.round(value / gridSize) * gridSize;
+			}
+
+			function toggleSelection(item) {
+				if (selectedItems.has(item)) {
+					item.classList.remove('active');
+					selectedItems.delete(item);
+				} else {
+					item.classList.add('active');
+					selectedItems.add(item);
+				}
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+				monitorSelection(selectedItems, "#selected_elements_status");
+			}
+
+			function startDraggingSelection(event) {
+				isDraggingSelection = true;
+				startX = event.clientX;
+				startY = event.clientY;
+			}
+
+			function updateSelectionBox(event) {
+				currentX = event.clientX;
+				currentY = event.clientY;
+
+				if (!selectionBox && (Math.abs(currentX - startX) >= minDragDistance || Math.abs(currentY - startY) >= minDragDistance)) {
+					// Create the selection box only if the drag distance exceeds the minimum threshold
+					selectionBox = document.createElement('div');
+					selectionBox.className = 'selection-box';
+					container.appendChild(selectionBox);
+				}
+
+				if (selectionBox) {
+					selectionBox.style.left = `${Math.min(startX, currentX)}px`;
+					selectionBox.style.top = `${Math.min(startY, currentY)}px`;
+					selectionBox.style.width = `${Math.abs(currentX - startX)}px`;
+					selectionBox.style.height = `${Math.abs(currentY - startY)}px`;
+
+					const rect = selectionBox.getBoundingClientRect();
+
+					document.querySelectorAll(itemSelector).forEach(item => {
+						const itemRect = item.getBoundingClientRect();
+						if (rect.right >= itemRect.left &&
+							rect.left <= itemRect.right &&
+							rect.bottom >= itemRect.top &&
+							rect.top <= itemRect.bottom) {
+							if (!selectedItems.has(item)) {
+								item.classList.add('active');
+								selectedItems.add(item);
+							}
+						} else {
+							if (selectedItems.has(item)) {
+								item.classList.remove('active');
+								selectedItems.delete(item);
+							}
+						}
+					});
+				}
+			}
+
+			function monitorSelection(selectedItems, monitorDiv) {
+				let arrSelected = Array.from(selectedItems);
+				let str = '';
+				console.log('arrSelected :>> ', arrSelected);
+				arrSelected.forEach(item => {
+					console.log(item.innerHTML);
+					str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary runtime-controls-button" id="" title="">${item.innerHTML}</button>`;
+				});
+				document.querySelector(monitorDiv).innerHTML = str;
+			}
+
+			function finalizeSelection() {
+				isDraggingSelection = false;
+				if (selectionBox) {
+					selectionBox.remove();
+					selectionBox = null;
+				}
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+				monitorSelection(selectedItems, "#selected_elements_status");
+			}
+
+			function startDraggingItem(event, item) {
+				if (!selectedItems.has(item)) {
+					selectedItems.forEach(selectedItem => {
+						selectedItem.classList.remove('active');
+					});
+					selectedItems.clear();
+					selectedItems.add(item);
+					item.classList.add('active');
+				}
+
+				isDraggingItem = true;
+				startX = event.clientX;
+				startY = event.clientY;
+
+				selectedItems.forEach(selectedItem => {
+					initialPositions.set(selectedItem, {
+						left: selectedItem.offsetLeft,
+						top: selectedItem.offsetTop
+					});
+				});
+			}
+
+			function dragItem(event) {
+				const dx = event.clientX - startX;
+				const dy = event.clientY - startY;
+
+				selectedItems.forEach(item => {
+					const initialPosition = initialPositions.get(item);
+					item.style.left = `${snapToGrid(initialPosition.left + dx, snapSize)}px`;
+					item.style.top = `${snapToGrid(initialPosition.top + dy, snapSize)}px`;
+				});
+			}
+
+			function stopDraggingItem() {
+				isDraggingItem = false;
+				initialPositions.clear();
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+			}
+
+			function deselectAll() {
+				selectedItems.forEach(item => {
+					item.classList.remove('active');
+				});
+				selectedItems.clear();
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+			}
+
+			function setupEventListeners() {
+				const selectableItems = document.querySelectorAll(itemSelector);
+
+				selectableItems.forEach(item => {
+					item.addEventListener('mousedown', (event) => {
+						console.log('mousedown');
+						const resizeHandleSize = 10;
+						const rect = item.getBoundingClientRect();
+
+						if (event.clientX >= rect.right - resizeHandleSize && event.clientY >= rect.bottom - resizeHandleSize) {
+							isResizing = true;
+							item.style.cursor = 'se-resize';
+						} else {
+							isResizing = false;
+							item.style.cursor = 'pointer';
+							if (event.ctrlKey || event.metaKey) {
+								toggleSelection(event.target);
+							} else if (selectedItems.has(event.target)) {
+								startDraggingItem(event, item);
+							} else {
+								deselectAll();
+								toggleSelection(event.target);
+								startDraggingItem(event, item);
+							}
+						}
+						event.stopPropagation();
+					});
+
+					item.addEventListener('mousemove', (event) => {
+						const resizeHandleSize = 10;
+						const rect = item.getBoundingClientRect();
+						if (event.clientX >= rect.right - resizeHandleSize && event.clientY >= rect.bottom - resizeHandleSize) {
+							item.style.cursor = 'se-resize';
+						} else {
+							item.style.cursor = 'pointer';
+						}
+					});
+
+					item.addEventListener('mouseup', () => {
+						isResizing = false;
+					});
+				});
+
+				container.addEventListener('mousedown', (event) => {
+					if (!event.ctrlKey && !event.metaKey && !event.target.classList.contains(itemSelector.substring(1))) {
+						deselectAll();
+						startDraggingSelection(event);
+					}
+				});
+
+				container.addEventListener('mousemove', (event) => {
+					if (isDraggingSelection) {
+						updateSelectionBox(event);
+					} else if (isDraggingItem) {
+						dragItem(event);
+					}
+				});
+
+				container.addEventListener('mouseup', () => {
+					if (isDraggingSelection) {
+						finalizeSelection();
+					} else if (isDraggingItem) {
+						stopDraggingItem();
+					}
+				});
+			}
+
+			setupEventListeners();
+
+			return {
+				reinitialize() {
+					console.log('Start debug initializeDragAndSelect');
+					console.log('snapSize :>> ', snapSize);
+					console.log('containerSelector :>> ', containerSelector);
+					console.log('itemSelector :>> ', itemSelector);
+					console.log('selectedDivs :>> ', selectedDivs);
+
+					// Call deselectAll before reinitializing
+					deselectAll();
+
+					// Remove all previous event listeners and reinitialize
+					const selectableItems = document.querySelectorAll(itemSelector);
+					selectableItems.forEach(item => {
+						item.removeEventListener('mousedown', startDraggingItem);
+						item.removeEventListener('mousemove', (event) => { /* Add corresponding event listener removal logic here */ });
+						item.removeEventListener('mouseup', () => { /* Add corresponding event listener removal logic here */ });
+					});
+
+					container.removeEventListener('mousedown', startDraggingSelection);
+					container.removeEventListener('mousemove', updateSelectionBox);
+					container.removeEventListener('mouseup', finalizeSelection);
+
+					setupEventListeners();
+				},
+				addItem(html) {
+					deselectAll();
+					container.insertAdjacentHTML('beforeend', html);
+					this.reinitialize();
+				},
+				removeItem(item) {
+					deselectAll();
+					item.remove();
+					this.reinitialize();
+				}
+			};
+		}),
+
+
+		"initializeDragAndSelectV1":((options = {}, selectedDivs) => {
+			const { snapSize = 20, containerSelector = '.container', itemSelector = '.selectable' } = options;
+
+			console.log('Start debug initializeDragAndSelect');
+			console.log('snapSize :>> ', snapSize);
+			console.log('containerSelector :>> ', containerSelector);
+			console.log('itemSelector :>> ', itemSelector);
+			console.log('selectedDivs :>> ', selectedDivs);
+
 		
 			const container = document.querySelector(containerSelector);
-			let selectedItems = new Set();
+			// let selectedItems = new Set();
+			let selectedItems = selectedDivs;
 			let isDraggingSelection = false;
 			let isDraggingItem = false;
 			let isResizing = false;
@@ -2878,6 +3164,7 @@ export class Utility {
 					selectedItems.add(item);
 				}
 				console.log(Array.from(selectedItems));  // Log selected items for debugging
+				monitorSelection(selectedItems, "#selected_elements_status");
 			}
 		
 			function startDraggingSelection(event) {
@@ -2921,6 +3208,17 @@ export class Utility {
 					}
 				});
 			}
+
+			function monitorSelection(selectedItems, monitorDiv) { 
+				let arrSelected = Array.from(selectedItems);
+				let str = '';
+				console.log('arrSelected :>> ', arrSelected);
+				arrSelected.forEach(item => {
+					console.log(item.innerHTML);
+					str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary runtime-controls-button" id="" title="">${item.innerHTML}</button>`;
+				});
+				document.querySelector(monitorDiv).innerHTML = str;
+			}
 		
 			function finalizeSelection() {
 				isDraggingSelection = false;
@@ -2928,7 +3226,8 @@ export class Utility {
 					selectionBox.remove();
 					selectionBox = null;
 				}
-				console.log(Array.from(selectedItems));  // Log selected items for debugging
+				console.log(Array.from(selectedItems));
+				monitorSelection(selectedItems, "#selected_elements_status");
 			}
 		
 			function startDraggingItem(event, item) {
@@ -2983,6 +3282,7 @@ export class Utility {
 		
 				selectableItems.forEach(item => {
 					item.addEventListener('mousedown', (event) => {
+						console.log('mousedown');
 						const resizeHandleSize = 10;
 						const rect = item.getBoundingClientRect();
 		
@@ -3021,12 +3321,13 @@ export class Utility {
 				});
 		
 				container.addEventListener('mousedown', (event) => {
+					console.log('mousedown on container'); // Debugging
 					if (!event.ctrlKey && !event.metaKey && !event.target.classList.contains(itemSelector.substring(1))) {
 						deselectAll();
 						startDraggingSelection(event);
 					}
 				});
-		
+						
 				container.addEventListener('mousemove', (event) => {
 					if (isDraggingSelection) {
 						updateSelectionBox(event);
@@ -3048,6 +3349,12 @@ export class Utility {
 		
 			return {
 				reinitialize() {
+					console.log('Start debug initializeDragAndSelect');
+					console.log('snapSize :>> ', snapSize);
+					console.log('containerSelector :>> ', containerSelector);
+					console.log('itemSelector :>> ', itemSelector);
+					console.log('selectedDivs :>> ', selectedDivs);
+
 					// Call deselectAll before reinitializing
 					deselectAll();
 		
