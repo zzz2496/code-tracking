@@ -2910,31 +2910,89 @@ export class Utility {
 				monitorSelection(selectedItems, "#selected_elements_status");
 			}
 
+			// function startDraggingSelection(event) {
+			// 	isDraggingSelection = true;
+			// 	startX = event.clientX;
+			// 	startY = event.clientY;
+			// }
+
+			// function updateSelectionBox(event) {
+			// 	currentX = event.clientX;
+			// 	currentY = event.clientY;
+
+			// 	if (!selectionBox && (Math.abs(currentX - startX) >= minDragDistance || Math.abs(currentY - startY) >= minDragDistance)) {
+			// 		// Create the selection box only if the drag distance exceeds the minimum threshold
+			// 		selectionBox = document.createElement('div');
+			// 		selectionBox.className = 'selection-box';
+			// 		container.appendChild(selectionBox);
+			// 	}
+
+			// 	if (selectionBox) {
+			// 		selectionBox.style.left = `${Math.min(startX, currentX)}px`;
+			// 		selectionBox.style.top = `${Math.min(startY, currentY)}px`;
+			// 		selectionBox.style.width = `${Math.abs(currentX - startX)}px`;
+			// 		selectionBox.style.height = `${Math.abs(currentY - startY)}px`;
+
+			// 		const rect = selectionBox.getBoundingClientRect();
+
+			// 		document.querySelectorAll(itemSelector).forEach(item => {
+			// 			const itemRect = item.getBoundingClientRect();
+			// 			if (rect.right >= itemRect.left &&
+			// 				rect.left <= itemRect.right &&
+			// 				rect.bottom >= itemRect.top &&
+			// 				rect.top <= itemRect.bottom) {
+			// 				if (!selectedItems.has(item)) {
+			// 					item.classList.add('active');
+			// 					selectedItems.add(item);
+			// 				}
+			// 			} else {
+			// 				if (selectedItems.has(item)) {
+			// 					item.classList.remove('active');
+			// 					selectedItems.delete(item);
+			// 				}
+			// 			}
+			// 		});
+			// 	}
+			// }
 			function startDraggingSelection(event) {
 				isDraggingSelection = true;
-				startX = event.clientX;
-				startY = event.clientY;
+			
+				// Calculate the mouse position relative to the container
+				const containerRect = container.getBoundingClientRect();
+				startX = event.pageX - containerRect.left + container.scrollLeft;
+				startY = event.pageY - containerRect.top + container.scrollTop;
+			
+				selectionBox = null;  // Do not create the selection box immediately
 			}
-
+			
 			function updateSelectionBox(event) {
-				currentX = event.clientX;
-				currentY = event.clientY;
-
-				if (!selectionBox && (Math.abs(currentX - startX) >= minDragDistance || Math.abs(currentY - startY) >= minDragDistance)) {
-					// Create the selection box only if the drag distance exceeds the minimum threshold
-					selectionBox = document.createElement('div');
-					selectionBox.className = 'selection-box';
-					container.appendChild(selectionBox);
-				}
-
-				if (selectionBox) {
+				if (!isDraggingSelection) return;
+			
+				// Calculate the current mouse position relative to the container
+				const containerRect = container.getBoundingClientRect();
+				currentX = event.pageX - containerRect.left + container.scrollLeft;
+				currentY = event.pageY - containerRect.top + container.scrollTop;
+			
+				// Calculate the distance moved
+				const dx = Math.abs(currentX - startX);
+				const dy = Math.abs(currentY - startY);
+			
+				// Check if the movement exceeds the minimum drag distance
+				if (dx >= minDragDistance || dy >= minDragDistance) {
+					// Create the selection box if it hasn't been created yet
+					if (!selectionBox) {
+						selectionBox = document.createElement('div');
+						selectionBox.className = 'selection-box';
+						container.appendChild(selectionBox);
+					}
+			
 					selectionBox.style.left = `${Math.min(startX, currentX)}px`;
 					selectionBox.style.top = `${Math.min(startY, currentY)}px`;
-					selectionBox.style.width = `${Math.abs(currentX - startX)}px`;
-					selectionBox.style.height = `${Math.abs(currentY - startY)}px`;
-
+					selectionBox.style.width = `${dx}px`;
+					selectionBox.style.height = `${dy}px`;
+			
 					const rect = selectionBox.getBoundingClientRect();
-
+			
 					document.querySelectorAll(itemSelector).forEach(item => {
 						const itemRect = item.getBoundingClientRect();
 						if (rect.right >= itemRect.left &&
@@ -2954,6 +3012,17 @@ export class Utility {
 					});
 				}
 			}
+			
+			function finalizeSelection() {
+				isDraggingSelection = false;
+				if (selectionBox) {
+					selectionBox.remove();
+					selectionBox = null;
+				}
+				console.log(Array.from(selectedItems));  // Log selected items for debugging
+				monitorSelection(selectedItems, "#selected_elements_status");
+			}
+			
 
 			function monitorSelection(selectedItems, monitorDiv) {
 				let arrSelected = Array.from(selectedItems);
@@ -3185,7 +3254,7 @@ export class Utility {
 				selectionBox.style.top = `${startY}px`;
 				container.appendChild(selectionBox);
 			}
-		
+
 			function updateSelectionBox(event) {
 				currentX = event.clientX;
 				currentY = event.clientY;
@@ -3215,6 +3284,9 @@ export class Utility {
 					}
 				});
 			}
+
+			
+			
 
 			function monitorSelection(selectedItems, monitorDiv) { 
 				let arrSelected = Array.from(selectedItems);
