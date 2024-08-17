@@ -66,7 +66,6 @@ document.addEventListener('BlueprintsLoaded', () => {
 	document.querySelector('#id_yggdrasil_control_palette_container-node-add').addEventListener('click', () => {
 		let y = ((rows - 1) * 100) + 50;
 		let num = (rows - 1) * 10;
-		console.log('y', y);
 		document.querySelector('#id_yggdrasil-graph').innerHTML += `
 			<div class="graph-node" style="left: 350px;  top: ${y}px;" id="item_${num+1}">Item ${num + 1}<br><div class="graph-node-content"></div></div>
 			<div class="graph-node" style="left: 450px; top: ${y}px;" id="item_${num+2}">Item ${num + 2}<br><div class="graph-node-content"></div></div>
@@ -89,7 +88,7 @@ document.addEventListener('BlueprintsLoaded', () => {
 		dragAndSelect.reinitialize();
 	});
 
-	ParadigmREVOLUTION.Utility.DOMElements.enableDragAndDropGroupAllDirection('.group-container');
+	ParadigmREVOLUTION.Utility.DOMElements.enableDragAndDropGroup('.group-container');
 
 	console.log('Done Graph Loader >>>>');
 
@@ -139,5 +138,7 @@ document.addEventListener('SurrealDBLoaded', () => {
 				});
 			});	
 		});
-	});	
+	});
+
+	document.dispatchEvent(new Event('SurrealDBMonitorLoaded'));
 });

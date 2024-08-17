@@ -43,7 +43,7 @@ export class GraphSurface {
 			"centerPointOfDocumentRelativeToViewport": null,
 			"graph_canvas_dimension": {
 				width: 20000,
-				height: 20000
+				height: 20000 
 			},
 			"divs": null,
 			"selectedNodes": new Set(),
@@ -204,6 +204,7 @@ export class GraphSurface {
 		
 		//NOTE - Make Control Palette Draggable
 		// GraphObject.Utility.DOMElements.DragElement(GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette));
+		GraphObject.Utility.DOMElements.DragAndResizeElement(GraphObject.GraphElement.div_graph_surface.querySelector('#' + GraphObject.GraphElement.id_graph_control_palette));
 
 		console.log('GraphObject.GraphElement.controlPalette :>> ', GraphObject.GraphElement.controlPalette.querySelectorAll('.group-container'));
 		GraphObject.GraphElement.controlPalette.querySelectorAll('.group-container').forEach((element) => {

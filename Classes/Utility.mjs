@@ -3161,81 +3161,8 @@ export class Utility {
 				}
 			};
 		}),
-		"enableDragAndDropGroup": ((selector) => {
-            const fieldsets = document.querySelectorAll(selector);
 
-            fieldsets.forEach(fieldset => {
-                fieldset.setAttribute('draggable', 'true');
-
-                fieldset.addEventListener('dragstart', dragStart);
-                fieldset.addEventListener('dragover', dragOver);
-                fieldset.addEventListener('dragleave', dragLeave);
-                fieldset.addEventListener('drop', drop);
-                fieldset.addEventListener('dragend', dragEnd);
-            });
-
-            let draggedFieldset = null;
-
-            function dragStart(event) {
-                draggedFieldset = this;
-                this.classList.add('dragging');
-                setTimeout(() => {
-                    this.style.display = 'none';
-                }, 0);
-            }
-
-            function dragOver(event) {
-                event.preventDefault();
-                this.classList.add('drag-over');
-
-                // Check if the dragged element is above or below the current element
-                const bounding = this.getBoundingClientRect();
-                const offset = event.clientY - bounding.top - bounding.height / 2;
-
-                if (offset < 0) {
-                    this.classList.add('move-up');
-                    this.classList.remove('move-down');
-                } else {
-                    this.classList.add('move-down');
-                    this.classList.remove('move-up');
-                }
-            }
-
-            function dragLeave(event) {
-                this.classList.remove('drag-over', 'move-up', 'move-down');
-            }
-
-            function drop(event) {
-                event.preventDefault();
-                this.classList.remove('drag-over', 'move-up', 'move-down');
-
-                if (draggedFieldset !== this) {
-                    const allFieldsets = Array.from(document.querySelectorAll(selector));
-                    const draggedIndex = allFieldsets.indexOf(draggedFieldset);
-                    const targetIndex = allFieldsets.indexOf(this);
-
-                    if (draggedIndex > targetIndex) {
-                        this.parentNode.insertBefore(draggedFieldset, this);
-                    } else {
-                        this.parentNode.insertBefore(draggedFieldset, this.nextSibling);
-                    }
-                }
-            }
-
-            function dragEnd(event) {
-                this.classList.remove('dragging');
-                setTimeout(() => {
-                    draggedFieldset.style.display = 'block';
-                    draggedFieldset = null;
-
-                    // Remove animation classes after the drop
-                    document.querySelectorAll('.move-up, .move-down').forEach(el => {
-                        el.classList.remove('move-up', 'move-down');
-                    });
-                }, 0);
-            }
-		}),
-		"enableDragAndDropGroupAllDirection": ((selector) => {
+		"enableDragAndDropGroup": ((selector, direction = 'v') => {
 			const items = document.querySelectorAll(selector);
 
             items.forEach(item => {
@@ -3259,24 +3186,32 @@ export class Utility {
                 event.preventDefault();
                 this.classList.add('drag-over');
 
-                const bounding = this.getBoundingClientRect();
-                const offsetX = event.clientX - bounding.left - bounding.width / 2;
-                const offsetY = event.clientY - bounding.top - bounding.height / 2;
+				const bounding = this.getBoundingClientRect();
+				
+				switch (direction) {
+					case 'v':
+						const offsetY = event.clientY - bounding.top - bounding.height / 2;
+						if (offsetY < 0) {
+							this.classList.add('move-up');
+							this.classList.remove('move-down');
+						} else {
+							this.classList.add('move-down');
+							this.classList.remove('move-up');
+						}
+						break;
+				
+					case 'h':
+						const offsetX = event.clientX - bounding.left - bounding.width / 2;
+						if (offsetX < 0) {
+							this.classList.add('move-right');
+							this.classList.remove('move-left');
+						} else {
+							this.classList.add('move-left');
+							this.classList.remove('move-right');
+						}
+						break;
+				}
 
-                if (offsetX < 0) {
-                    this.classList.add('move-right');
-                    this.classList.remove('move-left');
-                } else {
-                    this.classList.add('move-left');
-                    this.classList.remove('move-right');
-                }
-                if (offsetY < 0) {
-                    this.classList.add('move-up');
-                    this.classList.remove('move-down');
-                } else {
-                    this.classList.add('move-down');
-                    this.classList.remove('move-up');
-                }
 			}
 
             function dragLeave(event) {
@@ -3806,6 +3741,150 @@ export class Utility {
 				"element": element
 			};
 		}).bind(this),
+
+		"DragAndResizeElement": (function (elmnt, zoomed = false, snap_every = 1, callback) {
+			let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+			let isResizing = false;
+		
+			// Create a resizer element for the bottom-right corner
+			const resizer = document.createElement('div');
+			resizer.style.width = '10px';
+			resizer.style.height = '10px';
+			resizer.style.background = 'rgba(0, 0, 0, 0.5)';
+			resizer.style.position = 'absolute';
+			resizer.style.right = '0';
+			resizer.style.bottom = '0';
+			resizer.style.cursor = 'nwse-resize';
+			elmnt.appendChild(resizer);
+		
+			// Drag functionality, specific to the toolbar-titlebar
+			console.log('elmnt >>>>>>>>>>>>>>', elmnt);
+			const header = elmnt.querySelector('.toolbar-titlebar');
+			console.log('header :>>>>>>>>>>>>>>>>>> ', header);
+			if (header) {
+				header.onmousedown = dragMouseDown.bind(this);
+				header.addEventListener("touchstart", touchStart.bind(this), { passive: false });
+			}
+		
+			// Resize functionality
+			resizer.addEventListener('mousedown', initResize.bind(this), { passive: false });
+			resizer.addEventListener('touchstart', initResize.bind(this), { passive: false });
+		
+			function dragMouseDown(e) {
+				console.log('>>>>>> dragMouseDown');
+				if (isResizing) return;  // Prevent dragging when resizing
+				this.activeElement = elmnt.id;
+		
+				e = e || window.event;
+				e.preventDefault();
+		
+				let divider = (zoomed) ? this.zoom_level : 1;
+				pos3 = this.Numbers.RoundToNearestBase((e.clientX / divider), snap_every);
+				pos4 = this.Numbers.RoundToNearestBase((e.clientY / divider), snap_every);
+		
+				document.onmouseup = closeDragElement.bind(this);
+				document.onmousemove = elementDrag.bind(this);
+			}
+		
+			function touchStart(e) {
+				if (isResizing) return;  // Prevent dragging when resizing
+				this.activeElement = elmnt.id;
+		
+				e = e || window.event;
+				e.preventDefault();
+		
+				const touch = e.changedTouches[0];
+				let divider = (zoomed) ? this.zoom_level : 1;
+				pos3 = this.Numbers.RoundToNearestBase((touch.clientX / divider), snap_every);
+				pos4 = this.Numbers.RoundToNearestBase((touch.clientY / divider), snap_every);
+		
+				document.removeEventListener("touchend", closeDragElement);
+				document.removeEventListener("touchmove", elementDrag);
+		
+				document.addEventListener("touchend", closeDragElement.bind(this), { passive: false });
+				document.addEventListener("touchmove", elementDrag.bind(this), { passive: false });
+			}
+		
+			function elementDrag(e) {
+				if (this.activeElement != elmnt.id) return;
+		
+				e = e || window.event;
+				e.preventDefault();
+		
+				let clientX, clientY;
+				let divider = (zoomed) ? this.zoom_level : 1;
+		
+				if (e.type === "touchmove") {
+					const touch = e.changedTouches[0];
+					clientX = this.Numbers.RoundToNearestBase((touch.clientX / divider), snap_every);
+					clientY = this.Numbers.RoundToNearestBase((touch.clientY / divider), snap_every);
+				} else {
+					clientX = this.Numbers.RoundToNearestBase((e.clientX / divider), snap_every);
+					clientY = this.Numbers.RoundToNearestBase((e.clientY / divider), snap_every);
+				}
+		
+				pos1 = pos3 - clientX;
+				pos2 = pos4 - clientY;
+				pos3 = clientX;
+				pos4 = clientY;
+		
+				let cY = elmnt.offsetTop - pos2;
+				let cX = elmnt.offsetLeft - pos1;
+				if (cY >= 0) elmnt.style.top = cY + "px";
+				if (cX >= 0) elmnt.style.left = cX + "px";
+				if (typeof callback != 'undefined') callback();
+			}
+		
+			function closeDragElement() {
+				pos3 = 0;
+				pos4 = 0;
+				this.activeElement = null;
+		
+				document.onmouseup = null;
+				document.onmousemove = null;
+				document.removeEventListener("touchend", closeDragElement);
+				document.removeEventListener("touchmove", elementDrag);
+				if (typeof callback != 'undefined') callback();
+			}
+		
+			// Initialize resizing
+			function initResize(e) {
+				isResizing = true;
+				e.preventDefault();
+				document.onmousemove = doResize.bind(this);
+				document.onmouseup = stopResize.bind(this);
+				document.addEventListener("touchmove", doResize.bind(this), { passive: false });
+				document.addEventListener("touchend", stopResize.bind(this), { passive: false });
+			}
+		
+			function doResize(e) {
+				e = e || window.event;
+				let clientX, clientY;
+				if (e.type === "touchmove") {
+					const touch = e.changedTouches[0];
+					clientX = touch.clientX;
+					clientY = touch.clientY;
+				} else {
+					clientX = e.clientX;
+					clientY = e.clientY;
+				}
+		
+				elmnt.style.width = clientX - elmnt.getBoundingClientRect().left + "px";
+				elmnt.style.height = clientY - elmnt.getBoundingClientRect().top + "px";
+				if (typeof callback != 'undefined') callback();
+			}
+		
+			function stopResize() {
+				isResizing = false;
+				document.onmousemove = null;
+				document.onmouseup = null;
+				document.removeEventListener("touchmove", doResize);
+				document.removeEventListener("touchend", stopResize);
+				if (typeof callback != 'undefined') callback();
+			}
+		}).bind(this),
+		
+		
 		"DragElement": (function (elmnt, zoomed = false, snap_every = 1, callback) {
 			let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 		  
