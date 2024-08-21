@@ -1509,9 +1509,9 @@ legend {
     top: 0;
     left: 0;
     z-index: 1000; /* Ensure the status bar appears on top of other content */
-    background-color: var(--bg-color);
-	color: var(--text-color);
-	border: solid gray 1px;
+    background-color: var(--bg-color-inverse);
+	color: var(--bg-color);
+	/* border: solid gray 1px; */
 }
 
 .status_bar.header,
@@ -1524,17 +1524,16 @@ legend {
 	border: none;
     max-height: 20vh;
 	overflow: auto;
-}
-
-.status_bar.header > div:last-child, 
-.status_bar.footer > div:last-child {
-    border-right: none; /* Remove the border on the last segment */
+	scrollbar-width: none;
+	padding: 1rem;
 }
 
 .status_bar.content {
     max-height: calc(60vh - 3rem); /* Max height for content is 60% of viewport height minus padding */
 	width: 100%;
     overflow-y: auto;
+	scrollbar-width: none;
+	padding: 1rem;
 }
 
 /* Collapsed state */
@@ -1567,4 +1566,55 @@ legend {
 .push-content {
     margin-top: calc(20vh + 60vh + 20vh); /* Adjust the margin-top based on the expanded height */
     transition: margin-top 0.5s ease;
+}
+
+.overflow-shadow{
+	background:
+		/* Shadow covers */
+		linear-gradient(white 30%, rgba(255,255,255,0)),
+		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+		
+		/* Shadows */
+		radial-gradient(50% 0, farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)),
+		radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
+	background:
+		/* Shadow covers */
+		linear-gradient(white 30%, rgba(255,255,255,0)),
+		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+		
+		/* Shadows */
+		radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.3), rgba(0,0,0,0)),
+		radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
+	background-repeat: no-repeat;
+	background-color: white;
+	background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+
+	/* Opera doesn't support this in the shorthand */
+	background-attachment: local, local, scroll, scroll;
+
+}
+.overflow-shadow-inverse{
+	background:
+		/* Shadow covers */
+		linear-gradient(black 30%, rgba(0,0,0,0)),
+		linear-gradient(rgba(0,0,0,0), black 70%) 0 100%,
+		
+		/* Shadows */
+		radial-gradient(50% 0, farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)),
+		radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
+	background:
+		/* Shadow covers */
+		linear-gradient(black 30%, rgba(0,0,0,0)),
+		linear-gradient(rgba(0,0,0,0), black 70%) 0 100%,
+		
+		/* Shadows */
+		radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.3), rgba(0,0,0,0)),
+		radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
+	background-repeat: no-repeat;
+	background-color: black;
+	background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+
+	/* Opera doesn't support this in the shorthand */
+	background-attachment: local, local, scroll, scroll;
+
 }
