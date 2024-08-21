@@ -22,8 +22,8 @@
 </head>
 
 <body>
-	<div class="container-fluid status_bar" id="status_bar">
-		<div class="status_bar header" id="segment_header">
+	<div class="status_bar" id="status_bar">
+		<div class="status_bar header d-flex flex-row justify-content-center" id="segment_header">
 			<div id="segment_header_1">
 				Header Segment 1<br>
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
@@ -35,9 +35,10 @@
 				Header Segment 3<br>
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
 			</div>
 		</div>
-		<div class="status_bar content" id="segment_content">
+		<div class="status_bar content d-flex flex-row justify-content-center" id="segment_content">
 			<div class="container-fluid jumbotron">
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
@@ -119,7 +120,7 @@
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
 			</div>
 		</div>
-		<div class="status_bar footer" id="segment_footer">
+		<div class="status_bar footer d-flex flex-row justify-content-center" id="segment_footer">
 			<div id="segment_footer_1">
 				Footer Segment 1<br>
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
@@ -165,9 +166,9 @@
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
 				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
 			</div>
-		</div>
+		</div>	
 	</div>
-	<div class="graph-surface" style="margin-top: 2rem;">
+	<div class="graph-surface">
 		<div class="container-fluid" id="debugging"></div>
 		<div class="container-fluid" id="grph" style="padding: 0px; margin: 0px;"></div>
 	</div>
@@ -201,7 +202,7 @@
 
 		// Initially collapsed
 		document.getElementById('status_bar').addEventListener('click', () => toggleStatusBar());
-		document.getElementById('status_bar').classList.add('collapsed');
+		// document.getElementById('status_bar').classList.add('collapsed');
 	</script>
 </body>
 </html>

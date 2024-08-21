@@ -1509,29 +1509,21 @@ legend {
     top: 0;
     left: 0;
     z-index: 1000; /* Ensure the status bar appears on top of other content */
-    transition: max-height 1s ease;
-    background-color: #fff; /* Optional: set a background color for the status bar */
+    background-color: var(--bg-color);
+	color: var(--text-color);
+	border: solid gray 1px;
 }
 
 .status_bar.header,
 .status_bar.footer {
-    /*max-height: 20vh; *//* Max height for header and footer is 20% of viewport height */
-    /* display: flex; 
-    flex-direction: row;  */
 }
 
 .status_bar.header > div, 
 .status_bar.footer > div {
-    /* flex: 1;  */
-	display: inline-block;
-    padding: 0.5rem;
-    overflow-y: auto; /* Enable independent scrolling for each segment */
-    max-height: 20vh; /* Ensure each segment is scrollable independently within the header/footer */
-    border-right: 1px solid #ccc; /* Optional: add a border between segments */
-    box-sizing: border-box;
-	width: 33.2%;
-	text-align: center;
-	vertical-align: top;
+	width: 33.3%;
+	border: none;
+    max-height: 20vh;
+	overflow: auto;
 }
 
 .status_bar.header > div:last-child, 
@@ -1557,7 +1549,6 @@ legend {
 
 .collapsed #segment_footer,
 .collapsed #segment_content {
-    display: none;
 }
 
 .expanded #segment_header {
@@ -1566,12 +1557,10 @@ legend {
 
 .expanded #segment_footer {
     max-height: 20vh;
-    display: flex;
 }
 
 .expanded #segment_content {
     max-height: calc(60vh - 3rem);
-    display: block;
 }
 
 /* Optional: Push content down when expanded */
