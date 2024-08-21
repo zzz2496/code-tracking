@@ -742,6 +742,40 @@ export class Utility {
 	};
 	// NOTE - Objects related methods
 	Objects = {
+		"monitorDependentPropertyChanges": ((object, dependencies, finalCallback) => {
+			const state = {};
+			dependencies.forEach(dep => {
+				state[dep] = false;  // Initialize the state for each dependency
+			});
+			const handler = {
+				set(target, property, value) {
+					if (dependencies.includes(property) && target[property] !== value) {
+						target[property] = value; // Set the value
+						state[property] = value === 'LOADED'; // Update the state
+						
+						// Check if all dependencies are satisfied
+						const allLoaded = Object.values(state).every(v => v === true);
+						if (allLoaded) {
+							finalCallback();  // Trigger the callback
+						}
+					} else {
+						target[property] = value;
+					}
+					return true;
+				}
+			};
+			function applyProxyToDependencies(obj) {
+				dependencies.forEach(dep => {
+					if (obj.hasOwnProperty(dep)) {
+						obj[dep] = new Proxy(obj[dep], handler);
+					}
+				});
+			}
+			applyProxyToDependencies(object);
+		}),
+		"monitorSingleProperty": ((property, callback) =>{
+			monitorDependentPropertyChanges(coreStatus, [property], callback);
+		}),
 		"fetchData": async function (DataARRAY, callback, progressCallback, cr=0){
 			async function fetchJSON(Fdata = {"URL":"", "Method": 'GET', "Params": {}, "ContentType": "application/json"}, key) {
 				const options = {

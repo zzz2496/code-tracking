@@ -1,4 +1,4 @@
-document.addEventListener('BlueprintsLoaded', async () => {
+document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	console.log('Start SurrealDB Initialization!');
 
 	if (ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status != 'LOADED') {

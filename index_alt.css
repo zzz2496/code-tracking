@@ -889,7 +889,7 @@ div {
 	/* background-color: var(--color-white-a06); */
 	/* border: 1px solid #d3d3d3; */
 	/* background-image: linear-gradient(158deg, var(--color-dark1), var(--color-dark2) 100%); */
-	background-image: linear-gradient(158deg, var(--subtle-color-a09) 10%, var(--subtle-color-a04) 50%, var(--subtle-color) 80%);
+	background-image: linear-gradient(158deg, var(--subtle-color) 15%, var(--subtle-color-a06) 50%, var(--subtle-color) 85%);
 	/* background-color: var(--bg-dark-color-primary); */
 	
 	text-align: center;
@@ -1474,4 +1474,108 @@ legend {
 
 .move-right {
 	transform: translateX(20px);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.status_bar {
+    height: auto;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    /*position: fixed; /* Keep the status bar fixed at the top */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensure the status bar appears on top of other content */
+    transition: max-height 1s ease;
+    background-color: #fff; /* Optional: set a background color for the status bar */
+}
+
+.status_bar.header,
+.status_bar.footer {
+    /*max-height: 20vh; *//* Max height for header and footer is 20% of viewport height */
+    /* display: flex; 
+    flex-direction: row;  */
+}
+
+.status_bar.header > div, 
+.status_bar.footer > div {
+    /* flex: 1;  */
+	display: inline-block;
+    padding: 0.5rem;
+    overflow-y: auto; /* Enable independent scrolling for each segment */
+    max-height: 20vh; /* Ensure each segment is scrollable independently within the header/footer */
+    border-right: 1px solid #ccc; /* Optional: add a border between segments */
+    box-sizing: border-box;
+	width: 33.2%;
+	text-align: center;
+	vertical-align: top;
+}
+
+.status_bar.header > div:last-child, 
+.status_bar.footer > div:last-child {
+    border-right: none; /* Remove the border on the last segment */
+}
+
+.status_bar.content {
+    max-height: calc(60vh - 3rem); /* Max height for content is 60% of viewport height minus padding */
+	width: 100%;
+    overflow-y: auto;
+}
+
+/* Collapsed state */
+.collapsed {
+    max-height: 1.5rem; /* Height when collapsed */
+}
+
+/* Expanded state */
+.expanded {
+    max-height: 100vh; /* Max height when expanded */
+}
+
+.collapsed #segment_footer,
+.collapsed #segment_content {
+    display: none;
+}
+
+.expanded #segment_header {
+    max-height: 20vh;
+}
+
+.expanded #segment_footer {
+    max-height: 20vh;
+    display: flex;
+}
+
+.expanded #segment_content {
+    max-height: calc(60vh - 3rem);
+    display: block;
+}
+
+/* Optional: Push content down when expanded */
+.push-content {
+    margin-top: calc(20vh + 60vh + 20vh); /* Adjust the margin-top based on the expanded height */
+    transition: margin-top 0.5s ease;
 }

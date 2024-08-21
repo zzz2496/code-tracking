@@ -11,7 +11,7 @@ console.log('Start Module Loader');
 // import { surrealdbWasmEngines } from '../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js';
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 
-let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surrealdbWasmEngines;
+let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surrealdbWasmEngines; //, Blockly, Blockly_blocks, Blockly_javascript, Blockly_msg_en
 
 let ParadigmREVOLUTION = {
 	"SystemCore": {
@@ -75,6 +75,7 @@ let ParadigmREVOLUTION = {
 			"Utility": Utility,
 			"GraphSurface": GraphSurface,
 			"Connection": Connection,
+			"WorkerThread": WorkerThread,
 			"Flowchart": Flowchart,
 			"Surreal": Surreal,
 			"surrealdbWasmEngines": surrealdbWasmEngines
@@ -112,6 +113,12 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
         import("../Classes/Flowchart.mjs"),
         import('../../node_modules/surrealdb.js/dist/index.bundled.mjs'),
         import('../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js'),
+
+
+		// import('../../node_modules/blockly/blockly_compressed.js'),
+		// import('../../node_modules/blockly/blocks_compressed.js'),
+		// import('../../node_modules/blockly/javascript_compressed.js'),
+		// import('../../node_modules/blockly/msg/en.js'),
     ];
 
     const results = await Promise.allSettled(importPromises);
@@ -123,7 +130,11 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
         WorkerThreadResult,
         FlowchartResult,
         SurrealResult,
-        SurrealdbWasmEnginesResult
+		SurrealdbWasmEnginesResult,
+		BlocklyResult,
+		Blockly_blocksResult,
+		Blockly_javascriptResult,
+		Blockly_msg_enResult
     ] = results;
 
     const UtilityModule = UtilityResult.status === "fulfilled" ? UtilityResult.value : null;
@@ -133,6 +144,7 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
     const FlowchartModule = FlowchartResult.status === "fulfilled" ? FlowchartResult.value : null;
 	const SurrealModule = SurrealResult.status === "fulfilled" ? SurrealResult.value : null;
     const SurrealdbWasmEnginesModule = SurrealdbWasmEnginesResult.status === "fulfilled" ? SurrealdbWasmEnginesResult.value : null;
+    // const BlocklyModule = BlocklyResult.status === "fulfilled" ? BlocklyResult.value : null;
 
     if (UtilityModule) {
         const { Utility } = UtilityModule;
@@ -237,6 +249,21 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
         ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "FAILED TO LOAD";
         console.error("Failed to import surrealdbWasmEngines.");
     }
+
+
+
+
+	// if (BlocklyModule) {
+    //     const { surrealdbWasmEngines } = BlocklyModule;
+    //     console.log("surrealdbWasmEngines imported successfully.");
+	// 	ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "LOADED";
+	// 	ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines = surrealdbWasmEngines;
+    //     // Use surrealdbWasmEngines module
+    // } else {
+	// 	document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.wasm.<br>";
+    //     ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "FAILED TO LOAD";
+    //     console.error("Failed to import surrealdbWasmEngines.");
+    // }
 
     // Execute something else after checking all imports
 	console.log('Done Module Loader >>>>');
