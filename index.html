@@ -11,6 +11,8 @@
 	<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/brands.min.css">
 	<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css">
 	<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css">
+	
+	<link rel="stylesheet" href="./node_modules/finderjs/example/finderjs.css">
 
 	<!-- <link rel="stylesheet" href="paradigm_modules/materialize/css/materialize.min.css">
 	<script src="paradigm_modules/materialize/js/materialize.min.js"></script> -->
@@ -23,164 +25,137 @@
 
 <body>
 	<div class="status_bar" id="status_bar">
-		<div class="status_bar tabs">
-			<nav class="nav nav-pills flex-column flex-sm-row">
-				<a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="#">Active</a>
-				<a class="flex-sm-fill text-sm-center nav-link" href="#">Longer nav link</a>
-				<a class="flex-sm-fill text-sm-center nav-link" href="#">Link</a>
-				<a class="flex-sm-fill text-sm-center nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-			</nav>
+		<div class="status_bar tabs content_segments d-flex flex-row justify-content-center">
+			<button class="btn m-1 btn-primary debug_button" id="debug_button1">Debug Button1</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button2">Debug Button2</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button3">Debug Button3</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button4">Debug Button4</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button5">Debug Button5</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button6">Debug Button6</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button7">Debug Button7</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button8">Debug Button8</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button9">Debug Button9</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button10">Debug Button10</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button11">Debug Button11</button>
+			<button class="btn m-1 btn-outline-secondary debug_button" id="debug_button12">Debug Button12</button>
 		</div>
-
-		<div class="status_bar header d-flex flex-row justify-content-center" id="segment_header">
-			<div id="segment_header_1" class="overflow-shadow">
+		<div class="status_bar header d-flex flex-row justify-content-center">
+			<div class="overflow-shadow header_segments">
 				Header Segment 1<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
 			</div>
-			<div id="segment_header_2" class="overflow-shadow">
+			<div class="overflow-shadow header_segments">
 				Header Segment 2<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
 			</div>
-			<div id="segment_header_3" class="overflow-shadow">
+			<div class="overflow-shadow header_segments">
 				Header Segment 3<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
 			</div>
 		</div>
-		<div class="status_bar content d-flex flex-row justify-content-center overflow-shadow" id="segment_content">
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
+		<div class="status_bar d-flex flex-row justify-content-center overflow-shadow content_segments">
+			<div id="test_finderjs"></div>
 		</div>
-		<div class="status_bar footer d-flex flex-row justify-content-center" id="segment_footer">
-			<div class="overflow-shadow" id="segment_footer_1">
+		<div class="status_bar footer d-flex flex-row justify-content-center">
+			<div class="overflow-shadow footer_segments">
 				Footer Segment 1<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
 			</div>
-			<div class="overflow-shadow" id="segment_footer_2">
+			<div class="overflow-shadow footer_segments">
 				Footer Segment 2<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
 			</div>
-			<div class="overflow-shadow" id="segment_footer_3">
+			<div class="overflow-shadow footer_segments">
 				Footer Segment 3<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat velit sed voluptatibus adipisci
+				aliquam, cupiditate soluta similique vel nihil delectus ea tenetur optio autem odio ratione, facere
+				itaque. Sunt, illo?<br>
 			</div>
-		</div>	
+		</div>
+	</div>
+
+	<div class="debug_buttons d-flex flex-row justify-content-around">
+		<button id="debug_button1">Debug Button1</button>
+		<button id="debug_button2">Debug Button2</button>
+		<button id="debug_button3">Debug Button3</button>
+		<button id="debug_button4">Debug Button4</button>
+		<button id="debug_button5">Debug Button5</button>
+		<button id="debug_button6">Debug Button6</button>
+		<button id="debug_button7">Debug Button7</button>
+		<button id="debug_button8">Debug Button8</button>
+		<button id="debug_button9">Debug Button9</button>
+		<button id="debug_button10">Debug Button10</button>
+		<button id="debug_button11">Debug Button11</button>
 	</div>
 	<div class="graph-surface">
 		<div class="container-fluid" id="debugging"></div>
 		<div class="container-fluid" id="grph" style="padding: 0px; margin: 0px;"></div>
 	</div>
 	<!-- <script type="text/javascript" 	id="service_worker_loader" 	defer src="./ParadigmScripts/sw_loader.js"></script> -->
-	<script type="text/javascript" id="startup_loader" 		defer src="./ParadigmScripts/startup.js"></script>
-	<script type="module" 		   id="module_loader" 		defer src="./ParadigmScripts/module_loader_v2.js"></script>
-	<script type="module" 		   id="surrealdb_loader"	defer src="./ParadigmScripts/surrealdb_loader.js"></script>
-	<script type="module" 		   id="graph_loader" 		defer src="./ParadigmScripts/graph_loader.js"></script>
-	<script type="module" 		   id="paradigm_revolution" defer src="./ParadigmScripts/paradigm_revolution.js"></script>
-	
+	<script type="module" id="finderjs" defer src="./node_modules/finderjs/build/finder.min.js"></script>
+	<script type="text/javascript" id="startup_loader" defer src="./ParadigmScripts/startup.js"></script>
+	<script type="module" id="module_loader" defer src="./ParadigmScripts/module_loader_v2.js"></script>
+	<script type="module" id="surrealdb_loader" defer src="./ParadigmScripts/surrealdb_loader.js"></script>
+	<script type="module" id="graph_loader" defer src="./ParadigmScripts/graph_loader.js"></script>
+	<script type="module" id="paradigm_revolution" defer src="./ParadigmScripts/paradigm_revolution.js"></script>
+
+
+
 	<!-- Load Blockly core -->
 	<!-- <script src="./node_modules//blockly/blockly_compressed.js" defer></script> -->
 	<!-- Load the default blocks -->
@@ -191,6 +166,14 @@
 	<!-- <script src="./node_modules//blockly/msg/en.js" defer></script> -->
 
 	<script type="text/javascript" defer>
+		function addGlobalEventListeners(type, selector, callback, parent) {
+			parent.addEventListener(type, e => {
+				if (e.target.matches(selector)) {
+					callback();
+				}
+			});
+		}
+
 		function toggleStatusBar() {
 			const statusBar = document.getElementById('status_bar');
 			if (statusBar.classList.contains('collapsed')) {
@@ -213,6 +196,206 @@
 		// Initially collapsed
 		document.getElementById('status_bar').addEventListener('click', () => toggleStatusBar());
 		document.getElementById('status_bar').classList.add('collapsed');
+
+		addGlobalEventListeners('click', '#debug_button1', ((e) => {
+			document.querySelector('#segment_header_1').classList.add('collapsed');
+		}), document.querySelector('.debug_buttons'));
+
+		document.addEventListener('DOMContentLoaded', (e) => {
+			console.log('documentLoaded >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+			var data = [
+				{
+					size: '10 KB',
+					modified: '02/21/2015 at 10:04am',
+					label: 'build',
+					children: [
+						{
+							size: '44 KB',
+							modified: '02/21/2015 at 10:04am',
+							label: 'build',
+							children: [
+								{
+									size: '2 KB',
+									modified: '02/21/2015 at 10:04am',
+									label: 'finder.js'
+								}
+							]
+						},
+						{
+							size: '11 KB',
+							modified: '02/21/2015 at 10:04am',
+							label: 'finder.js'
+						}
+					]
+				},
+				{
+					size: '9 KB',
+					modified: '02/21/2015 at 10:04am',
+					label: 'example',
+					children: [
+						{
+							size: '10 KB',
+							modified: '02/21/2015 at 10:04am',
+							label: 'example',
+							children: [
+								{
+									size: '10 KB',
+									modified: '02/21/2015 at 10:04am',
+									label: 'test',
+									children: [
+										{
+											size: '10 KB',
+											modified: '03/09/2014 at 11:45am',
+											label: 'index.js'
+										},
+										{
+											size: '10 KB',
+											modified: '03/09/2014 at 11:45am',
+											label: 'test.js'
+										},
+										{
+											size: '10 KB',
+											modified: '03/09/2014 at 11:45am',
+											label: 'util.js'
+										}
+									]
+								},
+								{
+									size: '33 KB',
+									modified: '02/21/2015 at 10:04am',
+									label: 'bundle.js'
+								},
+								{
+									size: '103 KB',
+									modified: '02/21/2015 at 10:04am',
+									label: 'finderjs.css'
+								},
+								{
+									size: '56 KB',
+									modified: '02/21/2015 at 10:04am',
+									label: 'index.html'
+								},
+								{
+									size: '122 KB',
+									modified: '02/21/2015 at 10:04am',
+									label: 'index.js'
+								}
+							]
+						},
+						{
+							size: '8 KB',
+							modified: '02/21/2015 at 10:04am',
+							label: 'bundle.js'
+						},
+						{
+							size: '6 KB',
+							modified: '02/21/2015 at 10:04am',
+							label: 'finderjs.css'
+						},
+						{
+							size: '4 KB',
+							modified: '02/21/2015 at 10:04am',
+							label: 'index.html'
+						},
+						{
+							size: '2 KB',
+							modified: '02/21/2015 at 10:04am',
+							label: 'index.js'
+						}
+					]
+				},
+				{
+					size: '10 KB',
+					modified: '02/21/2015 at 10:04am',
+					label: 'test',
+					children: [
+						{
+							size: '10 KB',
+							modified: '03/09/2014 at 11:45am',
+							label: 'index.js'
+						},
+						{
+							size: '10 KB',
+							modified: '03/09/2014 at 11:45am',
+							label: 'test.js'
+						},
+						{
+							size: '10 KB',
+							modified: '03/09/2014 at 11:45am',
+							label: 'util.js'
+						}
+					]
+				},
+				{
+					size: '56 KB',
+					modified: '02/21/2015 at 10:04am',
+					label: '.codeclimate.yml'
+				},
+				{
+					size: '33 KB',
+					modified: '02/21/2015 at 10:04am',
+					label: '.eslintrc'
+				},
+				{
+					size: '101 KB',
+					modified: '02/21/2015 at 10:04am',
+					label: '.gitignore'
+				},
+				{
+					size: '96 KB',
+					modified: '02/21/2015 at 10:04am',
+					label: '.travis.yml'
+				},
+				{
+					size: '69 KB',
+					modified: '02/15/2012 at 1:02pm',
+					label: 'index.js'
+				},
+				{
+					size: '666 KB',
+					modified: '02/15/2012 at 1:02pm',
+					label: 'LICENSE'
+				},
+				{
+					size: '187 KB',
+					modified: '02/15/2012 at 1:02pm',
+					label: 'Makefile'
+				},
+				{
+					size: '45 KB',
+					modified: '02/15/2012 at 1:02pm',
+					label: 'package.json'
+				},
+				{
+					size: '10 KB',
+					modified: '02/15/2012 at 1:02pm',
+					label: 'README.md'
+				},
+				{
+					size: '7 KB',
+					modified: '02/15/2012 at 1:02pm',
+					label: 'util.js'
+				},
+				{
+					size: '10 KB',
+					modified: '02/21/2015 at 10:04am',
+					label: 'Project page',
+					type: 'github-url',
+					url: 'https://github.com/mynameistechno/finderjs'
+				}
+			];
+
+			var container = document.getElementById('test_finderjs');
+			console.log('container :>> ', container);
+			
+			var options = {};
+			var f = finder(container, data, options);
+			f.on('leaf-selected', function (item) {
+				console.log('Leaf selected', item);
+			});
+		});
+
 	</script>
 </body>
+
 </html>

@@ -26,19 +26,20 @@ document.addEventListener('BlueprintsLoaded', () => {
 
 	window.ParadigmREVOLUTION.GraphSurface = GraphSurfaceObject;
 	
+	alert('wiiiii');
 	ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status').innerHTML = 'Loading...';
 	let corestatus_str = '';
 	Object.entries(window.ParadigmREVOLUTION.SystemCore.CoreStatus).forEach(([idx, value]) => {
 		console.log(idx, value);
 		switch (value.Status) {
 			case 'NOT LOADED':
-				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-outline-secondary runtime-controls-button" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-outline-secondary runtime-controls-button" id="${value}__${idx}__notLoaded" title="${idx.Label}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 			case 'LOADED':
-				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary runtime-controls-button" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary runtime-controls-button" id="${value}__${idx}__Loaded" title="${idx.Label}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 			case 'FAILED TO LOAD':
-				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-danger runtime-controls-button" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-danger runtime-controls-button" id="${value}__${idx}__failedtoLoad" title="${idx.Label}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 		}
 	});

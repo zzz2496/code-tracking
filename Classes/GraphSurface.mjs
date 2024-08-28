@@ -274,7 +274,7 @@ export class GraphSurface {
 		let GraphElement = document.createElement('div');
 		GraphElement.id = 'id_' + GraphObject.Utility.Strings.UnReadable(GraphObject.Metadata.DocumentName);
 		GraphElement.style.width = '100vw';
-		GraphElement.style.height = '100vh';
+		GraphElement.style.height = 'calc(100vh - 3rem)';
 		GraphElement.style.overflow = 'scroll';
 		GraphElement.style.position = 'relative';
 		

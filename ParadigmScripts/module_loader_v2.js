@@ -9,8 +9,7 @@ console.log('Start Module Loader');
 // import { surrealdbWasmEngines } from '../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js';
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 
-let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surrealdbWasmEngines; //, Blockly, Blockly_blocks, Blockly_javascript, Blockly_msg_en
-
+let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surrealdbWasmEngines;
 
 let ParadigmREVOLUTION = {
 	"SystemCore": {
@@ -66,8 +65,14 @@ let ParadigmREVOLUTION = {
 			"SurrealDB": {
 				"Status": "NOT LOADED",
 				"Icon": "database",
-				"Label": "SurrealDB",
+				"Label": "SurrealDB Datastore",
 				"ShortLabel": "SDB"
+			},
+			"FinderJS": {
+				"Status": "NOT LOADED",
+				"Icon": "table-columns",
+				"Label": "FinderJS",
+				"ShortLabel": "FJS"
 			},
 		},
 		"Modules": {
@@ -101,6 +106,17 @@ let ParadigmREVOLUTION = {
 	"Initialization_Status": 0
 };
 window.ParadigmREVOLUTION = ParadigmREVOLUTION;
+
+// Assuming Finder attaches something to the global object, you can access it like this:
+if (typeof finder !== 'undefined') {
+    console.log("FinderJS module loaded successfully.");
+	ParadigmREVOLUTION.SystemCore.CoreStatus.FinderJS.Status = "LOADED";
+	ParadigmREVOLUTION.SystemCore.Modules.FinderJS = finder;
+} else {
+	document.querySelector('#debugging').innerHTML += "Failed to load FinderJS.<br>";
+	ParadigmREVOLUTION.SystemCore.CoreStatus.FinderJS.Status = "FAILED TO LOAD";
+	console.error("Failed to import FinderJS.");
+}
 
 (async () => {
 	try {
@@ -220,8 +236,7 @@ window.ParadigmREVOLUTION = ParadigmREVOLUTION;
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "FAILED TO LOAD";
 				console.error("Failed to import Surreal.");
 			}
-		}
-		// Add more handlers as necessary...
+		},
 	];
 
 	for (const handler of moduleHandlers) {

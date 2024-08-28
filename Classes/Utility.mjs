@@ -4061,9 +4061,9 @@ export class Utility {
 			elmnt.appendChild(resizer);
 
 			// Drag functionality, specific to the toolbar-titlebar
-			console.log('elmnt >>>>>>>>>>>>>>', elmnt);
+			// console.log('elmnt >>>>>>>>>>>>>>', elmnt);
 			const header = elmnt.querySelector('.toolbar-titlebar');
-			console.log('header :>>>>>>>>>>>>>>>>>> ', header);
+			// console.log('header :>>>>>>>>>>>>>>>>>> ', header);
 			if (header) {
 				header.onmousedown = dragMouseDown.bind(this);
 				header.addEventListener("touchstart", touchStart.bind(this), { passive: false });

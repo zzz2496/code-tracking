@@ -1501,124 +1501,109 @@ legend {
 
 
 
-
 .status_bar {
     height: auto;
     overflow: hidden;
-    transition: max-height 0.5s ease;
-    /*position: fixed; /* Keep the status bar fixed at the top */
+    transition: max-height 1s ease-in-out;
     top: 0;
     left: 0;
     z-index: 1000; /* Ensure the status bar appears on top of other content */
-    background-color: var(--bg-color-inverse);
-	color: var(--bg-color);
-	/* border: solid gray 1px; */
-	scrollbar-width: none;
-
+    /* background-color: var(--bg-color-inverse); */
+    color: var(--bg-color);
+    scrollbar-width: none;
 }
 
-.status_bar.header,
-.status_bar.footer {
-}
-
-.status_bar.header > div, 
-.status_bar.footer > div {
-	width: 33.3%;
-	border: none;
+.status_bar.header > .header_segments, 
+.status_bar.footer > .footer_segments {
+    width: 33.3%;
+    border: none;
     max-height: 20vh;
-	overflow: auto;
-	scrollbar-width: none;
-	/* padding: 1rem; */
+    overflow: hidden; /* Hide overflow during transition */
+    scrollbar-width: none;
+    transition: max-height 1s ease-in-out; /* Adjusted to match content_segments */
 }
 
-.status_bar.content {
+.status_bar.content_segments {
     max-height: calc(60vh - 3rem); /* Max height for content is 60% of viewport height minus padding */
-	width: 100%;
+    width: 100%;
     overflow-y: auto;
-	scrollbar-width: none;
-	/* padding-top: 1rem;
-	padding-bottom: 1rem; */
+    scrollbar-width: none;
+    transition: max-height 1s ease-in-out; /* Consistent transition duration */
 }
 
-/* Collapsed state */
+/* General collapsed state */
 .collapsed {
-    max-height: 1.5rem; /* Height when collapsed */
+    max-height: 1.5rem; /* Entire status_bar collapses to 1.5rem */
 }
 
-/* Expanded state */
+/* Collapse the tabs and content sections */
+.collapsed .content_segments,
+.collapsed .tabs {
+    max-height: 0px;
+    transition: max-height 1s ease-in-out; /* Smooth transition */
+}
+
+/* Collapse the footer segments */
+.collapsed .footer_segments {
+    max-height: 0px;
+    overflow: hidden; /* Ensure hidden overflow during collapse */
+    transition: max-height 1s ease-in-out; /* Smooth transition */
+}
+
+/* Only these headers will remain at 1.5rem */
+.collapsed .header_segments {
+    max-height: 1.5rem;
+    overflow: hidden; /* Ensure hidden overflow during collapse */
+    transition: max-height 1s ease-in-out; /* Adjusted for consistency */
+}
+
+/* Expanded state (restored to full height) */
 .expanded {
-    max-height: 100vh; /* Max height when expanded */
+    max-height: 100vh;
 }
 
-.collapsed #segment_footer,
-.collapsed #segment_content {
+.expanded .header_segments {
+    max-height: 20vh; /* Adjust based on your needs */
 }
 
-.expanded #segment_header {
-    max-height: 20vh;
+.expanded .content_segments {
+    max-height: calc(60vh - 3rem); /* Adjust based on your needs */
 }
 
-.expanded #segment_footer {
-    max-height: 20vh;
-}
-
-.expanded #segment_content {
-    max-height: calc(60vh - 3rem);
+.expanded .footer_segments {
+    max-height: 20vh; /* Adjust based on your needs */
 }
 
 /* Optional: Push content down when expanded */
 .push-content {
     margin-top: calc(20vh + 60vh + 20vh); /* Adjust the margin-top based on the expanded height */
-    transition: margin-top 0.5s ease;
+    transition: margin-top 0.5s ease-in-out;
 }
 
-.overflow-shadow{
-	background:
-		/* Shadow covers */
-		linear-gradient(white 30%, rgba(255,255,255,0)),
-		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
-		
-		/* Shadows */
-		radial-gradient(50% 0, farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)),
-		radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
-	background:
-		/* Shadow covers */
-		linear-gradient(white 30%, rgba(255,255,255,0)),
-		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
-		
-		/* Shadows */
-		radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.3), rgba(0,0,0,0)),
-		radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
-	background-repeat: no-repeat;
-	background-color: white;
-	background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
-
-	/* Opera doesn't support this in the shorthand */
-	background-attachment: local, local, scroll, scroll;
-
+.overflow-shadow {
+    background:
+        /* Shadow covers */
+        linear-gradient(white 30%, rgba(255,255,255,0)),
+        linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+        /* Shadows */
+        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.3), rgba(0,0,0,0)),
+        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+    background-attachment: local, local, scroll, scroll;
 }
-.overflow-shadow-inverse{
-	background:
-		/* Shadow covers */
-		linear-gradient(black 30%, rgba(0,0,0,0)),
-		linear-gradient(rgba(0,0,0,0), black 70%) 0 100%,
-		
-		/* Shadows */
-		radial-gradient(50% 0, farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)),
-		radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
-	background:
-		/* Shadow covers */
-		linear-gradient(black 30%, rgba(0,0,0,0)),
-		linear-gradient(rgba(0,0,0,0), black 70%) 0 100%,
-		
-		/* Shadows */
-		radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.3), rgba(0,0,0,0)),
-		radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
-	background-repeat: no-repeat;
-	background-color: black;
-	background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
 
-	/* Opera doesn't support this in the shorthand */
-	background-attachment: local, local, scroll, scroll;
-
+.overflow-shadow-inverse {
+    background:
+        /* Shadow covers */
+        linear-gradient(black 30%, rgba(0,0,0,0)),
+        linear-gradient(rgba(0,0,0,0), black 70%) 0 100%,
+        /* Shadows */
+        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.3), rgba(0,0,0,0)),
+        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
+    background-repeat: no-repeat;
+    background-color: black;
+    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+    background-attachment: local, local, scroll, scroll;
 }
