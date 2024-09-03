@@ -102,12 +102,19 @@ export class GraphSurface {
 							<td colspan="3" class="outlined-text"><i class="fa-solid fa-play"></i> <i class="fa-solid fa-pause"></i> &nbsp;&nbsp;RUNTIME</td>
 						</tr>
 						<tr>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset" title="Reset Form"><i class="p-2 fa-solid fa-refresh"></i></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--play" title="Run Form"><span ><i class="pt-2 pl-2 pb-2 fa-solid fa-play"></i> <i class="pt-2 pr-2 pb-2 fa-solid fa-pause"></i></span></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step" title="Step Into"><i class="p-2 fa-solid fa-diagram-successor"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Step Back"><i class="p-2 fa-solid fa-backward"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Run in Steps"><span ><i class="pt-2 pl-2 pb-2 fa-solid fa-play"></i></span></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Step Forward"><i class="p-2 fa-solid fa-forward"></i></button></td>
 						</tr>
 						<tr>
-							<td colspan="3"><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--debug" title="Debug Mode" style="width:70%;"><i class="fa-solid fa-bug"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Step Back"><i class="p-2 fa-solid fa-backward-fast"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Run in Steps"><span ><i class="pt-2 pl-2 pb-2 fa-solid fa-pause"></i></span></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Step Forward"><i class="p-2 fa-solid fa-forward-fast"></i></button></td>
+						</tr>
+						<tr>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset" title="Reset Form"><i class="p-2 fa-solid fa-refresh"></i></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run" title="Run Module"><i class="p-2 fa-solid fa-stop" style="color:red;"></i></button></td>
+							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--debug" title="Debug Mode"><i class="fa-solid fa-bug"></i></button></td>
 						</tr>
 					</table>
 					<table border="0" align="center" style="margin-top:5px;">

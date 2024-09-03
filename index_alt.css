@@ -1441,7 +1441,9 @@ legend {
 .group-body{
 
 }
-
+.content_segments{
+	background-color: var(--outline-color-blueish-a02);
+}
 .group-container {
 	margin: 10px 0;
 	padding: 10px;

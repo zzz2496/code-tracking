@@ -26,7 +26,6 @@ document.addEventListener('BlueprintsLoaded', () => {
 
 	window.ParadigmREVOLUTION.GraphSurface = GraphSurfaceObject;
 	
-	alert('wiiiii');
 	ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status').innerHTML = 'Loading...';
 	let corestatus_str = '';
 	Object.entries(window.ParadigmREVOLUTION.SystemCore.CoreStatus).forEach(([idx, value]) => {
