@@ -97,48 +97,38 @@ export class GraphSurface {
 			<fieldset class="group-container" draggable="true">
 				<legend class="w-auto align-content-center group-head outlined-text">CONTROLS</legend>
 				<div style="padding:10px;" class="group-body">
-					<table border="0" align="center" style="margin-top:5px;">
-						<tr>
-							<td colspan="3" class="outlined-text"><i class="fa-solid fa-play"></i> <i class="fa-solid fa-pause"></i> &nbsp;&nbsp;RUNTIME</td>
-						</tr>
-						<tr>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Step Back"><i class="p-2 fa-solid fa-backward"></i></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Run in Steps"><span ><i class="pt-2 pl-2 pb-2 fa-solid fa-play"></i></span></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Step Forward"><i class="p-2 fa-solid fa-forward"></i></button></td>
-						</tr>
-						<tr>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Step Back"><i class="p-2 fa-solid fa-backward-fast"></i></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Run in Steps"><span ><i class="pt-2 pl-2 pb-2 fa-solid fa-pause"></i></span></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Step Forward"><i class="p-2 fa-solid fa-forward-fast"></i></button></td>
-						</tr>
-						<tr>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset" title="Reset Form"><i class="p-2 fa-solid fa-refresh"></i></i></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run" title="Run Module"><i class="p-2 fa-solid fa-stop" style="color:red;"></i></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--debug" title="Debug Mode"><i class="fa-solid fa-bug"></i></button></td>
-						</tr>
-					</table>
-					<table border="0" align="center" style="margin-top:5px;">
-						<tr>
-							<td colspan="3" class="outlined-text"><i class="fa-solid fa-magnifying-glass"></i> &nbsp;&nbsp;ZOOM LEVEL [<label id='zoom-level'>${GraphObject.GraphElement.zoom_level}</label>]</td>
-						</tr>
-						<tr>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-out"><i class="p-2 fa-solid fa-minus"></i></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-reset"><i class="p-2 fa-solid fa-refresh"></i></button></td>
-							<td><button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-in"><i class="p-2 fa-solid fa-plus"></i></button></td>
-						</tr>
-					</table>
-					<table border="0" align="center" style="margin-top:5px;">
-						<tr>
-							<td colspan='3' class="outlined-text"><i class="fa-solid fa-circle-half-stroke"></i> &nbsp;&nbsp;DARK / LIGHT MODE</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>
-								<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}___theme-switch" style="color:red;"><i class="p-2 fa-solid fa-repeat"></i></button>
-							</td>
-							<td></td>
-						</tr>
-					</table>
+					<div align="center" class="p-2">
+						<div class="outlined-text"><i class="fa-solid fa-play"></i> <i class="fa-solid fa-pause"></i>&nbsp;&nbsp;RUNTIME</div>
+						<div class="p-2 d-flex flex-row justify-content-around">
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Step Back"><i class="p-2 pt-4 pb-4 fa-solid fa-backward"></i></button>
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Run Module"><span ><i class="p-2 pt-4 pb-4 fa-solid fa-play" style="color:#00b800;"></i></span></button>
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Step Forward"><i class="p-2 pt-4 pb-4 fa-solid fa-forward"></i></button>
+						</div>
+						<div class="d-flex flex-row justify-content-around">
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Go to the Module Start"><i class="p-2 fa-solid fa-backward-fast"></i></button>
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Pause Runtime"><span ><i class="p-2 fa-solid fa-pause"></i></span></button>
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Go to the Module End"><i class="p-2 fa-solid fa-forward-fast"></i></button>
+						</div>
+						<div class="d-flex flex-row justify-content-around">
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset" title="Reset Form"><i class="p-2 fa-solid fa-refresh" style="color:#5b5bff;"></i></i></button>
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run" title="Stop Runtime"><i class="p-2 fa-solid fa-stop" style="color:red;"></i></button>
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--debug" title="Debug Mode"><i class="p-2 fa-solid fa-bug" style="color:#d800d8;"></i></button>
+						</div>
+					</div>
+					<div align="center" class="p-2">
+						<div class="outlined-text"><i class="fa-solid fa-magnifying-glass"></i> &nbsp;&nbsp;ZOOM LEVEL [<label id='zoom-level'>${GraphObject.GraphElement.zoom_level}</label>]</div>
+						<div class="p-2 d-flex flex-row justify-content-around">
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-out"><i class="p-2 fa-solid fa-minus"></i></button>
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-reset"><i class="p-2 fa-solid fa-refresh"></i></button>
+							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}-zoom-in"><i class="p-2 fa-solid fa-plus"></i></button>
+						</div>
+					</div>
+					<div align="center" class="p-2">
+						<div class="outlined-text"><i class="fa-solid fa-circle-half-stroke"></i> &nbsp;&nbsp;DARK / LIGHT MODE</div>
+						<div class="p-2 d-flex flex-row justify-content-around">
+							<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}___theme-switch" style="color:red;"><i class="p-2 fa-solid fa-repeat"></i></button>
+						</div>
+					</div>
 				</div>
 			</fieldset>
 			<fieldset class="group-container" draggable="true">
