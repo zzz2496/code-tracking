@@ -145,6 +145,8 @@
 		<div class="container-fluid" id="debugging"></div>
 		<div class="container-fluid" id="grph" style="padding: 0px; margin: 0px;"></div>
 	</div>
+	
+	<!-- <script type="module" id="event_bus" defer src="./ParadigmScripts/eventbus.js"></script> -->
 	<!-- <script type="text/javascript" 	id="service_worker_loader" 	defer src="./ParadigmScripts/sw_loader.js"></script> -->
 	<script type="module" id="finderjs" defer src="./node_modules/finderjs/build/finder.min.js"></script>
 	<script type="text/javascript" id="startup_loader" defer src="./ParadigmScripts/startup.js"></script>
@@ -152,6 +154,10 @@
 	<script type="module" id="surrealdb_loader" defer src="./ParadigmScripts/surrealdb_loader.js"></script>
 	<script type="module" id="graph_loader" defer src="./ParadigmScripts/graph_loader.js"></script>
 	<script type="module" id="paradigm_revolution" defer src="./ParadigmScripts/paradigm_revolution.js"></script>
+
+	<!-- <script type="module" id="test1" defer src="./TestJS/test1.js"></script>
+	<script type="module" id="test2" defer src="./TestJS/test2.js"></script>
+	<script type="module" id="test3" defer src="./TestJS/test3.js"></script> -->
 
 
 
@@ -201,7 +207,7 @@
 		}), document.querySelector('.debug_buttons'));
 
 		document.addEventListener('DOMContentLoaded', (e) => {
-			console.log('documentLoaded >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+			// console.log('documentLoaded >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
 			var data = [
 				{
 					size: '10 KB',
@@ -385,7 +391,7 @@
 			];
 
 			var container = document.getElementById('test_finderjs');
-			console.log('container :>> ', container);
+			// console.log('container :>> ', container);
 			
 			var options = {};
 			var f = finder(container, data, options);

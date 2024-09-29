@@ -1,3 +1,5 @@
+console.log('>>> >>> >>> GraphSurface Loader');
+
 //SECTION - Graph Surface Class
 export class GraphSurface {
 	//SECTION - GraphSurface Constructor
@@ -99,20 +101,22 @@ export class GraphSurface {
 				<div style="padding:10px;" class="group-body">
 					<div align="center" class="p-2">
 						<div class="outlined-text"><i class="fa-solid fa-play"></i> <i class="fa-solid fa-pause"></i>&nbsp;&nbsp;RUNTIME</div>
-						<div class="p-2 d-flex flex-row justify-content-around">
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Step Back"><i class="p-2 pt-4 pb-4 fa-solid fa-backward"></i></button>
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Run Module"><span ><i class="p-2 pt-4 pb-4 fa-solid fa-play" style="color:#00b800;"></i></span></button>
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Step Forward"><i class="p-2 pt-4 pb-4 fa-solid fa-forward"></i></button>
-						</div>
-						<div class="d-flex flex-row justify-content-around">
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Go to the Module Start"><i class="p-2 fa-solid fa-backward-fast"></i></button>
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Pause Runtime"><span ><i class="p-2 fa-solid fa-pause"></i></span></button>
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Go to the Module End"><i class="p-2 fa-solid fa-forward-fast"></i></button>
-						</div>
-						<div class="d-flex flex-row justify-content-around">
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset" title="Reset Form"><i class="p-2 fa-solid fa-refresh" style="color:#5b5bff;"></i></i></button>
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run" title="Stop Runtime"><i class="p-2 fa-solid fa-stop" style="color:red;"></i></button>
-							<button class="raised-element btn runtime-controls-button" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--debug" title="Debug Mode"><i class="p-2 fa-solid fa-bug" style="color:#d800d8;"></i></button>
+						<div class="p-2">
+							<div class="d-flex flex-row justify-content-around">
+								<button class="raised-element btn runtime-controls-button runtime-controls-step-back" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Step Back"><i class="p-2 pt-4 pb-4 fa-solid fa-backward"></i></button>
+								<button class="raised-element btn runtime-controls-button runtime-controls-run-in-steps" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run-in-steps" title="Pause Runtime" style="color:#00b800;"><i class="fa-solid fa-play"></i><i class="fa-solid fa-pause"></i></button>
+								<button class="raised-element btn runtime-controls-button runtime-controls-step-forward" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Step Forward"><i class="p-2 pt-4 pb-4 fa-solid fa-forward"></i></button>
+							</div>
+							<div class="d-flex flex-row justify-content-around">
+								<button class="raised-element btn runtime-controls-button runtime-controls-go-to-start" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-back" title="Go to the Module Start"><i class="p-2 fa-solid fa-backward-fast"></i></button>
+								<button class="raised-element btn runtime-controls-button runtime-controls-run id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--run" title="Run Module"><i class="p-2 fa-solid fa-play"></i></button>
+								<button class="raised-element btn runtime-controls-button runtime-controls-go-to-end" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--step-forward" title="Go to the Module End"><i class="p-2 fa-solid fa-forward-fast"></i></button>
+							</div>
+							<div class="d-flex flex-row justify-content-around">
+								<button class="raised-element btn runtime-controls-button runtime-controls-reset" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--reset" title="Reset Form"><i class="p-2 fa-solid fa-refresh" style="color:#5b5bff;"></i></i></button>
+								<button class="raised-element btn runtime-controls-button runtime-controls-stop" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--stop" title="Stop Runtime"><i class="p-2 fa-solid fa-stop" style="color:red;"></i></button>
+								<button class="raised-element btn runtime-controls-button runtime-controls-debug-mode" id="${GraphObject.GraphElement.id_graph_control_palette_container}--runtime-control--debug" title="Debug Mode"><i class="p-2 fa-solid fa-bug" style="color:#d800d8;"></i></button>
+							</div>
 						</div>
 					</div>
 					<div align="center" class="p-2">
@@ -126,7 +130,7 @@ export class GraphSurface {
 					<div align="center" class="p-2">
 						<div class="outlined-text"><i class="fa-solid fa-circle-half-stroke"></i> &nbsp;&nbsp;DARK / LIGHT MODE</div>
 						<div class="p-2 d-flex flex-row justify-content-around">
-							<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}___theme-switch" style="color:red;"><i class="p-2 fa-solid fa-repeat"></i></button>
+							<button class="raised-element" id="${GraphObject.GraphElement.id_graph_control_palette_container}___theme-switch" style="color:#ff0000;"><i class="p-2 fa-solid fa-repeat"></i></button>
 						</div>
 					</div>
 				</div>
@@ -288,6 +292,7 @@ export class GraphSurface {
 		return GraphObject;
 	}
 }
+console.log('<<< <<< <<< GraphSurface Loader');
 
 export class GraphSurfaceOld {
 	constructor(GraphInfo, App, Utility) {

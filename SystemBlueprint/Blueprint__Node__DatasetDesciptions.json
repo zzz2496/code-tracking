@@ -1,0 +1,10 @@
+{
+	"Query": "The Query string to get the data to be stored in this object, for example: select * from Yggdrasil where Dataset.DataType = 'something'",
+	"Schema": "The data Schema, will define form fields and segments",
+	"Parameters": "The data entry process, sort by timestamp of input event",
+	"Data": "The State of the form, the actual data object",
+	"Checksum": "The Data checksum string, containing MD5 checksum of the [Dataset > Data] as string",
+	"DataType": "Data classification string, for example: Transaksi Penjualan",
+	"ExternalResource": "This is an array containing the external resource, for example image files, PDF files, Spreadsheet files, etc",
+	"ProcessingParameters": "This is the Processing Parameters object, containing the Next Process Locking , Signage, etc"
+}

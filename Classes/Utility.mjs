@@ -1,3 +1,5 @@
+let cr = false;
+if (cr) console.log('>>> Utility.mjs');
 // import { NodeProperties } from "./NodeProperties.mjs";
 // import { Surreal } from './node_modules/surrealdb.wasm/dist/full/index.js';
 // import { Surreal } from '../paradigm_modules/surrealdb.wasm/dist/full/index.js';
@@ -4964,13 +4966,13 @@ export class Utility {
 	DataStore = {
 		"SurrealDB": {
 			// "initiateSurrealDB": async function(storage, namespace, database, server, user, pass) {
-			initSurrealDB: async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA, Modules) {
+			initSurrealDB: async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA, Modules, cr) {
 				let token = mode;
 				switch (mode) {
 					case 'Memory':
 						try {
 							//Initiate MEMORY
-							console.info('Start SurrealDB.Memory connection...');
+							if (cr) console.info('Start SurrealDB.Memory connection...');
 							if (Connect) {
 								// Connect to the database
 								SurrealDB.Memory.Metadata = {
@@ -4994,7 +4996,7 @@ export class Utility {
 							} else {
 								SurrealDB.Memory.Instance = false;
 							}
-							console.info('Done SurrealDB.Memory connection...');
+							if (cr) console.info('Done SurrealDB.Memory connection...');
 						} catch (e) {
 							console.error("ERROR SurrealDB.Memory on initialization, ", e);
 						}
@@ -5002,7 +5004,7 @@ export class Utility {
 					case 'IndexedDB':
 						try {
 							//Initiate INDEXEDDB
-							console.info('Start SurrealDB.IndexedDB connection...');
+							if (cr) console.info('Start SurrealDB.IndexedDB connection...');
 							if (Connect) {
 								// Connect to the database
 								SurrealDB.IndexedDB.Metadata = {
@@ -5018,7 +5020,7 @@ export class Utility {
 							} else {
 								SurrealDB.IndexedDB.Instance = false;
 							}
-							console.info('Done SurrealDB.IndexedDB connection...');
+							if (cr) console.info('Done SurrealDB.IndexedDB connection...');
 						} catch (e) {
 							console.error("ERROR SurrealDB.IndexedDB on initialization, ", e);
 						}
@@ -5026,7 +5028,7 @@ export class Utility {
 					default:
 						try {
 							//Initiate TESTSERVER
-							console.info('Start SurrealDB.TestServer connection...');
+							if (cr) console.info('Start SurrealDB.TestServer connection...');
 							if (Connect) {
 								// Initialize SurrealDB Server Connection subsystem if UNDEFINED
 								if (typeof SurrealDB[mode] == "undefined") {
@@ -5065,7 +5067,7 @@ export class Utility {
 								};
 							}
 
-							console.info(`Done SurrealDB.${mode}. connection...`);
+							if (cr) console.info(`Done SurrealDB.${mode}. connection...`);
 						} catch (e) {
 							console.error(`ERROR SurrealDB.${mode} on initialization, `, e);
 						}
@@ -5520,4 +5522,4 @@ export class Utility {
 		}
 	}
 };
-
+if (cr) console.log('<<< Utility.mjs');

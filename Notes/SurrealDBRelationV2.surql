@@ -1,0 +1,49 @@
+return fn::connect_nodes_v2(chain:data1_v1_step01, chain:data1_v1_step02, 'chain_data1', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data1_v1_step02, chain:data1_v1_step03, 'chain_data1', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data1_v1_step03, chain:data1_v1_step04, 'chain_data1', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data1_v1_step04, chain:data1_v1_step05, 'chain_data1', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data1_v1_step05, chain:data1_v1_step06, 'chain_data1', 'next_process', 'true');
+
+return fn::connect_nodes_v2(chain:data2_v1_step01, chain:data2_v1_step02, 'chain_data2', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data2_v1_step02, chain:data2_v1_step03, 'chain_data2', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data2_v1_step03, chain:data2_v1_step04, 'chain_data2', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data2_v1_step04, chain:data2_v1_step05, 'chain_data2', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data2_v1_step05, chain:data2_v1_step06, 'chain_data2', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data2_v1_step06, chain:data2_v1_step07, 'chain_data2', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data2_v1_step07, chain:data2_v1_step08, 'chain_data2', 'next_process', 'true');
+
+return fn::connect_nodes_v2(chain:data3_v1_step01, chain:data3_v1_step02, 'chain_data3', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data3_v1_step02, chain:data3_v1_step03, 'chain_data3', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data3_v1_step03, chain:data3_v1_step04, 'chain_data3', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data3_v1_step04, chain:data3_v1_step05, 'chain_data3', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data3_v1_step05, chain:data3_v1_step06, 'chain_data3', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data3_v1_step06, chain:data3_v1_step07, 'chain_data3', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data3_v1_step07, chain:data3_v1_step08, 'chain_data3', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data3_v1_step08, chain:data3_v1_step09, 'chain_data3', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data3_v1_step09, chain:data3_v1_step10, 'chain_data3', 'next_process', 'true');
+
+return fn::connect_nodes_v2(chain:data4_v1_step01, chain:data4_v1_step02, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step02, chain:data4_v1_step03, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step03, chain:data4_v1_step04, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step04, chain:data4_v1_step05, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step05, chain:data4_v1_step06, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step06, chain:data4_v1_step07, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step07, chain:data4_v1_step08, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step08, chain:data4_v1_step09, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step09, chain:data4_v1_step10, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step10, chain:data4_v1_step11, 'chain_data4', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data4_v1_step11, chain:data4_v1_step12, 'chain_data4', 'next_process', 'true');
+
+return fn::connect_nodes_v2(chain:data5_v1_step01, chain:data5_v1_step02, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step02, chain:data5_v1_step03, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step03, chain:data5_v1_step04, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step04, chain:data5_v1_step05, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step05, chain:data5_v1_step06, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step06, chain:data5_v1_step07, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step07, chain:data5_v1_step08, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step08, chain:data5_v1_step09, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step09, chain:data5_v1_step10, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step10, chain:data5_v1_step11, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step11, chain:data5_v1_step12, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step12, chain:data5_v1_step13, 'chain_data5', 'next_process', 'true');
+return fn::connect_nodes_v2(chain:data5_v1_step13, chain:data5_v1_step14, 'chain_data5', 'next_process', 'true');

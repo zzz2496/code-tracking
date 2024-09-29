@@ -1,3 +1,5 @@
+let cr = false;
+if (cr) console.log('>>> Startup Loader')
 HTMLElement.prototype.addEventOnce = function (eventName, eventHandler) {
 	console.log('Start Add event Once @startup.js');
 	const element = this;
@@ -115,3 +117,6 @@ Date.prototype.getWeek = function (dowOffset) {
 	}
 	return weeknum;
 };
+
+// document.dispatchEvent(new Event('StartupLoaded'));
+if (cr) console.log('<<< Startup Loader')

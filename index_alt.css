@@ -1377,10 +1377,6 @@ svg {
 	position: absolute;
 	background-color: var(--outline-color-a02);
 }
-.runtime-controls-button{
-	min-width: 50px;
-	cursor: pointer;
-}
 
 fieldset {
 	border: solid var(--border-color) 1px !important;
@@ -1514,6 +1510,17 @@ legend {
     color: var(--bg-color);
     scrollbar-width: none;
 }
+/*.status_bar {
+    width: auto;
+    overflow: hidden;
+    transition: max-width 1s ease-in-out;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensure the status bar appears on top of other content */
+    /* background-color: var(--bg-color-inverse); */
+    /*color: var(--bg-color);
+    scrollbar-width: none;
+}*/
 
 .status_bar.header > .header_segments, 
 .status_bar.footer > .footer_segments {
@@ -1608,4 +1615,28 @@ legend {
     background-color: black;
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
+}
+
+
+
+
+.runtime-controls-button{
+	min-width: 55px;
+	cursor: pointer;
+	border-radius: 8px;
+}
+
+.runtime-controls-step-back{
+	border-radius: 14px 8px 8px 8px;
+
+}
+.runtime-controls-step-forward{
+	border-radius: 8px 14px 8px 8px;
+}
+.runtime-controls-reset{
+	border-radius: 8px 8px 8px 14px;
+
+}
+.runtime-controls-debug-mode{
+	border-radius: 8px 8px 14px 8px;
 }

@@ -4,34 +4,53 @@
 	"out":"",
 	"Label":"",
 	"Name":"",
-	"Value":"",
-	"ConnectionType":"",
+	"Value":{},
+	"Connection":{
+		"Type":"",
+		"ChainID":""
+	},
+	"User":{
+		"ID":"",
+		"PID":""
+	},
+	"Time":{
+		"Connected":""
+	},
 	"PinType":"Blueprints__EdgePinType.json",
-	"PinTypeSelected":"HistoryPin",
-	"Timestamp":"",
-	"UserId":"",
-	"UserPid":"",
+	"PinTypeSelected":"VersionPin",
 	"Presentation":{
 		"InputPin":{
 			"Position":["Top", "TopRight", "Right", "BottomRight", "Bottom", "BottomLeft", "Left", "TopLeft"],
 			"PositionSelected": 0,
-			"ColorMode":["Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
-			"Color":"#000000"
+			"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+			"ColorModeSelected":0,
+			"Color":"#000000",
+			"Coordinate":{
+				"x":0,
+				"y":0
+			}
 		},
 		"OutputPin":{
 			"Position":["Top", "TopRight", "Right", "BottomRight", "Bottom", "BottomLeft", "Left", "TopLeft"],
 			"PositionSelected": 0,
-			"ColorMode":["Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
-			"Color":"#000000"
+			"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+			"ColorModeSelected":0,
+			"Color":"#000000",
+			"Coordinate":{
+				"x":0,
+				"y":0
+			}
 		},
 		"Path":{
 			"PathMode":["Internal", "External"],
 			"PathModeSelected": 0,
-			"ColorMode":["Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+			"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+			"ColorModeSelected":0,
 			"Color":"#000000",
 			"PathDecoration":["Dashed", "Normal", "Dotted", "Custom"],
+			"PathDecorationSelected":0,
 			"PathDashArray":20,
-			"PathThickness":["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+			"PathThickness":2
 		}
 	}
 }

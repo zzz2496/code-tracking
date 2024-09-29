@@ -1,5 +1,7 @@
+let cr = false;
+if (cr) console.log('>>> >>> SurrealDB Loader');
 document.addEventListener('SurrealDBEnginesLoaded', async () => {
-	console.log('Start SurrealDB Initialization!');
+	if (cr) console.log('Start SurrealDB Initialization!');
 
 	if (ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status != 'LOADED') {
 		console.error('SurrealDB Module failed to load. Aborting. (SurrealDB Status : ' + ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status + ')');
@@ -39,7 +41,6 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
 			})
 		}
-		
 	};
 
 	 // NOTE: SURREALDB SUBSECTION - MEMORY INITIALIZATION
@@ -59,7 +60,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	// window.ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = 'Loading...';
 
     const promises = initConfigs.map(config => 
-        ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules)
+        ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
     );
 
     const results = await Promise.all(promises);
@@ -69,5 +70,6 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
     });
 	window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
     document.dispatchEvent(new Event('SurrealDBLoaded'));
-    console.log('Done SurrealDB Initialization!');
+    if (cr) console.log('Done SurrealDB Initialization!');
 });
+if (cr) console.log('<<< <<< SurrealDB Loader');

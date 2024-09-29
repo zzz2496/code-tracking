@@ -1,5 +1,7 @@
+let cr = false;
+if (cr) console.log('>>> >>> >>> >>> Graph Loader');
 document.addEventListener('BlueprintsLoaded', () => {
-	console.log('Start Graph Loader >>>>')
+	if (cr) console.log('>>> >>> >>> >>> >>> Start Blurprints Loaded')
 
 	if (ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status != 'LOADED') { 
 		console.error('Utility Module failed to load. Aborting. (Utility Status : ' + ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status + ')');
@@ -10,7 +12,7 @@ document.addEventListener('BlueprintsLoaded', () => {
 		return;
 	}
 
-	console.log(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data);
+	if (cr) console.log(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data);
 	let GraphSurfaceObject = new window.ParadigmREVOLUTION.SystemCore.Modules.GraphSurface({
 		name: "Yggdrasil",
 		label: "Yggdrasil The World Tree",
@@ -21,7 +23,7 @@ document.addEventListener('BlueprintsLoaded', () => {
 		realm: window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Name,
 		universe: window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Name
 	}, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, new window.ParadigmREVOLUTION.SystemCore.Modules.Utility, window.ParadigmREVOLUTION.Datastores);
-	console.log('GraphSurfaceObject :>>', GraphSurfaceObject);
+	if (cr) console.log('GraphSurfaceObject :>>', GraphSurfaceObject);
 	document.querySelector('#grph').appendChild(GraphSurfaceObject.GraphElement.div_graph_surface);
 
 	window.ParadigmREVOLUTION.GraphSurface = GraphSurfaceObject;
@@ -29,7 +31,6 @@ document.addEventListener('BlueprintsLoaded', () => {
 	ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status').innerHTML = 'Loading...';
 	let corestatus_str = '';
 	Object.entries(window.ParadigmREVOLUTION.SystemCore.CoreStatus).forEach(([idx, value]) => {
-		console.log(idx, value);
 		switch (value.Status) {
 			case 'NOT LOADED':
 				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-outline-secondary runtime-controls-button" id="${value}__${idx}__notLoaded" title="${idx.Label}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
@@ -42,7 +43,6 @@ document.addEventListener('BlueprintsLoaded', () => {
 				break;
 		}
 	});
-	console.log('corestatus_str :>> ', corestatus_str);
 	ParadigmREVOLUTION.Utility.DOMElements.hide(ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status'), function () { 
 		ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status').innerHTML = corestatus_str;
 		ParadigmREVOLUTION.Utility.DOMElements.show(ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status'), function () { 
@@ -89,17 +89,16 @@ document.addEventListener('BlueprintsLoaded', () => {
 	});
 
 	ParadigmREVOLUTION.Utility.DOMElements.enableDragAndDropGroup('.group-container');
-
-	console.log('Done Graph Loader >>>>');
-
+	if (cr) console.log('>>> >>> >>> >>> >>> Done Blurprints Loaded')
 });
 document.addEventListener('SurrealDBLoaded', () => {
-	console.log('>>>>>>>START SurrealDBLoaded!! >>>>>>>')
-	
+	if (cr) console.log('>>> >>> >>> >>> >>> SurrealDB Loaded');
+	if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Core Status');
+
 	ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status').innerHTML = 'Loading...';
 	let corestatus_str = '';
 	Object.entries(window.ParadigmREVOLUTION.SystemCore.CoreStatus).forEach(([idx, value]) => {
-		console.log(idx, value);
+		// if (cr) console.log(idx, value);
 		switch (value.Status) {
 			case 'NOT LOADED':
 				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-outline-secondary runtime-controls-button" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
@@ -112,9 +111,10 @@ document.addEventListener('SurrealDBLoaded', () => {
 				break;
 		}
 	});
-	console.log('corestatus_str :>> ', corestatus_str);
 	ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status').innerHTML = corestatus_str;
+	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Core Status');
 
+	if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status');
 	let datastore_status = '';
 	Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
 		// console.log('>>>>>>', idx, window.ParadigmREVOLUTION.Datastores.SurrealDB[idx].Instance, entry);
@@ -126,6 +126,7 @@ document.addEventListener('SurrealDBLoaded', () => {
 			datastore_status += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-danger" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>` ;
 		}
 	});
+	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status');
 
 	ParadigmREVOLUTION.Utility.DOMElements.hide(ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status'), function () { 
 		ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = datastore_status;
@@ -139,6 +140,6 @@ document.addEventListener('SurrealDBLoaded', () => {
 			});	
 		});
 	});
-
 	document.dispatchEvent(new Event('SurrealDBMonitorLoaded'));
 });
+if (cr) console.log('<<< <<< <<< <<< Graph Loader');

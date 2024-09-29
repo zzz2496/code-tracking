@@ -1,0 +1,7 @@
+SurrealDB relation note.
+
+1. Connection types:
+	a. history
+	b. next_process
+	c. next_function
+	d. is_containing

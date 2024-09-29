@@ -1,5 +1,5 @@
-console.log('Start Module Loader');
-
+let cr = false;
+if (cr) console.log('>>> Module Loader');
 // import { Utility } from "../Classes/Utility.mjs";
 // import { GraphSurface } from "../Classes/GraphSurface.mjs";
 // import { Connection} 	from "../Classes/GraphConnection.mjs";
@@ -95,6 +95,7 @@ let ParadigmREVOLUTION = {
 				"System": { "URL": "./SystemBlueprint/Blueprint__System.json" },
 				"Datastore": { "URL": "./SystemBlueprint/Blueprint__Datastore.json" },
 				"Node": { "URL": "./SystemBlueprint/Blueprint__Node.json" },
+				"Template__Node__DataStatus": { "URL": "./SystemBlueprint/Blueprint__Template__Node__DataStatus.json" },
 				"Edge": { "URL": "./SystemBlueprint/Blueprint__Edge.json" },
 				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" }
 			},
@@ -107,9 +108,9 @@ let ParadigmREVOLUTION = {
 };
 window.ParadigmREVOLUTION = ParadigmREVOLUTION;
 
-// Assuming Finder attaches something to the global object, you can access it like this:
 if (typeof finder !== 'undefined') {
-    console.log("FinderJS module loaded successfully.");
+    if (cr) console.log(">>> ||| FinderJS module loaded successfully.");
+	document.dispatchEvent(new Event('FinderJSLoaded'));
 	ParadigmREVOLUTION.SystemCore.CoreStatus.FinderJS.Status = "LOADED";
 	ParadigmREVOLUTION.SystemCore.Modules.FinderJS = finder;
 } else {
@@ -126,7 +127,7 @@ if (typeof finder !== 'undefined') {
 		ParadigmREVOLUTION.SystemCore.Modules.Utility = Utility;
 		ParadigmREVOLUTION.Utility = new Utility();
 
-		console.log('Start Blueprint Loader >>>>');
+		if (cr) console.log('>>> Blueprint Loader');
 		let SysUtil = window.ParadigmREVOLUTION.Utility;
 
 		if (ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status == 'LOADED') {
@@ -135,13 +136,14 @@ if (typeof finder !== 'undefined') {
 					window.ParadigmREVOLUTION.SystemCore.Blueprints.Data = results;
 					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Blueprints = "LOADED";
 					document.dispatchEvent(new Event('BlueprintsLoaded'));
-					console.log('Done Blueprint Loader >>>>');
+					if (cr) console.log('>>> ||| Blueprint Loader | SUCCESS');
 				}, function (key, url, status) {
-					console.log('progress :>> ', status, key, url);
+					if (cr) console.log('>>> ||| progress :>> ', status, key, url);
 				});
 			}
 			initBlueprints();
 		}
+		if (cr) console.log('<<< Blueprint Loader');
 	} catch (error) {
 		document.querySelector('#debugging').innerHTML += "Failed to import Utility.<br>";
 		ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "FAILED TO LOAD";
@@ -155,9 +157,10 @@ if (typeof finder !== 'undefined') {
 			importPromise: import("../Classes/GraphSurface.mjs"),
 			onSuccess: (module) => {
 				const { GraphSurface } = module;
-				console.log("GraphSurface imported successfully.");
+				if (cr) console.log(">>> ||| GraphSurface imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.GraphSurface.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.GraphSurface = GraphSurface;
+				document.dispatchEvent(new Event('GraphSurfaceLoaded'));
 			},
 			onFailure: () => {
 				document.querySelector('#debugging').innerHTML += "Failed to import GraphSurface.<br>";
@@ -169,9 +172,10 @@ if (typeof finder !== 'undefined') {
 			importPromise: import("../Classes/GraphConnection.mjs"),
 			onSuccess: (module) => {
 				const { Connection } = module;
-				console.log("Connection imported successfully.");
+				if (cr) console.log(">>> ||| Connection imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.Connection = Connection;
+				document.dispatchEvent(new Event('GraphConnectionLoaded'));
 			},
 			onFailure: () => {
 				document.querySelector('#debugging').innerHTML += "Failed to import Connection.<br>";
@@ -183,9 +187,10 @@ if (typeof finder !== 'undefined') {
 			importPromise: import("../Classes/WorkerThread.mjs"),
 			onSuccess: (module) => {
 				const { WorkerThread } = module;
-				console.log("WorkerThread imported successfully.");
+				if (cr) console.log(">>> ||| WorkerThread imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.WorkerThread = WorkerThread;
+				document.dispatchEvent(new Event('WorkerThreadLoaded'));
 			},
 			onFailure: () => {
 				document.querySelector('#debugging').innerHTML += "Failed to import WorkerThread.<br>";
@@ -197,9 +202,10 @@ if (typeof finder !== 'undefined') {
 			importPromise: import("../Classes/Flowchart.mjs"),
 			onSuccess: (module) => {
 				const { Flowchart } = module;
-				console.log("Flowchart imported successfully.");
+				if (cr) console.log(">>> ||| Flowchart imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Flowchart.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.Flowchart = Flowchart;
+				document.dispatchEvent(new Event('FlowchartLoaded'));
 			},
 			onFailure: () => {
 				document.querySelector('#debugging').innerHTML += "Failed to import Flowchart.<br>";
@@ -211,19 +217,18 @@ if (typeof finder !== 'undefined') {
 			importPromise: import('../../node_modules/surrealdb.js/dist/index.bundled.mjs'),
 			onSuccess: async (module) => {
 				const { Surreal } = module;
-				console.log("Surreal imported successfully.");
+				if (cr) console.log(">>> ||| Surreal imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.Surreal = Surreal;
-
+				document.dispatchEvent(new Event('SurrealJSLoaded'));
 				try {
 					const surrealdbWasmEnginesModule = await import('../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js');
 					const { surrealdbWasmEngines } = surrealdbWasmEnginesModule;
-					console.log("surrealdbWasmEngines imported successfully.");
+					if (cr) console.log(">>> ||| surrealdbWasmEngines imported successfully.");
 					ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "LOADED";
 					ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines = surrealdbWasmEngines;
-
 					document.dispatchEvent(new Event('SurrealDBEnginesLoaded'));
-					console.log('Done Blueprint Loader >>>>');
+					if (cr) console.log('>>> ||| Done Blueprint Loader >>>>');
 
 				} catch (error) {
 					document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.wasm.<br>";
@@ -238,7 +243,6 @@ if (typeof finder !== 'undefined') {
 			}
 		},
 	];
-
 	for (const handler of moduleHandlers) {
 		try {
 			const module = await handler.importPromise;
@@ -247,6 +251,5 @@ if (typeof finder !== 'undefined') {
 			handler.onFailure();
 		}
 	}
-
-	console.log('Done Module Loader >>>>');
 })();
+if (cr) console.log('<<< Module Loader');
