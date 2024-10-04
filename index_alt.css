@@ -1505,22 +1505,10 @@ legend {
     transition: max-height 1s ease-in-out;
     top: 0;
     left: 0;
-    z-index: 1000; /* Ensure the status bar appears on top of other content */
-    /* background-color: var(--bg-color-inverse); */
+    z-index: 1000; 
     color: var(--bg-color);
     scrollbar-width: none;
 }
-/*.status_bar {
-    width: auto;
-    overflow: hidden;
-    transition: max-width 1s ease-in-out;
-    top: 0;
-    left: 0;
-    z-index: 1000; /* Ensure the status bar appears on top of other content */
-    /* background-color: var(--bg-color-inverse); */
-    /*color: var(--bg-color);
-    scrollbar-width: none;
-}*/
 
 .status_bar.header > .header_segments, 
 .status_bar.footer > .footer_segments {
@@ -1639,4 +1627,111 @@ legend {
 }
 .runtime-controls-debug-mode{
 	border-radius: 8px 8px 14px 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Default: Stack divs vertically (when the screen is taller than it is wide) */
+.app_container {
+    display: flex;
+    flex-direction: column; /* Vertical layout by default */
+    gap: 20px; /* Adds space between the sections */
+}
+
+/* If the screen is wider than it is tall, set to row (horizontal layout) */
+@media (min-aspect-ratio: 1/1) {
+    .app_container {
+        flex-direction: row; /* Horizontal layout */
+        justify-content: space-between;
+    }
+
+    
+	/* Ensure equal width for each section when side-by-side */
+    .status_bar{
+        width: 10vw;
+	}
+	.module_container {
+        width:80vw;
+	}
+	.info_container {
+        width:80vw;
+	}
+
+
+
+	.status_bar {
+        width: auto;
+        height: 100vh;
+        transition: max-width 1s ease-in-out;
+        flex-direction: row; /* Horizontal layout */
+    }
+
+    .status_bar.header > .header_segments,
+    .status_bar.footer > .footer_segments {
+        height: auto;
+        width: 0vw;
+        max-width: 20vw;
+        transition: max-width 1s ease-in-out;
+		justify-content: column;
+    }
+
+    .status_bar.content_segments {
+        max-width: calc(60vw - 3rem);
+        overflow-x: auto;
+        transition: max-width 1s ease-in-out;
+    }
+
+    /* Collapsed state (horizontally collapsed) */
+    .collapsed {
+        max-width: 1.5rem;
+    }
+
+    .collapsed .content_segments,
+    .collapsed .tabs,
+    .collapsed .footer_segments,
+    .collapsed .header_segments {
+        max-width: 0px;
+        transition: max-width 1s ease-in-out;
+    }
+
+    /* Expanded state for horizontal layout */
+    .expanded {
+        max-width: 100vw;
+    }
+
+    .expanded .header_segments {
+        max-width: 32vw;
+    }
+
+    .expanded .content_segments {
+        max-width: calc(60vw - 3rem);
+    }
+
+    .expanded .footer_segments {
+        max-width: 100vw;
+    }
+
+    /* Optional: Push content to the right when expanded horizontally */
+    .push-content {
+        margin-left: calc(20vw + 60vw + 20vw);
+        transition: margin-left 0.5s ease-in-out;
+    }
 }

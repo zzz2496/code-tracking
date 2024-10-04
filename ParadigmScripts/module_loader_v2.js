@@ -14,6 +14,18 @@ let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surreal
 let ParadigmREVOLUTION = {
 	"SystemCore": {
 		"CoreStatus": {
+			"UI": {
+				"Status": "NOT LOADED",
+				"Icon": "tv",
+				"Label": "UI",
+				"ShortLabel": "UI"
+			},
+			"FormGenerator": {
+				"Status": "NOT LOADED",
+				"Icon": "window-restore",
+				"Label": "UI",
+				"ShortLabel": "UI"
+			},
 			"Utility": {
 				"Status": "NOT LOADED",
 				"Icon": "screwdriver-wrench",
@@ -121,6 +133,19 @@ if (typeof finder !== 'undefined') {
 
 (async () => {
 	try {
+		const UIResult = await import("../ParadigmScripts/UI.js");
+		const { UI, FormGenerator } = UIResult;
+		ParadigmREVOLUTION.SystemCore.CoreStatus.UI.Status = "LOADED";
+		ParadigmREVOLUTION.SystemCore.Modules.UI = UI;
+		ParadigmREVOLUTION.SystemCore.Modules.FormGenerator = FormGenerator;
+	} catch (error) {
+		document.querySelector('#debugging').innerHTML += "Failed to import UI.<br>";
+		ParadigmREVOLUTION.SystemCore.CoreStatus.UI.Status = "FAILED TO LOAD";
+		console.error("Failed to import UI.");
+	}
+})();
+(async () => {
+	try {
 		const UtilityResult = await import("../Classes/Utility.mjs");
 		const { Utility } = UtilityResult;
 		ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "LOADED";
@@ -214,7 +239,7 @@ if (typeof finder !== 'undefined') {
 			}
 		},
 		{
-			importPromise: import('../../node_modules/surrealdb.js/dist/index.bundled.mjs'),
+			importPromise: import('../../node_modules/surrealdb/dist/index.bundled.mjs'),
 			onSuccess: async (module) => {
 				const { Surreal } = module;
 				if (cr) console.log(">>> ||| Surreal imported successfully.");

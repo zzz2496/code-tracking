@@ -1,5 +1,4 @@
 {
-	"id": "",
 	"PinDescriptions": "Blueprint__NodeDesciptions.json",
 	"Properties": {
 		"PID": "",
@@ -8,9 +7,6 @@
 		"Label": "",
 		"Header": "",
 		"Footer": "",
-		"Table": "",
-		"Database": "",
-		"Namespace": "",
 		"NodeInfo": {
 			"Type": "",
 			"isNew": true,
@@ -111,36 +107,12 @@
 			"panel_height": "auto",
 			"panel_width": "auto"
 		},
-		"Schema": {
-			"nomor_purchase_order": {
-				"type": [
-					"Text",
-					"Number",
-					"Object",
-					"Date",
-					"Time",
-					"Datetime",
-					"Boolean"
-				],
-				"form": 1
-			},
-			"tanggal": {
-				"type": "timestamp without time zone",
-				"form": 1
-			}
-		},
+		"Schema": {},
 		"Parameters": [],
 		"Data": {},
 		"Checksum": "",
 		"DataType": "",
-		"ExternalResource": [
-			{
-				"Document": {
-					"Type": "",
-					"Path": ""
-				}
-			}
-		],
+		"ExternalResource": [],
 		"ProcessingParameters": {
 			"EnableNextProcessLocking": {
 				"Enable": false,

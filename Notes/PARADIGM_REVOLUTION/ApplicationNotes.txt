@@ -1,0 +1,24 @@
+Start App
+	Load HTML
+		Load CSS
+			Load bootstrap.min.css
+			Load fontawesome
+				Load fontawesome.min.css
+				Load brands.min.css
+				Load solid.min.css
+				Load all.min.css
+			Load finderjs.css
+
+		Load JS
+			Load finder.min.js
+			Load startup.js
+			Load module_loader_v2.js
+			Load surrealdb_loader.js
+			Load graph_loader.js
+			Load paradigm_revolution.js
+
+		Load UI Elements
+			ParadigmREVOLUTION Object initialization
+			UI.render()
+			UI.refresh()
+			UI.update()
