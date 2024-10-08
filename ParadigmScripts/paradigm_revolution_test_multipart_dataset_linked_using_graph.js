@@ -30,17 +30,25 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	let template__edge = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
 	window.template__edge = template__edge;
 
-	let form = JSON.parse(JSON.stringify(template__node));
-	form.Dataset.Schema = {
-		informasi_faktur: JSON.parse(JSON.stringify(template__node)),
-		identitas_pemilik: JSON.parse(JSON.stringify(template__node)),
-		identitas_kendaraan: JSON.parse(JSON.stringify(template__node)),
-		data_pendukung: JSON.parse(JSON.stringify(template__node)),
-		keterangan: JSON.parse(JSON.stringify(template__node))
-	}
-	
-	form.Dataset.Schema.informasi_faktur.Properties.Chain.Head = true;
-	form.Dataset.Schema.informasi_faktur.Dataset.Layout = {
+	let form = {
+		form_schema: {
+			informasi_faktur: JSON.parse(JSON.stringify(template__node)),
+			identitas_pemilik: JSON.parse(JSON.stringify(template__node)),
+			identitas_kendaraan: JSON.parse(JSON.stringify(template__node)),
+			data_pendukung: JSON.parse(JSON.stringify(template__node)),
+			keterangan: JSON.parse(JSON.stringify(template__node))
+		},
+		form_data: {
+			informasi_faktur: {},
+			identitas_pemilik: {},
+			identitas_kendaraan: {},
+			data_pendukung: {},
+			keterangan: {}
+		}
+	};
+
+	form.form_schema.informasi_faktur.Properties.Chain.Head = true;
+	form.form_schema.informasi_faktur.Dataset.Layout = {
 		"Form": {
 			"Show": 1,
 			"Label": "Informasi Faktur",
@@ -52,7 +60,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.informasi_faktur.Dataset.Schema = {
+	form.form_schema.informasi_faktur.Dataset.Schema = {
 		"nomor_purchase_order": {
 			"label": "Nomor PO",
 			"type": "text",
@@ -91,7 +99,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	}
 
-	form.Dataset.Schema.identitas_pemilik.Dataset.Layout = {
+	form.form_schema.identitas_pemilik.Dataset.Layout = {
 		"Form": {
 			"Show": 1,
 			"Label": "Identitas Pemilik",
@@ -103,7 +111,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.identitas_pemilik.Dataset.Schema = {
+	form.form_schema.identitas_pemilik.Dataset.Schema = {
 		"atas_nama": {
 			"type": "text",
 			"form": 1
@@ -174,7 +182,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	}
 
-	form.Dataset.Schema.identitas_kendaraan.Dataset.Layout = {
+	form.form_schema.identitas_kendaraan.Dataset.Layout = {
 		"Form": {
 			"Show": 1,
 			"Label": "Identitas Kendaraan",
@@ -186,7 +194,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.identitas_kendaraan.Dataset.Schema = {
+	form.form_schema.identitas_kendaraan.Dataset.Schema = {
 		"id_type": {
 			"label": "ID Type",
 			"type": "text",
@@ -266,7 +274,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	}
 
-	form.Dataset.Schema.data_pendukung.Dataset.Layout = {
+	form.form_schema.data_pendukung.Dataset.Layout = {
 		"Form": {
 			"Show": 1,
 			"Label": "Data Pendukung",
@@ -278,7 +286,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.data_pendukung.Dataset.Schema = {
+	form.form_schema.data_pendukung.Dataset.Schema = {
 		"formulir_ab": {
 			"label": "Formulir A/B",
 			"type": "text",
@@ -307,7 +315,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		}
 	}
 
-	form.Dataset.Schema.keterangan.Dataset.Layout = {
+	form.form_schema.keterangan.Dataset.Layout = {
 		"Form": {
 			"Show": 1,
 			"Label": "Keterangan",
@@ -319,7 +327,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.keterangan.Dataset.Schema = {
+	form.form_schema.keterangan.Dataset.Schema = {
 		"keterangan": {
 			"type": "text",
 			"form": 1,
@@ -336,24 +344,21 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"subtype": "textarea"
 		}
 	}
-	form.Dataset.Layout = [
+	let form_layout = [
 		[
-			form.Dataset.Schema.informasi_faktur
+			form.form_schema.informasi_faktur
 		],
 		[
-			form.Dataset.Schema.identitas_pemilik,
-			form.Dataset.Schema.identitas_kendaraan
+			form.form_schema.identitas_pemilik,
+			form.form_schema.identitas_kendaraan
 		],
 		[
-			form.Dataset.Schema.data_pendukung
+			form.form_schema.data_pendukung
 		],
 		[
-			form.Dataset.Schema.keterangan
+			form.form_schema.keterangan
 		]
-
 	];
-
-	window.form = form;
 
 	console.log('form :>> ', form);
 	let ram_db = ParadigmREVOLUTION.Yggdrasil.Datastores.SurrealDB.Memory;
@@ -365,22 +370,28 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	window.test_db = test_db;
 
 
-	let form_schema_keys = Object.keys(form.Dataset.Schema);
+	let form_schema_keys = Object.keys(form.form_schema);
 	// console.log('form_schema_keys :>> ', form_schema_keys);
 
 	let qstr = "";
 
-	for (let index = 1; index <= 1; index++) {
-		let pid = `TFKB/V${ParadigmREVOLUTION.Utility.Numbers.Pad(index, 4)}`;
+	for (let index = 1; index <= 5; index++) {
+		Object.keys(form.form_schema).forEach((d, i) => {
+			let pid = `TFKB/V${ParadigmREVOLUTION.Utility.Numbers.Pad(index, 4)}`;
 
-		form.Properties.PID = pid;
-		form.Properties.Chain.ID = `CHAIN/${pid}`;
-		form.Properties.Chain.Segment = '';
-		form.Properties.Chain.SegmentOrder = 0;
-		let q = `create test:\`${pid}/${index}\` content ${JSON.stringify(form)};`;
-		qstr += q;
+			form.form_schema[d].Properties.PID = pid;
+			form.form_schema[d].Properties.Chain.ID = `CHAIN/${pid}`;
+			form.form_schema[d].Properties.Chain.Segment = d;
+			form.form_schema[d].Properties.Chain.SegmentOrder = i;
+
+			let q = `create test:\`${pid}/${i}-${d}\` content ${JSON.stringify(form.form_schema[d])};`;
+			qstr += q;
+			if (i > 0) {
+				let q_relate = `relate test:\`${pid}/${i - 1}-${form_schema_keys[i - 1]}\`->edge->test:\`${pid}/${i}-${d}\` content ${JSON.stringify(template__edge)};`;
+				qstr += q_relate;
+			}
+		});
 	}
-	
 	(async () => {
 		if (qstr != "") {
 			console.log('query :>> ', qstr);
@@ -404,9 +415,9 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	ram_db.Instance.connect('mem://')
 		.then(() => ram_db.Instance.query(`select * from test where Properties.PID contains 'TFKB/V0001' order by id`))
 		.then(data => {
-			form.Dataset.Schema = data[0];
-			console.log('form.Dataset.Schema :>> ', form.Dataset.Schema);
-			form.Dataset.Schema.forEach((d, i) => {
+			form.form_schema = data[0];
+			console.log('form.form_schema :>> ', form.form_schema);
+			form.form_schema.forEach((d, i) => {
 				// console.log('d :>> ', d.Properties.Chain.Segment);
 				// str[d.Properties.Chain.Segment] = formgen.GenerateForm('informasi_faktur', d.Dataset.Schema);
 				let tstr = formgen.GenerateForm(d.Properties.Chain.Segment, d.Dataset.Schema);

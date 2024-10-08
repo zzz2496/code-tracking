@@ -2,11 +2,16 @@
 	"PinDescriptions": "Blueprint__NodeDesciptions.json",
 	"Properties": {
 		"PID": "",
-		"BatchProcessingID": "",
 		"Name": "",
 		"Label": "",
 		"Header": "",
 		"Footer": "",
+		"Chain": {
+			"Head": false,
+			"ID": "",
+			"Segment":"",
+			"SegmentOrder":null
+		},
 		"NodeInfo": {
 			"Type": "",
 			"isNew": true,
@@ -101,12 +106,7 @@
 	"Dataset": {
 		"PinDescriptions": "Blueprint__Node__DatasetDesciptions.json",
 		"Query": "",
-		"Layout": {
-			"show": 1,
-			"data_type": "form",
-			"panel_height": "auto",
-			"panel_width": "auto"
-		},
+		"Layout": {},
 		"Schema": {},
 		"Parameters": [],
 		"Data": {},

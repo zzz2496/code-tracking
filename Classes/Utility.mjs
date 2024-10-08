@@ -4979,18 +4979,18 @@ export class Utility {
 									"Name": mode,
 									"Label": Label,
 									"ShortLabel": ShortLabel,
-									"Connect": Connect
+									"Connect": Connect,
 								}
 								await SurrealDB.Memory.Instance.connect('mem://');
 								await SurrealDB.Memory.Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
 
 								//NOTE - CREATE DUMMY DATA 
 								let query;
-								query = await SurrealDB.Memory.Instance.query('create test:data1 content {nama:"Damir"}');
-								query = await SurrealDB.Memory.Instance.query('create test:data2 content {nama:"Putri"}');
-								query = await SurrealDB.Memory.Instance.query('create test:data3 content {nama:"Olive"}');
-								query = await SurrealDB.Memory.Instance.query('create test:data4 content {nama:"Puji"}');
-								query = await SurrealDB.Memory.Instance.query('create test:data5 content {nama:"Listyono"}');
+								// query = await SurrealDB.Memory.Instance.query('create test:data1 content {nama:"Damir"}');
+								// query = await SurrealDB.Memory.Instance.query('create test:data2 content {nama:"Putri"}');
+								// query = await SurrealDB.Memory.Instance.query('create test:data3 content {nama:"Olive"}');
+								// query = await SurrealDB.Memory.Instance.query('create test:data4 content {nama:"Puji"}');
+								// query = await SurrealDB.Memory.Instance.query('create test:data5 content {nama:"Listyono"}');
 								// query = await SurrealDB.Memory.query('select * from test');
 								// console.log('query', query);								
 							} else {
@@ -5032,12 +5032,28 @@ export class Utility {
 							if (Connect) {
 								// Initialize SurrealDB Server Connection subsystem if UNDEFINED
 								if (typeof SurrealDB[mode] == "undefined") {
+	
 									SurrealDB[mode] = {
 										"Metadata": {
 											"Name": mode,
 											"Label": Label,
 											"ShortLabel": ShortLabel,
-											"Connect": Connect
+											"Connect": Connect,
+											"ConnectionInfo": [
+												BlueprintsDATA.Datastore[mode],
+												{
+													user: {
+														username: BlueprintsDATA.Datastore.DefaultUser.Username,
+														password: BlueprintsDATA.Datastore.DefaultUser.Password
+													}
+												}
+											],
+											"NSDB": {
+												namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name,
+												database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name
+											}
+
+											
 										},
 										"Instance": new Modules.Surreal({
 											engines: Modules.surrealdbWasmEngines()
@@ -5045,10 +5061,12 @@ export class Utility {
 									}
 								}
 								// Connect to the database
-								await SurrealDB[mode].Instance.connect(BlueprintsDATA.Datastore[mode], { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
+								// await SurrealDB[mode].Instance.connect(BlueprintsDATA.Datastore[mode], { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
+								await SurrealDB[mode].Instance.connect(...SurrealDB[mode].Metadata.ConnectionInfo);
 
 								// Select a specific namespace / database
-								await SurrealDB[mode].Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
+								// await SurrealDB[mode].Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
+								await SurrealDB[mode].Instance.use(SurrealDB[mode].Metadata.NSDB);
 
 								// Signin as a namespace, database, or root user
 								token = await SurrealDB[mode].Instance.signin({

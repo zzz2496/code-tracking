@@ -730,13 +730,22 @@ DEFINE FUNCTION OVERWRITE fn::traverse_v4(
     };
 };
 
-return fn::traverse_v4(chain:data1_v1_step03, |$el| SELECT VALUE (->version->chain) FROM $el LIMIT 1, 0, 3);
+--return fn::traverse_v4(chain:data1_v1_step03, |$el| SELECT VALUE (->version->chain) FROM $el LIMIT 1, 0, 3);
 
 
-select 
-    *, 
-    (fn::traverse_v4($this.id, |$el| SELECT VALUE (<-next_process<-chain) FROM $el LIMIT 1, 0, 99)).{id, name, process_step} as prev, 
-    (fn::traverse_v4($this.id, |$el| SELECT VALUE (->next_process->chain) FROM $el LIMIT 1, 0, 99)).{id, name, process_step} as next 
-from chain
-limit 10
-;
+-- select 
+--     *, 
+--     (fn::traverse_v4($this.id, |$el| SELECT VALUE (<-next_process<-chain) FROM $el LIMIT 1, 0, 99)).{id, name, process_step} as prev, 
+--     (fn::traverse_v4($this.id, |$el| SELECT VALUE (->next_process->chain) FROM $el LIMIT 1, 0, 99)).{id, name, process_step} as next 
+-- from chain
+-- limit 10
+-- ;
+
+define table test schemaless;
+define table edge schemaless;
+
+define index DocumentTypeIndex on table test columns Properties.PID, Properties.Chain.ID, Properties.Chain.Segment, Properties.Chain.SegmentOrder UNIQUE;
+define field overwrite timestamp on table test readonly value time::now();
+
+define index EdgeIndex on table edge columns in, out UNIQUE;
+define field overwrite timestamp on table edge readonly value time::now();

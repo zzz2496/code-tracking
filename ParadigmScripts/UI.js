@@ -33,11 +33,9 @@ export class FormGenerator {
 	}
 	GenerateForm = function($id, $schema) {
 		var str = '';
-		str += '<form id="' + $id + '" onsubmit="return false;">';
-		str += '<fieldset class="uk-fieldset">';
-		str += `<legend class="uk-legend">${$schema.Layout.Label}</legend>`;
-		Object.entries($schema.Schema).forEach(([i, d]) => {
-			console.log(i, d);
+		str += '<form class="uk-form-horizontal" id="' + $id + '" onsubmit="return false;">';
+		Object.entries($schema).forEach(([i, d]) => {
+			// console.log(i, d);
 			if (d['form'] == 1) {
 				if ((d['type'] != 'button') && (d['type'] != 'separator')) {
 					str += '<div class="form-group" ';
@@ -70,7 +68,7 @@ export class FormGenerator {
 						if (typeof d['subtype'] != 'undefined') {
 							switch (d['subtype']) {
 								case 'select':
-									str += '        <select style="width: 100%" id="' + $id + '___' + i + '" name="' + i + '" class="js-example-responsive form-control col-md-7 col-xs-12 text_input '+d_class+'">';
+									str += '        <select style="width: 100%" id="' + $id + '___' + i + '" name="' + i + '" class="uk-select text_input '+d_class+'">';
 									if (typeof d['select_values'] != 'undefined') {
 										var el = d['select_values'];
 										console.log("el", el);
@@ -94,50 +92,50 @@ export class FormGenerator {
 								case 'textarea':
 									str += '        <textarea '
 									if (d.readonly) str += ' readonly ';
-									str += 'id="' + $id + '___' + i + '"name="' + i + '" class="form-control col-md-7 col-xs-12 text_input '+d_class+'" rows="5"></textarea>';
+									str += 'id="' + $id + '___' + i + '"name="' + i + '" class="uk-textarea text_input '+d_class+'" rows="5"></textarea>';
 									break;
 								case 'hierarki_input':
 									str += '        <input ';
 									if (d.readonly) str += ' readonly ';
-									str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 hierarki_input '+d_class+'"/>';
+									str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-input hierarki_input '+d_class+'"/>';
 									break;
 								case 'chart_of_accounts_input':
 									str += '        <input ';
 									if (d.readonly) str += ' readonly ';
-									str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 chart_of_accounts_input '+d_class+'" value="' + valz + '"/>';
+									str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-input chart_of_accounts_input '+d_class+'" value="' + valz + '"/>';
 									break;
 								case 'list':
 									str += '        <textarea '
 									if (d.readonly) str += ' readonly ';
-									str += 'id="' + $id + '___' + i + '"name="' + i + '" class="form-control col-md-7 col-xs-12 list_input '+d_class+'" rows="5"></textarea>';
+									str += 'id="' + $id + '___' + i + '"name="' + i + '" class="uk-textarea list_input '+d_class+'" rows="5"></textarea>';
 									break;
 							}
 						} else {
 							str += '        <input ';
 							if (d.readonly) str += ' readonly ';
-							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 text_input '+d_class+'" value="' + valz + '"/>';
+							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-input text_input '+d_class+'" value="' + valz + '"/>';
 						}
 						break;
 					case 'numeric':
 						str += '        <input ';
 						if (d.readonly) str += ' readonly ';
-						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 numeric_input '+d_class+'" value="' + valz + '"/>';
+						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-text numeric_input '+d_class+'" value="' + valz + '"/>';
 						break;
 					case 'numeric_comma':
 						str += '        <input ';
 						if (d.readonly) str += ' readonly ';
-						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 numeric_comma_input '+d_class+'" value="' + valz + '"/>';
+						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-text numeric_comma_input '+d_class+'" value="' + valz + '"/>';
 						break;
 					 case 'plat_nomor_input':
 						// console.log('masuk plat nomor input');
 						str += '        <input ';
 						if (d.readonly) str += ' readonly ';
-						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 plat_nomor_input '+d_class+'" value="' + valz + '"/>';
+						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-text plat_nomor_input '+d_class+'" value="' + valz + '"/>';
 						break;
 					case 'password':
 						str += '        <input ';
 						if (d.readonly) str += ' readonly ';
-						str += 'type="password" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 '+d_class+'"/>';
+						str += 'type="password" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-text '+d_class+'"/>';
 						break;
 					case 'timestamp without time zone':
 						str += '        <input ';
@@ -175,23 +173,23 @@ export class FormGenerator {
 								valx = $('#date_next_month_end').val();
 								break;
 						}
-						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 datetime_input '+d_class+'" value="' + valx + '"/>';
+						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-input datetime_input '+d_class+'" value="' + valx + '"/>';
 						break;
 					case 'time':
 						str += '        <input ';
 						if (d.readonly) str += ' readonly ';
-						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 time_input '+d_class+'" value="' + valz + '"/>';
+						str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-input time_input '+d_class+'" value="' + valz + '"/>';
 						break;
 					case 'boolean':
 						var valc = true;
 						if (valz != '') valc = valz;
 						// if (d.value)
-						str += '<div class="checkbox"><label><input type="checkbox" id="' + $id + '___' + i + '" name="' + i + '" value="'+valc+'" class="'+d_class+'"';
+						str += '<div class="checkbox"><label><input type="checkbox" id="' + $id + '___' + i + '" name="' + i + '" value="'+valc+'" class="uk-checkbox '+d_class+'"';
 						if (d.checked) str += ' checked ';
 						str += ' /></label></div>';
 						break;
 					case 'button':
-						str += '        <div align="center"><input type="button" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="btn btn-success '+d_class+'" value="' + ucwords(i.replace(/\_/gi, ' ')) + '"/></div>';
+						str += '        <div align="center"><input type="button" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="uk-button uk-button-primary '+d_class+'" value="' + ucwords(i.replace(/\_/gi, ' ')) + '"/></div>';
 						break;
 					case 'separator':
 						str += '        <hr>';
@@ -209,7 +207,6 @@ export class FormGenerator {
 				}
 			}
 		});
-		str += '</fieldset>';
 		str += '</form>';
 		return str;
 	}
