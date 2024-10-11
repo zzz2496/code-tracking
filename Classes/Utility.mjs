@@ -4964,6 +4964,7 @@ export class Utility {
 	};
 	// NOTE - Datastore related methods
 	DataStore = {
+		// NOTE - SurrealDB
 		"SurrealDB": {
 			// "initiateSurrealDB": async function(storage, namespace, database, server, user, pass) {
 			initSurrealDB: async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA, Modules, cr) {
@@ -5093,234 +5094,6 @@ export class Utility {
 				}
 				return token;
 			},
-			"Initialize": async function (storage, App, userinfo, server, what) {
-				console.log('start debug initialize surrealdb');
-				// let App = {
-				// 	world:"Yggdrasil",
-				// 	realm:"System_ParadigmREVOLUTION",
-				// 	universe:"ParadigmREVOLUTION"
-				// }
-
-				let init = [false, false, false];
-
-				if (arguments.length == 2) {
-					switch (what) {
-						case 'memory':
-							init[0] = true;
-							break;
-						case 'local':
-							init[1] = true;
-							break;
-						case 'server':
-							init[2] = true;
-							break;
-
-						default:
-							break;
-					}
-
-				} else {
-					init = [true, true, true];
-				}
-
-				let token;
-				//Initiate Mem
-				if (init[0]) try {
-					console.info('Start SurrealDB Mem connection...');
-					// Connect to the database
-					await storage.SurrealDB.Memory.connect('mem://', { user: { username: userinfo.user, password: userinfo.pass } });
-
-					// Select a specific namespace / database
-					await storage.SurrealDB.Memory.use({ ns: App.universe, db: App.realm });
-
-					// Signin as a namespace, database, or root user
-					token = await storage.SurrealDB.Memory.signin({
-						username: userinfo.user,
-						password: userinfo.pass,
-					});
-					// console.log('token', token);
-					console.info('Done SurrealDB Mem connection...');
-					window.dispatchEvent(storage.Events.memoryDBEvent);
-				} catch (e) {
-					console.error("ERROR SurrealDB Mem, ", e);
-				}
-
-				//Initiate IndexedDB
-				if (init[1]) try {
-					console.info('Start SurrealDB IndexedDB connection...');
-					// Connect to the database
-
-					await storage.SurrealDB.Local.connect('indxdb://' + App.universe, { user: { username: userinfo.user, password: userinfo.pass } });
-
-					// Select a specific namespace / database
-					await storage.SurrealDB.Local.use({ ns: App.universe, db: App.realm });
-
-					// Signin as a namespace, database, or root user
-					token = await storage.SurrealDB.Local.signin({
-						username: userinfo.user,
-						password: userinfo.pass,
-					});
-					// console.log('token', token);
-					console.info('Done SurrealDB IndexedDB connection...');
-					window.dispatchEvent(storage.Events.indexedDBEvent);
-				} catch (e) {
-					console.error("ERROR SurrealDB IndexedDB, ", e);
-				}
-
-				//Initiate Server
-				if (init[2]) try {
-					console.info('Start SurrealDB Server connection...');
-					// Connect to the database
-					await storage.SurrealDB.Server.connect(server);
-
-					// Select a specific namespace / database
-					await storage.SurrealDB.Server.use({ ns: App.universe, db: App.realm });
-
-					// Signin as a namespace, database, or root user
-					token = await storage.SurrealDB.Server.signin({
-						username: userinfo.user,
-						password: userinfo.pass,
-					});
-					// console.log('token', token);
-					console.info('Done SurrealDB Server connection...');
-					window.dispatchEvent(storage.Events.serverDBEvent);
-				} catch (e) {
-					console.error("ERROR SurrealDB Server, ", e);
-				}
-				return storage;
-			},
-			"InitializeSurrealDB": async function (App, userinfo, what) {
-				if (typeof App == 'undefined' || App != null || App == '') {
-					console.error('App is empty, need App data to initialize!')
-					return;
-				}
-				if (typeof userinfo == 'undefined' || userinfo != null || userinfo == '') {
-					console.error('Userinfo is empty, need userinfo to initialize!')
-					return;
-				}
-				if (typeof what == 'undefined' || what != null || what == '') {
-					console.error('What is empty, need what to initialize!')
-					return;
-				}
-				console.log('start debug initialize surrealdb individual >>>');
-				switch (what.toLowerCase()) {
-					case 'memory':
-
-						break;
-					case 'local':
-
-						break;
-					case 'server':
-
-						break;
-				}
-			},
-			"InitializeNew": async function (App, userinfo, server, what, callbacks) {
-				console.log('start debug initialize new surrealdb >>>');
-				console.log('App >>>>>', App);
-
-				// let App = {
-				// 	world:"Yggdrasil",
-				// 	realm:"System_ParadigmREVOLUTION",
-				// 	universe:"ParadigmREVOLUTION"
-				// }
-				let Storage = {
-					SurrealDB: {
-						Local: new Surreal(),
-						Memory: new Surreal(),
-						Server: new Surreal(),
-					},
-				}
-
-				let init = [false, false, false];
-
-				if (typeof what == 'undefined' || what != null || what == '') {
-					switch (what) {
-						case 'memory':
-							init[0] = true;
-							break;
-						case 'local':
-							init[1] = true;
-							break;
-						case 'server':
-							init[2] = true;
-							break;
-
-						default:
-							break;
-					}
-
-				} else {
-					init = [true, true, true];
-				}
-
-				//Initiate Mem
-				if (init[0]) try {
-					console.info('Start SurrealDB Mem connection...');
-					// Connect to the database
-					await Storage.SurrealDB.Memory.connect('mem://', { user: { username: userinfo.user, password: userinfo.pass } });
-
-					// Select a specific namespace / database
-					await Storage.SurrealDB.Memory.use({ namespace: App.universe, database: App.realm });
-
-					// Signin as a namespace, database, or root user
-					const token = await Storage.SurrealDB.Memory.signin({
-						username: userinfo.user,
-						password: userinfo.pass,
-					});
-					console.log('token >>>', token);
-					console.info('Done SurrealDB Memory connection...');
-					if (typeof callbacks.Memory == 'function') callbacks.Memory();
-				} catch (e) {
-					console.error("ERROR SurrealDB Memory, ", e);
-				}
-
-				//Initiate IndexedDB
-				if (init[1]) try {
-					console.info('Start SurrealDB IndexedDB connection...');
-					// Connect to the database
-
-					await Storage.SurrealDB.Local.connect('indxdb://' + App.universe, { user: { username: userinfo.user, password: userinfo.pass } });
-
-					// Select a specific namespace / database
-					await Storage.SurrealDB.Local.use({ namespace: App.universe, database: App.realm });
-
-					// Signin as a namespace, database, or root user
-					const token = await Storage.SurrealDB.Local.signin({
-						username: userinfo.user,
-						password: userinfo.pass,
-					});
-					console.log('token >>>', token);
-					console.info('Done SurrealDB IndexedDB connection...');
-					if (typeof callbacks.Local == 'function') callbacks.Local(Storage);
-
-				} catch (e) {
-					console.error("ERROR SurrealDB IndexedDB, ", e);
-				}
-
-				//Initiate Server
-				if (init[2]) try {
-					console.info('Start SurrealDB Server connection...');
-					console.log('App', App);
-					// Connect to the database
-					await Storage.SurrealDB.Server.connect(server);
-
-					// Select a specific namespace / database
-					await Storage.SurrealDB.Server.use({ namespace: App.universe, database: App.realm });
-
-					// Signin as a namespace, database, or root user
-					await Storage.SurrealDB.Server.signin({
-						username: userinfo.user,
-						password: userinfo.pass,
-					});
-					// console.log('token', token);
-					console.info('Done SurrealDB Server connection...');
-					if (typeof callbacks.Server == 'function') callbacks.Server();
-				} catch (e) {
-					console.error("ERROR SurrealDB Server, ", e);
-				}
-				return Storage;
-			},
 			"SurrealQL": {
 				"create": (function (tableName, data) {
 					if (!tableName || !data) {
@@ -5372,6 +5145,37 @@ export class Utility {
 					return `DELETE ${recordID};
 `;
 				}).bind(this),
+				"GenerateQueryString"(form) { 
+					if (form === undefined) {
+						throw new Error('Form is undefined');
+					}
+
+					let form_schema_keys = Object.keys(form.Dataset.Schema);
+			
+					let array_query = ["begin transaction;"];
+				
+					for (let index = 1; index <= 5; index++) {
+						let pid = `TFKB/V${ParadigmREVOLUTION.Utility.Numbers.Pad(index, 4)}`;
+				
+						form.Properties.PID = pid;
+						form.Properties.Chain.ID = `CHAIN/${pid}`;
+						form.Properties.Chain.Segment = '';
+						form.Properties.Chain.SegmentOrder = 0;
+						let q = `create test:\`${pid}/${index}\` content ${JSON.stringify(form)};`;
+						array_query.push(q); // qstr += q;
+					}
+					array_query.push("commit transaction;");
+				
+					let qstr = "";
+					array_query.forEach(d => {
+						console.log('d :>> ', d);
+						qstr += d + "\n\n";
+					});
+					return {
+						"string": qstr,
+						"array": array_query
+					}
+				}
 			},
 			"Get": function (self, target = 'Local') {
 				//Load nodes from IndexedDB SurrealDB instance
