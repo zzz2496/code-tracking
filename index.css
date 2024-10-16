@@ -1,715 +1,102 @@
-:root {
-    --bg-color-a01: rgba(255, 255, 255, 0.1);
-    --bg-color-a02: rgba(255, 255, 255, 0.2);
-    --bg-color-a03: rgba(255, 255, 255, 0.3);
-    --bg-color-a04: rgba(255, 255, 255, 0.4);
-    --bg-color-a05: rgba(255, 255, 255, 0.5);
-    --bg-color-a06: rgba(255, 255, 255, 0.6);
-    --bg-color-a07: rgba(255, 255, 255, 0.7);
-    --bg-color-a08: rgba(255, 255, 255, 0.8);
-    --bg-color-a09: rgba(255, 255, 255, 0.9);
-    --bg-color    : rgba(255, 255, 255, 1);
-
-	--bg-color-inverse-a01: rgba(0, 0, 0, 0.1);
-    --bg-color-inverse-a02: rgba(0, 0, 0, 0.2);
-    --bg-color-inverse-a03: rgba(0, 0, 0, 0.3);
-    --bg-color-inverse-a04: rgba(0, 0, 0, 0.4);
-    --bg-color-inverse-a05: rgba(0, 0, 0, 0.5);
-    --bg-color-inverse-a06: rgba(0, 0, 0, 0.6);
-    --bg-color-inverse-a07: rgba(0, 0, 0, 0.7);
-    --bg-color-inverse-a08: rgba(0, 0, 0, 0.8);
-    --bg-color-inverse-a09: rgba(0, 0, 0, 0.9);
-    --bg-color-inverse    : rgba(0, 0, 0, 1);
-
-
-    --text-color: rgba(39, 49, 61, 1);
-    --text-soft-color: rgba(68, 75, 83, 1);
-    --text-strong-color: rgba(74, 74, 74, 1);
-    
-    --subtle-color-a01: rgba(247, 249, 253, 0.1);
-    --subtle-color-a02: rgba(247, 249, 253, 0.2);
-    --subtle-color-a03: rgba(247, 249, 253, 0.3);
-    --subtle-color-a04: rgba(247, 249, 253, 0.4);
-    --subtle-color-a05: rgba(247, 249, 253, 0.5);
-    --subtle-color-a06: rgba(247, 249, 253, 0.6);
-    --subtle-color-a07: rgba(247, 249, 253, 0.7);
-    --subtle-color-a08: rgba(247, 249, 253, 0.8);
-    --subtle-color-a09: rgba(247, 249, 253, 0.9);
-    --subtle-color    : rgba(247, 249, 253, 1);
-    
-    --border-color: rgba(221, 232, 246, 1);
-    
-	--shadow-color-a01: rgba(171, 193, 220, 0.1);
-	--shadow-color-a02: rgba(171, 193, 220, 0.2);
-	--shadow-color-a03: rgba(171, 193, 220, 0.3);
-	--shadow-color-a04: rgba(171, 193, 220, 0.4);
-	--shadow-color-a05: rgba(171, 193, 220, 0.5);
-	--shadow-color-a06: rgba(171, 193, 220, 0.6);
-	--shadow-color-a07: rgba(171, 193, 220, 0.7);
-	--shadow-color-a08: rgba(171, 193, 220, 0.8);
-	--shadow-color-a09: rgba(171, 193, 220, 0.9);
-	--shadow-color: rgba(171, 193, 220, 1);
-
-    --input-color: rgba(255, 255, 255, 1);
-
-	--outline-color-blueish-a01: rgba(126, 179, 230, 0.1);
-	--outline-color-blueish-a02: rgba(126, 179, 230, 0.2);
-	--outline-color-blueish-a03: rgba(126, 179, 230, 0.3);
-	--outline-color-blueish-a04: rgba(126, 179, 230, 0.4);
-	--outline-color-blueish-a05: rgba(126, 179, 230, 0.5);
-	--outline-color-blueish-a06: rgba(126, 179, 230, 0.6);
-	--outline-color-blueish-a07: rgba(126, 179, 230, 0.7);
-	--outline-color-blueish-a08: rgba(126, 179, 230, 0.8);
-	--outline-color-blueish-a09: rgba(126, 179, 230, 0.9);
-	--outline-color-blueish: rgba(126, 179, 230, 1);
-
-	--outline-color-inverse-a01: rgba(43, 45, 48, 0.1);
-	--outline-color-inverse-a02: rgba(43, 45, 48, 0.2);
-	--outline-color-inverse-a03: rgba(43, 45, 48, 0.3);
-	--outline-color-inverse-a04: rgba(43, 45, 48, 0.4);
-	--outline-color-inverse-a05: rgba(43, 45, 48, 0.5);
-	--outline-color-inverse-a06: rgba(43, 45, 48, 0.6);
-	--outline-color-inverse-a07: rgba(43, 45, 48, 0.7);
-	--outline-color-inverse-a08: rgba(43, 45, 48, 0.8);
-	--outline-color-inverse-a09: rgba(43, 45, 48, 0.9);
-	--outline-color-inverse: rgb(43, 45, 48);
-
-	--outline-color-a01: rgba(219, 225, 231, 0.1);
-	--outline-color-a02: rgba(219, 225, 231, 0.2);
-	--outline-color-a03: rgba(219, 225, 231, 0.3);
-	--outline-color-a04: rgba(219, 225, 231, 0.4);
-	--outline-color-a05: rgba(219, 225, 231, 0.5);
-	--outline-color-a06: rgba(219, 225, 231, 0.6);
-	--outline-color-a07: rgba(219, 225, 231, 0.7);
-	--outline-color-a08: rgba(219, 225, 231, 0.8);
-	--outline-color-a09: rgba(219, 225, 231, 0.9);
-	--outline-color: rgb(219, 225, 231);
-
-	--light-color-a01: rgba(238, 244, 252, 0.1);
-	--light-color-a02: rgba(238, 244, 252, 0.2);
-	--light-color-a03: rgba(238, 244, 252, 0.3);
-	--light-color-a04: rgba(238, 244, 252, 0.4);
-	--light-color-a05: rgba(238, 244, 252, 0.5);
-	--light-color-a06: rgba(238, 244, 252, 0.6);
-	--light-color-a07: rgba(238, 244, 252, 0.7);
-	--light-color-a08: rgba(238, 244, 252, 0.8);
-	--light-color-a09: rgba(238, 244, 252, 0.9);
-	--light-color: rgba(238, 244, 252, 1);
-
-	--dark-color-a01: rgba(55, 72, 90, 0.1);
-	--dark-color-a02: rgba(55, 72, 90, 0.2);
-	--dark-color-a03: rgba(55, 72, 90, 0.3);
-	--dark-color-a04: rgba(55, 72, 90, 0.4);
-	--dark-color-a05: rgba(55, 72, 90, 0.5);
-	--dark-color-a06: rgba(55, 72, 90, 0.6);
-	--dark-color-a07: rgba(55, 72, 90, 0.7);
-	--dark-color-a08: rgba(55, 72, 90, 0.8);
-	--dark-color-a09: rgba(55, 72, 90, 0.9);
-	--dark-color: rgba(55, 72, 90, 1);
-
-
-	--mark-color: rgba(71, 132, 182, 0.08);
-    --special-color: rgba(71, 132, 182, 1);
-    --special-bg-color: rgba(73, 136, 188, 1);
-    --special-text-color: rgba(255, 255, 255, 1);
-    --special-shadow-color: rgba(71, 91, 113, 1);
-    --special-mark-color: rgba(255, 255, 255, 0.08);
-    --text-color-rgb: 39, 49, 61;
-    --bg-color-rgb: 255, 255, 255;
-    --subtle-color-rgb: 247, 249, 253;
-    --special-color-rgb: 71, 132, 182;
-    --special-text-color-rgb: 255, 255, 255;
-    --special-bg-color-rgb: 73, 136, 188;
-    --shadow-color-rgb: 171, 193, 220;
-    --special-shadow-color-rgb: 71, 91, 113;
-    --outline-color-rgb: 157, 195, 235;
-    --dark-color-rgb: 55, 72, 90;
-    --light-color-rgb: 238, 244, 252;
-
-	--soft-box-shadow-l4: 
-		4.4px 4.5px 6px rgba(0, 0, 0, 0.055),
-		12.3px 12.5px 15px rgba(0, 0, 0, 0.09),
-		29.5px 30.1px 32px rgba(0, 0, 0, 0.118),
-		98px 100px 80px rgba(0, 0, 0, 0.14);
-	--soft-box-shadow-l10: 
-		0.5px 1.5px 1px rgba(0, 0, 0, 0.015),
-		1px 3.3px 2.9px rgba(0, 0, 0, 0.022),
-		1.7px 5.5px 6px rgba(0, 0, 0, 0.028),
-		2.6px 8.3px 10.6px rgba(0, 0, 0, 0.032),
-		3.8px 12px 17.1px rgba(0, 0, 0, 0.036),
-		5.3px 17px 26.4px rgba(0, 0, 0, 0.04),
-		7.5px 24.1px 39.8px rgba(0, 0, 0, 0.044),
-		11px 35px 59.6px rgba(0, 0, 0, 0.049),
-		16.9px 54px 91.5px rgba(0, 0, 0, 0.055),
-		30px 96px 157px rgba(0, 0, 0, 0.07);
-
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-color-a01: rgba(32, 32, 32, 0.1);
-        --bg-color-a02: rgba(32, 32, 32, 0.2);
-        --bg-color-a03: rgba(32, 32, 32, 0.3);
-        --bg-color-a04: rgba(32, 32, 32, 0.4);
-        --bg-color-a05: rgba(32, 32, 32, 0.5);
-        --bg-color-a06: rgba(32, 32, 32, 0.6);
-        --bg-color-a07: rgba(32, 32, 32, 0.7);
-        --bg-color-a08: rgba(32, 32, 32, 0.8);
-        --bg-color-a09: rgba(32, 32, 32, 0.9);
-        --bg-color    : rgba(32, 32, 32, 1);
-
-		--bg-color-inverse-a01: rgba(223, 223, 223, 0.1);
-		--bg-color-inverse-a02: rgba(223, 223, 223, 0.2);
-		--bg-color-inverse-a03: rgba(223, 223, 223, 0.3);
-		--bg-color-inverse-a04: rgba(223, 223, 223, 0.4);
-		--bg-color-inverse-a05: rgba(223, 223, 223, 0.5);
-		--bg-color-inverse-a06: rgba(223, 223, 223, 0.6);
-		--bg-color-inverse-a07: rgba(223, 223, 223, 0.7);
-		--bg-color-inverse-a08: rgba(223, 223, 223, 0.8);
-		--bg-color-inverse-a09: rgba(223, 223, 223, 0.9);
-		--bg-color-inverse: rgba(223, 223, 223, 1);
-
-		--text-color: rgba(220, 223, 229, 1);
-        --text-soft-color: rgba(184, 188, 194, 1);
-        --text-strong-color: rgba(187, 187, 187, 1);
-
-        --subtle-color-a01: rgba(33, 37, 42, 0.1);
-        --subtle-color-a02: rgba(33, 37, 42, 0.2);
-        --subtle-color-a03: rgba(33, 37, 42, 0.3);
-        --subtle-color-a04: rgba(33, 37, 42, 0.4);
-        --subtle-color-a05: rgba(33, 37, 42, 0.5);
-        --subtle-color-a06: rgba(33, 37, 42, 0.6);
-        --subtle-color-a07: rgba(33, 37, 42, 0.7);
-        --subtle-color-a08: rgba(33, 37, 42, 0.8);
-        --subtle-color-a09: rgba(33, 37, 42, 0.9);
-        --subtle-color    : rgba(33, 37, 42, 1);
-
-        --border-color: rgba(38, 49, 61, 1);
-
-        --shadow-color-a01: rgba(0, 0, 0, 0.1);
-        --shadow-color-a02: rgba(0, 0, 0, 0.2);
-        --shadow-color-a03: rgba(0, 0, 0, 0.3);
-        --shadow-color-a04: rgba(0, 0, 0, 0.4);
-        --shadow-color-a05: rgba(0, 0, 0, 0.5);
-        --shadow-color-a06: rgba(0, 0, 0, 0.6);
-        --shadow-color-a07: rgba(0, 0, 0, 0.7);
-        --shadow-color-a08: rgba(0, 0, 0, 0.8);
-        --shadow-color-a09: rgba(0, 0, 0, 0.9);
-        --shadow-color: rgba(0, 0, 0, 1);
-        
-		--input-color: rgba(28, 28, 28, 1);
-        
-		--outline-color-blueish-a01: rgba(98, 161, 215, 0.1);
-        --outline-color-blueish-a02: rgba(98, 161, 215, 0.2);
-        --outline-color-blueish-a03: rgba(98, 161, 215, 0.3);
-        --outline-color-blueish-a04: rgba(98, 161, 215, 0.4);
-        --outline-color-blueish-a05: rgba(98, 161, 215, 0.5);
-        --outline-color-blueish-a06: rgba(98, 161, 215, 0.6);
-        --outline-color-blueish-a07: rgba(98, 161, 215, 0.7);
-        --outline-color-blueish-a08: rgba(98, 161, 215, 0.8);
-        --outline-color-blueish-a09: rgba(98, 161, 215, 0.9);
-        --outline-color-blueish: rgba(98, 161, 215, 1);
-
-		--outline-color-a01: rgba(40, 43, 46, 0.1);
-		--outline-color-a02: rgba(40, 43, 46, 0.2);
-		--outline-color-a03: rgba(40, 43, 46, 0.3);
-		--outline-color-a04: rgba(40, 43, 46, 0.4);
-		--outline-color-a05: rgba(40, 43, 46, 0.5);
-		--outline-color-a06: rgba(40, 43, 46, 0.6);
-		--outline-color-a07: rgba(40, 43, 46, 0.7);
-		--outline-color-a08: rgba(40, 43, 46, 0.8);
-		--outline-color-a09: rgba(40, 43, 46, 0.9);
-		--outline-color: rgb(40, 43, 46);
-
-		--outline-color-inverse-a01: rgba(200, 209, 216, 0.1);
-		--outline-color-inverse-a02: rgba(200, 209, 216, 0.2);
-		--outline-color-inverse-a03: rgba(200, 209, 216, 0.3);
-		--outline-color-inverse-a04: rgba(200, 209, 216, 0.4);
-		--outline-color-inverse-a05: rgba(200, 209, 216, 0.5);
-		--outline-color-inverse-a06: rgba(200, 209, 216, 0.6);
-		--outline-color-inverse-a07: rgba(200, 209, 216, 0.7);
-		--outline-color-inverse-a08: rgba(200, 209, 216, 0.8);
-		--outline-color-inverse-a09: rgba(200, 209, 216, 0.9);
-		--outline-color-inverse: rgb(200, 209, 216);
-
-        --mark-color: rgba(87, 144, 193, 0.08);
-        --special-color: rgba(87, 144, 193, 1);
-        --special-bg-color: rgba(60, 102, 138, 1);
-        --special-text-color: rgba(220, 223, 229, 1);
-        --special-shadow-color: rgba(22, 31, 40, 1);
-        --special-mark-color: rgba(220, 223, 229, 0.08);
-        --light-color: rgba(191, 214, 242, 1);
-        --dark-color: rgba(39, 54, 69, 1);
-        --text-color-rgb: 220, 223, 229;
-        --bg-color-rgb: 32, 32, 32;
-        --subtle-color-rgb: 33, 37, 42;
-        --special-color-rgb: 87, 144, 193;
-        --special-text-color-rgb: 220, 223, 229;
-        --special-bg-color-rgb: 60, 102, 138;
-        --shadow-color-rgb: 0, 0, 0;
-        --special-shadow-color-rgb: 22, 31, 40;
-        --outline-color-rgb: 100, 164, 220;
-        --dark-color-rgb: 39, 54, 69;
-        --light-color-rgb: 191, 214, 242;
-    }
-}
-
-@media (prefers-color-scheme: light) and (prefers-contrast: more) {
-    :root {
-		--bg-color-a01: rgba(255, 255, 255, 0.1);
-		--bg-color-a02: rgba(255, 255, 255, 0.2);
-		--bg-color-a03: rgba(255, 255, 255, 0.3);
-		--bg-color-a04: rgba(255, 255, 255, 0.4);
-		--bg-color-a05: rgba(255, 255, 255, 0.5);
-		--bg-color-a06: rgba(255, 255, 255, 0.6);
-		--bg-color-a07: rgba(255, 255, 255, 0.7);
-		--bg-color-a08: rgba(255, 255, 255, 0.8);
-		--bg-color-a09: rgba(255, 255, 255, 0.9);
-		--bg-color    : rgba(255, 255, 255, 1);
-
-		--text-color: rgba(25, 33, 41, 1);
-        --text-soft-color: rgba(29, 32, 37, 1);
-        --text-strong-color: rgba(74, 74, 74, 1);
-
-		--subtle-color-a01: rgba(247, 249, 253, 0.1);
-		--subtle-color-a02: rgba(247, 249, 253, 0.2);
-		--subtle-color-a03: rgba(247, 249, 253, 0.3);
-		--subtle-color-a04: rgba(247, 249, 253, 0.4);
-		--subtle-color-a05: rgba(247, 249, 253, 0.5);
-		--subtle-color-a06: rgba(247, 249, 253, 0.6);
-		--subtle-color-a07: rgba(247, 249, 253, 0.7);
-		--subtle-color-a08: rgba(247, 249, 253, 0.8);
-		--subtle-color-a09: rgba(247, 249, 253, 0.9);
-		--subtle-color    : rgba(247, 249, 253, 1);
-
-        --border-color: rgba(166, 183, 204, 1);
-
-        --shadow-color-a01: rgba(138, 158, 182, 0.1);
-        --shadow-color-a02: rgba(138, 158, 182, 0.2);
-        --shadow-color-a03: rgba(138, 158, 182, 0.3);
-        --shadow-color-a04: rgba(138, 158, 182, 0.4);
-        --shadow-color-a05: rgba(138, 158, 182, 0.5);
-        --shadow-color-a06: rgba(138, 158, 182, 0.6);
-        --shadow-color-a07: rgba(138, 158, 182, 0.7);
-        --shadow-color-a08: rgba(138, 158, 182, 0.8);
-        --shadow-color-a09: rgba(138, 158, 182, 0.9);
-        --shadow-color: rgba(138, 158, 182, 1);
-        
-		--input-color: rgba(255, 255, 255, 1);
-
-		--outline-color-blueish-a01: rgba(126, 179, 230, 0.1);
-		--outline-color-blueish-a02: rgba(126, 179, 230, 0.2);
-		--outline-color-blueish-a03: rgba(126, 179, 230, 0.3);
-		--outline-color-blueish-a04: rgba(126, 179, 230, 0.4);
-		--outline-color-blueish-a05: rgba(126, 179, 230, 0.5);
-		--outline-color-blueish-a06: rgba(126, 179, 230, 0.6);
-		--outline-color-blueish-a07: rgba(126, 179, 230, 0.7);
-		--outline-color-blueish-a08: rgba(126, 179, 230, 0.8);
-		--outline-color-blueish-a09: rgba(126, 179, 230, 0.9);
-		--outline-color-blueish: rgba(126, 179, 230, 1);
-
-		--outline-color-inverse-a01: rgba(43, 45, 48, 0.1);
-		--outline-color-inverse-a02: rgba(43, 45, 48, 0.2);
-		--outline-color-inverse-a03: rgba(43, 45, 48, 0.3);
-		--outline-color-inverse-a04: rgba(43, 45, 48, 0.4);
-		--outline-color-inverse-a05: rgba(43, 45, 48, 0.5);
-		--outline-color-inverse-a06: rgba(43, 45, 48, 0.6);
-		--outline-color-inverse-a07: rgba(43, 45, 48, 0.7);
-		--outline-color-inverse-a08: rgba(43, 45, 48, 0.8);
-		--outline-color-inverse-a09: rgba(43, 45, 48, 0.9);
-		--outline-color-inverse: rgb(43, 45, 48);
-
-		--outline-color-a01: rgba(219, 225, 231, 0.1);
-		--outline-color-a02: rgba(219, 225, 231, 0.2);
-		--outline-color-a03: rgba(219, 225, 231, 0.3);
-		--outline-color-a04: rgba(219, 225, 231, 0.4);
-		--outline-color-a05: rgba(219, 225, 231, 0.5);
-		--outline-color-a06: rgba(219, 225, 231, 0.6);
-		--outline-color-a07: rgba(219, 225, 231, 0.7);
-		--outline-color-a08: rgba(219, 225, 231, 0.8);
-		--outline-color-a09: rgba(219, 225, 231, 0.9);
-		--outline-color: rgb(219, 225, 231);
-
-
-		--mark-color: rgba(53, 101, 140, 0.16);
-        --special-color: rgba(53, 101, 140, 1);
-        --special-bg-color: rgba(55, 105, 145, 1);
-        --special-text-color: rgba(255, 255, 255, 1);
-        --special-shadow-color: rgba(25, 34, 44, 1);
-        --special-mark-color: rgba(255, 255, 255, 0.16);
-        --light-color: rgba(238, 244, 252, 1);
-        --dark-color: rgba(55, 72, 90, 1);
-        --text-color-rgb: 25, 33, 41;
-        --bg-color-rgb: 255, 255, 255;
-        --subtle-color-rgb: 247, 249, 253;
-        --special-color-rgb: 53, 101, 140;
-        --special-text-color-rgb: 255, 255, 255;
-        --special-bg-color-rgb: 55, 105, 145;
-        --shadow-color-rgb: 138, 158, 182;
-        --special-shadow-color-rgb: 25, 34, 44;
-        --outline-color-rgb: 126, 179, 230;
-        --dark-color-rgb: 55, 72, 90;
-        --light-color-rgb: 238, 244, 252;
-    }
-}
-
-@media (prefers-color-scheme: dark) and (prefers-contrast: more) {
-    :root {
-		--bg-color-a01: rgba(32, 32, 32, 0.1);
-        --bg-color-a02: rgba(32, 32, 32, 0.2);
-        --bg-color-a03: rgba(32, 32, 32, 0.3);
-        --bg-color-a04: rgba(32, 32, 32, 0.4);
-        --bg-color-a05: rgba(32, 32, 32, 0.5);
-        --bg-color-a06: rgba(32, 32, 32, 0.6);
-        --bg-color-a07: rgba(32, 32, 32, 0.7);
-        --bg-color-a08: rgba(32, 32, 32, 0.8);
-        --bg-color-a09: rgba(32, 32, 32, 0.9);
-        --bg-color    : rgba(32, 32, 32, 1);
-
-        --text-color: rgba(238, 239, 242, 1);
-        --text-soft-color: rgba(238, 239, 241, 1);
-        --text-strong-color: rgba(187, 187, 187, 1);
-        
-		--subtle-color-a01: rgba(33, 37, 42, 0.1);
-        --subtle-color-a02: rgba(33, 37, 42, 0.2);
-        --subtle-color-a03: rgba(33, 37, 42, 0.3);
-        --subtle-color-a04: rgba(33, 37, 42, 0.4);
-        --subtle-color-a05: rgba(33, 37, 42, 0.5);
-        --subtle-color-a06: rgba(33, 37, 42, 0.6);
-        --subtle-color-a07: rgba(33, 37, 42, 0.7);
-        --subtle-color-a08: rgba(33, 37, 42, 0.8);
-        --subtle-color-a09: rgba(33, 37, 42, 0.9);
-        --subtle-color    : rgba(33, 37, 42, 1);
-		
-		--border-color: rgba(74, 81, 91, 1);
-
-		--shadow-color-a01: rgba(0, 0, 0, 0.1);
-        --shadow-color-a02: rgba(0, 0, 0, 0.2);
-        --shadow-color-a03: rgba(0, 0, 0, 0.3);
-        --shadow-color-a04: rgba(0, 0, 0, 0.4);
-        --shadow-color-a05: rgba(0, 0, 0, 0.5);
-        --shadow-color-a06: rgba(0, 0, 0, 0.6);
-        --shadow-color-a07: rgba(0, 0, 0, 0.7);
-        --shadow-color-a08: rgba(0, 0, 0, 0.8);
-        --shadow-color-a09: rgba(0, 0, 0, 0.9);
-		--shadow-color: rgba(0, 0, 0, 1);
-        
-		--input-color: rgba(28, 28, 28, 1);
-
-        --outline-color-blueish-a01: rgba(98, 161, 215, 0.1);
-        --outline-color-blueish-a02: rgba(98, 161, 215, 0.2);
-        --outline-color-blueish-a03: rgba(98, 161, 215, 0.3);
-        --outline-color-blueish-a04: rgba(98, 161, 215, 0.4);
-        --outline-color-blueish-a05: rgba(98, 161, 215, 0.5);
-        --outline-color-blueish-a06: rgba(98, 161, 215, 0.6);
-        --outline-color-blueish-a07: rgba(98, 161, 215, 0.7);
-        --outline-color-blueish-a08: rgba(98, 161, 215, 0.8);
-        --outline-color-blueish-a09: rgba(98, 161, 215, 0.9);
-        --outline-color-blueish: rgba(98, 161, 215, 1);
-
-		--outline-color-inverse-a01: rgba(40, 43, 46, 0.1);
-		--outline-color-inverse-a02: rgba(40, 43, 46, 0.2);
-		--outline-color-inverse-a03: rgba(40, 43, 46, 0.3);
-		--outline-color-inverse-a04: rgba(40, 43, 46, 0.4);
-		--outline-color-inverse-a05: rgba(40, 43, 46, 0.5);
-		--outline-color-inverse-a06: rgba(40, 43, 46, 0.6);
-		--outline-color-inverse-a07: rgba(40, 43, 46, 0.7);
-		--outline-color-inverse-a08: rgba(40, 43, 46, 0.8);
-		--outline-color-inverse-a09: rgba(40, 43, 46, 0.9);
-		--outline-color-inverse: rgb(40, 43, 46);
-
-		--outline-color-inverse-a01: rgba(200, 209, 216, 0.1);
-		--outline-color-inverse-a02: rgba(200, 209, 216, 0.2);
-		--outline-color-inverse-a03: rgba(200, 209, 216, 0.3);
-		--outline-color-inverse-a04: rgba(200, 209, 216, 0.4);
-		--outline-color-inverse-a05: rgba(200, 209, 216, 0.5);
-		--outline-color-inverse-a06: rgba(200, 209, 216, 0.6);
-		--outline-color-inverse-a07: rgba(200, 209, 216, 0.7);
-		--outline-color-inverse-a08: rgba(200, 209, 216, 0.8);
-		--outline-color-inverse-a09: rgba(200, 209, 216, 0.9);
-		--outline-color-inverse: rgb(200, 209, 216);
-
-		
-		--mark-color: rgba(126, 179, 230, 0.16);
-        --special-color: rgba(126, 179, 230, 1);
-        --special-bg-color: rgba(48, 82, 113, 1);
-        --special-text-color: rgba(238, 239, 242, 1);
-        --special-shadow-color: rgba(0, 0, 0, 1);
-        --special-mark-color: rgba(238, 239, 242, 0.16);
-        --light-color: rgba(216, 229, 246, 1);
-        --dark-color: rgba(39, 54, 69, 1);
-        --text-color-rgb: 238, 239, 242;
-        --bg-color-rgb: 32, 32, 32;
-        --subtle-color-rgb: 33, 37, 42;
-        --special-color-rgb: 126, 179, 230;
-        --special-text-color-rgb: 238, 239, 242;
-        --special-bg-color-rgb: 48, 82, 113;
-        --shadow-color-rgb: 0, 0, 0;
-        --special-shadow-color-rgb: 0, 0, 0;
-        --outline-color-rgb: 98, 161, 215;
-        --dark-color-rgb: 39, 54, 69;
-        --light-color-rgb: 216, 229, 246;
-    }
-}
-
-.light-theme {
-    --bg-color-a01: rgba(255, 255, 255, 0.1);
-    --bg-color-a02: rgba(255, 255, 255, 0.2);
-    --bg-color-a03: rgba(255, 255, 255, 0.3);
-    --bg-color-a04: rgba(255, 255, 255, 0.4);
-    --bg-color-a05: rgba(255, 255, 255, 0.5);
-    --bg-color-a06: rgba(255, 255, 255, 0.6);
-    --bg-color-a07: rgba(255, 255, 255, 0.7);
-    --bg-color-a08: rgba(255, 255, 255, 0.8);
-    --bg-color-a09: rgba(255, 255, 255, 0.9);
-    --bg-color    : rgba(255, 255, 255, 1);
-    
-    --text-color: rgba(39, 49, 61, 1);
-    --text-soft-color: rgba(68, 75, 83, 1);
-    --text-strong-color: rgba(74, 74, 74, 1);
-    
-    --subtle-color-a01: rgba(247, 249, 253, 0.1);
-    --subtle-color-a02: rgba(247, 249, 253, 0.2);
-    --subtle-color-a03: rgba(247, 249, 253, 0.3);
-    --subtle-color-a04: rgba(247, 249, 253, 0.4);
-    --subtle-color-a05: rgba(247, 249, 253, 0.5);
-    --subtle-color-a06: rgba(247, 249, 253, 0.6);
-    --subtle-color-a07: rgba(247, 249, 253, 0.7);
-    --subtle-color-a08: rgba(247, 249, 253, 0.8);
-    --subtle-color-a09: rgba(247, 249, 253, 0.9);
-    --subtle-color    : rgba(247, 249, 253, 1);
-    
-    --border-color: rgba(221, 232, 246, 1);
-
-    --shadow-color-a01: rgba(171, 193, 220, 0.1);
-    --shadow-color-a02: rgba(171, 193, 220, 0.2);
-    --shadow-color-a03: rgba(171, 193, 220, 0.3);
-    --shadow-color-a04: rgba(171, 193, 220, 0.4);
-    --shadow-color-a05: rgba(171, 193, 220, 0.5);
-    --shadow-color-a06: rgba(171, 193, 220, 0.6);
-    --shadow-color-a07: rgba(171, 193, 220, 0.7);
-    --shadow-color-a08: rgba(171, 193, 220, 0.8);
-    --shadow-color-a09: rgba(171, 193, 220, 0.9);
-    --shadow-color: rgba(171, 193, 220, 1);
-
-    --input-color: rgba(255, 255, 255, 1);
-    
-	--outline-color-blueish-a01: rgba(157, 195, 235, 0.1);
-	--outline-color-blueish-a02: rgba(157, 195, 235, 0.2);
-	--outline-color-blueish-a03: rgba(157, 195, 235, 0.3);
-	--outline-color-blueish-a04: rgba(157, 195, 235, 0.4);
-	--outline-color-blueish-a05: rgba(157, 195, 235, 0.5);
-	--outline-color-blueish-a06: rgba(157, 195, 235, 0.6);
-	--outline-color-blueish-a07: rgba(157, 195, 235, 0.7);
-	--outline-color-blueish-a08: rgba(157, 195, 235, 0.8);
-	--outline-color-blueish-a09: rgba(157, 195, 235, 0.9);
-	--outline-color-blueish: rgba(157, 195, 235, 1);
-
-	--outline-color-inverse-a01: rgba(43, 45, 48, 0.1);
-	--outline-color-inverse-a02: rgba(43, 45, 48, 0.2);
-	--outline-color-inverse-a03: rgba(43, 45, 48, 0.3);
-	--outline-color-inverse-a04: rgba(43, 45, 48, 0.4);
-	--outline-color-inverse-a05: rgba(43, 45, 48, 0.5);
-	--outline-color-inverse-a06: rgba(43, 45, 48, 0.6);
-	--outline-color-inverse-a07: rgba(43, 45, 48, 0.7);
-	--outline-color-inverse-a08: rgba(43, 45, 48, 0.8);
-	--outline-color-inverse-a09: rgba(43, 45, 48, 0.9);
-	--outline-color-inverse: rgb(43, 45, 48);
-
-	--outline-color-a01: rgba(219, 225, 231, 0.1);
-	--outline-color-a02: rgba(219, 225, 231, 0.2);
-	--outline-color-a03: rgba(219, 225, 231, 0.3);
-	--outline-color-a04: rgba(219, 225, 231, 0.4);
-	--outline-color-a05: rgba(219, 225, 231, 0.5);
-	--outline-color-a06: rgba(219, 225, 231, 0.6);
-	--outline-color-a07: rgba(219, 225, 231, 0.7);
-	--outline-color-a08: rgba(219, 225, 231, 0.8);
-	--outline-color-a09: rgba(219, 225, 231, 0.9);
-	--outline-color: rgb(219, 225, 231);
-
-	--mark-color: rgba(71, 132, 182, 0.08);
-    --special-color: rgba(71, 132, 182, 1);
-    --special-bg-color: rgba(73, 136, 188, 1);
-    --special-text-color: rgba(255, 255, 255, 1);
-    --special-shadow-color: rgba(71, 91, 113, 1);
-    --special-mark-color: rgba(255, 255, 255, 0.08);
-    --light-color: rgba(238, 244, 252, 1);
-    --dark-color: rgba(55, 72, 90, 1);
-    --text-color-rgb: 39, 49, 61;
-    --bg-color-rgb: 255, 255, 255;
-    --subtle-color-rgb: 247, 249, 253;
-    --special-color-rgb: 71, 132, 182;
-    --special-text-color-rgb: 255, 255, 255;
-    --special-bg-color-rgb: 73, 136, 188;
-    --shadow-color-rgb: 171, 193, 220;
-    --special-shadow-color-rgb: 71, 91, 113;
-    --outline-color-rgb: 157, 195, 235;
-    --dark-color-rgb: 55, 72, 90;
-    --light-color-rgb: 238, 244, 252;}
-
-.dark-theme {
-	--bg-color-a01: rgba(32, 32, 32, 0.1);
-	--bg-color-a02: rgba(32, 32, 32, 0.2);
-	--bg-color-a03: rgba(32, 32, 32, 0.3);
-	--bg-color-a04: rgba(32, 32, 32, 0.4);
-	--bg-color-a05: rgba(32, 32, 32, 0.5);
-	--bg-color-a06: rgba(32, 32, 32, 0.6);
-	--bg-color-a07: rgba(32, 32, 32, 0.7);
-	--bg-color-a08: rgba(32, 32, 32, 0.8);
-	--bg-color-a09: rgba(32, 32, 32, 0.9);
-	--bg-color    : rgba(32, 32, 32, 1);
-
-	--text-color: rgba(220, 223, 229, 1);
-	--text-soft-color: rgba(184, 188, 194, 1);
-	--text-strong-color: rgba(187, 187, 187, 1);
-
-	--subtle-color-a01: rgba(33, 37, 42, 0.1);
-	--subtle-color-a02: rgba(33, 37, 42, 0.2);
-	--subtle-color-a03: rgba(33, 37, 42, 0.3);
-	--subtle-color-a04: rgba(33, 37, 42, 0.4);
-	--subtle-color-a05: rgba(33, 37, 42, 0.5);
-	--subtle-color-a06: rgba(33, 37, 42, 0.6);
-	--subtle-color-a07: rgba(33, 37, 42, 0.7);
-	--subtle-color-a08: rgba(33, 37, 42, 0.8);
-	--subtle-color-a09: rgba(33, 37, 42, 0.9);
-	--subtle-color    : rgba(33, 37, 42, 1);
-
-	--border-color: rgba(38, 49, 61, 1);
-		
-	--shadow-color-a01: rgba(0, 0, 0, 0.1);
-	--shadow-color-a02: rgba(0, 0, 0, 0.2);
-	--shadow-color-a03: rgba(0, 0, 0, 0.3);
-	--shadow-color-a04: rgba(0, 0, 0, 0.4);
-	--shadow-color-a05: rgba(0, 0, 0, 0.5);
-	--shadow-color-a06: rgba(0, 0, 0, 0.6);
-	--shadow-color-a07: rgba(0, 0, 0, 0.7);
-	--shadow-color-a08: rgba(0, 0, 0, 0.8);
-	--shadow-color-a09: rgba(0, 0, 0, 0.9);
-	--shadow-color: rgba(0, 0, 0, 1);
-	
-	--input-color: rgba(28, 28, 28, 1);
-	
-	--outline-color-blueish-a01: rgba(100, 164, 220, 0.1);
-	--outline-color-blueish-a02: rgba(100, 164, 220, 0.2);
-	--outline-color-blueish-a03: rgba(100, 164, 220, 0.3);
-	--outline-color-blueish-a04: rgba(100, 164, 220, 0.4);
-	--outline-color-blueish-a05: rgba(100, 164, 220, 0.5);
-	--outline-color-blueish-a06: rgba(100, 164, 220, 0.6);
-	--outline-color-blueish-a07: rgba(100, 164, 220, 0.7);
-	--outline-color-blueish-a08: rgba(100, 164, 220, 0.8);
-	--outline-color-blueish-a09: rgba(100, 164, 220, 0.9);
-	--outline-color-blueish: rgba(100, 164, 220, 1);
-
-	--outline-color-a01: rgba(40, 43, 46, 0.1);
-	--outline-color-a02: rgba(40, 43, 46, 0.2);
-	--outline-color-a03: rgba(40, 43, 46, 0.3);
-	--outline-color-a04: rgba(40, 43, 46, 0.4);
-	--outline-color-a05: rgba(40, 43, 46, 0.5);
-	--outline-color-a06: rgba(40, 43, 46, 0.6);
-	--outline-color-a07: rgba(40, 43, 46, 0.7);
-	--outline-color-a08: rgba(40, 43, 46, 0.8);
-	--outline-color-a09: rgba(40, 43, 46, 0.9);
-	--outline-color: rgb(40, 43, 46);
-
-	--outline-color-inverse-a01: rgba(200, 209, 216, 0.1);
-	--outline-color-inverse-a02: rgba(200, 209, 216, 0.2);
-	--outline-color-inverse-a03: rgba(200, 209, 216, 0.3);
-	--outline-color-inverse-a04: rgba(200, 209, 216, 0.4);
-	--outline-color-inverse-a05: rgba(200, 209, 216, 0.5);
-	--outline-color-inverse-a06: rgba(200, 209, 216, 0.6);
-	--outline-color-inverse-a07: rgba(200, 209, 216, 0.7);
-	--outline-color-inverse-a08: rgba(200, 209, 216, 0.8);
-	--outline-color-inverse-a09: rgba(200, 209, 216, 0.9);
-	--outline-color-inverse: rgb(200, 209, 216);
-
-
-	--mark-color: rgba(87, 144, 193, 0.08);
-	--special-color: rgba(87, 144, 193, 1);
-	--special-bg-color: rgba(60, 102, 138, 1);
-	--special-text-color: rgba(220, 223, 229, 1);
-	--special-shadow-color: rgba(22, 31, 40, 1);
-	--special-mark-color: rgba(220, 223, 229, 0.08);
-	--light-color: rgba(191, 214, 242, 1);
-	--dark-color: rgba(39, 54, 69, 1);
-	--text-color-rgb: 220, 223, 229;
-	--bg-color-rgb: 32, 32, 32;
-	--subtle-color-rgb: 33, 37, 42;
-	--special-color-rgb: 87, 144, 193;
-	--special-text-color-rgb: 220, 223, 229;
-	--special-bg-color-rgb: 60, 102, 138;
-	--shadow-color-rgb: 0, 0, 0;
-	--special-shadow-color-rgb: 22, 31, 40;
-	--outline-color-rgb: 100, 164, 220;
-	--dark-color-rgb: 39, 54, 69;
-	--light-color-rgb: 191, 214, 242;
-}
-.wavy-background {
-	background-color: var(--border-color);
-	opacity: 0.8;
-	background-image: repeating-radial-gradient(circle at 0 0, transparent 0, var(--border-color) 10px), repeating-linear-gradient(var(--shadow-color-a04), var(--input-color));
-}
-
-.grid2020-background {
-	background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(to right, var(--border-color) 1px, transparent 1px);
-	background-size: 20px 20px;
-	background-color: var(--subtle-color);
-}
-
-.honeycomb-background {
-	background:
-		radial-gradient(circle farthest-side at 0% 50%, var(--light-color) 23.5%, #0000 0)14.7px 21px,
-		radial-gradient(circle farthest-side at 0% 50%, #e4e4f3 24%, #0000 0)13.3px 21px,
-		linear-gradient(var(--light-color) 14%, #0000 0, #0000 85%, var(--light-color) 0)0 0,
-		linear-gradient(150deg, var(--light-color) 24%, #e4e4f3 0, #e4e4f3 26%, #0000 0, #0000 74%, #e4e4f3 0, #e4e4f3 76%, var(--light-color) 0)0 0,
-		linear-gradient(30deg, var(--light-color) 24%, #e4e4f3 0, #e4e4f3 26%, #0000 0, #0000 74%, #e4e4f3 0, #e4e4f3 76%, var(--light-color) 0)0 0,
-		linear-gradient(90deg, #e4e4f3 2%, var(--light-color) 0, var(--light-color) 98%, #e4e4f3 0%)0 0 var(--light-color);
-	background-size: 28px 42px;
-	background-color: var(--light-color);
-}
-
-
-.grid2525-background {
-	background-image: linear-gradient(#e4e4f3 1px, transparent 1px), linear-gradient(to right, #e4e4f3 1px, transparent 1px);
-	background-size: 25px 25px;
-	background-color: #ffffff;
-}
-
-.grid5050-background {
-	background-image: linear-gradient(#e4e4f3 1px, transparent 1px), linear-gradient(to right, #e4e4f3 1px, transparent 1px);
-	background-size: 50px 50px;
-	background-color: #ffffff;
-}
-
-.grid100100-background {
-	background-image: linear-gradient(#e4e4f3 1px, transparent 1px), linear-gradient(to right, #e4e4f3 1px, transparent 1px);
-	background-size: 100px 100px;
-	background-color: #ffffff;
-}
-
-.checkered-board {
-	background-size: 200px 200px;
-	background-image:
-		linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black),
-		linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black),
-		linear-gradient(45deg, transparent 25%, black 25%, black 75%, transparent 75%, transparent),
-		linear-gradient(45deg, transparent 25%, black 25%, black 75%, transparent 75%, transparent);
-	background-position:
-		0 0,
-		100px 100px,
-		100px 0,
-		0 100px;
-}
-
-
-
-/*Additional styles for dark mode */
-
-
-body {
-	min-height: 100vh;
-	font-family: 'Roboto', sans-serif;
-	font-size: 12px;
-	transition: all 1s;
-	transition-timing-function: cubic-bezier(0, 0, 0, 1);
-	scrollbar-width: none;
-}
+/* General animation for smooth expanding/collapsing */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+  }
+  
+  /* The root container holds APP_MENU, APP_CONTAINER, and APP_HELPER */
+  .APP_ROOT_CONTAINER {
+	display: flex;
+	flex-direction: row;
+	height: auto;
+	max-height: 100vh;
+	overflow-x: auto; /* Allows horizontal scroll when content overflows */
+	overflow-y: auto; /* Allows vertical scroll when content overflows */
+	border: 1px solid silver;
+	width: 100vw; /* Ensure it takes full width of the viewport */
+  }
+  
+  /* APP_MENU */
+  .APP_MENU {
+	Flex-grow: 0;
+	Flex-shrink: 0; 
+	Flex-basis: 2rem;
+	height: auto;
+	border: 1px solid green;
+	overflow: hidden;
+	transition: flex-basis 0.3s ease;
+  }
+  
+  .APP_MENU.open {
+	flex: 0 0 80vw; /* Expand to 80vw when clicked */
+  }
+  
+  /* APP_CONTAINER */
+  .APP_CONTAINER {
+	/* flex: 1; Fill remaining space */
+	Flex-grow: 0;
+	Flex-shrink: 0; 
+	Flex-basis: 100vw;
+
+	display: flex;
+	flex-direction: column;
+	border: 1px solid red;
+	overflow: visible; /* Content inside can overflow */
+  }
+  
+  /* Inside APP_CONTAINER: APP_GRAPH_CONTAINER, APP_CONTENT, and APP_CONSOLE */
+  .APP_GRAPH_CONTAINER {
+	Flex-grow: 0;
+	Flex-shrink: 0; 
+	Flex-basis: 2rem;
+	height: 2rem;
+	border: 1px solid purple;
+	transition: flex-basis 0.3s ease;
+	overflow: auto;
+  }
+  
+  .APP_GRAPH_CONTAINER.show {
+	flex-basis: 80vh; /* Expands when clicked */
+  }
+  
+  .APP_CONTENT {
+	flex: 1;
+	border: 1px solid blue;
+	overflow: auto;
+	transition: max-height 0.3s ease;
+  }
+  
+  .APP_CONSOLE {
+	height: 2rem;
+	max-height: 80vh;
+	border: 1px solid orange;
+	overflow: auto;
+	transition: max-height 0.3s ease;
+  }
+  
+  /* APP_HELPER */
+  .APP_HELPER {
+	flex: 0 0 2rem;
+	max-width: 20vw;
+	border: 1px solid blue;
+	transition: flex-basis 0.3s ease;
+  }
+  
+  .APP_HELPER.show {
+	flex-basis: 100vw;
+  }
+
+  .APP_CONSOLE {
+	/* height: 2rem; */
+	Flex-grow: 0;
+	Flex-shrink: 0; 
+	Flex-basis: 2rem;
+	border: 1px solid purple;
+	transition: flex-basis 0.3s ease;
+	overflow: hidden;
+  }
+  
+  .APP_CONSOLE.show {
+	flex-basis: 80vh; /* Expands when clicked */
+  }

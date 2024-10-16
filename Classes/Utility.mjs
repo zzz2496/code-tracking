@@ -4515,8 +4515,9 @@ export class Utility {
 			document.querySelectorAll(".graph-node > div > div.mid-row > div.left-column > div.connection-container > span.left-input > i").forEach(inputEvents);
 			document.querySelectorAll(".graph-node > div > div.mid-row > div.right-column > div.connection-container > span.right-output > i").forEach(outputEvents);
 			document.querySelectorAll(".graph-node > div > div.bottom-row > div.connection-container > span.bottom-output > i").forEach(outputEvents);
-		}).bind(this),
-
+		}).bind(this)
+	};
+	Forms = {
 		"GenerateTable": (function (id, dataset, with_action, npage_num = 1, npage_result_number = 0) {
 			let page_number = 0;
 			let no_urut = 0;
@@ -4722,23 +4723,22 @@ export class Utility {
 				return "<span style='font-family:arial; font-weight:bold; font-size:18px; color: black; border-bottom: 1px solid silver;'>Tidak ada data yang cocok</span>";
 			}
 		}).bind(this),
-		"GenerateForm": (function (id, schema) {
+		"GenerateForm": (function ($id, $schema) {
 			var str = '';
-			str += '<div class="x_content" id="id_div_' + $id + '">';
-			str += '<form id="' + $id + '" data-parsley-validate class="form-horizontal form-label-left" onsubmit="return false;">';
-			$.each($schema['schema'], function (i, d) {
+			str += '<form id="' + $id + '" class="" onsubmit="return false;">';
+			Object.entries($schema).forEach(([i, d]) => {
 				if (d['form'] == 1) {
 					if ((d['type'] != 'button') && (d['type'] != 'separator')) {
-						str += '<div class="form-group" ';
+						str += '<div class="" ';
 						if (typeof d['label'] != 'undefined') {
-							str += 'paradigm-data="' + d['label'] + '" ' + 'paradigm-data-unreadable="' + un_readable(d['label']) + '"';
+							str += 'paradigm-data="'+d['label']+'" '+'paradigm-data-unreadable="'+ParadigmREVOLUTION.Utility.Strings.UnReadable(d['label'])+'"';
 						}
 						str += '>';
-						str += '    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="' + i + '" id="id_label___' + $id + '___' + i + '">';
+						str += '    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="' + i + '" id="id_label___' +$id+'___'+ i + '">';
 						if (typeof d['label'] != 'undefined') {
 							str += '        ' + d['label'] + ' ';
-						} else {
-							str += '        ' + ucwords(i.replace(/\_/gi, ' ')) + ' ';
+						}else{
+							str += '        ' + ParadigmREVOLUTION.Utility.Strings.UCwords(i.replace(/\_/gi, ' ')) + ' ';
 						}
 						if (typeof d['string_not_empty'] != 'undefined') {
 							str += '<span class="required">*</span>';
@@ -4754,74 +4754,96 @@ export class Utility {
 					if (typeof d['class'] != 'undefined') {
 						d_class = d['class'];
 					}
+					// // console.log('masuk check d type');
+					// // console.log($id+'> '+i+': '+d['type']);
 					switch (d['type']) {
 						case 'text':
 							if (typeof d['subtype'] != 'undefined') {
 								switch (d['subtype']) {
 									case 'select':
-										str += '        <select style="width: 100%" id="' + $id + '___' + i + '" name="' + i + '" class="js-example-responsive form-control col-md-7 col-xs-12 text_input ' + d_class + '">';
+										str += `<div class="select">
+													<select style="width: 100%" id="' + $id + '___' + i + '" name="' + i + '" class="text_input '+d_class+'">
+										`;
 										if (typeof d['select_values'] != 'undefined') {
-											var el = d['select_values'].split('::');
+											var el = d['select_values'];
 											// // // // console.logel);
-											$.each(el, function (ii, dd) {
-												str += '<option value="' + dd + '">' + dd + '</option>';
+											el.forEach((dd, ii) => {
+												if (dd.length == 0) { 
+													str += '<option value="%">' + dd + '</option>';
+												} else {
+													str += '<option value="' + dd + '">' + dd + '</option>';
+												}
 											});
-										}
-										str += '</select>';
+												}
+										str += '</select></div>';
 										break;
 									case 'textarea':
-										str += '        <textarea '
+										str += '<textarea '
 										if (d.readonly) str += ' readonly ';
-										str += 'id="' + $id + '___' + i + '"name="' + i + '" class="form-control col-md-7 col-xs-12 text_input ' + d_class + '" rows="5"></textarea>';
+										str += 'id="' + $id + '___' + i + '"name="' + i + '" class="textarea text_input '+d_class+'" rows="5"></textarea>';
 										break;
 									case 'hierarki_input':
 										str += '        <input ';
 										if (d.readonly) str += ' readonly ';
-										str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 hierarki_input ' + d_class + '"/>';
+										str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="input hierarki_input '+d_class+'"/>';
 										break;
 									case 'chart_of_accounts_input':
 										str += '        <input ';
 										if (d.readonly) str += ' readonly ';
-										str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 chart_of_accounts_input ' + d_class + '" value="' + valz + '"/>';
+										str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="input chart_of_accounts_input '+d_class+'" value="' + valz + '"/>';
 										break;
 									case 'list':
 										str += '        <textarea '
 										if (d.readonly) str += ' readonly ';
-										str += 'id="' + $id + '___' + i + '"name="' + i + '" class="form-control col-md-7 col-xs-12 list_input ' + d_class + '" rows="5"></textarea>';
+										str += 'id="' + $id + '___' + i + '"name="' + i + '" class="input list_input '+d_class+'" rows="5"></textarea>';
 										break;
 								}
 							} else {
-								str += '        <input ';
+								str += '<input ';
 								if (d.readonly) str += ' readonly ';
-								str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 text_input ' + d_class + '" value="' + valz + '"/>';
+								str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="input '+d_class+'" value="' + valz + '"/>';
 							}
+							break;
+						case 'array':
+								str += '<div class="select"><select style="width: 100%" id="' + $id + '___' + i + '" name="' + i + '" class="text_input '+d_class+'">';
+								if (typeof d['select_values'] != 'undefined') {
+									var el = d['select_values'];
+									el.forEach((dd, ii) => {
+										if (dd.length == 0) { 
+											str += '<option value="%">' + dd + '</option>';
+										} else {
+											str += '<option value="' + dd + '">' + dd + '</option>';
+										}
+									});
+								}
+								str += '</select></div>';
 							break;
 						case 'numeric':
 							str += '        <input ';
 							if (d.readonly) str += ' readonly ';
-							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 numeric_input ' + d_class + '" value="' + valz + '"/>';
+							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 numeric_input '+d_class+'" value="' + valz + '"/>';
 							break;
 						case 'numeric_comma':
 							str += '        <input ';
 							if (d.readonly) str += ' readonly ';
-							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 numeric_comma_input ' + d_class + '" value="' + valz + '"/>';
+							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 numeric_comma_input '+d_class+'" value="' + valz + '"/>';
 							break;
 						case 'plat_nomor_input':
 							// console.log('masuk plat nomor input');
 							str += '        <input ';
 							if (d.readonly) str += ' readonly ';
-							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 plat_nomor_input ' + d_class + '" value="' + valz + '"/>';
+							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 plat_nomor_input '+d_class+'" value="' + valz + '"/>';
 							break;
 						case 'password':
 							str += '        <input ';
 							if (d.readonly) str += ' readonly ';
-							str += 'type="password" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 ' + d_class + '"/>';
+							str += 'type="password" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 '+d_class+'"/>';
 							break;
 						case 'timestamp without time zone':
 							str += '        <input ';
 							if (d.readonly) str += ' readonly ';
 							var valx = '';
-							switch (valz) {
+							switch(valz) {
 								case 'sekarang':
 									valx = $('#date_today').val();
 									break;
@@ -4853,29 +4875,29 @@ export class Utility {
 									valx = $('#date_next_month_end').val();
 									break;
 							}
-							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 datetime_input ' + d_class + '" value="' + valx + '"/>';
+							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 datetime_input '+d_class+'" value="' + valx + '"/>';
 							break;
 						case 'time':
 							str += '        <input ';
 							if (d.readonly) str += ' readonly ';
-							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 time_input ' + d_class + '" value="' + valz + '"/>';
+							str += 'type="text" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="form-control col-md-7 col-xs-12 time_input '+d_class+'" value="' + valz + '"/>';
 							break;
 						case 'boolean':
 							var valc = true;
 							if (valz != '') valc = valz;
 							// if (d.value)
-							str += '<div class="checkbox"><label><input type="checkbox" id="' + $id + '___' + i + '" name="' + i + '" value="' + valc + '" class="' + d_class + '"';
+							str += '<div class="checkbox"><label><input type="checkbox" id="' + $id + '___' + i + '" name="' + i + '" value="'+valc+'" class="'+d_class+'"';
 							if (d.checked) str += ' checked ';
 							str += ' /></label></div>';
 							break;
 						case 'button':
-							str += '        <div align="center"><input type="button" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="btn btn-success ' + d_class + '" value="' + ucwords(i.replace(/\_/gi, ' ')) + '"/></div>';
+							str += '        <div align="center"><input type="button" id="' + $id + '___' + i + '" name="' + i + '" required="required" class="btn btn-success '+d_class+'" value="' + ParadigmREVOLUTION.Utility.Strings.UCwords(i.replace(/\_/gi, ' ')) + '"/></div>';
 							break;
 						case 'separator':
 							str += '        <hr>';
 							break;
 						case 'object':
-							str += '        <div align="center" id="' + $id + '___' + i + '" class="' + d_class + '"></div>';
+							str += '        <div align="center" id="' + $id + '___' + i + '" class="'+d_class+'"></div>';
 							break;
 					}
 					if (typeof d['tail'] != 'undefined') {
@@ -4888,9 +4910,160 @@ export class Utility {
 				}
 			});
 			str += '</form>';
-			str += '</div>';
 			return str;
+
 		}).bind(this),
+
+		"initSearchDropdown": (function(inputElement, source) {
+			const parent = inputElement.parentElement;
+			const wrapper = document.createElement('div');
+			wrapper.classList.add('control', 'has-icons-left');
+
+			const magnifierIcon = document.createElement('span');
+			magnifierIcon.classList.add('icon', 'is-left');
+			magnifierIcon.innerHTML = '<i class="fas fa-search"></i>';
+
+			// Preserve the input's attributes and move it inside the wrapper
+			wrapper.appendChild(inputElement);
+			wrapper.appendChild(magnifierIcon);
+			console.log('wrapper', wrapper);
+			parent.innerHTML = '';
+			parent.appendChild(wrapper, inputElement); // Insert wrapper in the same position as the original input
+
+			// Set input styling (class, padding) if it's not already there
+			inputElement.classList.add('input');
+			inputElement.style.paddingLeft = '2.5em'; // Add padding to make room for the icon
+
+			// Step 2: Create the dropdown container
+			const dropdownMenu = document.createElement('div');
+			dropdownMenu.classList.add('dropdown');
+			dropdownMenu.style.cssText = 'width:100%;';
+
+			// Create dropdown menu structure
+			dropdownMenu.innerHTML = `
+			<div class="dropdown-menu" style="width: 100%; left: 0; right: 0;">
+				<div class="dropdown-content" style="max-height: 300px; overflow-y: auto; width: 100%; "></div>
+			</div>
+			`;
+
+			const searchResults = dropdownMenu.querySelector('.dropdown-content');
+			parent.appendChild(dropdownMenu); // Append the dropdown to the parent of the input
+
+
+			let activeIndex = -1;  // Track the currently selected result
+			let results = [];  // Store the current search results
+
+			inputElement.addEventListener('input', async function () {
+			const query = inputElement.value.trim();
+
+			if (query.length > 0) {
+				if (typeof source === 'string') {
+					results = await fetchResults(query); // If source is an API string, use fetch
+				} else if (Array.isArray(source)) {
+					results = filterLocalResults(query); // If source is an array, search locally
+				}
+				displayResults(results);
+			} else {
+				dropdownMenu.classList.remove('is-active');
+				results = [];
+				activeIndex = -1;
+			}
+			});
+
+			// Show all results when the input gains focus
+			inputElement.addEventListener('focus', function () {
+				if (Array.isArray(source)) {
+					// Display all available options
+					results = source;
+					displayResults(results);
+				}
+			});
+			inputElement.addEventListener('focusout', function () {
+				setTimeout(() => {
+					dropdownMenu.classList.remove('is-active');
+					activeIndex = -1; // Reset the active index
+				}, 100);
+			});
+
+			// Fetch results from API
+			async function fetchResults(query) {
+				try {
+					const response = await fetch(`${source}?name=${query}`);
+					const data = await response.json();
+					return data.results || [];
+				} catch (error) {
+					console.error('Error fetching results:', error);
+					return [];
+				}
+			}
+
+			// Filter results from local array
+			function filterLocalResults(query) {
+				const lowerCaseQuery = query.toLowerCase();
+				return source.filter(item => item.toLowerCase().includes(lowerCaseQuery));
+			}
+
+			function displayResults(results) {
+				searchResults.innerHTML = '';
+				activeIndex = -1; // Reset the active index
+
+				if (results.length === 0) {
+					searchResults.innerHTML = '<div class="dropdown-item">No results found</div>';
+				} else {
+					results.forEach((result, index) => {
+						const item = document.createElement('a');
+						item.classList.add('dropdown-item');
+						item.textContent = typeof result === 'string' ? result : result.name; // Handle both string and object results
+						item.addEventListener('click', () => selectResult(index));
+						searchResults.appendChild(item);
+					});
+				}
+				dropdownMenu.classList.add('is-active');
+			}
+
+			function selectResult(index) {
+				if (results[index]) {
+					const selectedValue = typeof results[index] === 'string' ? results[index] : results[index].name;
+					inputElement.value = selectedValue; // Populate the input with selected result
+					dropdownMenu.classList.remove('is-active');
+					activeIndex = -1; // Reset the active index
+				}
+			}
+
+			inputElement.addEventListener('keydown', function (e) {
+				const items = searchResults.getElementsByClassName('dropdown-item');
+				if (e.key === 'ArrowDown') {
+					e.preventDefault();
+					if (activeIndex < items.length - 1) {
+						activeIndex++;
+						updateActiveItem(items);
+					}
+				} else if (e.key === 'ArrowUp') {
+					e.preventDefault();
+					if (activeIndex > 0) {
+						activeIndex--;
+						updateActiveItem(items);
+					}
+				} else if (e.key === 'Enter') {
+					e.preventDefault();
+					if (activeIndex >= 0) {
+						selectResult(activeIndex);
+					}
+				}
+			});
+
+			function updateActiveItem(items) {
+				// Remove 'is-selected' class from all items
+				for (let i = 0; i < items.length; i++) {
+					items[i].classList.remove('is-selected');
+				}
+
+				// Add 'is-selected' class to the active item
+				if (items[activeIndex]) {
+					items[activeIndex].classList.add('is-selected');
+				}
+			}
+		}),
 		"GenerateInfoStrip": (function ($fetch, tlegend, id = '') {
 			if ($fetch !== false) {
 				legend = tlegend;
@@ -4961,7 +5134,7 @@ export class Utility {
 		"CSV": function ($fetch, tlegend, id = '') { },
 		"Kanban": function ($fetch, tlegend, id = '') { },
 		"Timeline": function ($fetch, tlegend, id = '') { }
-	};
+	}
 	// NOTE - Datastore related methods
 	DataStore = {
 		// NOTE - SurrealDB
@@ -5145,37 +5318,6 @@ export class Utility {
 					return `DELETE ${recordID};
 `;
 				}).bind(this),
-				"GenerateQueryString"(form) { 
-					if (form === undefined) {
-						throw new Error('Form is undefined');
-					}
-
-					let form_schema_keys = Object.keys(form.Dataset.Schema);
-			
-					let array_query = ["begin transaction;"];
-				
-					for (let index = 1; index <= 5; index++) {
-						let pid = `TFKB/V${ParadigmREVOLUTION.Utility.Numbers.Pad(index, 4)}`;
-				
-						form.Properties.PID = pid;
-						form.Properties.Chain.ID = `CHAIN/${pid}`;
-						form.Properties.Chain.Segment = '';
-						form.Properties.Chain.SegmentOrder = 0;
-						let q = `create test:\`${pid}/${index}\` content ${JSON.stringify(form)};`;
-						array_query.push(q); // qstr += q;
-					}
-					array_query.push("commit transaction;");
-				
-					let qstr = "";
-					array_query.forEach(d => {
-						console.log('d :>> ', d);
-						qstr += d + "\n\n";
-					});
-					return {
-						"string": qstr,
-						"array": array_query
-					}
-				}
 			},
 			"Get": function (self, target = 'Local') {
 				//Load nodes from IndexedDB SurrealDB instance

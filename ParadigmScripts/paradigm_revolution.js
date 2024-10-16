@@ -30,6 +30,145 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	let template__edge = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
 	window.template__edge = template__edge;
 
+	let makeForm = JSON.parse(JSON.stringify(template__node));
+
+	makeForm.Dataset.Schema = {
+		Dataset_Definition: JSON.parse(JSON.stringify(template__node)),
+		Element: JSON.parse(JSON.stringify(template__node)),
+		Layout: JSON.parse(JSON.stringify(template__node))
+	}
+
+	makeForm.Dataset.Layout = {
+		PropertyOrder: ['Dataset_Definition', 'Element', 'Layout'],
+		FormLayout: [
+			[
+				'Dataset_Definition',
+				'Element',
+				'Layout',
+			],
+		]
+	}
+
+	makeForm.Dataset.Schema.Dataset_Definition.Dataset.Layout = {
+		"Form": {
+			"Show": 1,
+			"Label": "Dataset Definition",
+			"ShowLabel": 1,
+		},
+		"Preview": {
+			"Show": 1,
+			"Label": "Dataset Definition",
+			"ShowLabel": 1,
+		}
+	}
+
+	makeForm.Dataset.Schema.Element.Dataset.Layout = {
+		"Form": {
+			"Show": 1,
+			"Label": "Element",
+			"ShowLabel": 1,
+		},
+		"Preview": {
+			"Show": 1,
+			"Label": "Element",
+			"ShowLabel": 1,
+		}
+	}
+
+	makeForm.Dataset.Schema.Layout.Dataset.Layout = {
+		"Form": {
+			"Show": 1,
+			"Label": "Layout",
+			"ShowLabel": 1,
+		},
+		"Preview": {
+			"Show": 1,
+			"Label": "Layout",
+			"ShowLabel": 1,
+		}
+	}
+	makeForm.Dataset.Schema.Dataset_Definition.Dataset.Schema = {
+		"name": {
+			"label": "Nama",
+			"type": "text",
+			"form": 1,
+		},
+		"label": {
+			"label": "Label",
+			"type": "text",
+			"form": 1,
+		},
+		"form": {
+			"label": "Form",
+			"type": "boolean",
+			"form": 1,
+		}
+	}
+	makeForm.Dataset.Schema.Element.Dataset.Schema = {
+		"name": {
+			"label": "Nama",
+			"type": "text",
+			"form": 1,
+		},
+		"label": {
+			"label": "Label",
+			"type": "text",
+			"form": 1,
+		},
+		"type": {
+			"label": "Type",
+			"type": "array",
+			"form": 1,
+			"subtype": "select",
+			"select_values": ["text", "number", "boolean", "select", "textarea", "button", "separator"]
+		},
+		"form": {
+			"label": "Form",
+			"type": "boolean",
+			"form": 1,
+		},
+		"value": {
+			"label": "Value",
+			"type": "text",
+			"form": 1,
+		},
+		"readonly": {
+			"label": "Readonly",
+			"type": "boolean",
+			"form": 1,
+		},
+		"value": {
+			"label": "Value",
+			"type": "text",
+			"form": 1,
+		},
+		"subtype": {
+			"label": "Subtype",
+			"type": "array",
+			"form": 1,
+			"subtype": "select",
+			"select_values": ["select", "textarea"]
+		},
+		"select_values": {
+			"label": "Select Values",
+			"type": "array",
+			"form": 1,
+			"select_values": ['Voluptates','dolores','qui','eum','adipisci','non','ut','occaecati','Et','expedita','autem','distinctio','commodi','sapiente','Harum','et','facere','non', 'Ipsum','laudantium','eius','dicta','consequatur','quaerat'],
+		},
+		"add_element": {
+			"label":"Add Element",
+			"type": "button",
+			"form":1
+		}
+	}
+	makeForm.Dataset.Schema.Layout.Dataset.Schema = {
+		"add_new_line": {
+			"label": "Add New Line",
+			"type": "button",
+			"form": 1,
+		}
+	}
+
 	let form = JSON.parse(JSON.stringify(template__node));
 	form.Dataset.Schema = {
 		informasi_faktur: JSON.parse(JSON.stringify(template__node)),
@@ -70,13 +209,14 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
+	
 	form.Dataset.Schema.informasi_faktur.Dataset.Schema = {
 		"nomor_purchase_order": {
 			"label": "Nomor PO",
 			"type": "text",
 			"form": 1,
 			"subtype": "select",
-			"select_values": ['Lorem', 'Ipsum', 'Dolor', 'Amet']
+			"select_values": ['Voluptates','dolores','qui','eum','adipisci','non','ut','occaecati','Et','expedita','autem','distinctio','commodi','sapiente','Harum','et','facere','non', 'Ipsum','laudantium','eius','dicta','consequatur','quaerat']
 		},
 		"nomor_mesin": {
 			"type": "text",
@@ -88,6 +228,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"readonly": 1
 		},
 		"id_dealer": {
+			"label": "ID Dealer",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
@@ -214,7 +355,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		"type": {
 			"type": "text",
 			"form": 1,
-			"subtype": "select"
+			"subtype": "select",
+			"select_values": ['Voluptates','dolores','qui','eum','adipisci','non','ut','occaecati','Et','expedita','autem','distinctio','commodi','sapiente','Harum','et','facere','non', 'Ipsum','laudantium','eius','dicta','consequatur','quaerat']
 		},
 		"kode_atpm": {
 			"type": "text",
@@ -369,9 +511,19 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	let suql = ParadigmREVOLUTION.Utility.DataStore.SurrealDB.SurrealQL;
 	window.suql = suql;
 
-	let q = suql.GenerateQueryString(form);
-	console.log('q :>> ', q);
-	let qstr = q.string;
+
+	let qstr = {
+		"string": "begin transaction;\n\n",
+		"array":['begin transaction']
+	};
+	for (let index = 1; index <= 5; index++) {
+		let q = `create test:{ "DocumentType": "TFKB", "Version": 1, "DocumentID":${index}} content ${JSON.stringify(form)};`;
+		qstr.string += q+"\n\n";
+		qstr.array.push(q);
+	};
+	qstr.string += 'commit transaction;';
+	qstr.array.push('commit transaction;');
+
 
 	(async () => {
 		if (qstr != "") {
@@ -379,7 +531,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 			console.log('Insert into RAM DB');
 			await ram_db.Instance.connect('mem://');
-			await ram_db.Instance.query(qstr);
+			await ram_db.Instance.query(qstr.string);
 
 			// console.log('Insert into TEST DB');
 			// await test_db.Instance.connect(test_db.Metadata.ConnectionInfo[0]);
@@ -393,81 +545,97 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	(async () => {
 		await ram_db.Instance.connect('mem://');
-		let formgen = new ParadigmREVOLUTION.SystemCore.Modules.FormGenerator();
-		let formdata = await ram_db.Instance.query(`select * from test where Properties.PID contains 'TFKB/V0001' order by id`);
+		let formgen = ParadigmREVOLUTION.Utility.Forms;
+		let formdata = await ram_db.Instance.query(`select * from test where id.DocumentType contains 'TFKB' order by id`);
 		let str = {};
 		formdata = formdata[0][0];
-		console.log('formdata :>> ', formdata.Dataset);
-		formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {
-			console.log('d :>> ', d, formdata.Dataset.Schema[d]);
-			// str[formdata.Dataset.Schema[d].Properties.Chain.Segment] = '';
-			
-			str[d] = formgen.GenerateForm('informasi_faktur', formdata.Dataset.Schema[d].Dataset.Schema);
-			// let tstr = formgen.GenerateForm(formdata.Dataset.Schema[d].Properties.Chain.Segment, formdata.Dataset.Schema[d].Dataset.Schema);
-			// console.log('formdata.Dataset.Schema[d].Dataset.Schema :>> ', formdata.Dataset.Schema[d].Dataset.Schema);
-			// console.log('tstr :>> ', tstr);
+		console.log('formdata :>> ', formdata);
+		formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {			
+			str[d] = formgen.GenerateForm(d, formdata.Dataset.Schema[d].Dataset.Schema);
 		});
 		console.log('form string str :>> ', str);
 		Object.keys(str).forEach((d, i) => {
 			console.log('keys:>', d);
 		})
-		let gridstr = ''; // Start the outer container
-		// Iterate through the FormLayout
+		let gridstr = ''; 
 		formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
-			// gridstr += `<div uk-grid class="uk-grid-match uk-child-width-expand@s uk-child-width-expand@m uk-child-width-expand@l">`; // Start a new row for each inner array
-			gridstr += `<div class="uk-flex uk-flex-top uk-flex-center">`; 
-			// Iterate through each item (column) in the current row
+			// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
+			gridstr += `<div class="columns is-1 is-multiline is-centered">`; 
 			d.forEach((dd, ii) => {
 				gridstr += `
-					<div class="uk-card uk-card-default uk-flex-stretch uk-margin-small-top uk-margin-small-bottom uk-margin-small-left uk-margin-small-right uk-width-1-${d.length}@m uk-width-1-${d.length}@l uk-width-expand@s">
-						<h5 class="uk-card-title uk-margin-small-top uk-margin-small-left">${ParadigmREVOLUTION.Utility.Strings.ReadableUCWords(dd)}</h5>
-						<div class="uk-card-body uk-padding-medium uk-padding-remove-top">${str[dd]}</div>
+					<div class="column ${d.length == 1 ? 'is-10 is-variable ':''} is-flex">
+						<div class="card is-flex-grow-1">
+							<div class="card-header">
+								<div class="card-header-icon">
+									<i class="fa fa-tv"></i>
+								</div>
+								<div class="card-header-title">
+									<h3 class="has-text-weight-bold">${ParadigmREVOLUTION.Utility.Strings.ReadableUCWords(dd)}</h3>
+								</div>
+							</div>
+							<div class="card-content">
+								<div class="content">
+									${str[dd]}
+									
+								</div>
+							</div>
+						</div>
 					</div>
-				`; // Append the current element in a div
+				`;
 			});
 			gridstr += '</div>'; // Close the row
 		});
-
-		// Output the final HTML string
-		console.log(gridstr);
-
-		// document.querySelector('#app_container').innerHTML = gridstr;
-	
+		// console.log(gridstr);
+		document.querySelector('#testform').innerHTML = gridstr;	
 	})();
+	
+	let formgen = new ParadigmREVOLUTION.SystemCore.Modules.FormGenerator();
+	let str = {};
+	let gridstr = ''; 
 
-	// ram_db.Instance.connect('mem://')
-	// 	.then(() => ram_db.Instance.query(`select * from test where Properties.PID contains 'TFKB/V0001' order by id`))
-	// 	.then(data => {
-	// 		form.Dataset.Schema = data[0];
-	// 		console.log('form.Dataset.Schema :>> ', form.Dataset.Schema);
-	// 		form.Dataset.Schema.forEach((d, i) => {
-	// 			// console.log('d :>> ', d.Properties.Chain.Segment);
-	// 			// str[d.Properties.Chain.Segment] = formgen.GenerateForm('informasi_faktur', d.Dataset.Schema);
-	// 			let tstr = formgen.GenerateForm(d.Properties.Chain.Segment, d.Dataset.Schema);
-	// 			// console.log('d.Dataset.Schema :>> ', d.Dataset.Schema);
-	// 			// console.log('tstr :>> ', tstr);
-	// 			str[d.Properties.Chain.Segment] = '';
-	// 		});
-	// 		console.log('str :>> ', str);
-			// select id, Properties, Dataset, (fn::traverse_v4($this.id, |$el| SELECT VALUE (->edge->test) FROM $el LIMIT 1, 0, 99)).{id, Properties, Dataset} as next  from test where Properties.PID contains 'TFKB/V0001' and Properties.Chain.Head = true order by id;
-			// document.querySelector('#app_container').style = `width:80%;`;
-			// document.querySelector('#app_container').classList = ``;
-			// document.querySelector('#app_container').innerHTML = `
-			// 	<div uk-grid class="uk-child-width-expand@s">
-			// 		<div class="uk-card uk-card-default uk-card-small"><h4 class="uk-card-header uk-margin-remove">${informasi_faktur.Dataset.Layout.Form.Label}</h4><div class="uk-card-body ">${str.informasi_faktur}</div></div>
-			// 	</div>
-			// 	<div uk-grid class="uk-child-width-expand@s">
-			// 		<div class="uk-card uk-card-default uk-card-small"><h4 class="uk-card-header uk-margin-remove">${informasi_faktur.Dataset.Layout.Form.Label}</h4><div class="uk-card-body ">${str}</div></div>
-			// 		<div class="uk-card uk-card-default uk-card-small"><h4 class="uk-card-header uk-margin-remove">${informasi_faktur.Dataset.Layout.Form.Label}</h4><div class="uk-card-body ">${str}</div></div>
-			// 		<div class="uk-card uk-card-default uk-card-small"><h4 class="uk-card-header uk-margin-remove">${informasi_faktur.Dataset.Layout.Form.Label}</h4><div class="uk-card-body ">${str}</div></div>
-			// 	</div>
-			// 	<div uk-grid class="uk-child-width-expand@s">
-			// 		<div class="uk-card uk-card-default uk-card-small"><h4 class="uk-card-header uk-margin-remove">${informasi_faktur.Dataset.Layout.Form.Label}</h4><div class="uk-card-body ">${str}</div></div>
-			// 		<div class="uk-card uk-card-default uk-card-small"><h4 class="uk-card-header uk-margin-remove">${informasi_faktur.Dataset.Layout.Form.Label}</h4><div class="uk-card-body ">${str}</div></div>
-			// 	</div>
-			// `;
-			// console.log(str);
-	// });
+	str = {};
+	let formdata = makeForm;
+	console.log('formdata :>> ', formdata);
+	formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {			
+		str[d] = formgen.GenerateForm(d, formdata.Dataset.Schema[d].Dataset.Schema);
+	});
+	console.log('form string str :>> ', str);
+	Object.keys(str).forEach((d, i) => {
+		console.log('keys:>', d);
+	})
+	gridstr = ''; 
+	formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
+		// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
+		gridstr += `<div class="columns is-1 is-multiline">`; 
+		d.forEach((dd, ii) => {
+			gridstr += `
+				<div class="column ${d.length == 1 ? 'is-10 is-variable ':''} is-flex">
+					<div class="card is-flex-grow-1">
+						<div class="card-header">
+							<div class="card-header-icon">
+								<i class="fa fa-tv"></i>
+							</div>
+							<div class="card-header-title">
+								<h3 class="has-text-weight-bold">${ParadigmREVOLUTION.Utility.Strings.ReadableUCWords(dd)}</h3>
+							</div>
+						</div>
+						<div class="card-content">
+							<div class="content">
+								${str[dd]}
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			`;
+		});
+		gridstr += '</div>'; // Close the row
+});
+	gridstr += ''; // Close the row
+	// console.log(gridstr);
+	document.querySelector('#formGenerator').innerHTML = gridstr;
+	ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), 'https://rickandmortyapi.com/api/character')
+	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), ['Jaylen', 'Effie', 'Gudrun', 'Bennett', 'Chester']);
 });
 
 if (cr) console.log('<<< <<< <<< <<< ParadigmREVOLUTION');

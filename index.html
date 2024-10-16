@@ -1,70 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport"
-			content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3, minimum-scale=0.1">
-		<link rel="shortcut icon" href="./paradigm_modules/icons/32.png">
-		<!-- <link rel="stylesheet" href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap.min.css"> -->
-		<link rel="stylesheet" href="paradigm_modules/uikit-3.21.13/css/uikit.min.css">
+<html lang="en" data-theme="light">
 
-		<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/fontawesome.min.css">
-		<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/brands.min.css">
-		<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css">
-		<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css">
-		
-		<link rel="stylesheet" href="./node_modules/finderjs/example/finderjs.css">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3, minimum-scale=0.1">
+	<link rel="shortcut icon" href="./paradigm_modules/icons/32.png">
+	<link rel="stylesheet" href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" href="paradigm_modules/uikit-3.21.13/css/uikit.min.css"> -->
 
-		<!-- <link rel="manifest" href="manifest.json"> -->
-		<link rel="stylesheet" href="index_alt.css">
+	<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/fontawesome.min.css">
+	<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/brands.min.css">
+	<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/solid.min.css">
+	<link rel="stylesheet" href="paradigm_modules/fontawesome-free-6.4.0-web/css/all.min.css">
+
+	<link rel="stylesheet" href="node_modules/bulma/css/bulma.min.css">
+
+	<!-- <link rel="stylesheet" href="./node_modules/finderjs/example/finderjs.css"> -->
+
+	<!-- <link rel="manifest" href="manifest.json"> -->
+	<!-- <link rel="stylesheet" href="index_alt.css"> -->
 		<link rel="stylesheet" href="index.css">
-		<title>ParadigmREVOLUTION CONTAINER</title>
-	</head>
-	<body class="dark">
-		<div id="app_container" class="uk-overflow-auto">
-			<div class="uk-grid-match uk-grid-small uk-text-center uk-overflow-auto" uk-grid>
-				<div class="uk-width-1-2@m">
-					<div class="uk-card uk-card-default uk-card-body">1-2@m<br><br><br><br><br><br><br><br><br><br><br><br></div>
-				</div>
-				<div class="uk-width-1-4@m">
-					<div class="uk-card uk-card-default uk-card-body">1-4@m<br><br><br><br><br><br><br><br><br><br><br><br></div>
-				</div>
-				<div class="uk-width-1-4@m">
-					<div class="uk-card uk-card-default uk-card-body">1-4@m<br><br><br><br><br><br><br><br><br><br><br><br></div>
-				</div>
-				<div class="uk-width-1-5@m uk-hidden@l">
-					<div class="uk-card uk-card-secondary uk-card-body">1-5@m<br><br><br><br><br><br><br><br><br><br><br><br><br>hidden@l</div>
-				</div>
-				<div class="uk-width-1-5@m uk-width-1-3@l">
-					<div class="uk-card uk-card-default uk-card-body">1-5@m<br><br><br><br><br><br><br><br><br><br><br><br><br>1-3@l</div>
-				</div>
-				<div class="uk-width-3-5@m uk-width-2-3@l">
-					<div class="uk-card uk-card-default uk-card-body">3-5@m<br><br><br><br><br><br><br><br><br><br><br><br><br>2-3@l</div>
+	<title>ParadigmREVOLUTION CONTAINER</title>
+</head>
+
+<body class="dark">
+	<div class="APP_ROOT_CONTAINER">
+		<div class="APP_MENU" onclick="this.classList.toggle('open')">Menu menu menu menu</div>
+		<div class="APP_CONTAINER">
+			<div class="APP_GRAPH_CONTAINER" onclick="this.classList.toggle('show')">Graph</div>
+			<div class="APP_CONTENT">
+				<div id="app_containerz" class="">
+					<div id="formGenerator" class="container"></div>
+					<div id="testform" class="container"></div>
 				</div>
 			</div>
-			
-			<div class="uk-grid-match uk-grid-small uk-text-center" uk-grid>
-				<div class="uk-width-auto@m uk-visible@l">
-					<div class="uk-card uk-card-primary uk-card-body">auto@m<br>visible@l</div>
-				</div>
-				<div class="uk-width-1-3@m">
-					<div class="uk-card uk-card-default uk-card-body">1-3@m<br><br><br><br><br><br><br><br><br><br><br><br></div>
-				</div>
-				<div class="uk-width-expand@m">
-					<div class="uk-card uk-card-default uk-card-body">expand@m<br><br><br><br><br><br><br><br><br><br><br><br></div>
-				</div>
+			<div class="APP_CONSOLE" onclick="this.classList.toggle('show')">
+				Console
+			<div id="debugging"></div>
 			</div>
+	
 		</div>
-		<div id="debugging"></div>
-		<!-- <script type="text/javascript" 	id="service_worker_loader" 	defer src="./ParadigmScripts/sw_loader.js"></script> -->
-		<script type="module" id="ui_loader" defer src="./paradigm_modules/uikit-3.21.13/js/uikit.min.js"></script>
-		
-		<script type="module" id="finderjs" defer src="./node_modules/finderjs/build/finder.min.js"></script>
-		<script type="module" id="ui_loader" defer src="./ParadigmScripts/UI.js"></script>
-		<script type="text/javascript" id="startup_loader" defer src="./ParadigmScripts/startup.js"></script>
-		<script type="module" id="module_loader" defer src="./ParadigmScripts/module_loader_v2.js"></script>
-		<script type="module" id="surrealdb_loader" defer src="./ParadigmScripts/surrealdb_loader.js"></script>
-		<script type="module" id="graph_loader" defer src="./ParadigmScripts/graph_loader.js"></script>
-		<script type="module" id="paradigm_revolution" defer src="./ParadigmScripts/paradigm_revolution.js"></script>
-	</body>
+		<div class="APP_HELPER" onclick="this.classList.toggle('show');setTimeout(()=>{window.scrollBy({ left: 1000, behavior: 'smooth' })}, 1000)">Helper</div>
+	</div>
+	<!-- <script type="text/javascript" 	id="service_worker_loader" 	defer src="./ParadigmScripts/sw_loader.js"></script> -->
+	<!-- <script type="module" id="ui_loader" defer src="./paradigm_modules/uikit-3.21.13/js/uikit.min.js"></script> -->
+
+	<!-- <script type="module" 			id="mqtt" defer src="./node_modules/mqtt//dist/mqtt.min.js"></script> -->
+	<script type="module" id="finderjs" defer src="./node_modules/finderjs/build/finder.min.js"></script>
+	<script type="module" id="ui_loader" defer src="./ParadigmScripts/UI.js"></script>
+	<script type="text/javascript" id="startup_loader" defer src="./ParadigmScripts/startup.js"></script>
+	<script type="module" id="module_loader" defer src="./ParadigmScripts/module_loader_v2.js"></script>
+	<script type="module" id="surrealdb_loader" defer src="./ParadigmScripts/surrealdb_loader.js"></script>
+	<script type="module" id="graph_loader" defer src="./ParadigmScripts/graph_loader.js"></script>
+	<script type="module" id="paradigm_revolution" defer src="./ParadigmScripts/paradigm_revolution.js"></script>
+</body>
+
 </html>

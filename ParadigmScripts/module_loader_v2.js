@@ -9,7 +9,7 @@ if (cr) console.log('>>> Module Loader');
 // import { surrealdbWasmEngines } from '../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js';
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 
-let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surrealdbWasmEngines;
+let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
 	"SystemCore": {
@@ -86,6 +86,12 @@ let ParadigmREVOLUTION = {
 				"Label": "FinderJS",
 				"ShortLabel": "FJS"
 			},
+			"MQTT": {
+				"Status": "NOT LOADED",
+				"Icon": "link",
+				"Label": "MQTT",
+				"ShortLabel": "MQTT"
+			},
 		},
 		"Modules": {
 			"Utility": Utility,
@@ -94,7 +100,8 @@ let ParadigmREVOLUTION = {
 			"WorkerThread": WorkerThread,
 			"Flowchart": Flowchart,
 			"Surreal": Surreal,
-			"surrealdbWasmEngines": surrealdbWasmEngines
+			"surrealdbWasmEngines": surrealdbWasmEngines,
+			"mqtt": mqtt
 		},
 		"Blueprints": {
 			"URL": {
@@ -175,7 +182,6 @@ if (typeof finder !== 'undefined') {
 		console.error("Failed to import Utility.");
 	}
 })();
-
 (async () => {
 	const moduleHandlers = [
 		{
@@ -267,6 +273,22 @@ if (typeof finder !== 'undefined') {
 				console.error("Failed to import Surreal.");
 			}
 		},
+		// {
+		// 	importPromise: import("../../node_modules/mqtt/dist/mqtt.min.js"),
+		// 	onSuccess: (module) => {
+		// 		const { mqtt } = module;
+		// 		if (cr) console.log(">>> ||| MQTT imported successfully.");
+		// 		console.log('mqtt', mqtt);
+		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.MQTT.Status = "LOADED";
+		// 		ParadigmREVOLUTION.SystemCore.Modules.MQTT = mqtt;
+		// 		document.dispatchEvent(new Event('MQTTLoaded'));
+		// 	},
+		// 	onFailure: () => {
+		// 		document.querySelector('#debugging').innerHTML += "Failed to import MQTT.<br>";
+		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.MQTT.Status = "FAILED TO LOAD";
+		// 		console.error("Failed to import MQTT.");
+		// 	}
+		// },
 	];
 	for (const handler of moduleHandlers) {
 		try {
