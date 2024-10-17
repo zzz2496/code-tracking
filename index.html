@@ -28,20 +28,33 @@
 	<div class="APP_ROOT_CONTAINER">
 		<div class="APP_MENU" onclick="this.classList.toggle('open')">Menu menu menu menu</div>
 		<div class="APP_CONTAINER">
-			<div class="APP_GRAPH_CONTAINER" onclick="this.classList.toggle('show')">Graph</div>
+			<div class="APP_GRAPH_CONTAINER">
+				<div class="columns is-vcentered is-mobile">
+					<div class="column is-left">
+						<button class="button is-default" onclick="document.querySelector('.APP_GRAPH_CONTAINER').classList.toggle('show')">Graph</button>
+					</div>
+					<div class="column is-right has-text-right">
+						<button class="button is-primary" onclick="document.querySelector('.APP_CONSOLE').classList.toggle('show')">Console</button>
+						<button class="button is-warning" onclick="document.querySelector('.APP_HELPER').classList.toggle('show'); setTimeout(()=>{document.querySelector('.APP_ROOT_CONTAINER').scrollTo({
+							left: document.querySelector('.APP_ROOT_CONTAINER').scrollWidth, // Scroll to the far right (end of container)
+							behavior: 'smooth'
+						});}, 300)">Helper</button>
+					</div>
+				  </div>
+			</div>
 			<div class="APP_CONTENT">
 				<div id="app_containerz" class="">
 					<div id="formGenerator" class="container"></div>
 					<div id="testform" class="container"></div>
 				</div>
 			</div>
-			<div class="APP_CONSOLE" onclick="this.classList.toggle('show')">
+			<div class="APP_CONSOLE">
 				Console
 			<div id="debugging"></div>
 			</div>
 	
 		</div>
-		<div class="APP_HELPER" onclick="this.classList.toggle('show');setTimeout(()=>{window.scrollBy({ left: 1000, behavior: 'smooth' })}, 1000)">Helper</div>
+		<div class="APP_HELPER">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni iste pariatur dolores voluptatibus reiciendis, obcaecati ullam ipsam nihil assumenda ipsum neque harum, sint nostrum adipisci voluptate minima cupiditate consequuntur dolorem?</div>
 	</div>
 	<!-- <script type="text/javascript" 	id="service_worker_loader" 	defer src="./ParadigmScripts/sw_loader.js"></script> -->
 	<!-- <script type="module" id="ui_loader" defer src="./paradigm_modules/uikit-3.21.13/js/uikit.min.js"></script> -->

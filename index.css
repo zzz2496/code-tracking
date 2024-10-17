@@ -1,102 +1,141 @@
-/* General animation for smooth expanding/collapsing */
 * {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-  }
-  
-  /* The root container holds APP_MENU, APP_CONTAINER, and APP_HELPER */
-  .APP_ROOT_CONTAINER {
+}
+/* For WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+	width: 10px; /* Set custom width for vertical scrollbar */
+}
+
+/* For Firefox */
+html {
+	scrollbar-width: thin; /* "thin" is approximately 10px, but this can be changed */
+	scrollbar-color: rgba(0, 0, 0, 0.5) transparent; /* Customize color (optional) */
+}
+
+/* The root container holds APP_MENU, APP_CONTAINER, and APP_HELPER */
+.APP_ROOT_CONTAINER {
 	display: flex;
 	flex-direction: row;
 	height: auto;
-	max-height: 100vh;
 	overflow-x: auto; /* Allows horizontal scroll when content overflows */
 	overflow-y: auto; /* Allows vertical scroll when content overflows */
 	border: 1px solid silver;
 	width: 100vw; /* Ensure it takes full width of the viewport */
-  }
-  
-  /* APP_MENU */
-  .APP_MENU {
-	Flex-grow: 0;
-	Flex-shrink: 0; 
-	Flex-basis: 2rem;
+	/* overflow: hidden;*/
+	/* max-height: fit-content; */
+}
+
+/* APP_MENU */
+.APP_MENU {
+	flex-grow: 0;
+	flex-shrink: 0; 
+	flex-basis: 50px; /* Start with a small fixed width */
 	height: auto;
 	border: 1px solid green;
 	overflow: hidden;
-	transition: flex-basis 0.3s ease;
-  }
-  
-  .APP_MENU.open {
-	flex: 0 0 80vw; /* Expand to 80vw when clicked */
-  }
-  
-  /* APP_CONTAINER */
-  .APP_CONTAINER {
-	/* flex: 1; Fill remaining space */
-	Flex-grow: 0;
-	Flex-shrink: 0; 
-	Flex-basis: 100vw;
+	transition: flex-basis 0.3s ease-in-out;
+}
 
+.APP_MENU.open {
+	flex-grow: 0;
+	flex-shrink: 0; 
+	flex-basis: 80vw; /* Expand to 80vw when clicked */
+}
+
+/* APP_CONTAINER */
+.APP_CONTAINER {
+	flex-grow: 0;
+	flex-shrink: 0;
+	flex-basis: calc(100vw - 65px); /* Calculate remaining space minus initial APP_MENU and APP_HELPER widths */
+	width: calc(100vw - 4rem); /* Same calculation for width */
 	display: flex;
 	flex-direction: column;
 	border: 1px solid red;
-	overflow: visible; /* Content inside can overflow */
-  }
-  
-  /* Inside APP_CONTAINER: APP_GRAPH_CONTAINER, APP_CONTENT, and APP_CONSOLE */
-  .APP_GRAPH_CONTAINER {
-	Flex-grow: 0;
-	Flex-shrink: 0; 
-	Flex-basis: 2rem;
-	height: 2rem;
+	height: auto;
+}
+
+/* Inside APP_CONTAINER: APP_GRAPH_CONTAINER, APP_CONTENT, and APP_CONSOLE */
+.APP_GRAPH_CONTAINER {
+	height: auto;
 	border: 1px solid purple;
-	transition: flex-basis 0.3s ease;
-	overflow: auto;
-  }
-  
-  .APP_GRAPH_CONTAINER.show {
-	flex-basis: 80vh; /* Expands when clicked */
-  }
-  
-  .APP_CONTENT {
+	transition: flex-basis 0.3s ease-in-out, height 0.3s ease-in-out;
+	/* overflow: clip; */
+}
+
+.APP_GRAPH_CONTAINER.show {
+	height: 90vh;
+}
+
+/* .APP_CONTENT {
 	flex: 1;
 	border: 1px solid blue;
 	overflow: auto;
-	transition: max-height 0.3s ease;
-  }
-  
-  .APP_CONSOLE {
+	transition: max-height 0.3s ease-in-out;
+} */
+/* Adjust APP_CONTENT */
+.APP_CONTENT {
+	flex: 1; /* Still take up available space in the flex container */
+	border: 1px solid blue;
+	overflow: visible; /* No scrolling, expand to fit content */
+	display: flex;
+	flex-direction: column; /* Ensure child elements stack vertically */
+	max-height: none; /* Let it grow beyond its container if necessary */
+	padding: 0; /* Ensure no extra space adds to the content size */
+	margin: 0; /* Remove margins to avoid unwanted scroll */
+	box-sizing: border-box; /* Ensure padding/margins are included in size calculations */
+}
+.APP_CONSOLE {
 	height: 2rem;
 	max-height: 80vh;
 	border: 1px solid orange;
 	overflow: auto;
-	transition: max-height 0.3s ease;
-  }
-  
-  /* APP_HELPER */
-  .APP_HELPER {
-	flex: 0 0 2rem;
-	max-width: 20vw;
-	border: 1px solid blue;
-	transition: flex-basis 0.3s ease;
-  }
-  
-  .APP_HELPER.show {
-	flex-basis: 100vw;
-  }
+	transition: max-height 0.3s ease-in-out;
+}
 
-  .APP_CONSOLE {
-	/* height: 2rem; */
-	Flex-grow: 0;
-	Flex-shrink: 0; 
-	Flex-basis: 2rem;
-	border: 1px solid purple;
-	transition: flex-basis 0.3s ease;
+/* APP_HELPER */
+/* .APP_HELPER {
+	flex-grow: 0;
+	flex-shrink: 0; 
+	flex-basis: 0px; 
+	max-width: 80vw;
+	border: 1px solid blue;
+	transition: flex-basis 0.3s ease-in-out, opacity 0.3s ease-in-out;
+	opacity: 0;
+}
+
+.APP_HELPER.show {
+	flex-basis: 80vw;
+	width: 80vw;
+	opacity: 1;
+} */
+
+/* APP_HELPER */
+.APP_HELPER {
+    flex-grow: 0; 
+    flex-shrink: 0; 
+    flex-basis: 0; /* Start with a small fixed width */
+    max-width: 0; /* Ensure it does not exceed its initial width */
+    border: 1px solid blue;
+    transition: flex-basis 0.3s ease-in-out, opacity 0.3s ease-in-out, max-width 0.3s ease-in-out; /* Added max-width transition */
+    opacity: 0; /* Fully transparent when hidden */
+    overflow: hidden; /* Hide any overflow content */
+}
+
+.APP_HELPER.show {
+    flex-basis: 80vw; /* Expand to 80% of the viewport width when opened */
+    max-width: 80vw; /* Ensure maximum width is set */
+    opacity: 1; /* Fully visible when shown */
+}
+
+/* .show behavior for APP_CONSOLE */
+.APP_CONSOLE {
+	height: 2rem;
+	transition: flex-basis 0.3s ease-in-out, height 0.3s ease-in-out;
 	overflow: hidden;
-  }
-  
-  .APP_CONSOLE.show {
-	flex-basis: 80vh; /* Expands when clicked */
-  }
+}
+
+.APP_CONSOLE.show {
+	height: 100vh;
+}
