@@ -1,5 +1,5 @@
 :root {
-    --menu-closed-width: 5.5rem;
+    --menu-closed-width: 5.3rem;
     --menu-open-width: 80vw;
 }
 * {
@@ -15,13 +15,13 @@
 	height: auto;
 	min-height: 0;
 	min-width: 0;
-	overflow: auto;
+	overflow-x: auto; /* Allows horizontal scroll when content overflows */
+	overflow-y: auto; /* Allows vertical scroll when content overflows */
 	/*border: 1px solid silver;*/
 	width: 100vw; /* Ensure it takes full width of the viewport */
 	/* overflow-y: hidden; */
-	padding-right: 2rem;
+	/* padding-right: 1rem; */
 }
-
 
 /* APP_MENU */
 #app_menu {
@@ -40,19 +40,6 @@
 	flex-basis: var(--menu-open-width);
 }
 
-#app_graph_container {
-	height: 80px;
-	border: 1px solid purple;
-	transition: flex-basis 0.3s ease-in-out, height 0.3s ease-in-out;
-	overflow: scroll;
-
-}
-
-#app_graph_container.show {
-	height: 90vh;
-}
-
-
 /* APP_CONTAINER */
 #app_container {
 	flex-grow: 0;
@@ -62,7 +49,7 @@
 	min-height: 0;
 	min-width: 0;
 	overflow-y: auto;
-	width: calc(100vw - var(--menu-closed-width) - 16px); /*Same calculation for width */
+	width: calc(100vw - var(--menu-closed-width)); /*Same calculation for width */
 	display: flex;
 	flex-direction: column;
 	/*border: 1px solid red;*/
@@ -72,22 +59,55 @@
 	/* overflow: hidden; */
 }
 
+/* Inside APP_CONTAINER: APP_GRAPH_CONTAINER, APP_CONTENT, and APP_CONSOLE */
+#app_graph_container {
+	height: 80px;
+	/*border: 1px solid purple;*/
+	transition: flex-basis 0.3s ease-in-out, height 0.3s ease-in-out;
+	/* overflow: scroll; */
+
+}
+
+#app_graph_container.show {
+	height: 90vh;
+}
 
 /* Adjust APP_CONTENT */
 #app_content {
 	flex: 1; /* Still take up available space in the flex container */
 	/*border: 1px solid blue;*/
 	overflow: visible; /* No scrolling, expand to fit content */
-	width: calc(100vw - var(--menu-closed-width) - 16px); /*Same calculation for width */
 	display: flex;
 	flex-direction: column; /* Ensure child elements stack vertically */
 	max-height: none; /* Let it grow beyond its container if necessary */
 	padding: 0; /* Ensure no extra space adds to the content size */
 	margin: 0; /* Remove margins to avoid unwanted scroll */
 	box-sizing: border-box; /* Ensure padding/margins are included in size calculations */
-	padding:1.5Ya rem
+}
+#app_console {
+	height: 2rem;
+	max-height: 80vh;
+	/*border: 1px solid orange;*/
+	overflow: auto;
+	transition: max-height 0.3s ease-in-out;
 }
 
+/* APP_HELPER */
+/* #app_helper {
+	flex-grow: 0; 
+	flex-shrink: 0; 
+	flex-basis: 0; 
+	max-width: 0; 
+	transition: flex-basis 0.3s ease-in-out, opacity 0.3s ease-in-out, max-width 0.3s ease-in-out; 
+	opacity: 0; 
+	overflow: hidden; 
+}
+
+#app_helper.show {
+	flex-basis: 80vw; 
+	max-width: 80vw; 
+	opacity: 1; 
+} */
 
 /* Helper section */
 #app_helper {
@@ -110,7 +130,16 @@
 	overflow: auto;
 }
 
+/* .show behavior for APP_CONSOLE */
+/* #app_console {
+	height: 2rem;
+	transition: flex-basis 0.3s ease-in-out, height 0.3s ease-in-out;
+	overflow: hidden;
+}
 
+#app_console.show {
+	height: 100vh;
+} */
 /* APP_CONSOLE */
 #app_console {
     position: fixed;

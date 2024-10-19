@@ -732,14 +732,37 @@ DEFINE FUNCTION OVERWRITE fn::traverse_v4(
 
 --return fn::traverse_v4(chain:data1_v1_step03, |$el| SELECT VALUE (->version->chain) FROM $el LIMIT 1, 0, 3);
 
+DEFINE FUNCTION OVERWRITE fn::traverse_v4(
+    $el: record,
+    $parent_fn: function,
+    $depth: number,
+    $max_depth: number
+) {
+    IF $depth >= $max_depth {
+        RETURN [];
+    };
 
--- select 
---     *, 
---     (fn::traverse_v4($this.id, |$el| SELECT VALUE (<-next_process<-chain) FROM $el LIMIT 1, 0, 99)).{id, name, process_step} as prev, 
---     (fn::traverse_v4($this.id, |$el| SELECT VALUE (->next_process->chain) FROM $el LIMIT 1, 0, 99)).{id, name, process_step} as next 
--- from chain
--- limit 10
--- ;
+    LET $parent = $parent_fn($el)[0][0];
+
+    IF $parent {
+        RETURN array::prepend(
+            fn::traverse_v4($parent, $parent_fn, $depth + 1, $max_depth),
+            $parent
+        );
+    } ELSE {
+        RETURN [];
+    };
+};
+
+return fn::traverse_v4(chain:data1_v1_step03, |$el| SELECT VALUE (->version->?) FROM $el LIMIT 1, 0, 3);
+
+select 
+    *, 
+    (fn::traverse_v4($this.id, |$el| SELECT VALUE (<-version<-?) FROM $el LIMIT 1, 0, 99)).{id, name, process_step} as prev, 
+    (fn::traverse_v4($this.id, |$el| SELECT VALUE (->version->?) FROM $el LIMIT 1, 0, 99)).{id, name, process_step} as next 
+from chain
+limit 10
+;
 
 define table test schemaless;
 define table edge schemaless;

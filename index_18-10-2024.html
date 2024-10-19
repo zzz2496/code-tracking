@@ -25,8 +25,8 @@
 </head>
 
 <body>
-	<div id="app_root_container" class="columns is-gapless">
-		<div id="app_menu" class="column" onclick="this.classList.toggle('open')">
+	<div id="app_root_container">
+		<div id="app_menu" onclick="this.classList.toggle('open')">
 			<div class="is-flex is-flex-direction-column is-align-items-flex-start">
 				<button class="button is-info">Menu 1</button>
 				<button class="button is-info">Menu 2</button>
@@ -35,39 +35,35 @@
 				<button class="button is-info">Menu 5</button>
 			</div>		
 		</div>
-		<div id="app_container" class="column">
-			<div class="columns is-gapless is-mobile">
-				<div id="app_container_column" class="column">
-					<div id="app_graph_container">
-						<div class="columns is-vcentered is-mobile">
-							<div class="column is-left" style="border: 1px solid gray;">
-								<button class="button is-default"
-									onclick="document.querySelector('#app_graph_container').classList.toggle('show')">Graph</button>
-							</div>
-							<div class="column is-right has-text-right" style="border: 1px solid gray;">
-								<button class="button is-primary"
-									onclick="document.querySelector('#app_console').classList.toggle('show')">
-									<li class="fas fa-terminal"></li>
-								</button>
-								<button class="button is-warning"
-									onclick="document.querySelector('#app_helper').classList.toggle('show'); setTimeout(()=>{document.querySelector('#app_root_container').scrollTo({ left: document.querySelector('#app_root_container').scrollWidth, behavior: 'smooth' });}, 300)">
-									<li class="fas fa-question"></li>
-								</button>
-							</div>
-						</div>
+		<div id="app_container">
+			<div id="app_graph_container">
+				<div class="columns is-vcentered is-mobile">
+					<div class="column is-left">
+						<button class="button is-default"
+							onclick="document.querySelector('#app_graph_container').classList.toggle('show')">Graph</button>
 					</div>
-					<div id="app_content">
-						<div id="app_containerz">
-							<div id="formGenerator" class="container"></div>
-							<div id="testform" class="container"></div>
-						</div>
+					<div class="column is-right has-text-right">
+						<button class="button is-primary"
+							onclick="document.querySelector('#app_console').classList.toggle('show')">
+							<li class="fas fa-terminal"></li>
+						</button>
+						<button class="button is-warning"
+							onclick="document.querySelector('#app_helper').classList.toggle('show'); setTimeout(()=>{document.querySelector('#app_root_container').scrollTo({ left: document.querySelector('#app_root_container').scrollWidth, behavior: 'smooth' });}, 300)">
+							<li class="fas fa-question"></li>
+						</button>
 					</div>
-				</div>	
-				<div id="app_helper" class="column">
-
 				</div>
 			</div>
-	</div>
+			<div id="app_content">
+				<div id="app_containerz">
+					<div id="formGenerator" class="container"></div>
+					<div id="testform" class="container"></div>
+				</div>
+			</div>
+		</div>
+		<div id="app_helper">
+
+		</div>		
 	</div>
 	<div id="app_console">
 		Console
