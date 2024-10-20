@@ -1,5 +1,5 @@
 :root {
-    --menu-closed-width: 5.5rem;
+    --menu-closed-width: 0rem;
     --menu-open-width: 80vw;
 }
 * {
@@ -41,10 +41,11 @@
 }
 
 #app_graph_container {
-	height: 80px;
-	border: 1px solid purple;
+	height: 3.6rem;
+	/* border: 1px solid purple; */
 	transition: flex-basis 0.3s ease-in-out, height 0.3s ease-in-out;
-	overflow: scroll;
+	overflow: auto;
+	padding-right: 1rem;
 
 }
 
@@ -85,7 +86,7 @@
 	padding: 0; /* Ensure no extra space adds to the content size */
 	margin: 0; /* Remove margins to avoid unwanted scroll */
 	box-sizing: border-box; /* Ensure padding/margins are included in size calculations */
-	padding:1.5Ya rem
+	padding:1.5rem
 }
 
 
@@ -114,10 +115,10 @@
 /* APP_CONSOLE */
 #app_console {
     position: fixed;
-    bottom: -70vh; /* Initially hidden below the screen */
+    bottom: -80vh; /* Initially hidden below the screen */
     left: 2vw; /* Center it horizontally */
     width: 96vw; /* 90% of the viewport width */
-    height: 70vh; /* 60% of the viewport height */
+    height: 80vh; /* 60% of the viewport height */
     max-height: 95vh;
     background-color: white; /* Background color */
     border-radius: 10px; /* Rounded corners */
@@ -125,11 +126,11 @@
     overflow: auto;
     transition: transform 0.3s ease-in-out; /* Smooth transition for fly-in/out */
     transform: translateY(0%); /* Start off-screen */
-    resize: both; /* Make it resizable */
+    resize: vertical; /* Make it resizable */
     z-index: 9999; /* Bring it on top of other elements */
     padding: 1rem; /* Add some padding inside */
 }
 
 #app_console.show {
-    transform: translateY(-72vh); /* Fly it up to the visible screen */
+    transform: translateY(-82vh); /* Fly it up to the visible screen */
 }

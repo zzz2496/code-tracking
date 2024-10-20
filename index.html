@@ -40,18 +40,17 @@
 				<div id="app_container_column" class="column">
 					<div id="app_graph_container">
 						<div class="columns is-vcentered is-mobile">
-							<div class="column is-left" style="border: 1px solid gray;">
-								<button class="button is-default"
-									onclick="document.querySelector('#app_graph_container').classList.toggle('show')">Graph</button>
+							<div class="column is-left">
+								<button class="button is-default" onclick="document.querySelector('#app_menu').classList.toggle('open')">&nbsp;<li class="fa fa-bars"></li>&nbsp;</button>
+								<button class="button is-default" onclick="document.querySelector('#app_graph_container').classList.toggle('show')">Graph</button>
 							</div>
-							<div class="column is-right has-text-right" style="border: 1px solid gray;">
+							<div class="column is-right has-text-right">
 								<button class="button is-primary"
 									onclick="document.querySelector('#app_console').classList.toggle('show')">
-									<li class="fas fa-terminal"></li>
+									&nbsp;<li class="fas fa-terminal"></li>&nbsp;
 								</button>
-								<button class="button is-warning"
-									onclick="document.querySelector('#app_helper').classList.toggle('show'); setTimeout(()=>{document.querySelector('#app_root_container').scrollTo({ left: document.querySelector('#app_root_container').scrollWidth, behavior: 'smooth' });}, 300)">
-									<li class="fas fa-question"></li>
+								<button class="button is-warning" onclick="document.querySelector('#app_helper').classList.toggle('show'); setTimeout(()=>{document.querySelector('#app_root_container').scrollTo({ left: document.querySelector('#app_root_container').scrollWidth, behavior: 'smooth' });}, 300)">
+									&nbsp;<li class="fas fa-question"></li>&nbsp;
 								</button>
 							</div>
 						</div>
