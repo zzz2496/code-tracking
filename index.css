@@ -55,30 +55,37 @@
     display: flex;
     flex-direction: column;
     height: auto;
-    padding-bottom: 1.1rem;
-	padding-right: 1.1rem;
+    padding-bottom: 1rem;
+	padding-right: 0rem;
 }
 
 
-/* Inside APP_CONTAINER: APP_GRAPH_CONTAINER, APP_CONTENT, and APP_CONSOLE */
 #app_graph_container {
-	height: 80px;
-	/*border: 1px solid purple;*/
-	transition: flex-basis 0.3s ease-in-out, height 0.3s ease-in-out;
-	/* overflow: scroll; */
+	height: 42px;
+	border: 1px solid purple;
+    max-height: 42px;
+	transition: flex-basis 0.3s ease-in-out, max-height 0.3s ease-in-out, height 0.3s ease-in-out;
+	overflow: hidden;
+	scrollbar-width: none; /* For Firefox: hides scrollbars */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge: hides scrollbars */
+	/* padding-right: 1rem; */
 
 }
-
 #app_graph_container.show {
+	max-height: 90vh;
 	height: 90vh;
+	overflow: auto;
+	padding: 0;
 }
-
+#app_graph_container::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera: hides scrollbars */
+}
 /* Adjust APP_CONTENT */
 #app_content {
 	flex: 1;
 	/* Still take up available space in the flex container */
 	/*border: 1px solid blue;*/
-	overflow: visible;
+	/* overflow: visible; */
 	/* No scrolling, expand to fit content */
 	display: flex;
 	flex-direction: column;
@@ -111,9 +118,10 @@
 	opacity: 0; /* Make sure it's not visible */
 	transition: flex-basis 0.3s ease-in-out, width 0.3s ease-in-out, max-width 0.3s ease-in-out, opacity 0.3s ease-in-out;
 	overflow: hidden;
-	padding-right: 1rem;
-	padding-bottom: 1rem;
-	padding: 0;;
+	/* display: none; */
+	/* padding-right: 1rem;
+	padding-bottom: 1rem; */
+	padding: 0rem;
 	/* border: solid purple 3px; */
 }
 
@@ -124,6 +132,7 @@
 	max-width: 100vw;
 	opacity: 1;
 	overflow: auto;
+	/* display: flex; */
 }
 
 /* APP_CONSOLE */
@@ -160,4 +169,8 @@
 #app_console.show {
 	transform: translateY(-72vh);
 	/* Fly it up to the visible screen */
+}
+
+#graph_container{
+	overflow: auto;
 }

@@ -41,21 +41,26 @@
 					<div class="column is-left is-gapless">
 						<button class="button is-default" onclick="document.querySelector('#app_menu').classList.toggle('open')">&nbsp;<li class="fa fa-bars"></li>&nbsp;</button>
 						<button class="button is-default" onclick="document.querySelector('#app_graph_container').classList.toggle('show')">Graph</button>
+						<button class="button is-default" id="add_graph_button">&nbsp;<li class="fa fa-plus"></li>&nbsp;</button>
 					</div>
 					<div class="column is-right has-text-right is-gapless">
 						<button class="button is-primary" onclick="document.querySelector('#app_console').classList.toggle('show')">
 							&nbsp;<li class="fas fa-terminal"></li>&nbsp;
+						</button>
+						<button class="button is-danger" id="add_form_button">
+							&nbsp;<li class="fas fa-plus"></li>&nbsp;
 						</button>
 						<button class="button is-warning" onclick="document.querySelector('#app_helper').classList.toggle('show'); setTimeout(()=>{document.querySelector('#app_root_container').scrollTo({ left: document.querySelector('#app_root_container').scrollWidth, behavior: 'smooth' });}, 300)">
 							&nbsp;<li class="fas fa-question"></li>&nbsp;
 						</button>
 					</div>
 				</div>
+				<div id="graph_container"></div>
 			</div>
 			<div id="app_content">
-				<div id="app_containerz">
-					<div id="formGenerator" class="container"></div>
-					<div id="testform" class="container"></div>
+				<div id="app_form_container" style="border: solid 1px black;">
+					<div id="formGenerator" class="container" style="border: solid 1px purple;"></div>
+					<div id="testform" class="container" style="border: solid 1px green;"></div>
 				</div>
 			</div>
 		</div>

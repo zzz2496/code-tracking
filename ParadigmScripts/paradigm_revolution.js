@@ -606,11 +606,11 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	gridstr = ''; 
 	formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
 		// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
-		gridstr += `<div class="columns is-1 is-multiline">`; 
+		gridstr += `<div class="">`; 
 		d.forEach((dd, ii) => {
 			gridstr += `
-				<div class="column ${d.length == 1 ? 'is-10 is-variable ':''} is-flex">
-					<div class="card is-flex-grow-1">
+				<div class="section p-1">
+					<div class="card">
 						<div class="card-header">
 							<div class="card-header-icon">
 								<i class="fa fa-tv"></i>
@@ -632,216 +632,41 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		gridstr += '</div>'; // Close the row
 });
 	gridstr += ''; // Close the row
-	// console.log(gridstr);
 	// document.querySelector('#formGenerator').innerHTML = gridstr;
-	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), 'https://rickandmortyapi.com/api/character')
+	document.querySelector('#app_helper').innerHTML = `
+		<div class="columns is-mobile is-gapless" id="test_helper_form">
+			<div class="column" style="min-width:400px;padding:1rem;>${gridstr}</div>
+		</div>`;
+	let t_str = `<div class="column" style="min-width:400px;padding:1rem;">${gridstr}</div>`;
+	document.querySelector('#add_form_button').addEventListener('click', () => {
+		document.querySelector('#test_helper_form').innerHTML += t_str;
+	});
+	ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), 'https://rickandmortyapi.com/api/character')
 	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), ['Jaylen', 'Effie', 'Gudrun', 'Bennett', 'Chester']);
 });
 
+function makeCol(rows, color) { 
+	let str = `<div class="column" style="margin-bottom: 0;min-width: 400px;">`;
+	for (let i = 1; i <=rows; i++) {
+		str += `<div class="card has-background-${color}">
+					<div class="card-header">
+						Card header
+					</div>
+					<div class="card-content">
+						This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</div>
+				</div>`;
+	}
+	str += `</div>`;
+	return str;
+}
+
 if (cr) console.log('<<< <<< <<< <<< ParadigmREVOLUTION');
-// document.querySelector('#app_helper').innerHTML = `
-// 			<div class="columns is-gapless is-mobile">
-// 				<div class="column">
-// 					<div class="card has-background-primary" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-primary" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-primary" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-primary" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-primary" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-primary" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 				</div>
-		
-// 				<div class="column">
-// 					<div class="card has-background-default" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-default" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-default" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-default" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-default" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-default" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 				</div>
-		
-// 				<div class="column">
-// 					<div class="card has-background-warning" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-warning" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-warning" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-warning" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-warning" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-warning" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 				</div>
-		
-// 				<div class="column">
-// 					<div class="card has-background-danger" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-danger" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-danger" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-danger" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-danger" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 					<div class="card has-background-danger" style="margin-bottom: 0;">
-// 						<div class="card-header">
-// 							Card header
-// 						</div>
-// 						<div class="card-content">
-// 							This is a card &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// 						</div>
-// 					</div>
-// 				</div>
-// 			</div>`;
+let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile" ></div>`;
+// document.querySelector('#app_helper').innerHTML = zstr;
+document.querySelector('#graph_container').innerHTML = zstr;
+document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'success');
+document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
+document.querySelector('#add_graph_button').addEventListener('click', () => {
+	document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
+});
