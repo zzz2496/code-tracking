@@ -108,8 +108,8 @@
 #app_menu {
 	flex-grow: 0;
 	flex-shrink: 0;
-	flex-basis: var(--menu-closed-width);
-	height: auto;
+	flex-basis: 500px;
+	height: 500px;
 	/*border: 1px solid green;*/
 	overflow: hidden;
 	transition: flex-basis 0.3s ease-in-out;
@@ -125,7 +125,7 @@
 #app_container {
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: 100vw;
+    flex-basis: 500px;
 	/* width: 100%; */
     min-height: 0;
     min-width: 0;
@@ -141,26 +141,24 @@
 #app_graph_container {
 	width: 100vw;
 	height: 42px;
-    max-height: 42px;
+    max-height: 80px;
 	transition: flex-basis 0.3s ease-in-out, max-height 0.3s ease-in-out, height 0.3s ease-in-out;
 	overflow: hidden;
 	border: solid pink 1px;
-	scrollbar-width: none; 
-    -ms-overflow-style: none; 
+	/* scrollbar-width: none; 
+    -ms-overflow-style: none;  */
 	/* padding-right: 1rem; */
 
 }
 #app_graph_container.show {
 	max-height: 90vh;
-	flex-basis: 50vw;
-
-	height: 90vh;
+	height: auto;
 	overflow: auto;
 	padding: 0;
 	width: 100%;
 }
 #app_graph_container::-webkit-scrollbar {
-    display: none; 
+    /* display: none;  */
 }
 /* Adjust APP_CONTENT */
 #app_content {
@@ -185,7 +183,7 @@
 #app_helper {
 	flex-grow: 0; 
 	flex-shrink: 0; 
-	flex-basis: 0;
+	flex-basis: 500px;
 	width: 0;
 	max-width: 0;
 	opacity: 0;
@@ -232,15 +230,12 @@
 }
 
 #graph_container {
-    width: 99vw;
-    height: 800px;
-	padding-right: 1vh;
-    overflow: auto; /* Make this container scrollable */
+    width: 20000px;
+    height: 20000px;
+    overflow: scroll; /* Make this container scrollable */
     border: solid green 1px; /* Optional for visibility */
-	scrollbar-width: none; 
-    -ms-overflow-style: none;
 }
-
-#graph_container::-webkit-scrollbar {
-    display: none; 
+#app_form_container{
+	height: 500px;
+	width: 500px;
 }

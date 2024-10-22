@@ -586,7 +586,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			gridstr += '</div>'; // Close the row
 		});
 		// console.log(gridstr);
-		document.querySelector('#testform').innerHTML = gridstr;	
+		// document.querySelector('#testform').innerHTML = gridstr;	
 	})();
 	
 	let formgen = new ParadigmREVOLUTION.SystemCore.Modules.FormGenerator();
@@ -635,9 +635,9 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// document.querySelector('#formGenerator').innerHTML = gridstr;
 	document.querySelector('#app_helper').innerHTML = `
 		<div class="columns is-mobile is-gapless" id="test_helper_form">
-			<div class="column" style="min-width:400px;padding:1rem;>${gridstr}</div>
+			<div class="column" style="min-width:400px; width:400px; padding:1rem;>${gridstr}</div>
 		</div>`;
-	let t_str = `<div class="column" style="min-width:400px;padding:1rem;">${gridstr}</div>`;
+	let t_str = `<div class="column is-1" style="min-width:400px; width:400px; padding:1rem;">${gridstr}</div>`;
 	document.querySelector('#add_form_button').addEventListener('click', () => {
 		document.querySelector('#test_helper_form').innerHTML += t_str;
 	});
@@ -662,11 +662,12 @@ function makeCol(rows, color) {
 }
 
 if (cr) console.log('<<< <<< <<< <<< ParadigmREVOLUTION');
-let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile" ></div>`;
+// let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile has-background-primary" style="background: var(--has-background-primary-light);"></div>`;
+let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile" style="width:20000px; height:20000px;">Test graph content</div>`;
 // document.querySelector('#app_helper').innerHTML = zstr;
 document.querySelector('#graph_container').innerHTML = zstr;
-document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'success');
-document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
+// document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'success');
+// document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
 document.querySelector('#add_graph_button').addEventListener('click', () => {
 	document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
 });
