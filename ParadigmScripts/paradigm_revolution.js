@@ -388,7 +388,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		"isi_silinder": {
 			"type": "text",
 			"form": 1,
-			"readonly": 1
+			"readonly": 1,
+			"tail": "cc"
 		},
 		"warna": {
 			"type": "text",
@@ -591,7 +592,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		document.querySelector('#testform').innerHTML = gridstr;	
 	})();
 	
-	let formgen = new ParadigmREVOLUTION.SystemCore.Modules.FormGenerator();
+	let formgen = ParadigmREVOLUTION.Utility.Forms;
 	let str = {};
 	let gridstr = ''; 
 
@@ -648,7 +649,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 });
 
 function makeCol(rows, color) { 
-	let str = `<div class="column" style="margin-bottom: 0;min-width: 400px;">`;
+	let str = `<div class="column" style="margin-bottom: 0;width: 400px; max-width: 400px;">`;
 	for (let i = 1; i <=rows; i++) {
 		str += `<div class="card has-background-${color}">
 					<div class="card-header">

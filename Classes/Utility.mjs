@@ -4741,7 +4741,13 @@ export class Utility {
 					str += `</label></div>`;
 
 					// Input area
-					str += `<div class="field-body"><div class="field">`;
+					str += `<div class="field-body">`;
+					if (d['tail']) {
+						str += `<div class="field has-addons">`;
+					} else {
+						str += `<div class="field">`;
+					}
+
 
 					// Value and class initialization
 					let valz = d['value'] || '';
@@ -4779,9 +4785,23 @@ export class Utility {
 												</div>`;
 								}
 							} else {
-								str += `<div class="control">
-											<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${valz}" ${d.readonly ? 'readonly' : ''} />
-										</div>`;
+								if (d['tail']) {
+									str += `<p class="control">
+												<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${valz}" ${d.readonly ? 'readonly' : ''} />
+											</p>
+											<p class="control">
+												<a class="button is-static">
+													${d['tail']}
+												</a>
+											</p>
+											`;
+								} else { 
+									str += `<div class="control">
+												<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${valz}" ${d.readonly ? 'readonly' : ''} />
+											</div>`;
+
+								}
+			
 							}
 							break;
 
@@ -4826,12 +4846,6 @@ export class Utility {
 									</div>`;
 							break;
 					}
-
-					// Tail (if any)
-					if (d['tail']) {
-						str += `<span class="form-control-feedback right">${d['tail']}</span>`;
-					}
-
 					// Close field-body and field wrappers
 					str += `</div></div></div>`;
 				}
