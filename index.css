@@ -9,11 +9,6 @@
 	padding: 0;
 }
 
-.wavy-background {
-	background-color: var(--bulma-info-light);
-	opacity: 0.8;
-	background-image: repeating-radial-gradient(circle at 0 0, transparent 0, var(--bulma-info-light) 10px), repeating-linear-gradient(var(--bulma-info-invert), var(--bulma-primary-light));
-}
 @media (prefers-color-scheme: light) {
 	.grid2020-background {
 		background-color: var(--bulma-text-95);
@@ -44,7 +39,11 @@
 		background-image: linear-gradient(var(--bulma-text-20) 1px, transparent 1px), linear-gradient(to right, var(--bulma-text-20) 1px, transparent 1px);
 	}
 }
-
+/* .wavy-background {
+	background-color: var(--bulma-info-light);
+	opacity: 0.8;
+	background-image: repeating-radial-gradient(circle at 0 0, transparent 0, var(--bulma-info-light) 10px), repeating-linear-gradient(var(--bulma-info-invert), var(--bulma-primary-light));
+}
 .honeycomb-background {
 	background:
 		radial-gradient(circle farthest-side at 0% 50%, var(--has-background-light) 23.5%, var(--has-background-dark) 0)14.7px 21px,
@@ -88,8 +87,11 @@
 		100px 100px,
 		100px 0,
 		0 100px;
-}
+} */
 
+.required {
+	color: red;
+}
 
 #app_root_container {
 	display: flex;
@@ -116,8 +118,6 @@
 }
 
 #app_menu.open {
-	flex-grow: 0;
-	flex-shrink: 0;
 	flex-basis: var(--menu-open-width);
 }
 
@@ -139,6 +139,8 @@
 
 
 #app_graph_container {
+    flex-grow: 0;
+    flex-shrink: 0;
 	width: 100vw;
 	height: 42px;
     max-height: 42px;
@@ -151,10 +153,10 @@
 
 }
 #app_graph_container.show {
-	max-height: 90vh;
-	flex-basis: 50vw;
+	max-height: 85vh;
+	flex-basis: 85vh;
 
-	height: 90vh;
+	height: 85vh;
 	overflow: auto;
 	padding: 0;
 	width: 100%;
@@ -235,8 +237,8 @@
     width: 99vw;
     height: 800px;
 	padding-right: 1vh;
-    overflow: auto; /* Make this container scrollable */
-    border: solid green 1px; /* Optional for visibility */
+    overflow: auto;
+    /* border: solid green 1px;  */
 	scrollbar-width: none; 
     -ms-overflow-style: none;
 }

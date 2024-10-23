@@ -37,25 +37,21 @@
 		</div>
 		<div id="app_container">
 			<div id="app_graph_container" class="">
-				<div class="columns is-mobile is-gapless" >
-					<div class="column is-left is-gapless" style="border: solid silver 1px;">
-						<button class="button is-default" onclick="document.querySelector('#app_menu').classList.toggle('open')">&nbsp;<li class="fa fa-bars"></li>&nbsp;</button>
-						<button class="button is-default" onclick="document.querySelector('#app_graph_container').classList.toggle('show')">Graph</button>
-						<button class="button is-default" id="add_graph_button">&nbsp;<li class="fa fa-plus"></li>&nbsp;</button>
-					</div>
-					<div class="column is-right has-text-right is-gapless" style="border: solid silver 1px;">
-						<button class="button is-primary" onclick="document.querySelector('#app_console').classList.toggle('show')">
-							&nbsp;<li class="fas fa-terminal"></li>&nbsp;
-						</button>
-						<button class="button is-danger" id="add_form_button">
-							&nbsp;<li class="fas fa-plus"></li>&nbsp;
-						</button>
-						<button class="button is-warning" onclick="document.querySelector('#app_helper').classList.toggle('show'); setTimeout(()=>{document.querySelector('#app_root_container').scrollTo({ left: document.querySelector('#app_root_container').scrollWidth, behavior: 'smooth' });}, 300)">
-							&nbsp;<li class="fas fa-question"></li>&nbsp;
-						</button>
-					</div>
+				<div class="is-flex" >
+					<button class="button is-default" onclick="document.querySelector('#app_menu').classList.toggle('open')">&nbsp;<li class="fa fa-bars"></li>&nbsp;</button>
+					<button class="button is-default" onclick="document.querySelector('#app_graph_container').classList.toggle('show')">Graph</button>
+					<button class="button is-default" id="add_graph_button">&nbsp;<li class="fa fa-plus"></li>&nbsp;</button>
+					<button class="button is-primary" onclick="document.querySelector('#app_console').classList.toggle('show')">
+						&nbsp;<li class="fas fa-terminal"></li>&nbsp;
+					</button>
+					<button class="button is-danger" id="add_form_button">
+						&nbsp;<li class="fas fa-plus"></li>&nbsp;
+					</button>
+					<button class="button is-warning" onclick="document.querySelector('#app_helper').classList.toggle('show'); setTimeout(()=>{document.querySelector('#app_root_container').scrollTo({ left: document.querySelector('#app_root_container').scrollWidth, behavior: 'smooth' });}, 300)">
+						&nbsp;<li class="fas fa-question"></li>&nbsp;
+					</button>
 				</div>
-				<div id="graph_container" class=" grid2020-background">
+				<div id="graph_container" class="">
 					
 				</div>
 			</div>

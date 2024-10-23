@@ -231,7 +231,9 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"label": "ID Dealer",
 			"type": "text",
 			"form": 1,
-			"readonly": 1
+			"readonly": 1,
+			"not_empty": 1
+
 		},
 		"nama_dealer": {
 			"type": "text",
@@ -586,7 +588,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			gridstr += '</div>'; // Close the row
 		});
 		// console.log(gridstr);
-		// document.querySelector('#testform').innerHTML = gridstr;	
+		document.querySelector('#testform').innerHTML = gridstr;	
 	})();
 	
 	let formgen = new ParadigmREVOLUTION.SystemCore.Modules.FormGenerator();
@@ -663,7 +665,7 @@ function makeCol(rows, color) {
 
 if (cr) console.log('<<< <<< <<< <<< ParadigmREVOLUTION');
 // let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile has-background-primary" style="background: var(--has-background-primary-light);"></div>`;
-let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile" style="width:20000px; height:20000px;">Test graph content</div>`;
+let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile grid2020-background" style="width:20000px; height:20000px;">Test graph content</div>`;
 // document.querySelector('#app_helper').innerHTML = zstr;
 document.querySelector('#graph_container').innerHTML = zstr;
 // document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'success');
