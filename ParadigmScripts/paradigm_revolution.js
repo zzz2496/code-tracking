@@ -117,10 +117,11 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		},
 		"type": {
 			"label": "Type",
-			"type": "array",
+			"type": "select",
 			"form": 1,
-			"subtype": "select",
-			"select_values": ["text", "number", "boolean", "select", "textarea", "button", "separator"]
+			"value": ["text", "number", "boolean", "select", "textarea", "button", "separator"],
+			"head": "XOM-",
+			"tail": "-ZZZ"
 		},
 		"form": {
 			"label": "Form",
@@ -211,41 +212,52 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	}
 	
 	form.Dataset.Schema.informasi_faktur.Dataset.Schema = {
-		"nomor_purchase_order": {
+		"001::nomor_purchase_order": {
 			"label": "Nomor PO",
 			"type": "text",
 			"form": 1,
 			"subtype": "select",
-			"select_values": ['Voluptates','dolores','qui','eum','adipisci','non','ut','occaecati','Et','expedita','autem','distinctio','commodi','sapiente','Harum','et','facere','non', 'Ipsum','laudantium','eius','dicta','consequatur','quaerat']
+			"select_values": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
+			"head": "required",
+			"tail": "required"
 		},
-		"nomor_mesin": {
+		"002::nomor_mesin": {
 			"type": "text",
 			"form": 1
 		},
-		"purchase_order": {
+		"003::aktif": {
+			"type": "boolean",
+			"form": 1,
+			"value":1
+		},
+		"0031::hr": {
+			"type": "separator",
+			"form": 1,
+		},
+		"004::purchase_order": {
 			"type": "text",
 			"form": 1,
-			"readonly": 1
+			"readonly": 0
 		},
-		"id_dealer": {
+		"005::id_dealer": {
 			"label": "ID Dealer",
 			"type": "text",
 			"form": 1,
-			"readonly": 1,
+			"readonly": 0,
 			"not_empty": 1
 
 		},
-		"nama_dealer": {
+		"006::nama_dealer": {
 			"type": "text",
 			"form": 1,
-			"readonly": 1
+			"readonly": 0
 		},
-		"nomor_faktur": {
+		"007::nomor_faktur": {
 			"type": "text",
 			"form": 1,
 			"value": "FH/CC"
 		},
-		"tanggal": {
+		"008::tanggal": {
 			"type": "timestamp without time zone",
 			"form": 1
 		}
@@ -265,74 +277,72 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		}
 	}
 	form.Dataset.Schema.identitas_pemilik.Dataset.Schema = {
-		"atas_nama": {
+		"001::atas_nama": {
 			"type": "text",
 			"form": 1
 		},
-		"alamat": {
-			"type": "text",
+		"002::alamat": {
+			"type": "textarea",
 			"form": 1,
-			"subtype": "textarea"
 		},
-		"rt": {
+		"003::rt": {
 			"label": "RT",
 			"type": "text",
 			"form": 0
 		},
-		"rw": {
+		"004::rw": {
 			"label": "RW",
 			"type": "text",
 			"form": 0
 		},
-		"desa": {
+		"005::desa": {
 			"type": "text",
 			"form": 0
 		},
-		"kelurahan": {
+		"006::kelurahan": {
 			"type": "text",
 			"form": 0
 		},
-		"kecamatan": {
+		"007::kecamatan": {
 			"type": "text",
 			"form": 0
 		},
-		"kabupaten_kota": {
-			"label": "Kabupaten/Kota",
+		"008::kabupaten_kota": {
+			"label": "Kabupaten / Kota",
 			"type": "text",
 			"form": 1,
 			"subtype": "select"
 		},
-		"SAMSAT": {
+		"009::SAMSAT": {
 			"type": "text",
 			"form": 1,
-			"readonly": 1
+			"readonly": 0
 		},
-		"provinsi": {
+		"010::provinsi": {
 			"type": "text",
 			"form": 1,
-			"readonly": 1
+			"readonly": 0
 		},
-		"kebangsaan": {
+		"011::kebangsaan": {
 			"type": "text",
 			"form": 1,
 			"value": "INDONESIA"
 		},
-		"nomor_ktp_tdp": {
+		"012::nomor_ktp_tdp": {
 			"label": "Nomor KTP/TDP",
 			"type": "text",
 			"form": 1
 		},
-		"pekerjaan": {
+		"013::pekerjaan": {
 			"type": "text",
 			"form": 1
 		},
-		"hp": {
+		"014::nomor_hp": {
 			"type": "text",
 			"class": "cellphone_input_test",
 			"form": 1,
 			"string_not_empty": 1
-		}
-
+		},
 	}
 
 	form.Dataset.Schema.identitas_kendaraan.Dataset.Layout = {
@@ -348,80 +358,84 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		}
 	}
 	form.Dataset.Schema.identitas_kendaraan.Dataset.Schema = {
-		"id_type": {
+		"001::id_type": {
 			"label": "ID Type",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"type": {
-			"type": "text",
+		"002::type": {
+			"label": "Type",
+			"type": "select",
 			"form": 1,
-			"subtype": "select",
-			"select_values": ['Voluptates','dolores','qui','eum','adipisci','non','ut','occaecati','Et','expedita','autem','distinctio','commodi','sapiente','Harum','et','facere','non', 'Ipsum','laudantium','eius','dicta','consequatur','quaerat']
+			"value": ['Voluptates','dolores','qui','eum','adipisci','non','ut','occaecati','Et','expedita','autem','distinctio','commodi','sapiente','Harum','et','facere','non', 'Ipsum','laudantium','eius','dicta','consequatur','quaerat'],
+			"head": "XOM-",
+			"tail": "-ZZZ"
 		},
-		"kode_atpm": {
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		"merk": {
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		"jenis": {
+		"003::kode_atpm": {
+			"label": "Kode ATPM",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"model": {
+		"04::merk": {
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"tahun_pembuatan": {
+		"005::jenis": {
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"isi_silinder": {
+		"006::model": {
 			"type": "text",
 			"form": 1,
-			"readonly": 1,
-			"tail": "cc"
+			"readonly": 1
 		},
-		"warna": {
+		"007::tahun_pembuatan": {
+			"type": "number",
+			"form": 1,
+			"readonly": 1
+		},
+		"008::isi_silinder": {
+			"type": "number",
+			"form": 1,
+			"readonly": 0,
+			"tail": "cc",
+			"value": 0
+		},
+		"009::warna": {
 			"type": "text",
 			"form": 1
 		},
-		"no_rangka_nik_vin": {
-			"label": "No. Rangka/NIK/VIN",
+		"010::no_rangka_nik_vin": {
+			"label": "Nomor Rangka / NIK / VIN",
 			"type": "text",
 			"form": 1
 		},
-		"pib": {
+		"011::pib": {
 			"label": "PIB",
 			"type": "text",
 			"form": 1
 		},
-		"srut": {
+		"012::srut": {
 			"label": "SRUT",
 			"type": "text",
 			"form": 1,
 			"value": "SRUT/AJ"
 		},
-		"nomor_mesin": {
+		"013::nomor_mesin": {
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"bahan_bakar": {
+		"014::bahan_bakar": {
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"harga": {
+		"015::harga": {
 			"type": "numeric",
 			"form": 0,
 			"tail": "IDR"
@@ -442,27 +456,27 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		}
 	}
 	form.Dataset.Schema.data_pendukung.Dataset.Schema = {
-		"formulir_ab": {
+		"001::formulir_ab": {
 			"label": "Formulir A/B",
 			"type": "text",
 			"form": 1
 		},
-		"pib": {
+		"002::pib": {
 			"label": "PIB",
 			"type": "text",
 			"form": 1
 		},
-		"tpt": {
+		"003::tpt": {
 			"label": "TPT",
 			"type": "text",
 			"form": 1
 		},
-		"sut": {
+		"004::sut": {
 			"label": "SUT",
 			"type": "text",
 			"form": 1
 		},
-		"srut": {
+		"005::srut": {
 			"label": "SRUT",
 			"type": "text",
 			"form": 1,
@@ -483,20 +497,17 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		}
 	}
 	form.Dataset.Schema.keterangan.Dataset.Schema = {
-		"keterangan": {
-			"type": "text",
+		"001::keterangan": {
+			"type": "textarea",
 			"form": 1,
-			"subtype": "textarea"
 		},
-		"keterangan2": {
-			"type": "text",
+		"002::keterangan2": {
+			"type": "textarea",
 			"form": 1,
-			"subtype": "textarea"
 		},
-		"keterangan3": {
-			"type": "text",
+		"003::keterangan3": {
+			"type": "textarea",
 			"form": 1,
-			"subtype": "textarea"
 		}
 	}
 
@@ -556,10 +567,10 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {			
 			str[d] = formgen.GenerateForm(d, formdata.Dataset.Schema[d].Dataset.Schema);
 		});
-		console.log('form string str :>> ', str);
-		Object.keys(str).forEach((d, i) => {
-			console.log('keys:>', d);
-		})
+		// console.log('form string str :>> ', str);
+		// Object.keys(str).forEach((d, i) => {
+			// console.log('keys:>', d);
+		// })
 		let gridstr = ''; 
 		formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
 			// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
@@ -588,8 +599,25 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			});
 			gridstr += '</div>'; // Close the row
 		});
+		gridstr += `
+		<div class="field is-grouped is-grouped-centered">
+			<p class="control">
+				<button class="button is-primary">
+				Konfirmasi
+				</button>
+			</p>
+			<p class="control">
+				<a class="button is-light">
+				Reset
+				</a>
+			</p>
+		</div>
+		`;
+		let newElement = document.createElement('div');
+		newElement.innerHTML = gridstr;
+		
 		// console.log(gridstr);
-		document.querySelector('#testform').innerHTML = gridstr;	
+		document.querySelector('#testform').append(newElement);
 	})();
 	
 	let formgen = ParadigmREVOLUTION.Utility.Forms;
@@ -638,13 +666,13 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// document.querySelector('#formGenerator').innerHTML = gridstr;
 	document.querySelector('#app_helper').innerHTML = `
 		<div class="columns is-mobile is-gapless" id="test_helper_form">
-			<div class="column" style="min-width:400px; width:400px; padding:1rem;>${gridstr}</div>
+			<div class="column" style="min-width:400px; max-width:400px; width:400px; padding:1rem;>${gridstr}</div>
 		</div>`;
-	let t_str = `<div class="column is-1" style="min-width:400px; width:400px; padding:1rem;">${gridstr}</div>`;
+	let t_str = `<div class="column is-1" style="min-width:400px; max-width:400px; width:400px; padding:1rem;">${gridstr}</div>`;
 	document.querySelector('#add_form_button').addEventListener('click', () => {
 		document.querySelector('#test_helper_form').innerHTML += t_str;
 	});
-	ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), 'https://rickandmortyapi.com/api/character')
+	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), 'https://rickandmortyapi.com/api/character')
 	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), ['Jaylen', 'Effie', 'Gudrun', 'Bennett', 'Chester']);
 });
 
@@ -668,7 +696,7 @@ if (cr) console.log('<<< <<< <<< <<< ParadigmREVOLUTION');
 // let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile has-background-primary" style="background: var(--has-background-primary-light);"></div>`;
 let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile grid2020-background" style="width:20000px; height:20000px;">Test graph content</div>`;
 // document.querySelector('#app_helper').innerHTML = zstr;
-document.querySelector('#graph_container').innerHTML = zstr;
+document.querySelector('#app_graph_container').innerHTML = zstr;
 // document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'success');
 // document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
 document.querySelector('#add_graph_button').addEventListener('click', () => {

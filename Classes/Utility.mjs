@@ -135,15 +135,6 @@ const OperatorTemplate = {
 //SECTION - Utility Class
 export class Utility {
 	constructor(cr) {
-		if (cr) {
-			// console.log("Utility class initialized !");
-			this.cr = cr;
-		}
-		// this.zoom_level = 1;
-		// this.activeElement = null;
-		// this.makingConnection = false;
-		// this.ConnectionDirection = null;
-
 		this.characterSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=_+[]{}|;:",.<>?/~`';
 		this.passwordLength = 16;
 		this.Operators = OperatorTemplate;
@@ -4724,136 +4715,105 @@ export class Utility {
 			}
 		}).bind(this),
 		"GenerateForm": (function ($id, $schema) {
+			function makeField($id, i, d_class, $type, fieldContent, readonly, $head, $tail, utilily) {
+				let inputField = '';
+			
+				// Determine the input type (e.g., text, select, checkbox, etc.)
+				switch ($type) {
+					case 'separator':
+						inputField = `<hr />`;
+					break;
+					case 'boolean':
+						inputField = `	
+						<label class="checkbox">
+							<input type="checkbox" id="${$id}___${i}" name="${i}" class="checkbox is-large ${d_class}" ${fieldContent ? 'checked' : ''} ${readonly ? 'disabled' : ''} />
+							${utilily.Strings.UCwords(i.replace(/\_/g, ' '))}
+						</label>`;
+					break;
+					case 'number':
+						inputField = `<input type="number" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} />`;
+						break;
+					case 'textarea':
+						inputField = `<textarea id="${$id}___${i}" name="${i}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''}>${fieldContent}</textarea>`;
+						break;
+					
+					case 'select':
+						inputField = `<div class="select">
+										<select id="${$id}___${i}" name="${i}" class="text_input ${d_class}">
+											${Array.isArray(fieldContent) ? fieldContent.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+										</select>
+									  </div>`;
+						break;
+			
+					case 'checkbox':
+						inputField = `<input type="checkbox" id="${$id}___${i}" name="${i}" class="${d_class}" ${fieldContent ? 'checked' : ''} />`;
+						break;
+			
+					default: // 'text' or other default cases
+						inputField = `<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} />`;
+						break;
+				}
+			
+				// Handle $head and $tail cases
+				if (!$head && !$tail) {
+					return `<div class="control">${inputField}</div>`;
+				}
+			
+				if (!$head && $tail) {
+					return `<p class="control">${inputField}</p><p class="control"><a class="button is-static">${$tail}</a></p>`;
+				}
+			
+				if ($head && !$tail) {
+					return `<p class="control"><a class="button is-static">${$head}</a></p><p class="control">${inputField}</p>`;
+				}
+			
+				return `<p class="control"><a class="button is-static">${$head}</a></p><p class="control">${inputField}</p><p class="control"><a class="button is-static">${$tail}</a></p>`;
+			}
 			let str = '<div class="paradigm-form">';
-
 			Object.entries($schema).forEach(([i, d]) => {
 				if (d['form'] === 1) {
-					// Create field wrapper with horizontal form structure
 					str += `<div class="field is-horizontal">`;
 
-					// Label
-					let label = d['label'] || i.replace(/_/g, ' ').toUpperCase();
-					str += `<div class="field-label is-normal">
-								<label class="label" id="id_label___${$id}___${i}">${d['label'] != undefined ? d['label'] : ParadigmREVOLUTION.Utility.Strings.UCwords(i.replace(/\_/gi, ' '))}`;
-					if (d['not_empty']) {
-						str += '<span class="required">*</span>';
+					// Label generation
+					let ti = i;
+					if (i.includes('::')) {
+						let tlabel = i.split('::');
+						ti = tlabel[1];
 					}
-					str += `</label></div>`;
+
+					if ((d['type']!= 'separator')&&(d['type']!= 'button')) {
+						let label = d['label'] || ti.replace(/_/g, ' ').toUpperCase();
+						str += `<div class="field-label is-normal">
+						<label class="label" id="id_label___${$id}___${i}">
+							${d['label'] ? d['label'] : this.Strings.UCwords(ti.replace(/\_/g, ' '))}
+						`;
+						if (d['not_empty']) {
+							str += '<span class="required">*</span>';
+						}
+						str += `</label></div>`;
+					}
+					// else {
+					// 	str += ``;
+					// }
 
 					// Input area
 					str += `<div class="field-body">`;
-					if (d['tail']) {
-						str += `<div class="field has-addons">`;
-					} else {
-						str += `<div class="field">`;
-					}
-
+					str += d['tail'] ? `<div class="field has-addons">` : `<div class="field">`;
 
 					// Value and class initialization
 					let valz = d['value'] || '';
 					let d_class = d['class'] || '';
 
-					// Switch case to render different input types
-					switch (d['type']) {
-						case 'text':
-							if (d['subtype']) {
-								switch (d['subtype']) {
-									case 'select':
-										str += `<div class="control">
-													<div class="select">
-														<select id="${$id}___${i}" name="${i}" class="text_input ${d_class}">`;
-										
-										// Only render options if 'select_values' is available
-										if (Array.isArray(d['select_values'])) {
-											str += d['select_values'].map(option => `<option value="${option}">${option}</option>`).join('');
-										}
-
-										str += `</select>
-													</div>
-												</div>`;
-										break;
-
-									case 'textarea':
-										str += `<div class="control">
-													<textarea id="${$id}___${i}" name="${i}" class="textarea ${d_class}" rows="5" ${d.readonly ? 'readonly' : ''}></textarea>
-												</div>`;
-										break;
-
-									default:
-										str += `<div class="control">
-													<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${valz}" ${d.readonly ? 'readonly' : ''} />
-												</div>`;
-								}
-							} else {
-								if (d['tail']) {
-									str += `<p class="control">
-												<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${valz}" ${d.readonly ? 'readonly' : ''} />
-											</p>
-											<p class="control">
-												<a class="button is-static">
-													${d['tail']}
-												</a>
-											</p>
-											`;
-								} else { 
-									str += `<div class="control">
-												<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${valz}" ${d.readonly ? 'readonly' : ''} />
-											</div>`;
-
-								}
-			
-							}
-							break;
-
-						case 'numeric':
-							str += `<div class="control">
-										<input type="text" id="${$id}___${i}" name="${i}" class="input numeric_input ${d_class}" value="${valz}" ${d.readonly ? 'readonly' : ''} />
-									</div>`;
-							break;
-
-						case 'boolean':
-							str += `<div class="control">
-										<label class="checkbox">
-											<input type="checkbox" id="${$id}___${i}" name="${i}" class="${d_class}" ${d.checked ? 'checked' : ''}>
-											${label}
-										</label>
-									</div>`;
-							break;
-
-						case 'timestamp without time zone':
-							// Simulate date value
-							let valx = ''; // This should be fetched from somewhere like your original code did
-							str += `<div class="control">
-										<input type="text" id="${$id}___${i}" name="${i}" class="input datetime_input ${d_class}" value="${valx}" ${d.readonly ? 'readonly' : ''} />
-									</div>`;
-							break;
-
-						case 'password':
-							str += `<div class="control">
-										<input type="password" id="${$id}___${i}" name="${i}" class="input ${d_class}" ${d.readonly ? 'readonly' : ''} />
-									</div>`;
-							break;
-
-						case 'button':
-							str += `<div class="control">
-										<button id="${$id}___${i}" class="button is-success ${d_class}">${label}</button>
-									</div>`;
-							break;
-
-						case 'separator':
-							str += `<div class="control">
-										<hr>
-									</div>`;
-							break;
-					}
+					// Call makeField based on the type
+					let debug = makeField($id, ti, d_class, d['type'], valz, d.readonly, d['head'], d['tail'], this);
+					str += debug;
+					
 					// Close field-body and field wrappers
 					str += `</div></div></div>`;
 				}
 			});
-
 			str += '</div>';
 			return str;
-
 		}).bind(this),
 		"initSearchDropdown": (function(inputElement, source) {
 			const parent = inputElement.parentElement;
