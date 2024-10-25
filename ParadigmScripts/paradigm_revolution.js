@@ -571,13 +571,29 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		// Object.keys(str).forEach((d, i) => {
 			// console.log('keys:>', d);
 		// })
-		let gridstr = ''; 
+		let gridstr = ` <section class="hero is-text mb-5">
+							<div class="hero-body">
+								<p class="title">Transaksi Faktur Kendaraan Bermotor</p>
+								<p class="subtitle">Transaksi terima faktur dari Dealer</p>
+							</div>
+						</section>
+						<div class="mb-6">
+							<nav class="breadcrumb " aria-label="breadcrumbs">
+								<ul>
+									<li><a href="#">Bulma</a></li>
+									<li><a href="#">Documentation</a></li>
+									<li><a href="#">Components</a></li>
+									<li class="is-active"><a href="#" aria-current="page">Breadcrumb</a></li>
+								</ul>
+							</nav>
+						</div>
+					`; 
 		formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
 			// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
 			gridstr += `<div class="columns is-1 is-multiline is-centered">`; 
 			d.forEach((dd, ii) => {
 				gridstr += `
-					<div class="column ${d.length == 1 ? 'is-10 is-variable ':''} is-flex">
+					<div class="column is-flex">
 						<div class="card is-flex-grow-1">
 							<div class="card-header">
 								<div class="card-header-icon">
