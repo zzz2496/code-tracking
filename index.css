@@ -1,6 +1,6 @@
 :root {
 	--menu-closed-width: 0rem;
-	--menu-open-width: 80vw;
+	--menu-open-width: 90vw;
 }
 
 * {
@@ -201,9 +201,9 @@
 
 
 #app_helper.show {
-	flex-basis: 100%;
+	flex-basis: calc(var(--menu-open-width));
 	/* width: 95vw; */
-	max-width: 100%;
+	max-width: calc(var(--menu-open-width));
 	opacity: 1;
 	overflow: auto;
 	padding-right: 0rem;

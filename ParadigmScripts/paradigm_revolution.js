@@ -154,12 +154,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"label": "Select Values",
 			"type": "array",
 			"form": 1,
-			"select_values": ['Voluptates','dolores','qui','eum','adipisci','non','ut','occaecati','Et','expedita','autem','distinctio','commodi','sapiente','Harum','et','facere','non', 'Ipsum','laudantium','eius','dicta','consequatur','quaerat'],
+			"select_values": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
 		},
 		"add_element": {
-			"label":"Add Element",
+			"label": "Add Element",
 			"type": "button",
-			"form":1
+			"form": 1
 		}
 	}
 	makeForm.Dataset.Schema.Layout.Dataset.Schema = {
@@ -170,6 +170,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		}
 	}
 
+
+
 	let form = JSON.parse(JSON.stringify(template__node));
 	form.Dataset.Schema = {
 		informasi_faktur: JSON.parse(JSON.stringify(template__node)),
@@ -178,91 +180,144 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		data_pendukung: JSON.parse(JSON.stringify(template__node)),
 		keterangan: JSON.parse(JSON.stringify(template__node))
 	}
+	// Old Form Definition
+	// Form: [
+	// 	[
+	// 		'informasi_faktur',
+	// 	],
+	// 	[
+	// 		'identitas_pemilik',
+	// 		'identitas_kendaraan',
+	// 	],
+	// 	[
+	// 		'data_pendukung'
+	// 	],
+	// 	[
+	// 		'keterangan'
+	// 	]
+	// ]
 
 	form.Dataset.Layout = {
-		PropertyOrder: ['informasi_faktur', 'identitas_pemilik', 'identitas_kendaraan', 'data_pendukung', 'keterangan'],
-		FormLayout: [
-			[
-				'informasi_faktur',
-			],
-			[
-				'identitas_kendaraan',
-				'identitas_pemilik',
-			],
-			[
-				'data_pendukung'
-			],
-			[
-				'keterangan'
+		Form: {
+			"comment": "Root Form Container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+				{
+					"comment": "Header container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+						{
+							"comment": "Hero Container", "tag": "section", "class": "hero is-link m-0 p-0", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+								{ "comment": "Hero Body", "tag": "div", "class": "hero-body", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": `<p class="title">Transaksi Faktur Kendaraan Bermotor</p><p class="subtitle">Transaksi terima faktur dari Dealer</p>`, "content": [] }
+							]
+						},
+						{
+							"comment": "Breadcrumb Container", "tag": "div", "class": "mb-4 mt-2", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+								{
+									"comment": "Breadcrumb", "tag": "nav", "class": "breadcrumb is-pulled-right", "id": "", "style": "", "href": "", "data": {}, "aria": { "label": "breadbrumbs" }, "order": 0, "innerHTML": "", "content": [
+										{
+											"comment": "ul", "tag": "ul", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Bulma</a>", "content": [] },
+												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Documentation</a>", "content": [] },
+												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Components</a>", "content": [] },
+												{ "comment": "li", "tag": "li", "class": "is-active", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\" aria-current=\"page\">Breadcrumb</a>", "content": [] }
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
 			]
-		]
+		},
+		Preview: {}
 	}
-	form.Dataset.Schema.informasi_faktur.Properties.Chain.Head = true;
+
+	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	document.querySelector('#testform').innerHTML = formstr;
+
+	form.Dataset.Schema = [
+		{
+			"id": "informasi_faktur",
+			"Dataset": {
+				"Schema": [{
+					"id": "nomor_purchase_order",
+					"label": "Nomor PO",
+					"type": "text",
+					"form": 1,
+					"subtype": "select",
+					"select_values": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
+					"head": "required",
+					"tail": "required"
+				},
+				{
+					"id": "nomor_mesin",
+					"type": "text",
+					"form": 1
+				},
+				{
+					"id": "aktif",
+					"type": "boolean",
+					"form": 1,
+					"value": 1
+				},
+				{
+					"id": "hr",
+					"label": "HR",
+					"type": "separator",
+					"form": 1,
+				},
+				{
+					"id": "purchase_order",
+					"type": "text",
+					"form": 1,
+					"readonly": 0
+				},
+				{
+					"id": "id_dealer",
+					"label": "ID Dealer",
+					"type": "text",
+					"form": 1,
+					"readonly": 0,
+					"not_empty": 1
+		
+				},
+				{
+					"id": "nama_dealer",
+					"type": "text",
+					"form": 1,
+					"readonly": 0
+				},
+				{
+					"id": "nomor_faktur",
+					"type": "text",
+					"form": 1,
+					"value": "FH/CC"
+				},
+				{
+					"id": "tanggal",
+					"type": "timestamp without time zone",
+					"form": 1
+				}]
+			},
+			"Layout": {
+				"Form": {
+					"Show": 1,
+					"Label": "Informasi Faktur",
+					"ShowLabel": 1,
+				},
+				"Preview": {
+					"Show": 1,
+					"Label": "Informasi Faktur",
+					"ShowLabel": 1,
+				}
+			}
+		}
+	]
+
+
 	form.Dataset.Schema.informasi_faktur.Dataset.Layout = {
-		"Form": {
-			"Show": 1,
-			"Label": "Informasi Faktur",
-			"ShowLabel": 1,
-		},
-		"Preview": {
-			"Show": 1,
-			"Label": "Informasi Faktur",
-			"ShowLabel": 1,
-		}
 	}
-	
-	form.Dataset.Schema.informasi_faktur.Dataset.Schema = {
-		"001::nomor_purchase_order": {
-			"label": "Nomor PO",
-			"type": "text",
-			"form": 1,
-			"subtype": "select",
-			"select_values": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
-			"head": "required",
-			"tail": "required"
-		},
-		"002::nomor_mesin": {
-			"type": "text",
-			"form": 1
-		},
-		"003::aktif": {
-			"type": "boolean",
-			"form": 1,
-			"value":1
-		},
-		"0031::hr": {
-			"type": "separator",
-			"form": 1,
-		},
-		"004::purchase_order": {
-			"type": "text",
-			"form": 1,
-			"readonly": 0
-		},
-		"005::id_dealer": {
-			"label": "ID Dealer",
-			"type": "text",
-			"form": 1,
-			"readonly": 0,
-			"not_empty": 1
 
-		},
-		"006::nama_dealer": {
-			"type": "text",
-			"form": 1,
-			"readonly": 0
-		},
-		"007::nomor_faktur": {
-			"type": "text",
-			"form": 1,
-			"value": "FH/CC"
-		},
-		"008::tanggal": {
-			"type": "timestamp without time zone",
-			"form": 1
-		}
+	form.Dataset.Schema.informasi_faktur.Dataset.Schema = [
 
-	}
 
 	form.Dataset.Schema.identitas_pemilik.Dataset.Layout = {
 		"Form": {
@@ -276,74 +331,89 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.identitas_pemilik.Dataset.Schema = {
-		"001::atas_nama": {
+	form.Dataset.Schema.identitas_pemilik.Dataset.Schema = [
+		{
+			"id": "atas_nama",
 			"type": "text",
 			"form": 1
 		},
-		"002::alamat": {
+		{
+			"id": "alamat",
 			"type": "textarea",
 			"form": 1,
 		},
-		"003::rt": {
+		{
+			"id": "rt",
 			"label": "RT",
 			"type": "text",
 			"form": 0
 		},
-		"004::rw": {
+		{
+			"id": "rw",
 			"label": "RW",
 			"type": "text",
 			"form": 0
 		},
-		"005::desa": {
+		{
+			"id": "desa",
 			"type": "text",
 			"form": 0
 		},
-		"006::kelurahan": {
+		{
+			"id": "kelurahan",
 			"type": "text",
 			"form": 0
 		},
-		"007::kecamatan": {
+		{
+			"id": "kecamatan",
 			"type": "text",
 			"form": 0
 		},
-		"008::kabupaten_kota": {
+		{
+			"id": "kabupaten_kota",
 			"label": "Kabupaten / Kota",
 			"type": "text",
 			"form": 1,
 			"subtype": "select"
 		},
-		"009::SAMSAT": {
+		{
+			"id": "samsat",
+			"label": "SAMSAT",
 			"type": "text",
 			"form": 1,
 			"readonly": 0
 		},
-		"010::provinsi": {
+		{
+			"id": "provinsi",
 			"type": "text",
 			"form": 1,
 			"readonly": 0
 		},
-		"011::kebangsaan": {
+		{
+			"id": "kebangsaan",
 			"type": "text",
 			"form": 1,
 			"value": "INDONESIA"
 		},
-		"012::nomor_ktp_tdp": {
+		{
+			"id": "nomor_ktp_tdp",
 			"label": "Nomor KTP/TDP",
 			"type": "text",
 			"form": 1
 		},
-		"013::pekerjaan": {
+		{
+			"id": "pekerjaan",
 			"type": "text",
 			"form": 1
 		},
-		"014::nomor_hp": {
+		{
+			"id": "nomor_hp",
 			"type": "text",
 			"class": "cellphone_input_test",
 			"form": 1,
 			"string_not_empty": 1
 		},
-	}
+	];
 
 	form.Dataset.Schema.identitas_kendaraan.Dataset.Layout = {
 		"Form": {
@@ -357,91 +427,105 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.identitas_kendaraan.Dataset.Schema = {
-		"001::id_type": {
+	form.Dataset.Schema.identitas_kendaraan.Dataset.Schema = [
+		{
+			"id": "id_type",
 			"label": "ID Type",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"002::type": {
+		{
+			"id": "type",
 			"label": "Type",
 			"type": "select",
 			"form": 1,
-			"value": ['Voluptates','dolores','qui','eum','adipisci','non','ut','occaecati','Et','expedita','autem','distinctio','commodi','sapiente','Harum','et','facere','non', 'Ipsum','laudantium','eius','dicta','consequatur','quaerat'],
+			"value": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
 			"head": "XOM-",
 			"tail": "-ZZZ"
 		},
-		"003::kode_atpm": {
+		{
+			"id": "kode_atpm",
 			"label": "Kode ATPM",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"04::merk": {
+		{
+			"id": "merk",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"005::jenis": {
+		{
+			"id": "jenis",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"006::model": {
+		{
+			"id": "model",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"007::tahun_pembuatan": {
+		{
+			"id": "tahun_pembuatan",
 			"type": "number",
 			"form": 1,
 			"readonly": 1
 		},
-		"008::isi_silinder": {
+		{
+			"id": "isi_silinder",
 			"type": "number",
 			"form": 1,
 			"readonly": 0,
 			"tail": "cc",
 			"value": 0
 		},
-		"009::warna": {
+		{
+			"id": "warna",
 			"type": "text",
 			"form": 1
 		},
-		"010::no_rangka_nik_vin": {
+		{
+			"id": "no_rangka_nik_vin",
 			"label": "Nomor Rangka / NIK / VIN",
 			"type": "text",
 			"form": 1
 		},
-		"011::pib": {
+		{
+			"id": "pib",
 			"label": "PIB",
 			"type": "text",
 			"form": 1
 		},
-		"012::srut": {
+		{
+			"id": "srut",
 			"label": "SRUT",
 			"type": "text",
 			"form": 1,
 			"value": "SRUT/AJ"
 		},
-		"013::nomor_mesin": {
+		{
+			"id": "nomor_mesin",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"014::bahan_bakar": {
+		{
+			"id": "bahan_bakar",
 			"type": "text",
 			"form": 1,
 			"readonly": 1
 		},
-		"015::harga": {
+		{
+			"id": "harga",
 			"type": "numeric",
 			"form": 0,
 			"tail": "IDR"
 		}
-
-	}
+	]
 
 	form.Dataset.Schema.data_pendukung.Dataset.Layout = {
 		"Form": {
@@ -455,34 +539,39 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.data_pendukung.Dataset.Schema = {
-		"001::formulir_ab": {
+	form.Dataset.Schema.data_pendukung.Dataset.Schema = [
+		{
+			"id": "formulir_ab",
 			"label": "Formulir A/B",
 			"type": "text",
 			"form": 1
 		},
-		"002::pib": {
+		{
+			"id": "pib",
 			"label": "PIB",
 			"type": "text",
 			"form": 1
 		},
-		"003::tpt": {
+		{
+			"id": "tpt",
 			"label": "TPT",
 			"type": "text",
 			"form": 1
 		},
-		"004::sut": {
+		{
+			"id": "sut",
 			"label": "SUT",
 			"type": "text",
 			"form": 1
 		},
-		"005::srut": {
+		{
+			"id": "srut",
 			"label": "SRUT",
 			"type": "text",
 			"form": 1,
 			"value": "SRUT/AJ"
 		}
-	}
+	]
 
 	form.Dataset.Schema.keterangan.Dataset.Layout = {
 		"Form": {
@@ -496,20 +585,23 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			"ShowLabel": 1,
 		}
 	}
-	form.Dataset.Schema.keterangan.Dataset.Schema = {
-		"001::keterangan": {
+	form.Dataset.Schema.keterangan.Dataset.Schema = [
+		{
+			"id": "keterangan",
 			"type": "textarea",
 			"form": 1,
 		},
-		"002::keterangan2": {
+		{
+			"id": "keterangan2",
 			"type": "textarea",
 			"form": 1,
 		},
-		"003::keterangan3": {
+		{
+			"id": "keterangan3",
 			"type": "textarea",
 			"form": 1,
 		}
-	}
+	]
 
 	window.form = form;
 
@@ -528,11 +620,11 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	let qstr = {
 		"string": "begin transaction;\n\n",
-		"array":['begin transaction']
+		"array": ['begin transaction']
 	};
 	for (let index = 1; index <= 5; index++) {
 		let q = `create test:{ "DocumentType": "TFKB", "Version": 1, "DocumentID":${index}} content ${JSON.stringify(form)};`;
-		qstr.string += q+"\n\n";
+		qstr.string += q + "\n\n";
 		qstr.array.push(q);
 	};
 	qstr.string += 'commit transaction;';
@@ -557,103 +649,114 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	})();
 
-	(async () => {
-		await ram_db.Instance.connect('mem://');
-		let formgen = ParadigmREVOLUTION.Utility.Forms;
-		let formdata = await ram_db.Instance.query(`select * from test where id.DocumentType contains 'TFKB' order by id`);
-		let str = {};
-		formdata = formdata[0][0];
-		console.log('formdata :>> ', formdata);
-		formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {			
-			str[d] = formgen.GenerateForm(d, formdata.Dataset.Schema[d].Dataset.Schema);
-		});
-		// console.log('form string str :>> ', str);
-		// Object.keys(str).forEach((d, i) => {
-			// console.log('keys:>', d);
-		// })
-		let gridstr = ` <section class="hero is-text mb-5">
-							<div class="hero-body">
-								<p class="title">Transaksi Faktur Kendaraan Bermotor</p>
-								<p class="subtitle">Transaksi terima faktur dari Dealer</p>
-							</div>
-						</section>
-						<div class="mb-6">
-							<nav class="breadcrumb " aria-label="breadcrumbs">
-								<ul>
-									<li><a href="#">Bulma</a></li>
-									<li><a href="#">Documentation</a></li>
-									<li><a href="#">Components</a></li>
-									<li class="is-active"><a href="#" aria-current="page">Breadcrumb</a></li>
-								</ul>
-							</nav>
-						</div>
-					`; 
-		formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
-			// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
-			gridstr += `<div class="columns is-1 is-multiline is-centered">`; 
-			d.forEach((dd, ii) => {
-				gridstr += `
-					<div class="column is-flex">
-						<div class="card is-flex-grow-1">
-							<div class="card-header">
-								<div class="card-header-icon">
-									<i class="fa fa-tv"></i>
-								</div>
-								<div class="card-header-title">
-									<h3 class="has-text-weight-bold">${ParadigmREVOLUTION.Utility.Strings.ReadableUCWords(dd)}</h3>
-								</div>
-							</div>
-							<div class="card-content">
-								<div class="content">
-									${str[dd]}
+	// (async () => {
+	// 	await ram_db.Instance.connect('mem://');
+	// 	let formgen = ParadigmREVOLUTION.Utility.Forms;
+	// 	let formdata = await ram_db.Instance.query(`select * from test where id.DocumentType contains 'TFKB' order by id`);
+	// 	let str = {};
+	// 	formdata = formdata[0][0];
+	// 	console.log('formdata :>> ', formdata);
+	// 	formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {			
+	// 		str[d] = formgen.GenerateFormArray(d, formdata.Dataset.Schema[d].Dataset.Schema);
+	// 	});
+	// 	console.log('form string str :>> ', str);
+	// 	Object.keys(str).forEach((d, i) => {
+	// 		console.log('keys:>', d);
+	// 	})
+	// 	let gridstr = ` 
+	// 					<div class="box">
+	// 						<section class="hero is-link m-0 p-0">
+	// 							<div class="hero-body">
+	// 								<p class="title">Transaksi Faktur Kendaraan Bermotor</p>
+	// 								<p class="subtitle">Transaksi terima faktur dari Dealer</p>
+	// 							</div>
+	// 						</section>
+	// 						<div class="mb-4 mt-2">
+	// 							<nav class="breadcrumb is-pulled-right" aria-label="breadcrumbs">
+	// 								<ul>
+	// 									<li><a href="#">Bulma</a></li>
+	// 									<li><a href="#">Documentation</a></li>
+	// 									<li><a href="#">Components</a></li>
+	// 									<li class="is-active"><a href="#" aria-current="page">Breadcrumb</a></li>
+	// 								</ul>
+	// 							</nav>
+	// 						</div>
+	// 					</div>
+	// 				`;
+	// 	// document.querySelector('#testform').innerHTML += gridstr;
+	// 	formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
+	// 		// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
+	// 		gridstr += `<div class="columns is-1 is-multiline is-centered">`;
+	// 		d.forEach((dd, ii) => {
+	// 			gridstr += `
+	// 				<div class="column is-flex">
+	// 					<div class="card is-flex-grow-1">
+	// 						<div class="card-header">
+	// 							<div class="card-header-icon">
+	// 								<i class="fa fa-tv"></i>
+	// 							</div>
+	// 							<div class="card-header-title">
+	// 								<h3 class="has-text-weight-bold">${ParadigmREVOLUTION.Utility.Strings.ReadableUCWords(dd)}</h3>
+	// 							</div>
+	// 						</div>
+	// 						<div class="card-content">
+	// 							<div class="content">
+	// 								${str[dd]}
 									
-								</div>
-							</div>
-						</div>
-					</div>
-				`;
-			});
-			gridstr += '</div>'; // Close the row
-		});
-		gridstr += `
-		<div class="field is-grouped is-grouped-centered">
-			<p class="control">
-				<button class="button is-primary">
-				Konfirmasi
-				</button>
-			</p>
-			<p class="control">
-				<a class="button is-light">
-				Reset
-				</a>
-			</p>
-		</div>
-		`;
-		let newElement = document.createElement('div');
-		newElement.innerHTML = gridstr;
-		
-		// console.log(gridstr);
-		document.querySelector('#testform').append(newElement);
-	})();
-	
+	// 							</div>
+	// 						</div>
+	// 					</div>
+	// 				</div>
+	// 			`;
+	// 		});
+	// 		gridstr += '</div>'; // Close the row
+	// 	});
+
+	// 	gridstr += `
+	// 	<div class="field is-grouped is-grouped-centered">
+	// 		<p class="control">
+	// 			<button class="button is-primary">
+	// 			Konfirmasi
+	// 			</button>
+	// 		</p>
+	// 		<p class="control">
+	// 			<a class="button is-light">
+	// 			Reset
+	// 			</a>
+	// 		</p>
+	// 	</div>
+	// 	`;
+	// 	let newElement = document.createElement('div');
+	// 	newElement.innerHTML = gridstr;
+
+	// 	// console.log(gridstr);
+	// 	// document.querySelector('#testform').append(newElement);
+	// })();
+
 	let formgen = ParadigmREVOLUTION.Utility.Forms;
 	let str = {};
-	let gridstr = ''; 
+	let gridstr = '';
+
+	form.Dataset.Layout.PropertyOrder.forEach((d, i) => {
+		str[d] = formgen.GenerateFormArray(d, formdata.Dataset.Schema[d].Dataset.Schema);
+	});
+
+
 
 	str = {};
 	let formdata = makeForm;
 	console.log('formdata :>> ', formdata);
-	formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {			
+	formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {
 		str[d] = formgen.GenerateForm(d, formdata.Dataset.Schema[d].Dataset.Schema);
 	});
 	console.log('form string str :>> ', str);
 	Object.keys(str).forEach((d, i) => {
 		console.log('keys:>', d);
 	})
-	gridstr = ''; 
+	gridstr = '';
 	formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
 		// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
-		gridstr += `<div class="">`; 
+		gridstr += `<div class="">`;
 		d.forEach((dd, ii) => {
 			gridstr += `
 				<div class="section p-1">
@@ -677,7 +780,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			`;
 		});
 		gridstr += '</div>'; // Close the row
-});
+	});
 	gridstr += ''; // Close the row
 	// document.querySelector('#formGenerator').innerHTML = gridstr;
 	document.querySelector('#app_helper').innerHTML = `
@@ -692,9 +795,9 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), ['Jaylen', 'Effie', 'Gudrun', 'Bennett', 'Chester']);
 });
 
-function makeCol(rows, color) { 
+function makeCol(rows, color) {
 	let str = `<div class="column" style="margin-bottom: 0;width: 400px; max-width: 400px;">`;
-	for (let i = 1; i <=rows; i++) {
+	for (let i = 1; i <= rows; i++) {
 		str += `<div class="card has-background-${color}">
 					<div class="card-header">
 						Card header

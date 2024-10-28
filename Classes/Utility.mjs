@@ -2745,6 +2745,42 @@ export class Utility {
 			return true;
 		}
 	};
+	DOMComponents = {
+		"traverseDOMProxyOBJ": ((element, callback) => {
+			let html = `<${element.tag}`;
+	
+			if (element.class) html += ` class="${element.class}"`;
+			if (element.id) html += ` id="${element.id}"`;
+			if (element.style) html += ` style="${element.style}"`;
+			if (element.href) html += ` href="${element.href}"`;
+	
+			if (element.data) {
+				for (let [key, value] of Object.entries(element.data)) {
+					html += ` data-${key}="${value}"`;
+				}
+			}
+			if (element.aria) {
+				for (let [key, value] of Object.entries(element.aria)) {
+					html += ` aria-${key}="${value}"`;
+				}
+			}
+	
+			html += ">";
+			if (element.innerHTML) html += element.innerHTML;
+			if (element.content && Array.isArray(element.content)) {
+				for (let child of element.content) {
+					console.log(this);
+					html += this.DOMComponents.traverseDOMProxyOBJ(child); // Recursively generate HTML for child elements
+				}
+			}
+	
+			html += `</${element.tag}>`;
+			
+			if (callback) callback();
+
+			return html;
+		}).bind(this)
+	};
 	// NOTE - DOMElements related methods
 	DOMElements = {
 		"viewToggle": ((element, callback) => {
@@ -4810,6 +4846,83 @@ export class Utility {
 					
 					// Close field-body and field wrappers
 					str += `</div></div></div>`;
+				}
+			});
+			str += '</div>';
+			return str;
+		}).bind(this),
+		"GenerateFormArray": (function ($id, $schema) {
+			function makeField($id, field, utilily) {
+				const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
+				let inputField = '';
+
+				// Determine the input type (e.g., text, select, checkbox, etc.)
+				switch (type) {
+					case 'separator':
+						inputField = `<hr />`;
+						break;
+					case 'boolean':
+						inputField = `
+						<label class="checkbox">
+							<input type="checkbox" id="${$id}___${id}" name="${id}" class="checkbox is-large ${d_class}" ${value ? 'checked' : ''} ${readonly ? 'disabled' : ''} />
+							${utilily.Strings.UCwords(id.replace(/\_/g, ' '))}
+						</label>`;
+						break;
+					case 'number':
+						inputField = `<input type="number" id="${$id}___${id}" name="${id}" class="input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} />`;
+						break;
+					case 'textarea':
+						inputField = `<textarea id="${$id}___${id}" name="${id}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''}>${value}</textarea>`;
+						break;
+					case 'select':
+						inputField = `<div class="select">
+										<select id="${$id}___${id}" name="${id}" class="text_input ${d_class}">
+											${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+										</select>
+									</div>`;
+						break;
+					default:
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} />`;
+						break;
+				}
+
+				// Handle $head and $tail cases
+				if (!head && !tail) {
+					return `<div class="control">${inputField}</div>`;
+				}
+
+				if (!head && tail) {
+					return `<p class="control">${inputField}</p><p class="control"><a class="button is-static">${tail}</a></p>`;
+				}
+
+				if (head && !tail) {
+					return `<p class="control"><a class="button is-static">${head}</a></p><p class="control">${inputField}</p>`;
+				}
+
+				return `<p class="control"><a class="button is-static">${head}</a></p><p class="control">${inputField}</p><p class="control"><a class="button is-static">${tail}</a></p>`;
+			}
+
+			let str = '<div class="paradigm-form">';
+			$schema.forEach((field) => {
+				const { id, label = '', form } = field;
+				if (form === 1) {
+					str += `<div class="field is-horizontal">`;
+
+					if (label || (field.type !== 'separator' && field.type !== 'button')) {
+						str += `<div class="field-label is-normal">
+									<label class="label" id="id_label___${$id}___${id}">
+										${label || utilily.Strings.UCwords(id.replace(/_/g, ' '))}
+									</label>
+								</div>`;
+					}
+
+					str += `<div class="field-body">`;
+					str += field.tail ? `<div class="field has-addons">` : `<div class="field">`;
+
+					let debug = makeField($id, field, utilily);
+					str += debug;
+
+					str += `</div></div></div>`; // Close field-body and field wrappers
 				}
 			});
 			str += '</div>';
