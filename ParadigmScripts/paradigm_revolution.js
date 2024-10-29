@@ -30,6 +30,11 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	let template__edge = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
 	window.template__edge = template__edge;
 
+	let ram_db = ParadigmREVOLUTION.Yggdrasil.Datastores.SurrealDB.Memory;
+	let local_db = ParadigmREVOLUTION.Yggdrasil.Datastores.SurrealDB.IndexedDB;
+	let test_db = ParadigmREVOLUTION.Yggdrasil.Datastores.SurrealDB.TestServer;
+
+
 	let makeForm = JSON.parse(JSON.stringify(template__node));
 
 	makeForm.Dataset.Schema = {
@@ -199,26 +204,22 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	form.Dataset.Layout = {
 		Form: {
-			"comment": "Root Form Container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+			"comment": "Header container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
 				{
-					"comment": "Header container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+					"comment": "Hero Container", "tag": "section", "class": "hero is-link m-0 p-0", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+						{ "comment": "Hero Body", "tag": "div", "class": "hero-body", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": `<p class="title">Transaksi Faktur Kendaraan Bermotor</p><p class="subtitle">Transaksi terima faktur dari Dealer</p>`, "content": [] }
+					]
+				},
+				{
+					"comment": "Breadcrumb Container", "tag": "div", "class": "mb-4 mt-2", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
 						{
-							"comment": "Hero Container", "tag": "section", "class": "hero is-link m-0 p-0", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-								{ "comment": "Hero Body", "tag": "div", "class": "hero-body", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": `<p class="title">Transaksi Faktur Kendaraan Bermotor</p><p class="subtitle">Transaksi terima faktur dari Dealer</p>`, "content": [] }
-							]
-						},
-						{
-							"comment": "Breadcrumb Container", "tag": "div", "class": "mb-4 mt-2", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+							"comment": "Breadcrumb", "tag": "nav", "class": "breadcrumb is-pulled-right", "id": "", "style": "", "href": "", "data": {}, "aria": { "label": "breadbrumbs" }, "order": 0, "innerHTML": "", "content": [
 								{
-									"comment": "Breadcrumb", "tag": "nav", "class": "breadcrumb is-pulled-right", "id": "", "style": "", "href": "", "data": {}, "aria": { "label": "breadbrumbs" }, "order": 0, "innerHTML": "", "content": [
-										{
-											"comment": "ul", "tag": "ul", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Bulma</a>", "content": [] },
-												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Documentation</a>", "content": [] },
-												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Components</a>", "content": [] },
-												{ "comment": "li", "tag": "li", "class": "is-active", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\" aria-current=\"page\">Breadcrumb</a>", "content": [] }
-											]
-										}
+									"comment": "ul", "tag": "ul", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+										{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Bulma</a>", "content": [] },
+										{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Documentation</a>", "content": [] },
+										{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Components</a>", "content": [] },
+										{ "comment": "li", "tag": "li", "class": "is-active", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\" aria-current=\"page\">Breadcrumb</a>", "content": [] }
 									]
 								}
 							]
@@ -232,11 +233,27 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
 	document.querySelector('#testform').innerHTML = formstr;
-
+	
 	form.Dataset.Schema = [
 		{
 			"id": "informasi_faktur",
+			"order": 100,
 			"Dataset": {
+				"Layout": {
+					"Form": {},
+					"Properties": {
+						"FormEntry": {
+							"Show": 1,
+							"Label": "Informasi Faktur",
+							"ShowLabel": 1,
+						},
+						"Preview": {
+							"Show": 1,
+							"Label": "Informasi Faktur",
+							"ShowLabel": 1,
+						}
+					}
+				},
 				"Schema": [{
 					"id": "nomor_purchase_order",
 					"label": "Nomor PO",
@@ -277,7 +294,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 					"form": 1,
 					"readonly": 0,
 					"not_empty": 1
-		
+
 				},
 				{
 					"id": "nama_dealer",
@@ -296,319 +313,324 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 					"type": "timestamp without time zone",
 					"form": 1
 				}]
-			},
-			"Layout": {
-				"Form": {
-					"Show": 1,
-					"Label": "Informasi Faktur",
-					"ShowLabel": 1,
+			}
+		}, {
+			"id": "identitas_pemilik",
+			"order": 200,
+			"Dataset": {
+				"Layout": {
+					"Form": {},
+					"Properties": {
+						"FormEntry": {
+							"Show": 1,
+							"Label": "Identitas Pemilik",
+							"ShowLabel": 1,
+						},
+						"Preview": {
+							"Show": 1,
+							"Label": "Identitas Pemilik",
+							"ShowLabel": 1,
+						}
+					}
 				},
-				"Preview": {
-					"Show": 1,
-					"Label": "Informasi Faktur",
-					"ShowLabel": 1,
-				}
+				"Schema": [
+					{
+						"id": "atas_nama",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "alamat",
+						"type": "textarea",
+						"form": 1,
+					},
+					{
+						"id": "rt",
+						"label": "RT",
+						"type": "text",
+						"form": 0
+					},
+					{
+						"id": "rw",
+						"label": "RW",
+						"type": "text",
+						"form": 0
+					},
+					{
+						"id": "desa",
+						"type": "text",
+						"form": 0
+					},
+					{
+						"id": "kelurahan",
+						"type": "text",
+						"form": 0
+					},
+					{
+						"id": "kecamatan",
+						"type": "text",
+						"form": 0
+					},
+					{
+						"id": "kabupaten_kota",
+						"label": "Kabupaten / Kota",
+						"type": "text",
+						"form": 1,
+						"subtype": "select"
+					},
+					{
+						"id": "samsat",
+						"label": "SAMSAT",
+						"type": "text",
+						"form": 1,
+						"readonly": 0
+					},
+					{
+						"id": "provinsi",
+						"type": "text",
+						"form": 1,
+						"readonly": 0
+					},
+					{
+						"id": "kebangsaan",
+						"type": "text",
+						"form": 1,
+						"value": "INDONESIA"
+					},
+					{
+						"id": "nomor_ktp_tdp",
+						"label": "Nomor KTP/TDP",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "pekerjaan",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "nomor_hp",
+						"type": "text",
+						"class": "cellphone_input_test",
+						"form": 1,
+						"string_not_empty": 1
+					}
+				]
+			}
+		}, {
+			"id": "identitas_kendaraan",
+			"order": 300,
+			"Dataset": {
+				"Layout": {
+					"Form": {},
+					"Properties": {
+						"FormEntry": {
+							"Show": 1,
+							"Label": "Indentitas Kendaraan",
+							"ShowLabel": 1,
+						},
+						"Preview": {
+							"Show": 1,
+							"Label": "Indentitas Kendaraan",
+							"ShowLabel": 1,
+						}
+					}
+				},
+				"Schema": [
+					{
+						"id": "id_type",
+						"label": "ID Type",
+						"type": "text",
+						"form": 1,
+						"readonly": 1
+					},
+					{
+						"id": "type",
+						"label": "Type",
+						"type": "select",
+						"form": 1,
+						"value": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
+						"head": "XOM-",
+						"tail": "-ZZZ"
+					},
+					{
+						"id": "kode_atpm",
+						"label": "Kode ATPM",
+						"type": "text",
+						"form": 1,
+						"readonly": 1
+					},
+					{
+						"id": "merk",
+						"type": "text",
+						"form": 1,
+						"readonly": 1
+					},
+					{
+						"id": "jenis",
+						"type": "text",
+						"form": 1,
+						"readonly": 1
+					},
+					{
+						"id": "model",
+						"type": "text",
+						"form": 1,
+						"readonly": 1
+					},
+					{
+						"id": "tahun_pembuatan",
+						"type": "number",
+						"form": 1,
+						"readonly": 1
+					},
+					{
+						"id": "isi_silinder",
+						"type": "number",
+						"form": 1,
+						"readonly": 0,
+						"tail": "cc",
+						"value": 0
+					},
+					{
+						"id": "warna",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "no_rangka_nik_vin",
+						"label": "Nomor Rangka / NIK / VIN",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "pib",
+						"label": "PIB",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "srut",
+						"label": "SRUT",
+						"type": "text",
+						"form": 1,
+						"value": "SRUT/AJ"
+					},
+					{
+						"id": "nomor_mesin",
+						"type": "text",
+						"form": 1,
+						"readonly": 1
+					},
+					{
+						"id": "bahan_bakar",
+						"type": "text",
+						"form": 1,
+						"readonly": 1
+					},
+					{
+						"id": "harga",
+						"type": "numeric",
+						"form": 0,
+						"tail": "IDR"
+					}
+				]
+			}
+		}, {
+			"id": "data_pendukung",
+			"order": 400,
+			"Dataset": {
+				"Layout": {
+					"Form": {},
+					"Properties": {
+						"FormEntry": {
+							"Show": 1,
+							"Label": "Data'Pendukung",
+							"ShowLabel": 1,
+						},
+						"Preview": {
+							"Show": 1,
+							"Label": "Data'Pendukung",
+							"ShowLabel": 1,
+						}
+					}
+				},
+				"Schema": [
+					{
+						"id": "formulir_ab",
+						"label": "Formulir A/B",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "pib",
+						"label": "PIB",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "tpt",
+						"label": "TPT",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "sut",
+						"label": "SUT",
+						"type": "text",
+						"form": 1
+					},
+					{
+						"id": "srut",
+						"label": "SRUT",
+						"type": "text",
+						"form": 1,
+						"value": "SRUT/AJ"
+					}
+				]
+			}
+		}, {
+			"id": "keterangan",
+			"order": 500,
+			"Dataset": {
+				"Layout": {
+					"Form": {},
+					"Properties": {
+						"FormEntry": {
+							"Show": 1,
+							"Label": "Keterangan",
+							"ShowLabel": 1,
+						},
+						"Preview": {
+							"Show": 1,
+							"Label": "Keterangan",
+							"ShowLabel": 1,
+						}
+					}
+				},
+				"Schema": [
+					{
+						"id": "keterangan",
+						"type": "textarea",
+						"form": 1,
+					},
+					{
+						"id": "keterangan2",
+						"type": "textarea",
+						"form": 1,
+					},
+					{
+						"id": "keterangan3",
+						"type": "textarea",
+						"form": 1,
+					}
+				]
 			}
 		}
 	]
-
-
-	form.Dataset.Schema.informasi_faktur.Dataset.Layout = {
-	}
-
-	form.Dataset.Schema.informasi_faktur.Dataset.Schema = [
-
-
-	form.Dataset.Schema.identitas_pemilik.Dataset.Layout = {
-		"Form": {
-			"Show": 1,
-			"Label": "Identitas Pemilik",
-			"ShowLabel": 1,
-		},
-		"Preview": {
-			"Show": 1,
-			"Label": "Identitas Pemilik",
-			"ShowLabel": 1,
-		}
-	}
-	form.Dataset.Schema.identitas_pemilik.Dataset.Schema = [
-		{
-			"id": "atas_nama",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "alamat",
-			"type": "textarea",
-			"form": 1,
-		},
-		{
-			"id": "rt",
-			"label": "RT",
-			"type": "text",
-			"form": 0
-		},
-		{
-			"id": "rw",
-			"label": "RW",
-			"type": "text",
-			"form": 0
-		},
-		{
-			"id": "desa",
-			"type": "text",
-			"form": 0
-		},
-		{
-			"id": "kelurahan",
-			"type": "text",
-			"form": 0
-		},
-		{
-			"id": "kecamatan",
-			"type": "text",
-			"form": 0
-		},
-		{
-			"id": "kabupaten_kota",
-			"label": "Kabupaten / Kota",
-			"type": "text",
-			"form": 1,
-			"subtype": "select"
-		},
-		{
-			"id": "samsat",
-			"label": "SAMSAT",
-			"type": "text",
-			"form": 1,
-			"readonly": 0
-		},
-		{
-			"id": "provinsi",
-			"type": "text",
-			"form": 1,
-			"readonly": 0
-		},
-		{
-			"id": "kebangsaan",
-			"type": "text",
-			"form": 1,
-			"value": "INDONESIA"
-		},
-		{
-			"id": "nomor_ktp_tdp",
-			"label": "Nomor KTP/TDP",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "pekerjaan",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "nomor_hp",
-			"type": "text",
-			"class": "cellphone_input_test",
-			"form": 1,
-			"string_not_empty": 1
-		},
-	];
-
-	form.Dataset.Schema.identitas_kendaraan.Dataset.Layout = {
-		"Form": {
-			"Show": 1,
-			"Label": "Identitas Kendaraan",
-			"ShowLabel": 1,
-		},
-		"Preview": {
-			"Show": 1,
-			"Label": "Identitas Kendaraan",
-			"ShowLabel": 1,
-		}
-	}
-	form.Dataset.Schema.identitas_kendaraan.Dataset.Schema = [
-		{
-			"id": "id_type",
-			"label": "ID Type",
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		{
-			"id": "type",
-			"label": "Type",
-			"type": "select",
-			"form": 1,
-			"value": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
-			"head": "XOM-",
-			"tail": "-ZZZ"
-		},
-		{
-			"id": "kode_atpm",
-			"label": "Kode ATPM",
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		{
-			"id": "merk",
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		{
-			"id": "jenis",
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		{
-			"id": "model",
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		{
-			"id": "tahun_pembuatan",
-			"type": "number",
-			"form": 1,
-			"readonly": 1
-		},
-		{
-			"id": "isi_silinder",
-			"type": "number",
-			"form": 1,
-			"readonly": 0,
-			"tail": "cc",
-			"value": 0
-		},
-		{
-			"id": "warna",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "no_rangka_nik_vin",
-			"label": "Nomor Rangka / NIK / VIN",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "pib",
-			"label": "PIB",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "srut",
-			"label": "SRUT",
-			"type": "text",
-			"form": 1,
-			"value": "SRUT/AJ"
-		},
-		{
-			"id": "nomor_mesin",
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		{
-			"id": "bahan_bakar",
-			"type": "text",
-			"form": 1,
-			"readonly": 1
-		},
-		{
-			"id": "harga",
-			"type": "numeric",
-			"form": 0,
-			"tail": "IDR"
-		}
-	]
-
-	form.Dataset.Schema.data_pendukung.Dataset.Layout = {
-		"Form": {
-			"Show": 1,
-			"Label": "Data Pendukung",
-			"ShowLabel": 1,
-		},
-		"Preview": {
-			"Show": 1,
-			"Label": "Data Pendukung",
-			"ShowLabel": 1,
-		}
-	}
-	form.Dataset.Schema.data_pendukung.Dataset.Schema = [
-		{
-			"id": "formulir_ab",
-			"label": "Formulir A/B",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "pib",
-			"label": "PIB",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "tpt",
-			"label": "TPT",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "sut",
-			"label": "SUT",
-			"type": "text",
-			"form": 1
-		},
-		{
-			"id": "srut",
-			"label": "SRUT",
-			"type": "text",
-			"form": 1,
-			"value": "SRUT/AJ"
-		}
-	]
-
-	form.Dataset.Schema.keterangan.Dataset.Layout = {
-		"Form": {
-			"Show": 1,
-			"Label": "Keterangan",
-			"ShowLabel": 1,
-		},
-		"Preview": {
-			"Show": 1,
-			"Label": "Keterangan",
-			"ShowLabel": 1,
-		}
-	}
-	form.Dataset.Schema.keterangan.Dataset.Schema = [
-		{
-			"id": "keterangan",
-			"type": "textarea",
-			"form": 1,
-		},
-		{
-			"id": "keterangan2",
-			"type": "textarea",
-			"form": 1,
-		},
-		{
-			"id": "keterangan3",
-			"type": "textarea",
-			"form": 1,
-		}
-	]
-
 	window.form = form;
 
 	console.log('form :>> ', form);
-	let ram_db = ParadigmREVOLUTION.Yggdrasil.Datastores.SurrealDB.Memory;
-	let local_db = ParadigmREVOLUTION.Yggdrasil.Datastores.SurrealDB.IndexedDB;
-	let test_db = ParadigmREVOLUTION.Yggdrasil.Datastores.SurrealDB.TestServer;
 
 	window.ram_db = ram_db;
 	window.local_db = local_db;
@@ -702,7 +724,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// 						<div class="card-content">
 	// 							<div class="content">
 	// 								${str[dd]}
-									
+
 	// 							</div>
 	// 						</div>
 	// 					</div>
@@ -734,63 +756,151 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// })();
 
 	let formgen = ParadigmREVOLUTION.Utility.Forms;
-	let str = {};
+	let str = [];
 	let gridstr = '';
 
-	form.Dataset.Layout.PropertyOrder.forEach((d, i) => {
-		str[d] = formgen.GenerateFormArray(d, formdata.Dataset.Schema[d].Dataset.Schema);
+	form.Dataset.Schema.forEach((d, i) => {
+		str.push(formgen.GenerateFormArray(d.id, d.Dataset.Schema));
 	});
+	// console.log('str :>> ', str);
+
+	let row = {
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+			{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+		]
+	};
+	let cardstr ;
+
+	let testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "informasi_faktur", 
+		order: 0,
+		style: "width:100%;",
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Informasi Faktur", 
+		content: str[0]
+	});
+	
+	// console.log('testcard :>> ', testcard);
+	row.content[0].innerHTML = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+	// // console.log('cardstr :>> ', cardstr);
+
+	row = {
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] }
+	] }
+
+	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "identitas_pemilik", 
+		class: "is-flex-grow-1", 
+		style: "width:100%;", 
+		order: 0, 
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Identitas Pemilik", 
+		content: str[1],
+	});
+	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[0].innerHTML += cardstr;
+
+	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "identitas_kendaraan", 
+		class: "is-flex-grow-1", 
+		style: "width:100%;", 
+		order: 1, 
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Identitas Kendaraan", 
+		content: str[2],
+	});
+	
+	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[1].innerHTML += cardstr;
+	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+
+	row = {
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+	] }
+	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "data_pendukung", 
+		class: "is-flex-grow-1", 
+		style: "width:100%;", 
+		order: 2, 
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Data Pendukung", 
+		content: str[3],
+	});
+	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[0].innerHTML += cardstr;
+	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+
+	row = {
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+	] }
+	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "keterangan", 
+		class: "is-flex-grow-1", 
+		style: "width:100%;", 
+		order: 2, 
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Keterangan", 
+		content: str[4],
+	});
+	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[0].innerHTML += cardstr;
+	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
 
 
 
-	str = {};
-	let formdata = makeForm;
-	console.log('formdata :>> ', formdata);
-	formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {
-		str[d] = formgen.GenerateForm(d, formdata.Dataset.Schema[d].Dataset.Schema);
-	});
-	console.log('form string str :>> ', str);
-	Object.keys(str).forEach((d, i) => {
-		console.log('keys:>', d);
-	})
-	gridstr = '';
-	formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
-		// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
-		gridstr += `<div class="">`;
-		d.forEach((dd, ii) => {
-			gridstr += `
-				<div class="section p-1">
-					<div class="card">
-						<div class="card-header">
-							<div class="card-header-icon">
-								<i class="fa fa-tv"></i>
-							</div>
-							<div class="card-header-title">
-								<h3 class="has-text-weight-bold">${ParadigmREVOLUTION.Utility.Strings.ReadableUCWords(dd)}</h3>
-							</div>
-						</div>
-						<div class="card-content">
-							<div class="content">
-								${str[dd]}
-								
-							</div>
-						</div>
-					</div>
-				</div>
-			`;
-		});
-		gridstr += '</div>'; // Close the row
-	});
-	gridstr += ''; // Close the row
-	// document.querySelector('#formGenerator').innerHTML = gridstr;
-	document.querySelector('#app_helper').innerHTML = `
-		<div class="columns is-mobile is-gapless" id="test_helper_form">
-			<div class="column" style="min-width:400px; max-width:400px; width:400px; padding:1rem;>${gridstr}</div>
-		</div>`;
-	let t_str = `<div class="column is-1" style="min-width:400px; max-width:400px; width:400px; padding:1rem;">${gridstr}</div>`;
-	document.querySelector('#add_form_button').addEventListener('click', () => {
-		document.querySelector('#test_helper_form').innerHTML += t_str;
-	});
+	// str = {};
+	// let formdata = makeForm;
+	// console.log('formdata :>> ', formdata);
+	// formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {
+	// 	str[d] = formgen.GenerateForm(d, formdata.Dataset.Schema[d].Dataset.Schema);
+	// });
+	// console.log('form string str :>> ', str);
+	// Object.keys(str).forEach((d, i) => {
+	// 	console.log('keys:>', d);
+	// })
+	// gridstr = '';
+	// formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
+	// 	// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
+	// 	gridstr += `<div class="">`;
+	// 	d.forEach((dd, ii) => {
+	// 		gridstr += `
+	// 			<div class="section p-1">
+	// 				<div class="card">
+	// 					<div class="card-header">
+	// 						<div class="card-header-icon">
+	// 							<i class="fa fa-tv"></i>
+	// 						</div>
+	// 						<div class="card-header-title">
+	// 							<h3 class="has-text-weight-bold">${ParadigmREVOLUTION.Utility.Strings.ReadableUCWords(dd)}</h3>
+	// 						</div>
+	// 					</div>
+	// 					<div class="card-content">
+	// 						<div class="content">
+	// 							${str[dd]}
+
+	// 						</div>
+	// 					</div>
+	// 				</div>
+	// 			</div>
+	// 		`;
+	// 	});
+	// 	gridstr += '</div>'; // Close the row
+	// });
+	// gridstr += ''; // Close the row
+	// // document.querySelector('#formGenerator').innerHTML = gridstr;
+	// document.querySelector('#app_helper').innerHTML = `
+	// 	<div class="columns is-mobile is-gapless" id="test_helper_form">
+	// 		<div class="column" style="min-width:400px; max-width:400px; width:400px; padding:1rem;>${gridstr}</div>
+	// 	</div>`;
+	// let t_str = `<div class="column is-1" style="min-width:400px; max-width:400px; width:400px; padding:1rem;">${gridstr}</div>`;
+	// document.querySelector('#add_form_button').addEventListener('click', () => {
+	// 	document.querySelector('#test_helper_form').innerHTML += t_str;
+	// });
 	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), 'https://rickandmortyapi.com/api/character')
 	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), ['Jaylen', 'Effie', 'Gudrun', 'Bennett', 'Chester']);
 });

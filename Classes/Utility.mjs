@@ -2753,6 +2753,8 @@ export class Utility {
 			if (element.id) html += ` id="${element.id}"`;
 			if (element.style) html += ` style="${element.style}"`;
 			if (element.href) html += ` href="${element.href}"`;
+			if (element.type) html += ` type="${element.type}"`;
+			if (element.value) html += ` value="${element.value}"`;
 	
 			if (element.data) {
 				for (let [key, value] of Object.entries(element.data)) {
@@ -2769,7 +2771,7 @@ export class Utility {
 			if (element.innerHTML) html += element.innerHTML;
 			if (element.content && Array.isArray(element.content)) {
 				for (let child of element.content) {
-					console.log(this);
+					// console.log(this);
 					html += this.DOMComponents.traverseDOMProxyOBJ(child); // Recursively generate HTML for child elements
 				}
 			}
@@ -2779,7 +2781,268 @@ export class Utility {
 			if (callback) callback();
 
 			return html;
-		}).bind(this)
+		}).bind(this),
+		"BulmaCSS": {
+			"Elements": {
+				"Block": (({ 
+					id = "", 
+					class: className = "", 
+					style = "", 
+					href = "", 
+					data = {}, 
+					aria = {}, 
+					order = 0,
+					innerHTML = "", 
+					content = []
+				} )=> {
+					return {
+						comment: "Block container",
+						tag: "div",
+						class: `block ${className}`,
+						id,
+						style,
+						href: isSafeHref(href) ? href : "",
+						data,
+						aria,
+						order,
+						innerHTML,
+						content
+					};
+				}).bind(this),
+				"Box": (({ 
+					id = "", 
+					class: className = "", 
+					style = "", 
+					href = "", 
+					data = {}, 
+					aria = {}, 
+					order = 0, 
+					innerHTML = "", 
+					content = []
+				} )=> {
+					return {
+						comment: "Box container",
+						tag: "div",
+						class: `box ${className}`,
+						id,
+						style,
+						href: isSafeHref(href) ? href : "",
+						data,
+						aria,
+						order,
+						innerHTML,
+						content
+					};
+				}).bind(this),
+				"Button": (() => {
+					
+				}).bind(this),
+				"Content": (() => {
+					
+				}).bind(this),
+				"Delete": (() => {
+					
+				}).bind(this),
+				"Icon": (() => {
+					
+				}).bind(this),
+				"Image": (() => {
+					
+				}).bind(this),
+				"Notification": (() => {
+					
+				}).bind(this),
+				"ProgressBars": (() => {
+					
+				}).bind(this),
+				"Table": (() => {
+					
+				}).bind(this),
+				"Tag": (() => {
+					
+				}).bind(this),
+				"Title": (() => {
+					
+				}).bind(this),
+			},
+			"Components": {
+				"Card": (({
+					id = "", 
+					className = "", 
+					style = "", 
+					href = "", 
+					data = {}, 
+					aria = {}, 
+					order = 0, 
+					headerIcon = "", 
+					header = "", 
+					content = "", 
+					footer = "" 
+				}) => {
+					// Helper to sanitize HTML content
+					const sanitize = (html) => {
+						// Use a basic sanitizer to strip out unsafe HTML
+						const tempDiv = document.createElement('div');
+						tempDiv.textContent = html;
+						return tempDiv.innerHTML;
+					};
+				
+					// Helper to validate hrefs
+					const isSafeHref = (href) => {
+						// Only allow safe links; adjust regex based on what "safe" means in context
+						return /^https?:\/\/|^\/\//i.test(href);
+					};
+				
+					// Basic card structure
+					const card = {
+						comment: "Card",
+						tag: "div",
+						class: `card ${className}`,
+						id,
+						style,
+						href: isSafeHref(href) ? href : "",
+						data,
+						aria,
+						order,
+						content: []
+					};
+				
+					// Add header if provided
+					if (header || headerIcon) {
+						const headerContent = [
+							headerIcon ? {
+								comment: "card-header-icon",
+								tag: "button",
+								class: "card-header-icon",
+								aria: { label: "more options" },
+								content: [
+									{
+										tag: "span",
+										class: "icon",
+										innerHTML: headerIcon
+									}
+								]
+							} : null,
+							{
+								comment: "card-header-title",
+								tag: "p",
+								class: "card-header-title",
+								innerHTML: sanitize(header)
+							}
+						].filter(Boolean); // Remove null if headerIcon is empty
+				
+						card.content.push({
+							comment: "card-header",
+							tag: "header",
+							class: "card-header",
+							content: headerContent
+						});
+					}
+				
+					// Add main content
+					card.content.push({
+						comment: "card-content",
+						tag: "div",
+						class: "card-content",
+						content: [
+							{
+								comment: "content",
+								tag: "div",
+								class: "content",
+								innerHTML: (content)
+							}
+						]
+					});
+				
+					// Add footer items if provided
+					if (footer) {
+						const footerContent = footer.map(item => ({
+							tag: "a",
+							class: "card-footer-item",
+							href: isSafeHref(item.href) ? item.href : "",
+							innerHTML: sanitize(item.label)
+						}));
+				
+						card.content.push({
+							comment: "Card Footer",
+							tag: "footer",
+							class: "card-footer",
+							content: footerContent
+						});
+					}
+					return card;
+				}).bind(this)
+			},
+			"Layout": {
+				"Hero": (({ 
+					id = "", 
+					class: className = "", 
+					style = "", 
+					href = "", 
+					data = {}, 
+					aria = {}, 
+					order = 0, 
+					title = "", 
+					subtitle = ""
+				} )=> {
+					const heroContainer = {
+						comment: "Header container",
+						tag: "div",
+						class: `box ${className}`,
+						id,
+						style,
+						href: isSafeHref(href) ? href : "",
+						data,
+						aria,
+						order,
+						content: []
+					};
+				
+					// Hero section with title and subtitle
+					const heroSection = {
+						comment: "Hero Container",
+						tag: "section",
+						class: "hero is-link m-0 p-0",
+						content: [
+							{
+								comment: "Hero Body",
+								tag: "div",
+								class: "hero-body",
+								innerHTML: `<p class="title">${sanitize(title)}</p><p class="subtitle">${sanitize(subtitle)}</p>`,
+								content: []
+							}
+						]
+					};
+					heroContainer.content.push(heroSection);
+					return heroContainer;
+				}).bind(this),
+				"Section": (({ 
+					id = "", 
+					class: className = "", 
+					style = "", 
+					href = "", 
+					data = {}, 
+					aria = {}, 
+					order = 0, 
+					innerHTML = "", 
+					content = []
+				} )=> {
+					return {
+						comment: "Section container",
+						tag: "section",
+						class: `section ${className}`,
+						id,
+						style,
+						href: isSafeHref(href) ? href : "",
+						data,
+						aria,
+						order,
+						innerHTML,
+						content
+					};
+				}).bind(this),
+			}
+		}
 	};
 	// NOTE - DOMElements related methods
 	DOMElements = {
@@ -4215,8 +4478,6 @@ export class Utility {
 				if (typeof callback != 'undefined') callback();
 			}
 		}).bind(this),
-
-
 		"DragElement": (function (elmnt, zoomed = false, snap_every = 1, callback) {
 			let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
@@ -4903,6 +5164,8 @@ export class Utility {
 			}
 
 			let str = '<div class="paradigm-form">';
+			let Util = this;
+			// console.log('Util :>> ', Util);
 			$schema.forEach((field) => {
 				const { id, label = '', form } = field;
 				if (form === 1) {
@@ -4911,7 +5174,7 @@ export class Utility {
 					if (label || (field.type !== 'separator' && field.type !== 'button')) {
 						str += `<div class="field-label is-normal">
 									<label class="label" id="id_label___${$id}___${id}">
-										${label || utilily.Strings.UCwords(id.replace(/_/g, ' '))}
+										${label || Util.Strings.UCwords(id.replace(/_/g, ' '))}
 									</label>
 								</div>`;
 					}
@@ -4919,13 +5182,14 @@ export class Utility {
 					str += `<div class="field-body">`;
 					str += field.tail ? `<div class="field has-addons">` : `<div class="field">`;
 
-					let debug = makeField($id, field, utilily);
+					let debug = makeField($id, field, Util);
 					str += debug;
 
-					str += `</div></div></div>`; // Close field-body and field wrappers
+					str += `</div></div></div>`;
 				}
 			});
 			str += '</div>';
+			// console.log('str :>> ', str);
 			return str;
 		}).bind(this),
 		"initSearchDropdown": (function(inputElement, source) {
