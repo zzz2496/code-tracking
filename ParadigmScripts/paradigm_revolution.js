@@ -204,22 +204,26 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	form.Dataset.Layout = {
 		Form: {
-			"comment": "Header container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+			"comment": "ROOT Form Container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
 				{
-					"comment": "Hero Container", "tag": "section", "class": "hero is-link m-0 p-0", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-						{ "comment": "Hero Body", "tag": "div", "class": "hero-body", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": `<p class="title">Transaksi Faktur Kendaraan Bermotor</p><p class="subtitle">Transaksi terima faktur dari Dealer</p>`, "content": [] }
-					]
-				},
-				{
-					"comment": "Breadcrumb Container", "tag": "div", "class": "mb-4 mt-2", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+					"comment": "Header container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
 						{
-							"comment": "Breadcrumb", "tag": "nav", "class": "breadcrumb is-pulled-right", "id": "", "style": "", "href": "", "data": {}, "aria": { "label": "breadbrumbs" }, "order": 0, "innerHTML": "", "content": [
+							"comment": "Hero Container", "tag": "section", "class": "hero is-link m-0 p-0", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+								{ "comment": "Hero Body", "tag": "div", "class": "hero-body", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": `<p class="title">Transaksi Faktur Kendaraan Bermotor</p><p class="subtitle">Transaksi terima faktur dari Dealer</p>`, "content": [] }
+							]
+						},
+						{
+							"comment": "Breadcrumb Container", "tag": "div", "class": "mb-4 mt-2", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
 								{
-									"comment": "ul", "tag": "ul", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-										{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Bulma</a>", "content": [] },
-										{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Documentation</a>", "content": [] },
-										{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Components</a>", "content": [] },
-										{ "comment": "li", "tag": "li", "class": "is-active", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\" aria-current=\"page\">Breadcrumb</a>", "content": [] }
+									"comment": "Breadcrumb", "tag": "nav", "class": "breadcrumb is-pulled-right", "id": "", "style": "", "href": "", "data": {}, "aria": { "label": "breadbrumbs" }, "order": 0, "innerHTML": "", "content": [
+										{
+											"comment": "ul", "tag": "ul", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Bulma</a>", "content": [] },
+												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Documentation</a>", "content": [] },
+												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Components</a>", "content": [] },
+												{ "comment": "li", "tag": "li", "class": "is-active", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\" aria-current=\"page\">Breadcrumb</a>", "content": [] }
+											]
+										}
 									]
 								}
 							]
@@ -230,9 +234,6 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		},
 		Preview: {}
 	}
-
-	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
-	document.querySelector('#testform').innerHTML = formstr;
 	
 	form.Dataset.Schema = [
 		{
@@ -764,9 +765,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	});
 	// console.log('str :>> ', str);
 
+	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	// document.querySelector('#testform').innerHTML = formstr;
+
 	let row = {
-		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-			{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+		"comment": "Columns", "tag": "div", "class": "columns is-centered is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+			{ "comment": "Column", "tag": "div", "class": "column is-four-fifths", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
 		]
 	};
 	let cardstr ;
@@ -779,11 +783,10 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		header: "Informasi Faktur", 
 		content: str[0]
 	});
-	
-	// console.log('testcard :>> ', testcard);
 	row.content[0].innerHTML = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
-	// // console.log('cardstr :>> ', cardstr);
+	form.Dataset.Layout.Form.content.push(row);
+
+	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
 
 	row = {
 		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
@@ -815,11 +818,13 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	
 	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	row.content[1].innerHTML += cardstr;
-	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+	form.Dataset.Layout.Form.content.push(row);
+
+	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
 
 	row = {
-		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+		{ "comment": "Column", "tag": "div", "class": "column is-flex is-four-fifths", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
 	] }
 	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
 		id: "data_pendukung", 
@@ -832,11 +837,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	});
 	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	row.content[0].innerHTML += cardstr;
-	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+	form.Dataset.Layout.Form.content.push(row);
+	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
 
 	row = {
-		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+		{ "comment": "Column", "tag": "div", "class": "column is-flex is-four-fifths", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
 	] }
 	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
 		id: "keterangan", 
@@ -849,7 +855,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	});
 	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	row.content[0].innerHTML += cardstr;
-	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+	form.Dataset.Layout.Form.content.push(row);
+	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
 
 
 
