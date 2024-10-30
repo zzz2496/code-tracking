@@ -985,6 +985,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('focusin', '.text_select', (e) => {
 		console.log('init text_select');
 		if (e.target.dataset.textselectinput !== 'initialized') {
+			console.log('id >>>>', e.target.id.split('___'));
 			ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(e.target, JSON.parse(e.target.dataset.selectValues));
 			e.target.dataset.textselectinput = 'initialized';
 		}

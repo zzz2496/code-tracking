@@ -1326,6 +1326,7 @@ export class Utility {
 							"array_index": i,
 							"data": array[i][ii],
 							"row": array[i],
+							"path": [i, ii]  // Add path here
 						});
 						resultArray.push(array[i]);
 					}
@@ -1409,6 +1410,7 @@ export class Utility {
 							"array_index": i,
 							"data": array[i][ii],
 							"row": array[i],
+							"path": [i, ii]  // Add path here
 						});
 						resultArray.push(array[i]);
 					}
