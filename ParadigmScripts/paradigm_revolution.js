@@ -4,12 +4,6 @@ if (cr) console.log('>>> >>> >>> >>> ParadigmREVOLUTION');
 document.addEventListener('UtilitiesLoaded', () => {
 	console.log('>>>>>> check for UtilitiesLoaded in paradigm_revolution.js');
 	(() => {
-		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '#form_root_container .text_input', (e) => {
-			e.target.value = ParadigmREVOLUTION.Utility.Strings.SafeString(e.target.value);
-		});
-		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '#form_root_container .number_input', (e) => {
-			e.target.value = ParadigmREVOLUTION.Utility.Strings.SafeString(e.target.value, { numberProcessing: {thousandSeparator: true} });
-		});
 	
 		// $('.text_input').keyup(function (e) {
 		//     $(this).val(convert_to_safe_string($(this).val()));
@@ -355,12 +349,11 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				"Schema": [{
 					"id": "nomor_purchase_order",
 					"label": "Nomor PO",
-					"type": "select",
+					"type": "text_select",
 					"form": 1,
-					"subtype": "select",
-					"select_values": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
-					"head": "required",
-					"tail": "required"
+					"value": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
+					"head": "Head",
+					"tail": "Tail"
 				},
 				{
 					"id": "nomor_mesin",
@@ -380,8 +373,9 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				},
 				{
 					"id": "purchase_order",
-					"type": "text",
+					"type": "text_select",
 					"form": 1,
+					"value": ["Sed", "atque", "suscipit", "Consequatur", "ipsum", "cum", "quia", "mollitia", "et", "rerum", "inventore", "occaecati", "molestias.", "Velit", "reprehenderit", "voluptatum", "ut", "hic", "rerum.", "Natus", "perferendis", "laboriosam", "omnis.", "Dolor", "voluptatem", "et", "eligendi", "ducimus.", "Omnis", "ratione", "enim", "et", "quis", "consequatur", "quia", "voluptatum", "ut."],
 					"readonly": 0
 				},
 				{
@@ -412,6 +406,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				},
 				{
 					"id": "add",
+					"label":"",
 					"class": "is-link",
 					"type": "button",
 					"form": 1
@@ -888,84 +883,116 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	row.content[0].innerHTML = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	form.Dataset.Layout.Form.content.push(row);
 
-	console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
-	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
-	console.log('formstr :>> ', formstr);
-	document.querySelector('#testform').innerHTML += formstr;
-
-
-	// row = {
-	// 	"comment": "Columns", "tag": "div", "class": "columns is-gapless is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-	// 	{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
-	// 	{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] }
-	// ] }
-
-	// testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
-	// 	id: "identitas_pemilik", 
-	// 	class: "is-flex-grow-1", 
-	// 	style: "width:100%;", 
-	// 	order: 0, 
-	// 	headerIcon: `<li class="fa fa-tv"></li>`, 
-	// 	header: "Identitas Pemilik", 
-	// 	content: str[1],
-	// });
-	// cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	// row.content[0].innerHTML += cardstr;
-
-	// testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
-	// 	id: "identitas_kendaraan", 
-	// 	class: "is-flex-grow-1", 
-	// 	style: "width:100%;", 
-	// 	order: 1, 
-	// 	headerIcon: `<li class="fa fa-tv"></li>`, 
-	// 	header: "Identitas Kendaraan", 
-	// 	content: str[2],
-	// });
-	
-	// cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	// row.content[1].innerHTML += cardstr;
-	// form.Dataset.Layout.Form.content.push(row);
-
-	// // document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
-
-	// row = {
-	// 	"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-	// 	{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
-	// ] }
-	// testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
-	// 	id: "data_pendukung", 
-	// 	class: "is-flex-grow-1", 
-	// 	style: "width:100%;", 
-	// 	order: 2, 
-	// 	headerIcon: `<li class="fa fa-tv"></li>`, 
-	// 	header: "Data Pendukung", 
-	// 	content: str[3],
-	// });
-	// cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	// row.content[0].innerHTML += cardstr;
-	// form.Dataset.Layout.Form.content.push(row);
-	// // document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
-
-	// row = {
-	// 	"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-	// 	{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
-	// ] }
-	// testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
-	// 	id: "keterangan", 
-	// 	class: "is-flex-grow-1", 
-	// 	style: "width:100%;", 
-	// 	order: 2, 
-	// 	headerIcon: `<li class="fa fa-tv"></li>`, 
-	// 	header: "Keterangan", 
-	// 	content: str[4],
-	// });
-	// cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	// row.content[0].innerHTML += cardstr;
-	// form.Dataset.Layout.Form.content.push(row);
 	// console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
-	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	// console.log('formstr :>> ', formstr);
+	// document.querySelector('#testform').innerHTML += formstr;
 
 
+	row = {
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] }
+	] }
+
+	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "identitas_pemilik", 
+		class: "is-flex-grow-1", 
+		style: "width:100%;", 
+		order: 0, 
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Identitas Pemilik", 
+		content: str[1],
+	});
+	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[0].innerHTML += cardstr;
+
+	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "identitas_kendaraan", 
+		class: "is-flex-grow-1", 
+		style: "width:100%;", 
+		order: 1, 
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Identitas Kendaraan", 
+		content: str[2],
+	});
+	
+	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[1].innerHTML += cardstr;
+	form.Dataset.Layout.Form.content.push(row);
+
+	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+
+	row = {
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+	] }
+	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "data_pendukung", 
+		class: "is-flex-grow-1", 
+		style: "width:100%;", 
+		order: 2, 
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Data Pendukung", 
+		content: str[3],
+	});
+	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[0].innerHTML += cardstr;
+	form.Dataset.Layout.Form.content.push(row);
+	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+
+	row = {
+		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+	] }
+	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+		id: "keterangan", 
+		class: "is-flex-grow-1", 
+		style: "width:100%;", 
+		order: 2, 
+		headerIcon: `<li class="fa fa-tv"></li>`, 
+		header: "Keterangan", 
+		content: str[4],
+	});
+	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[0].innerHTML += cardstr;
+	form.Dataset.Layout.Form.content.push(row);
+	// console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
+	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+
+	ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.text_input', (e) => {
+		e.target.value = ParadigmREVOLUTION.Utility.Strings.SafeString(e.target.value);
+		e.target.dataset.textinput = 'initialized';
+	}, document.querySelector('#form_root_container'));
+	// ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.number_input', (e) => {
+	// 	e.target.value = ParadigmREVOLUTION.Utility.Numbers.ThousandSeparator(e.target.value.replace(/[^0-9\.\-]/gmi, ''), '.');
+	// 	e.target.dataset.numberinput = 'initialized';
+	// }, document.querySelector('#form_root_container'));
+	ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.number_input', (e) => {
+		// Clear any previous timer
+		clearTimeout(e.target.debounceTimeout);
+
+		// Set a new timer for 0.5 seconds
+		e.target.debounceTimeout = setTimeout(() => {
+			e.target.value = ParadigmREVOLUTION.Utility.Numbers.ThousandSeparator(
+				e.target.value.replace(/[^0-9\.\-]/g, ''), // Remove non-numeric characters except '.' and '-'
+				'.'
+			);
+			e.target.dataset.numberinput = 'initialized';
+		}, 500);
+	}, document.querySelector('#form_root_container'));
+	
+	ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('focusin', '.text_select', (e) => {
+		console.log('init text_select');
+		if (e.target.dataset.textselectinput !== 'initialized') {
+			ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(e.target, JSON.parse(e.target.dataset.selectValues));
+			e.target.dataset.textselectinput = 'initialized';
+		}
+	}, document.querySelector('#form_root_container'));
+
+	
+
+	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#informasi_faktur___purchase_order'), ['Jaylen', 'Effie', 'Gudrun', 'Bennett', 'Chester']);
 
 	// str = {};
 	// let formdata = makeForm;

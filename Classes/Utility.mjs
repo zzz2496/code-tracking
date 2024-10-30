@@ -327,7 +327,6 @@ export class Utility {
 	// NOTE - Strings related methods
 	Strings = {
 		"SafeString": (function (str, textDecoration) {
-			console.log('masuk safe string!');
 			/*
 				textDecoration = {
 					"textOverlay": "some overlay %%% some other overlay" // %%% will be replaced by the original text from the array
@@ -342,7 +341,6 @@ export class Utility {
 			*/
 
 			let datatype = this.checkType(str);
-			console.log('datatype :>> ', datatype);
 			let sanitizedString = '';
 			switch (datatype) {
 				case 'DateTime':
@@ -393,11 +391,9 @@ export class Utility {
 					sanitizedString = (str.length > 0) ? str
 						.replace(/[^a-zA-Z0-9\/\s\-_\,.()+@=$%:&<>'"]/gmi, '')
 						.replace(/\s+/g, ' ')
-						.trim() : '0';
-
+						.trim() : '';
 					if (typeof textDecoration != 'undefined') {
 						if (textDecoration.hasOwnProperty('numberProcessing')) {
-							console.log('sanitizedString :>> ', sanitizedString);
 							sanitizedString = this.Numbers.ThousandSeparator(sanitizedString);
 						}
 						if (textDecoration.hasOwnProperty('textOverlay')) {
@@ -409,9 +405,9 @@ export class Utility {
 				case 'Number':
 					str = str.toString();
 					sanitizedString = (str.length > 0) ? str
-						.replace(/[^0-9]/gmi, '')
+						.replace(/[^0-9\,\.]/gmi, '')
 						.replace(/\s+/g, ' ')
-						.trim() : '';
+						.trim() : '0';
 					if (typeof textDecoration != 'undefined') {
 						if (textDecoration.hasOwnProperty('numberProcessing')) {
 							sanitizedString = this.Numbers.ThousandSeparator(this.Numbers.SafeNumber(sanitizedString));
@@ -626,10 +622,76 @@ export class Utility {
 		"RoundToNearestBase": (function (num, base) {
 			return Math.round(num / base) * base;
 		}).bind(this),
-		"ThousandSeparator": (function (num, decpoint, sep) {
+		"ThousandSeparator": (function (num, decpoint = ".", sep = ",") {
+			if (num == null) {
+				return "0";
+			}
+
+			// Check for live typing cases where we should avoid processing
+			if (num === "0") {
+				return num; // Return "0" if the input is exactly "0"
+			}
+			if (num === "0" + decpoint) {
+				return num; // Return "0." if the input is exactly "0."
+			}
+
+			// If the input is just a minus sign or ends with a decimal point, return as-is for live input
+			if (num === "-" || num.endsWith(decpoint) || (num.endsWith("0") && num.match(/\./))) {
+				return num;
+			}
+
+			// Handle the case where num is a string with comma separators and try to convert it
+			if (typeof num === "string") {
+				// Remove thousand separators and replace decimal point to handle as number
+				const parsedNum = Number(num.replace(new RegExp("\\" + sep, "g"), "").replace(decpoint, "."));
+				
+				// If parsedNum is NaN (invalid input), return the original string without processing
+				if (isNaN(parsedNum)) {
+					return num;
+				}
+				
+				num = parsedNum;
+			}
+
+			// Detect if the number is negative, and handle separately
+			let isNegative = false;
+			if (num < 0) {
+				isNegative = true;
+				num = Math.abs(num);
+			}
+
+			// Convert to string and split into whole and decimal parts
+			let [whole, decimal] = num.toFixed(2).split(".");
+
+			// Format the whole number part with thousands separators
+			whole = parseInt(whole).toLocaleString('en-US').replace(",", sep);
+
+			// Reassemble with decimal point only if there's a decimal part
+			let result = decimal && decimal !== "00" ? whole + decpoint + decimal : whole;
+
+			// Add back the negative sign if necessary
+			if (isNegative) {
+				result = '-' + result;
+			}
+
+			return result;
+		}).bind(this),
+
+
+		"ThousandSeparatorV1": (function (num, decpoint, sep) {
+			console.log('thousand separator!!!', num);
 			if (num == null) {
 				num = 0;
 			}
+			console.log('tembus == null');
+			console.log('num.endsWith(decpoint)', num.endsWith(decpoint));
+			// If the input is a minus sign only or a partial input ending with a decimal point, return it without formatting
+			if (num === "-" || num.endsWith(decpoint)) {
+				console.log('masuk cHECKKKK')
+				return num;
+			}
+			console.log('tembus (num === "-" || num.endsWith(decpoint))');
+
 			// Check if num is a string and if so, attempt to convert it to a number
 			if (typeof num === "string") {
 				if (isNaN(Number(num))) {
@@ -637,6 +699,7 @@ export class Utility {
 				}
 				num = Number(num);
 			}
+			console.log('tembus attempt NUMBER(string)');
 
 			// Handle negative numbers by temporarily converting to positive,
 			// then adding the negative sign back at the end.
@@ -645,17 +708,21 @@ export class Utility {
 				isNegative = true;
 				num = Math.abs(num);
 			}
+			console.log('tembus negative');
 
 			// Convert number to string and split it into whole and decimal parts.
 			let [whole, decimal] = num.toFixed(2).toString().split(decpoint);
-
+			console.log('start bikin whole', whole, decimal);
 			// Add the thousand separators to the whole number part.
 			whole = parseInt(whole).toLocaleString('en-US', {
 				maximumFractionDigits: 0,
 			});
+			console.log('tembus bikin whole', whole);
 
 			// Join everything back together.
+			console.log('elements', deciman, whole, decpoint, decimal);
 			let result = decimal ? whole + decpoint + decimal : whole;
+			console.log('tembus bikin result', result);
 
 			// Add negative sign back if necessary.
 			if (isNegative) {
@@ -1177,9 +1244,6 @@ export class Utility {
 				let rowsFound = trowsFound;
 				let result = tresult;
 				let resultArray = tresultArray;
-				// console.log('>>>>>>', array, i, ii, array[i][ii]);
-				// console.log('check for operator', Operator.toLowerCase(), this.Operators['string']);
-				// console.log(this.Operators['string'].indexOf(Operator.toLowerCase()));
 				if (this.Operators['string'].indexOf(Operator.toLowerCase()) === -1) {
 					console.error("matchString within FindArrayElementsAllAdvanced, Operator is not defined within parameters, submitted operator: " + Operator.toLowerCase() + ", parameters are: " + this.Operators.string.toString());
 					return { "status": false, "message": "Operator is not defined within parameters, submitted operator: " + Operator.toLowerCase() + ", parameters are: " + this.Operators.string.toString() };
@@ -1194,6 +1258,7 @@ export class Utility {
 							"array_index": i,
 							"data": array[i][ii],
 							"row": array[i],
+							"path": [i, ii]  // Add path here
 						});
 						resultArray.push(array[i]);
 					}
@@ -2784,7 +2849,7 @@ export class Utility {
 	DOMComponents = {
 		"addGlobalEventListener": (type, selector, callback, parent = document) => {
 			parent.addEventListener(type, e => {
-				callback(e);
+				if (e.target.matches(selector)) callback(e);
 			});
 		},
 		"traverseDOMProxyOBJ": ((element, callback) => {
@@ -5078,108 +5143,6 @@ export class Utility {
 				return "<span style='font-family:arial; font-weight:bold; font-size:18px; color: black; border-bottom: 1px solid silver;'>Tidak ada data yang cocok</span>";
 			}
 		}).bind(this),
-		"GenerateForm": (function ($id, $schema) {
-			function makeField($id, i, d_class, $type, fieldContent, readonly, $head, $tail, utilily) {
-				let inputField = '';
-			
-				// Determine the input type (e.g., text, select, checkbox, etc.)
-				switch ($type) {
-					case 'separator':
-						inputField = `<hr />`;
-					break;
-					case 'boolean':
-						inputField = `	
-						<label class="checkbox">
-							<input type="checkbox" id="${$id}___${i}" name="${i}" class="checkbox is-large ${d_class}" ${fieldContent ? 'checked' : ''} ${readonly ? 'disabled' : ''} />
-							${utilily.Strings.UCwords(i.replace(/\_/g, ' '))}
-						</label>`;
-					break;
-					case 'number':
-						// inputField = `<input type="number" id="${$id}___${i}" name="${i}" class="input number_input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
-						inputField = `<input type="text" id="${$id}___${i}" name="${i}" class="input number_input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
-						break;
-					case 'textarea':
-						inputField = `<textarea id="${$id}___${i}" name="${i}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''} autocomplete="off">${fieldContent}</textarea>`;
-						break;
-					
-					case 'select':
-						inputField = `<div class="select">
-										<select id="${$id}___${i}" name="${i}" class="text_input ${d_class}">
-											${Array.isArray(fieldContent) ? fieldContent.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
-										</select>
-									  </div>`;
-						break;
-			
-					case 'checkbox':
-						inputField = `<input type="checkbox" id="${$id}___${i}" name="${i}" class="${d_class}" ${fieldContent ? 'checked' : ''} />`;
-						break;
-			
-					default: // 'text' or other default cases
-						inputField = `<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
-						break;
-				}
-			
-				// Handle $head and $tail cases
-				if (!$head && !$tail) {
-					return `<div class="control">${inputField}</div>`;
-				}
-			
-				if (!$head && $tail) {
-					return `<p class="control">${inputField}</p><p class="control"><a class="button is-static">${$tail}</a></p>`;
-				}
-			
-				if ($head && !$tail) {
-					return `<p class="control"><a class="button is-static">${$head}</a></p><p class="control">${inputField}</p>`;
-				}
-			
-				return `<p class="control"><a class="button is-static">${$head}</a></p><p class="control">${inputField}</p><p class="control"><a class="button is-static">${$tail}</a></p>`;
-			}
-			let str = '<div class="paradigm-form">';
-			Object.entries($schema).forEach(([i, d]) => {
-				if (d['form'] === 1) {
-					str += `<div class="field is-horizontal">`;
-
-					// Label generation
-					let ti = i;
-					if (i.includes('::')) {
-						let tlabel = i.split('::');
-						ti = tlabel[1];
-					}
-
-					if ((d['type']!= 'separator')&&(d['type']!= 'button')) {
-						let label = d['label'] || ti.replace(/_/g, ' ').toUpperCase();
-						str += `<div class="field-label is-normal">
-						<label class="label" id="id_label___${$id}___${i}">
-							${d['label'] ? d['label'] : this.Strings.UCwords(ti.replace(/\_/g, ' '))}
-						`;
-						if (d['not_empty']) {
-							str += '<span class="required">*</span>';
-						}
-						str += `</label></div>`;
-					}
-					// else {
-					// 	str += ``;
-					// }
-
-					// Input area
-					str += `<div class="field-body">`;
-					str += d['tail'] ? `<div class="field has-addons">` : `<div class="field">`;
-
-					// Value and class initialization
-					let valz = d['value'] || '';
-					let d_class = d['class'] || '';
-
-					// Call makeField based on the type
-					let debug = makeField($id, ti, d_class, d['type'], valz, d.readonly, d['head'], d['tail'], this);
-					str += debug;
-					
-					// Close field-body and field wrappers
-					str += `</div></div></div>`;
-				}
-			});
-			str += '</div>';
-			return str;
-		}).bind(this),
 		"GenerateFormArray": (function ($id, $schema) {
 			function makeField($id, field, utilily) {
 				const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
@@ -5196,25 +5159,28 @@ export class Utility {
 					case 'boolean':
 						inputField = `
 						<label class="checkbox">
-							<input type="checkbox" id="${$id}___${id}" name="${id}" class="checkbox is-large ${d_class}" ${value ? 'checked' : ''} ${readonly ? 'disabled' : ''} autocomplete="off"/>
+							<input type="checkbox" id="${$id}___${id}" name="${id}" class="checkbox ${d_class}" ${value ? 'checked' : ''} ${readonly ? 'disabled' : ''} autocomplete="off"/>
 							${utilily.Strings.UCwords(id.replace(/\_/g, ' '))}
 						</label>`;
 						break;
 					case 'number':
-						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input number_input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 						break;
 					case 'textarea':
 						inputField = `<textarea id="${$id}___${id}" name="${id}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''} autocomplete="off">${value}</textarea>`;
 						break;
-					case 'select':
+						case 'select':
 						inputField = `<div class="select">
-										<select id="${$id}___${id}" name="${id}" class="text_input ${d_class}">
+										<select id="${$id}___${id}" name="${id}" class="select_input ${d_class}">
 											${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
 										</select>
 									</div>`;
 						break;
+					case 'text_select':
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input text_select ${d_class}" value="" ${readonly ? 'readonly' : ''} autocomplete="off" data-select-values='${JSON.stringify(value)}'/>`;
+						break;
 					default:
-						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input text_input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 						break;
 				}
 
@@ -5242,22 +5208,18 @@ export class Utility {
 				if (form === 1) {
 					str += `<div class="field is-horizontal">`;
 
-					if (label || (field.type !== 'separator')) {
-						let tlabel = label || Util.Strings.UCwords(id.replace(/_/g, ' '));
-						if (field.type == 'button') tlabel = '';
+					if (label || field.type !== 'separator') {
+						let tlabel = field.label || (field.type === 'button' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
 						str += `<div class="field-label is-normal">
 									<label class="label" id="id_label___${$id}___${id}">
 										${tlabel}
 									</label>
 								</div>`;
 					}
-
+					
 					str += `<div class="field-body">`;
 					str += field.tail ? `<div class="field has-addons">` : `<div class="field">`;
-
-					let debug = makeField($id, field, Util);
-					str += debug;
-
+					str += makeField($id, field, Util);
 					str += `</div></div></div>`;
 				}
 			});
@@ -5288,7 +5250,13 @@ export class Utility {
 			// Step 2: Create the dropdown container
 			const dropdownMenu = document.createElement('div');
 			dropdownMenu.classList.add('dropdown');
-			dropdownMenu.style.cssText = 'width:100%;';
+			dropdownMenu.style.cssText = `
+				width: 100%;
+				position: absolute; /* Make dropdown position absolute */
+				top: 100%; /* Position it directly below the input */
+				left: 0;
+				z-index: 10; /* Ensure it appears on top of other content */
+			`;
 
 			// Create dropdown menu structure
 			dropdownMenu.innerHTML = `
