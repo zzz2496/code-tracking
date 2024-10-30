@@ -3,6 +3,130 @@ if (cr) console.log('>>> >>> >>> >>> ParadigmREVOLUTION');
 
 document.addEventListener('UtilitiesLoaded', () => {
 	console.log('>>>>>> check for UtilitiesLoaded in paradigm_revolution.js');
+	(() => {
+		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '#form_root_container .text_input', (e) => {
+			e.target.value = ParadigmREVOLUTION.Utility.Strings.SafeString(e.target.value);
+		});
+		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '#form_root_container .number_input', (e) => {
+			e.target.value = ParadigmREVOLUTION.Utility.Strings.SafeString(e.target.value, { numberProcessing: {thousandSeparator: true} });
+		});
+	
+		// $('.text_input').keyup(function (e) {
+		//     $(this).val(convert_to_safe_string($(this).val()));
+		// });
+		// $('.list_input').keyup(function (e) {
+		//     $(this).val(convert_to_safe_string_with_newline($(this).val()));
+		// });
+		// // $('.no_telepon_input').unbind('mask');
+		// if ($('.landline_phone_input').length > 0) {
+		// 	$('.landline_phone_input').mask("(999)999-99999999", { selectOnFocus: true });
+		// }
+		// if ($('.cellphone_input').length > 0) {
+		// 	$('.cellphone_input').mask("099-99999999999", { selectOnFocus: true });
+		// }
+		// if ($('.cellphone_input_test').length > 0) {
+		// 	$('.cellphone_input_test').mask('Z9999999999999', {
+		//         translation: {
+		//         	'Z': {
+		//             	pattern: /[0]/
+		//     		}
+		//         }
+		//     });
+		// }
+		// if ($('.chart_of_accounts_input').length > 0) {
+		// 	$('.chart_of_accounts_input').mask("99999-99", { selectOnFocus: true });
+		// }
+	
+		// // $('.numeric_input').mask('0,000,000,000', { reverse: true, selectOnFocus: true });
+		// // $('.numeric_input').css({ 'text-align': 'right' });
+		// // if ($(".numeric_input").next().hasClass('form-control-feedback')) {
+		// // 	$(".numeric_input").next().prev().css({ 'padding-right': '50px' });
+		// // }
+		// $('.numeric_input').mask('0,000,000,000', { reverse: true, selectOnFocus: true });
+		// $('.numeric_input').css({ 'text-align': 'right' });
+		// if ($(".numeric_input").next().hasClass('form-control-feedback')) {
+		// 	$(".numeric_input").next().prev().css({ 'padding-right': '50px' });
+		// }
+		// $('.numeric_input').keyup(function(){
+		//     if ($(this).val().toString().length == 0){
+		//         $(this).val(0);
+		//         $(this).focus();
+		//         $(this).select();
+		//     }
+		// });
+		// $('.plat_nomor_input').mask('0000', { reverse: true, selectOnFocus: true });
+		// $('.nopol_input').mask('SZ 0XXX ZZZ', { selectOnFocus: true, translation: {
+		//         A: {pattern: /[A-Z0-9]/},
+		//         E: {pattern: /[A-Z0-9]/, optional: true},
+		//         S: {pattern: /[A-Z]/},
+		//         Z: {pattern: /[A-Z]/, optional: true},
+		//         Y: {pattern: /[0-9]/},
+		//         X: {pattern: /[0-9]/, optional: true}
+		//     }
+		// });
+		// $('.plat_nomor_input').css({ 'text-align': 'right' });
+		// if ($(".plat_nomor_input").next().hasClass('form-control-feedback')) {
+		//     $(".plat_nomor_input").next().prev().css({ 'padding-right': '50px' });
+		// }
+		// $('.plat_nomor_input').keyup(function(){
+		//     if ($(this).val().toString().length == 0){
+		//         $(this).val(0);
+		//         $(this).focus();
+		//         $(this).select();
+		//     }
+		// });
+	
+		// $('.hierarki_input').mask('99-99-99-99-99-99');
+		// $('.numeric_comma_input').mask('0,000,000,000.00', { reverse: true, selectOnFocus: true });
+		// $('.numeric_comma_input').css({ 'text-align': 'right' });
+		// if ($(".numeric_comma_input").next().hasClass('form-control-feedback')) {
+		// 	$(".numeric_comma_input").next().prev().css({ 'padding-right': '50px' });
+		// }
+		// $('.numeric_comma_input').keyup(function(){
+		//     if ($(this).val().toString().length == 0) $(this).val(0);
+		// });
+		// $('.numeric_comma4_input').mask('0,000,000,000.0000', { reverse: true, selectOnFocus: true });
+		// $('.numeric_comma4_input').css({ 'text-align': 'right' });
+		// if ($(".numeric_comma4_input").next().hasClass('form-control-feedback')) {
+		// 	$(".numeric_comma4_input").next().prev().css({ 'padding-right': '50px' });
+		// }
+		// $('.numeric_comma4_input').keyup(function(){
+		//     if ($(this).val().toString().length == 0) $(this).val(0);
+		// });
+		// // $('.datetime_input').daterangepicker(initDatePicker());
+		// // $('.daterange_input').daterangepicker(initDateRangePicker());
+		// $('.datetime_input').each(function () {
+		// 	$(this)[ 0 ].readonly = true;
+		// })
+		// $('.datetime_input').datetimepicker({
+		// 	locale: 'id',
+		// 	showTodayButton: true,
+		// 	format: 'DD/MM/YYYY'
+		// });
+		// $('.time_input').datetimepicker({
+		//     locale: 'id',
+		//     // showTodayButton: true,
+		//     format: 'LT'
+		// });
+		// $('.datetime_input').each(function () {
+		// 	$(this)[ 0 ].readonly = true;
+		// })
+		// $('.daterange_input').datetimepicker();
+		// $('[data-toggle="popover"]').popover({
+		// 	html: true
+		// });
+		// $('.bpkb_input').focusout(function(){
+		//     console.log('masuk debug bpkb_input');
+		//     var str = $(this).val();
+		//     if ((str[1] == '-')&&(str[3] == '-')){
+		//         str = $(this).val().replace(/\-/gmi, '');
+		//         $(this).val(str.substr(1, str.length-1));
+		//     }else if ((str[1] == '-')&&(str.indexOf(' ') !== -1)){
+		//         str = $(this).val().replace(/\-/gmi, '');
+		//         $(this).val(str.split(' ')[0]);
+		//     }//asdfasde
+		// });
+	})();
 });
 document.addEventListener('BlueprintsLoaded', () => {
 	console.log('>>>>>> check for BlueprintsLoaded  in paradigm_revolution.js');
@@ -185,55 +309,28 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		data_pendukung: JSON.parse(JSON.stringify(template__node)),
 		keterangan: JSON.parse(JSON.stringify(template__node))
 	}
-	// Old Form Definition
-	// Form: [
-	// 	[
-	// 		'informasi_faktur',
-	// 	],
-	// 	[
-	// 		'identitas_pemilik',
-	// 		'identitas_kendaraan',
-	// 	],
-	// 	[
-	// 		'data_pendukung'
-	// 	],
-	// 	[
-	// 		'keterangan'
-	// 	]
-	// ]
 
 	form.Dataset.Layout = {
-		Form: {
-			"comment": "ROOT Form Container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-				{
-					"comment": "Header container", "tag": "div", "class": "box", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-						{
-							"comment": "Hero Container", "tag": "section", "class": "hero is-link m-0 p-0", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-								{ "comment": "Hero Body", "tag": "div", "class": "hero-body", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": `<p class="title">Transaksi Faktur Kendaraan Bermotor</p><p class="subtitle">Transaksi terima faktur dari Dealer</p>`, "content": [] }
-							]
-						},
-						{
-							"comment": "Breadcrumb Container", "tag": "div", "class": "mb-4 mt-2", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-								{
-									"comment": "Breadcrumb", "tag": "nav", "class": "breadcrumb is-pulled-right", "id": "", "style": "", "href": "", "data": {}, "aria": { "label": "breadbrumbs" }, "order": 0, "innerHTML": "", "content": [
-										{
-											"comment": "ul", "tag": "ul", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Bulma</a>", "content": [] },
-												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Documentation</a>", "content": [] },
-												{ "comment": "li", "tag": "li", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\">Components</a>", "content": [] },
-												{ "comment": "li", "tag": "li", "class": "is-active", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "<a href=\"#\" aria-current=\"page\">Breadcrumb</a>", "content": [] }
-											]
-										}
-									]
-								}
-							]
-						}
-					]
-				}
-			]
-		},
-		Preview: {}
+		Form: {"comment": "ROOT Form Container", "tag": "div", "class": "", "id": "form_root_container", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": []},
+		Preview: {"comment": "ROOT Preview Container", "tag": "div", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": []},
 	}
+
+	let testcard1 = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Elements.Box({
+		id: "Form Box", 
+		className: "", 
+		content: [ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Layout.Hero({
+			id: "Form Hero",
+			className: "is-link",
+			title: "Transaksi Terima Faktur Kendaraan Bermotor",
+			subtitle: "Terima faktur dari Dealer",
+		})],
+	});
+	console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
+	form.Dataset.Layout.Form.content = [testcard1];
+	console.log('testcard1 :>> ', testcard1);
+	testcard1 = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard1);
+	console.log('testcard1 :>> ', testcard1);
+	
 	
 	form.Dataset.Schema = [
 		{
@@ -258,7 +355,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				"Schema": [{
 					"id": "nomor_purchase_order",
 					"label": "Nomor PO",
-					"type": "text",
+					"type": "select",
 					"form": 1,
 					"subtype": "select",
 					"select_values": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
@@ -267,7 +364,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				},
 				{
 					"id": "nomor_mesin",
-					"type": "text",
+					"type": "number",
 					"form": 1
 				},
 				{
@@ -278,7 +375,6 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				},
 				{
 					"id": "hr",
-					"label": "HR",
 					"type": "separator",
 					"form": 1,
 				},
@@ -312,6 +408,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				{
 					"id": "tanggal",
 					"type": "timestamp without time zone",
+					"form": 1
+				},
+				{
+					"id": "add",
+					"class": "is-link",
+					"type": "button",
 					"form": 1
 				}]
 			}
@@ -765,12 +867,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	});
 	// console.log('str :>> ', str);
 
-	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	// let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
 	// document.querySelector('#testform').innerHTML = formstr;
 
 	let row = {
 		"comment": "Columns", "tag": "div", "class": "columns is-centered is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-			{ "comment": "Column", "tag": "div", "class": "column is-four-fifths", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+			{ "comment": "Column", "tag": "div", "class": "column", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
 		]
 	};
 	let cardstr ;
@@ -786,77 +888,82 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	row.content[0].innerHTML = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	form.Dataset.Layout.Form.content.push(row);
 
-	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+	console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
+	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	console.log('formstr :>> ', formstr);
+	document.querySelector('#testform').innerHTML += formstr;
 
-	row = {
-		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
-		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] }
-	] }
 
-	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
-		id: "identitas_pemilik", 
-		class: "is-flex-grow-1", 
-		style: "width:100%;", 
-		order: 0, 
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Identitas Pemilik", 
-		content: str[1],
-	});
-	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	row.content[0].innerHTML += cardstr;
+	// row = {
+	// 	"comment": "Columns", "tag": "div", "class": "columns is-gapless is-flesx", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+	// 	{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+	// 	{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] }
+	// ] }
 
-	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
-		id: "identitas_kendaraan", 
-		class: "is-flex-grow-1", 
-		style: "width:100%;", 
-		order: 1, 
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Identitas Kendaraan", 
-		content: str[2],
-	});
+	// testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	// 	id: "identitas_pemilik", 
+	// 	class: "is-flex-grow-1", 
+	// 	style: "width:100%;", 
+	// 	order: 0, 
+	// 	headerIcon: `<li class="fa fa-tv"></li>`, 
+	// 	header: "Identitas Pemilik", 
+	// 	content: str[1],
+	// });
+	// cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	// row.content[0].innerHTML += cardstr;
+
+	// testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	// 	id: "identitas_kendaraan", 
+	// 	class: "is-flex-grow-1", 
+	// 	style: "width:100%;", 
+	// 	order: 1, 
+	// 	headerIcon: `<li class="fa fa-tv"></li>`, 
+	// 	header: "Identitas Kendaraan", 
+	// 	content: str[2],
+	// });
 	
-	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	row.content[1].innerHTML += cardstr;
-	form.Dataset.Layout.Form.content.push(row);
+	// cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	// row.content[1].innerHTML += cardstr;
+	// form.Dataset.Layout.Form.content.push(row);
 
-	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+	// // document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
 
-	row = {
-		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-		{ "comment": "Column", "tag": "div", "class": "column is-flex is-four-fifths", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
-	] }
-	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
-		id: "data_pendukung", 
-		class: "is-flex-grow-1", 
-		style: "width:100%;", 
-		order: 2, 
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Data Pendukung", 
-		content: str[3],
-	});
-	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	row.content[0].innerHTML += cardstr;
-	form.Dataset.Layout.Form.content.push(row);
-	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+	// row = {
+	// 	"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+	// 	{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+	// ] }
+	// testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	// 	id: "data_pendukung", 
+	// 	class: "is-flex-grow-1", 
+	// 	style: "width:100%;", 
+	// 	order: 2, 
+	// 	headerIcon: `<li class="fa fa-tv"></li>`, 
+	// 	header: "Data Pendukung", 
+	// 	content: str[3],
+	// });
+	// cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	// row.content[0].innerHTML += cardstr;
+	// form.Dataset.Layout.Form.content.push(row);
+	// // document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
 
-	row = {
-		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
-		{ "comment": "Column", "tag": "div", "class": "column is-flex is-four-fifths", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
-	] }
-	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
-		id: "keterangan", 
-		class: "is-flex-grow-1", 
-		style: "width:100%;", 
-		order: 2, 
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Keterangan", 
-		content: str[4],
-	});
-	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
-	row.content[0].innerHTML += cardstr;
-	form.Dataset.Layout.Form.content.push(row);
-	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	// row = {
+	// 	"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
+	// 	{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
+	// ] }
+	// testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	// 	id: "keterangan", 
+	// 	class: "is-flex-grow-1", 
+	// 	style: "width:100%;", 
+	// 	order: 2, 
+	// 	headerIcon: `<li class="fa fa-tv"></li>`, 
+	// 	header: "Keterangan", 
+	// 	content: str[4],
+	// });
+	// cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	// row.content[0].innerHTML += cardstr;
+	// form.Dataset.Layout.Form.content.push(row);
+	// console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
+	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
 
 
 
@@ -938,3 +1045,5 @@ document.querySelector('#app_graph_container').innerHTML = zstr;
 document.querySelector('#add_graph_button').addEventListener('click', () => {
 	document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
 });
+
+

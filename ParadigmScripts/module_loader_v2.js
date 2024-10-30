@@ -158,6 +158,7 @@ if (typeof finder !== 'undefined') {
 		ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "LOADED";
 		ParadigmREVOLUTION.SystemCore.Modules.Utility = Utility;
 		ParadigmREVOLUTION.Utility = new Utility();
+		document.dispatchEvent(new Event('UtilitiesLoaded'));
 
 		if (cr) console.log('>>> Blueprint Loader');
 		let SysUtil = window.ParadigmREVOLUTION.Utility;

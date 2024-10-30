@@ -20,5 +20,6 @@
 		"titleBar.inactiveForeground": "#e7e7e799"
 	},
 	"peacock.color": "#0f3362",
-	"dimmer.enabled": false
+	"dimmer.enabled": false,
+	"liveServer.settings.port": 5501
 }

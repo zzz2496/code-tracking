@@ -142,6 +142,41 @@ export class Utility {
 
 	// NOTE - checkType
 	checkType = function (variable) {
+		if (variable instanceof Date) {
+			return "DateTime";
+		} else if (typeof variable === 'number') {
+			return "Number";
+		} else if (typeof variable === 'string') {
+			// Allow flexible matching of numbers with optional commas
+			if (/^-?[\d,]+(\.\d+)?$/.test(variable.replace(/,+/g, ''))) { 
+				return "Number";
+			} else if (["true", "yes", "ya", "sudah"].includes(variable.toLowerCase())) {
+				return "Boolean";
+			} else if (["false", "no", "tidak", "belum"].includes(variable.toLowerCase())) {
+				return "Boolean";
+			} else {
+				return "String";
+			}
+		} else if (typeof variable === 'boolean') {
+			return "Boolean";
+		} else if (Array.isArray(variable)) {
+			return "Array";
+		} else if (typeof variable === 'function') {
+			return "Function";
+		} else if (typeof variable === 'object') {
+			if (variable instanceof Element || variable instanceof HTMLElement) {
+				return "DOM Element";
+			} else {
+				return "Object";
+			}
+		} else if (variable === null) {
+			return 'null';
+		} else {
+			return "Unknown";
+		}
+	}
+	
+	checkTypeV1 = function (variable) {
 		// console.log(typeof variable);
 		if (variable instanceof Date) {
 			return "DateTime";
@@ -149,7 +184,7 @@ export class Utility {
 			return "Number";
 		} else if (typeof variable === 'string') {
 			// Check for string representations of numbers, allowing for commas as thousand separators
-			if (/^-?(\d{1,3}(,\d{3})*|\d+)(\.\d+)?$/.test(variable)) {
+			if (/^-?(\d{1,3}(,\d{4})*|\d+)(\.\d+)?$/.test(variable)) {
 				return "Number";
 			} else if (variable.toLowerCase() === "true" || variable.toLowerCase() === "yes" || variable.toLowerCase() === "ya" || variable.toLowerCase() === "sudah") {
 				return "Boolean";
@@ -292,6 +327,7 @@ export class Utility {
 	// NOTE - Strings related methods
 	Strings = {
 		"SafeString": (function (str, textDecoration) {
+			console.log('masuk safe string!');
 			/*
 				textDecoration = {
 					"textOverlay": "some overlay %%% some other overlay" // %%% will be replaced by the original text from the array
@@ -306,6 +342,7 @@ export class Utility {
 			*/
 
 			let datatype = this.checkType(str);
+			console.log('datatype :>> ', datatype);
 			let sanitizedString = '';
 			switch (datatype) {
 				case 'DateTime':
@@ -354,12 +391,13 @@ export class Utility {
 					break;
 				case 'String':
 					sanitizedString = (str.length > 0) ? str
-						.replace(/[^a-zA-Z0-9\/\s\-_,.()+@=$%:&<>'"]/g, '')
+						.replace(/[^a-zA-Z0-9\/\s\-_\,.()+@=$%:&<>'"]/gmi, '')
 						.replace(/\s+/g, ' ')
-						.trim() : '';
+						.trim() : '0';
 
 					if (typeof textDecoration != 'undefined') {
 						if (textDecoration.hasOwnProperty('numberProcessing')) {
+							console.log('sanitizedString :>> ', sanitizedString);
 							sanitizedString = this.Numbers.ThousandSeparator(sanitizedString);
 						}
 						if (textDecoration.hasOwnProperty('textOverlay')) {
@@ -371,7 +409,7 @@ export class Utility {
 				case 'Number':
 					str = str.toString();
 					sanitizedString = (str.length > 0) ? str
-						.replace(/[^a-zA-Z0-9\/\s\-_,.()+@=$%:&<>'"]/g, '')
+						.replace(/[^0-9]/gmi, '')
 						.replace(/\s+/g, ' ')
 						.trim() : '';
 					if (typeof textDecoration != 'undefined') {
@@ -539,8 +577,7 @@ export class Utility {
 					break;
 				case 'Number':
 					if (typeof input === "string") {
-						console.log('masuk atas sini');
-						input = input.replace(',', '');  // Remove the period from the string
+						input = input.replace(',', '');
 					}
 					if (isNaN(input) || !isFinite(input)) {
 						return (nullable) ? null : 0;
@@ -593,7 +630,6 @@ export class Utility {
 			if (num == null) {
 				num = 0;
 			}
-
 			// Check if num is a string and if so, attempt to convert it to a number
 			if (typeof num === "string") {
 				if (isNaN(Number(num))) {
@@ -2746,6 +2782,11 @@ export class Utility {
 		}
 	};
 	DOMComponents = {
+		"addGlobalEventListener": (type, selector, callback, parent = document) => {
+			parent.addEventListener(type, e => {
+				callback(e);
+			});
+		},
 		"traverseDOMProxyOBJ": ((element, callback) => {
 			let html = `<${element.tag}`;
 	
@@ -2819,7 +2860,20 @@ export class Utility {
 					order = 0, 
 					innerHTML = "", 
 					content = []
-				} )=> {
+				}) => {
+					const sanitize = (html) => {
+						// Use a basic sanitizer to strip out unsafe HTML
+						const tempDiv = document.createElement('div');
+						tempDiv.textContent = html;
+						return tempDiv.innerHTML;
+					};
+				
+					// Helper to validate hrefs
+					const isSafeHref = (href) => {
+						// Only allow safe links; adjust regex based on what "safe" means in context
+						return /^https?:\/\/|^\/\//i.test(href);
+					};
+
 					return {
 						comment: "Box container",
 						tag: "div",
@@ -2976,7 +3030,7 @@ export class Utility {
 			"Layout": {
 				"Hero": (({ 
 					id = "", 
-					class: className = "", 
+					className = "", 
 					style = "", 
 					href = "", 
 					data = {}, 
@@ -2984,11 +3038,24 @@ export class Utility {
 					order = 0, 
 					title = "", 
 					subtitle = ""
-				} )=> {
+				}) => {
+					const sanitize = (html) => {
+						// Use a basic sanitizer to strip out unsafe HTML
+						const tempDiv = document.createElement('div');
+						tempDiv.textContent = html;
+						return tempDiv.innerHTML;
+					};
+				
+					// Helper to validate hrefs
+					const isSafeHref = (href) => {
+						// Only allow safe links; adjust regex based on what "safe" means in context
+						return /^https?:\/\/|^\/\//i.test(href);
+					};
+
 					const heroContainer = {
 						comment: "Header container",
 						tag: "div",
-						class: `box ${className}`,
+						class: `hero ${className}`,
 						id,
 						style,
 						href: isSafeHref(href) ? href : "",
@@ -3002,7 +3069,7 @@ export class Utility {
 					const heroSection = {
 						comment: "Hero Container",
 						tag: "section",
-						class: "hero is-link m-0 p-0",
+						class: "hero m-0 p-0",
 						content: [
 							{
 								comment: "Hero Body",
@@ -5028,10 +5095,11 @@ export class Utility {
 						</label>`;
 					break;
 					case 'number':
-						inputField = `<input type="number" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} />`;
+						// inputField = `<input type="number" id="${$id}___${i}" name="${i}" class="input number_input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
+						inputField = `<input type="text" id="${$id}___${i}" name="${i}" class="input number_input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 						break;
 					case 'textarea':
-						inputField = `<textarea id="${$id}___${i}" name="${i}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''}>${fieldContent}</textarea>`;
+						inputField = `<textarea id="${$id}___${i}" name="${i}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''} autocomplete="off">${fieldContent}</textarea>`;
 						break;
 					
 					case 'select':
@@ -5047,7 +5115,7 @@ export class Utility {
 						break;
 			
 					default: // 'text' or other default cases
-						inputField = `<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} />`;
+						inputField = `<input type="text" id="${$id}___${i}" name="${i}" class="input ${d_class}" value="${fieldContent}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 						break;
 				}
 			
@@ -5119,21 +5187,24 @@ export class Utility {
 
 				// Determine the input type (e.g., text, select, checkbox, etc.)
 				switch (type) {
+					case 'button':
+						inputField = `<button id="${$id}___${id}" name="${id}" class="button ${d_class}" value="${value}" ${readonly ? 'disabled' : '' } autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
+					break;
 					case 'separator':
 						inputField = `<hr />`;
 						break;
 					case 'boolean':
 						inputField = `
 						<label class="checkbox">
-							<input type="checkbox" id="${$id}___${id}" name="${id}" class="checkbox is-large ${d_class}" ${value ? 'checked' : ''} ${readonly ? 'disabled' : ''} />
+							<input type="checkbox" id="${$id}___${id}" name="${id}" class="checkbox is-large ${d_class}" ${value ? 'checked' : ''} ${readonly ? 'disabled' : ''} autocomplete="off"/>
 							${utilily.Strings.UCwords(id.replace(/\_/g, ' '))}
 						</label>`;
 						break;
 					case 'number':
-						inputField = `<input type="number" id="${$id}___${id}" name="${id}" class="input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} />`;
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 						break;
 					case 'textarea':
-						inputField = `<textarea id="${$id}___${id}" name="${id}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''}>${value}</textarea>`;
+						inputField = `<textarea id="${$id}___${id}" name="${id}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''} autocomplete="off">${value}</textarea>`;
 						break;
 					case 'select':
 						inputField = `<div class="select">
@@ -5143,7 +5214,7 @@ export class Utility {
 									</div>`;
 						break;
 					default:
-						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} />`;
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 						break;
 				}
 
@@ -5171,10 +5242,12 @@ export class Utility {
 				if (form === 1) {
 					str += `<div class="field is-horizontal">`;
 
-					if (label || (field.type !== 'separator' && field.type !== 'button')) {
+					if (label || (field.type !== 'separator')) {
+						let tlabel = label || Util.Strings.UCwords(id.replace(/_/g, ' '));
+						if (field.type == 'button') tlabel = '';
 						str += `<div class="field-label is-normal">
 									<label class="label" id="id_label___${$id}___${id}">
-										${label || Util.Strings.UCwords(id.replace(/_/g, ' '))}
+										${tlabel}
 									</label>
 								</div>`;
 					}
