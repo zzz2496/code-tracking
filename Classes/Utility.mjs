@@ -2849,8 +2849,36 @@ export class Utility {
 		}
 	};
 	DOMComponents = {
-		"addGlobalEventListener": (type, selector, callback, parent = document) => {
+		addGlobalEventListener: function (type, selector, callback, parent = document) {
+			const nonBubblingEvents = ['focus', 'blur', 'keyup'];
+		
+			// Add event listener on the parent (or global) scope
+			parent.addEventListener(type, (e) => {
+				console.log('addGlobalEventListener :>> ', type, selector);
+		
+				// Check if the event target matches the selector
+				if (e.target.matches(selector)) {
+					// Directly call callback if the event bubbles
+					if (!nonBubblingEvents.includes(type)) {
+						callback(e);
+					} else {
+						// For non-bubbling events, manually trigger on ancestors
+						let currentElement = e.target;
+						while (currentElement && currentElement !== parent) {
+							if (currentElement.matches(selector)) {
+								callback(e);
+							}
+							currentElement = currentElement.parentElement;
+						}
+					}
+				}
+			}, true); // Using capture phase to catch events early, for non-bubbling events
+		},
+		
+		
+		"addGlobalEventListenerV1": (type, selector, callback, parent = document) => {
 			parent.addEventListener(type, e => {
+				console.log('addGlobalEventListener :>> ', type, selector);
 				if (e.target.matches(selector)) callback(e);
 			});
 		},
@@ -5150,7 +5178,6 @@ export class Utility {
 				const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 				let inputField = '';
 
-				// Determine the input type (e.g., text, select, checkbox, etc.)
 				switch (type) {
 					case 'button':
 						inputField = `<button id="${$id}___${id}" name="${id}" class="button ${d_class}" value="${value}" ${readonly ? 'disabled' : '' } autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
@@ -5166,23 +5193,23 @@ export class Utility {
 						</label>`;
 						break;
 					case 'number':
-						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input number_input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input number_input is-success ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 						break;
 					case 'textarea':
 						inputField = `<textarea id="${$id}___${id}" name="${id}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''} autocomplete="off">${value}</textarea>`;
 						break;
 						case 'select':
-						inputField = `<div class="select">
+						inputField = `<div class="select is-link">
 										<select id="${$id}___${id}" name="${id}" class="select_input ${d_class}">
 											${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
 										</select>
 									</div>`;
 						break;
 					case 'text_select':
-						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input text_select ${d_class}" value="" ${readonly ? 'readonly' : ''} autocomplete="off" data-select-values='${JSON.stringify(value)}'/>`;
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input text_select is-link ${d_class}" value="" ${readonly ? 'readonly' : ''} autocomplete="off" data-select-values='${JSON.stringify(value)}'/>`;
 						break;
 					default:
-						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input text_input ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
+						inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input text_input is-info ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 						break;
 				}
 
@@ -5191,17 +5218,84 @@ export class Utility {
 					return `<div class="control">${inputField}</div>`;
 				}
 
-				if (!head && tail) {
-					return `<p class="control">${inputField}</p><p class="control"><a class="button is-static">${tail}</a></p>`;
-				}
-
 				if (head && !tail) {
-					return `<p class="control"><a class="button is-static">${head}</a></p><p class="control">${inputField}</p>`;
+					switch (head.type) {
+						case 'label': 
+							return `<p class="control"><a class="button is-static">${head.value}</a></p><p class="control">${inputField}</p>`;
+							break;
+						case 'input':
+							return `<p class="control"><input type="text" id="" name="" class="input head_input" value="" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+							break;
+						case 'select':
+							return `<p class="control">
+									<div class="select">
+										<select id="" name="" class="select_input head_input ${d_class}">
+											${Array.isArray(head.value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+										</select>
+									</div>
+								</p>`;
+							break;
+					}
 				}
-
-				return `<p class="control"><a class="button is-static">${head}</a></p><p class="control">${inputField}</p><p class="control"><a class="button is-static">${tail}</a></p>`;
+				if (!head && tail) {
+					switch (tail.type) {
+						case 'label': 
+							return `<p class="control">${inputField}</p><p class="control"><a class="button is-static">${tail.value}</a></p>`;
+							break;
+						case 'input':
+							return `<p class="control"><input type="text" id="" name="" class="input tail_input" value="" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+							break;
+						case 'select':
+							return `<p class="control">
+									<div class="select">
+										<select id="" name="" class="select_input tail_input ${d_class}">
+											${Array.isArray(tail.value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+										</select>
+									</div>
+								</p>`;
+							break;
+					}
+				}
+				if (head && tail) {
+					let zstr = "";
+					switch (head.type) {
+						case 'label': 
+							zstr += `<p class="control"><a class="button is-static">${Array.isArray(head.value) ? head.value[0] : head.value}</a></p>`;
+							break;
+						case 'input':
+							zstr += `<p class="control"><input type="text" id="" name="" class="input head_input" value="" placeholder="${Array.isArray(head.value) ? head.value[0] : head.value}" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+							break;
+						case 'select':
+							zstr += `<p class="control">
+									<span class="select">
+										<select id="" name="" class="select_input head_input ${d_class}">
+											${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+										</select>
+									</span>
+								</p>`;
+							break;
+					}
+					zstr += `<p class="control">${inputField}</p>`;
+					switch (tail.type) {
+						case 'label': 
+							zstr += `<p class="control"><a class="button is-static">${Array.isArray(tail.value) ? tail.value[0] : tail.value}</a></p>`;
+							break;
+						case 'input':
+							zstr += `<p class="control"><input type="text" id="" name="" class="input tail_input" value="" placeholder="${Array.isArray(tail.value) ? tail.value[0] : tail.value}" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+							break;
+						case 'select':
+							zstr += `<p class="control">
+									<span class="select">
+										<select id="" name="" class="select_input tail_input ${d_class}">
+											${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+										</select>
+									</span>
+								</p>`;
+							break;
+					}
+					return zstr;
+				}
 			}
-
 			let str = '<div class="paradigm-form">';
 			let Util = this;
 			// console.log('Util :>> ', Util);
@@ -5220,7 +5314,7 @@ export class Utility {
 					}
 					
 					str += `<div class="field-body">`;
-					str += field.tail ? `<div class="field has-addons">` : `<div class="field">`;
+					str += (field.head || field.tail) ? `<div class="field has-addons">` : `<div class="field">`;
 					str += makeField($id, field, Util);
 					str += `</div></div></div>`;
 				}

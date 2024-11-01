@@ -4,6 +4,36 @@ if (cr) console.log('>>> >>> >>> >>> ParadigmREVOLUTION');
 document.addEventListener('UtilitiesLoaded', () => {
 	console.log('>>>>>> check for UtilitiesLoaded in paradigm_revolution.js');
 	(() => {
+		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.text_input', (e) => {
+			e.target.value = ParadigmREVOLUTION.Utility.Strings.SafeString(e.target.value);
+			e.target.dataset.textinput = 'initialized';
+		}, document.querySelector('#testform'));
+		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.number_input', (e) => {
+			e.target.value = ParadigmREVOLUTION.Utility.Numbers.ThousandSeparator(e.target.value.replace(/[^0-9\.\-]/gmi, ''), '.');
+			e.target.dataset.numberinput = 'initialized';
+		}, document.querySelector('#testform'));
+		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.number_input', (e) => {
+			// Clear any previous timer
+			clearTimeout(e.target.debounceTimeout);
+	
+			// Set a new timer for 0.5 seconds
+			e.target.debounceTimeout = setTimeout(() => {
+				e.target.value = ParadigmREVOLUTION.Utility.Numbers.ThousandSeparator(
+					e.target.value.replace(/[^0-9\.\-]/g, ''), // Remove non-numeric characters except '.' and '-'
+					'.'
+				);
+				e.target.dataset.numberinput = 'initialized';
+			}, 500);
+		}, document.querySelector('#testform'));
+		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('focusin', '.text_select', (e) => {
+			console.log('init text_select');
+			if (e.target.dataset.textselectinput !== 'initialized') {
+				console.log('id >>>>', e.target.id.split('___'));
+				ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(e.target, JSON.parse(e.target.dataset.selectValues));
+				e.target.dataset.textselectinput = 'initialized';
+			}
+		});
+	
 	
 		// $('.text_input').keyup(function (e) {
 		//     $(this).val(convert_to_safe_string($(this).val()));
@@ -329,6 +359,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	form.Dataset.Schema = [
 		{
 			"id": "informasi_faktur",
+			"type": "record", //record or array >>> array of records
+			"icon": `<li class="fa fa-tv"></li>`,
 			"order": 100,
 			"Dataset": {
 				"Layout": {
@@ -352,8 +384,18 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 					"type": "text_select",
 					"form": 1,
 					"value": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
-					"head": "Head",
-					"tail": "Tail"
+					"head": {
+						"type": "select", //input/select/label
+						"value": 'Mata Uang', //string or array
+						"append_to_value": 1,
+						"readonly":0
+					},
+					"tail": {
+						"type": "label", //input/select/label
+						"value": ['Waaa', 'Wiii', 'Wuuu', 'Weee', 'Wooo'], //string or array
+						"append_to_value": 1,
+						"readonly":0
+					}
 				},
 				{
 					"id": "nomor_mesin",
@@ -373,9 +415,21 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				},
 				{
 					"id": "purchase_order",
-					"type": "text_select",
+					"type": "select",
 					"form": 1,
 					"value": ["Sed", "atque", "suscipit", "Consequatur", "ipsum", "cum", "quia", "mollitia", "et", "rerum", "inventore", "occaecati", "molestias.", "Velit", "reprehenderit", "voluptatum", "ut", "hic", "rerum.", "Natus", "perferendis", "laboriosam", "omnis.", "Dolor", "voluptatem", "et", "eligendi", "ducimus.", "Omnis", "ratione", "enim", "et", "quis", "consequatur", "quia", "voluptatum", "ut."],
+					"head": {
+						"type": "label", //input/select/label
+						"value": 'PO/', //string or array
+						"append_to_value": 1,
+						"readonly":0
+					},
+					"tail": {
+						"type": "label", //input/select/label
+						"value": ['XX', 'YY', 'ZZ'], //string or array
+						"append_to_value": 1,
+						"readonly":0
+					},
 					"readonly": 0
 				},
 				{
@@ -414,6 +468,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			}
 		}, {
 			"id": "identitas_pemilik",
+			"type": "record",
+			"icon": `<li class="fa fa-person"></li>`,
 			"order": 200,
 			"Dataset": {
 				"Layout": {
@@ -517,6 +573,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			}
 		}, {
 			"id": "identitas_kendaraan",
+			"icon": `<li class="fa fa-motorcycle"></li>/<li class="fa fa-car"></li>`,
+			"type": "record",
 			"order": 300,
 			"Dataset": {
 				"Layout": {
@@ -548,8 +606,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 						"type": "select",
 						"form": 1,
 						"value": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
-						"head": "XOM-",
-						"tail": "-ZZZ"
+						"head": {
+							"type": "label", //input/select/label
+							"value": 'FH/CC', //string or array
+							"append_to_value": 1,
+							"readonly":0
+						},
 					},
 					{
 						"id": "kode_atpm",
@@ -587,7 +649,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 						"type": "number",
 						"form": 1,
 						"readonly": 0,
-						"tail": "cc",
+						"tail": {
+							"type": "label", //input/select/label
+							"value": "cc", //string or array
+							"append_to_value": 1,
+							"readonly":0
+						},
 						"value": 0
 					},
 					{
@@ -636,6 +703,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			}
 		}, {
 			"id": "data_pendukung",
+			"icon": `<li class="fa fa-headset"></li>`,
+			"type": "record",
 			"order": 400,
 			"Dataset": {
 				"Layout": {
@@ -643,12 +712,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 					"Properties": {
 						"FormEntry": {
 							"Show": 1,
-							"Label": "Data'Pendukung",
+							"Label": "Data Pendukung",
 							"ShowLabel": 1,
 						},
 						"Preview": {
 							"Show": 1,
-							"Label": "Data'Pendukung",
+							"Label": "Data Pendukung",
 							"ShowLabel": 1,
 						}
 					}
@@ -689,6 +758,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			}
 		}, {
 			"id": "keterangan",
+			"type": "record",
+			"icon": `<li class="fa fa-clipboard"></li>`,
 			"order": 500,
 			"Dataset": {
 				"Layout": {
@@ -854,12 +925,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// })();
 
 	let formgen = ParadigmREVOLUTION.Utility.Forms;
-	let str = [];
+	// let str = [];
 	let gridstr = '';
 
-	form.Dataset.Schema.forEach((d, i) => {
-		str.push(formgen.GenerateFormArray(d.id, d.Dataset.Schema));
-	});
+	// form.Dataset.Schema.forEach((d, i) => {
+	// 	str.push(formgen.GenerateFormArray(d.id, d.Dataset.Schema));
+	// });
 	// console.log('str :>> ', str);
 
 	// let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
@@ -876,17 +947,13 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		id: "informasi_faktur", 
 		order: 0,
 		style: "width:100%;",
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Informasi Faktur", 
-		content: str[0]
+		headerIcon: form.Dataset.Schema[0].icon,
+		header: form.Dataset.Schema[0].Dataset.Layout.Properties.Preview.Label, 
+		content: formgen.GenerateFormArray(form.Dataset.Schema[0].id, form.Dataset.Schema[0].Dataset.Schema)
 	});
 	row.content[0].innerHTML = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	form.Dataset.Layout.Form.content.push(row);
-
-	// console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
 	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
-	// console.log('formstr :>> ', formstr);
-	// document.querySelector('#testform').innerHTML += formstr;
 
 
 	row = {
@@ -900,9 +967,9 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		class: "is-flex-grow-1", 
 		style: "width:100%;", 
 		order: 0, 
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Identitas Pemilik", 
-		content: str[1],
+		headerIcon: form.Dataset.Schema[1].icon, 
+		header: form.Dataset.Schema[1].Dataset.Layout.Properties.Preview.Label, 
+		content: formgen.GenerateFormArray(form.Dataset.Schema[1].id, form.Dataset.Schema[1].Dataset.Schema)
 	});
 	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	row.content[0].innerHTML += cardstr;
@@ -912,9 +979,9 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		class: "is-flex-grow-1", 
 		style: "width:100%;", 
 		order: 1, 
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Identitas Kendaraan", 
-		content: str[2],
+		headerIcon: form.Dataset.Schema[2].icon, 
+		header: form.Dataset.Schema[2].Dataset.Layout.Properties.Preview.Label, 
+		content: formgen.GenerateFormArray(form.Dataset.Schema[2].id, form.Dataset.Schema[2].Dataset.Schema)
 	});
 	
 	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
@@ -932,14 +999,13 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		class: "is-flex-grow-1", 
 		style: "width:100%;", 
 		order: 2, 
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Data Pendukung", 
-		content: str[3],
+		headerIcon: form.Dataset.Schema[3].icon, 
+		header: form.Dataset.Schema[3].Dataset.Layout.Properties.Preview.Label, 
+		content: formgen.GenerateFormArray(form.Dataset.Schema[3].id, form.Dataset.Schema[3].Dataset.Schema)
 	});
 	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	row.content[0].innerHTML += cardstr;
 	form.Dataset.Layout.Form.content.push(row);
-	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
 
 	row = {
 		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
@@ -950,101 +1016,15 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		class: "is-flex-grow-1", 
 		style: "width:100%;", 
 		order: 2, 
-		headerIcon: `<li class="fa fa-tv"></li>`, 
-		header: "Keterangan", 
-		content: str[4],
+		headerIcon: form.Dataset.Schema[4].icon, 
+		header: form.Dataset.Schema[4].Dataset.Layout.Properties.Preview.Label, 
+		content: formgen.GenerateFormArray(form.Dataset.Schema[4].id, form.Dataset.Schema[4].Dataset.Schema)
 	});
 	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
 	row.content[0].innerHTML += cardstr;
 	form.Dataset.Layout.Form.content.push(row);
 	// console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
 	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
-
-	ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.text_input', (e) => {
-		e.target.value = ParadigmREVOLUTION.Utility.Strings.SafeString(e.target.value);
-		e.target.dataset.textinput = 'initialized';
-	}, document.querySelector('#form_root_container'));
-	// ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.number_input', (e) => {
-	// 	e.target.value = ParadigmREVOLUTION.Utility.Numbers.ThousandSeparator(e.target.value.replace(/[^0-9\.\-]/gmi, ''), '.');
-	// 	e.target.dataset.numberinput = 'initialized';
-	// }, document.querySelector('#form_root_container'));
-	ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.number_input', (e) => {
-		// Clear any previous timer
-		clearTimeout(e.target.debounceTimeout);
-
-		// Set a new timer for 0.5 seconds
-		e.target.debounceTimeout = setTimeout(() => {
-			e.target.value = ParadigmREVOLUTION.Utility.Numbers.ThousandSeparator(
-				e.target.value.replace(/[^0-9\.\-]/g, ''), // Remove non-numeric characters except '.' and '-'
-				'.'
-			);
-			e.target.dataset.numberinput = 'initialized';
-		}, 500);
-	}, document.querySelector('#form_root_container'));
-	
-	ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('focusin', '.text_select', (e) => {
-		console.log('init text_select');
-		if (e.target.dataset.textselectinput !== 'initialized') {
-			console.log('id >>>>', e.target.id.split('___'));
-			ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(e.target, JSON.parse(e.target.dataset.selectValues));
-			e.target.dataset.textselectinput = 'initialized';
-		}
-	}, document.querySelector('#form_root_container'));
-
-	
-
-	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#informasi_faktur___purchase_order'), ['Jaylen', 'Effie', 'Gudrun', 'Bennett', 'Chester']);
-
-	// str = {};
-	// let formdata = makeForm;
-	// console.log('formdata :>> ', formdata);
-	// formdata.Dataset.Layout.PropertyOrder.forEach((d, i) => {
-	// 	str[d] = formgen.GenerateForm(d, formdata.Dataset.Schema[d].Dataset.Schema);
-	// });
-	// console.log('form string str :>> ', str);
-	// Object.keys(str).forEach((d, i) => {
-	// 	console.log('keys:>', d);
-	// })
-	// gridstr = '';
-	// formdata.Dataset.Layout.FormLayout.forEach((d, i) => {
-	// 	// gridstr += `<div uk-grid class='uk-grid-match uk-height-match="target: > div > .uk-card" uk-child-width-expand@m uk-child-width-expand@l'>`; // Start a new row for each inner array
-	// 	gridstr += `<div class="">`;
-	// 	d.forEach((dd, ii) => {
-	// 		gridstr += `
-	// 			<div class="section p-1">
-	// 				<div class="card">
-	// 					<div class="card-header">
-	// 						<div class="card-header-icon">
-	// 							<i class="fa fa-tv"></i>
-	// 						</div>
-	// 						<div class="card-header-title">
-	// 							<h3 class="has-text-weight-bold">${ParadigmREVOLUTION.Utility.Strings.ReadableUCWords(dd)}</h3>
-	// 						</div>
-	// 					</div>
-	// 					<div class="card-content">
-	// 						<div class="content">
-	// 							${str[dd]}
-
-	// 						</div>
-	// 					</div>
-	// 				</div>
-	// 			</div>
-	// 		`;
-	// 	});
-	// 	gridstr += '</div>'; // Close the row
-	// });
-	// gridstr += ''; // Close the row
-	// // document.querySelector('#formGenerator').innerHTML = gridstr;
-	// document.querySelector('#app_helper').innerHTML = `
-	// 	<div class="columns is-mobile is-gapless" id="test_helper_form">
-	// 		<div class="column" style="min-width:400px; max-width:400px; width:400px; padding:1rem;>${gridstr}</div>
-	// 	</div>`;
-	// let t_str = `<div class="column is-1" style="min-width:400px; max-width:400px; width:400px; padding:1rem;">${gridstr}</div>`;
-	// document.querySelector('#add_form_button').addEventListener('click', () => {
-	// 	document.querySelector('#test_helper_form').innerHTML += t_str;
-	// });
-	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), 'https://rickandmortyapi.com/api/character')
-	// ParadigmREVOLUTION.Utility.Forms.initSearchDropdown(document.querySelector('#Element___name'), ['Jaylen', 'Effie', 'Gudrun', 'Bennett', 'Chester']);
 });
 
 function makeCol(rows, color) {
@@ -1065,13 +1045,120 @@ function makeCol(rows, color) {
 
 if (cr) console.log('<<< <<< <<< <<< ParadigmREVOLUTION');
 // let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile has-background-primary" style="background: var(--has-background-primary-light);"></div>`;
-let zstr = `<div id="test_graph_content" class="columns is-gapless is-mobile grid2020-background" style="width:20000px; height:20000px;">Test graph content</div>`;
 // document.querySelector('#app_helper').innerHTML = zstr;
-document.querySelector('#app_graph_container').innerHTML = zstr;
 // document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'success');
 // document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
 document.querySelector('#add_graph_button').addEventListener('click', () => {
 	document.querySelector('#test_graph_content').innerHTML += makeCol(5, 'default');
 });
+document.querySelector('#add_form_button').addEventListener('click', () => {
+	document.querySelector('#app_helper').innerHTML += makeCol(5, 'default');
+});
 
 
+// Process chain as provided
+let chain = [
+	{
+		"id": "P1",
+		"input": {
+			"a": 1,
+			"b": 2
+		},
+		"process": "add",
+		"output": null,
+		"next_process": "P2"
+	},
+	{
+		"id": "P2",
+		"input": {
+			"a": "P1.output",  // Dynamic reference as a string for later evaluation
+			"b": 5
+		},
+		"process": "multiply",
+		"output": null,
+		"next_process": "P3"
+	},
+	{
+		"id": "P3",
+		"input": {
+			"a": "P2.output"
+		},
+		"process": "store",
+		"output": null,
+		"next_process": null
+	}
+];
+
+// Function definitions
+function add(a, b) {
+	return a + b;
+}
+
+function multiply(a, b) {
+	return a * b;
+}
+
+function store(a) {
+	console.log("Storing in database:", a);
+	// Simulated DB operation
+	// db.query("insert into db.test (content) values ($content)", { content: a });
+	return a;
+}
+
+// Process function lookup table
+const processFunctions = {
+	"add": add,
+	"multiply": multiply,
+	"store": store
+};
+
+// Helper to get input values, resolving dynamic references
+function resolveInput(input, chain) {
+	let resolvedInput = {};
+	for (let key in input) {
+		let value = input[key];
+		if (typeof value === "string" && value.includes(".output")) {
+			// Extract process ID and get output from chain
+			let processId = value.split(".")[0];
+			let processItem = chain.find(item => item.id === processId);
+			if (processItem) {
+				resolvedInput[key] = processItem.output;
+			}
+		} else {
+			resolvedInput[key] = value;
+		}
+	}
+	return resolvedInput;
+}
+
+// Function to execute the chain
+function executeChain(chain) {
+	let currentProcess = chain.find(item => item.id === "P1");
+
+	while (currentProcess) {
+		// Resolve inputs
+		const resolvedInput = resolveInput(currentProcess.input, chain);
+
+		// Execute the process
+		const processFunc = processFunctions[currentProcess.process];
+		if (processFunc) {
+			// Pass resolved inputs to the function using spread syntax
+			const output = processFunc(...Object.values(resolvedInput));
+			currentProcess.output = output;
+			console.log(`Process ${currentProcess.id} executed. Output:`, output);
+		} else {
+			console.error(`Process function ${currentProcess.process} not found`);
+			break;
+		}
+
+		// Move to the next process
+		if (currentProcess.next_process) {
+			currentProcess = chain.find(item => item.id === currentProcess.next_process);
+		} else {
+			currentProcess = null; // End of chain
+		}
+	}
+}
+
+// Run the execution chain
+executeChain(chain);
