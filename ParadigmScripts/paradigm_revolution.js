@@ -1071,17 +1071,27 @@ let chain = [
 	{
 		"id": "P2",
 		"input": {
-			"a": "P1.output",  // Dynamic reference as a string for later evaluation
-			"b": 5
+			"a": "P1.output",
+			"b": 1
 		},
-		"process": "multiply",
+		"process": "reduce",
 		"output": null,
 		"next_process": "P3"
 	},
 	{
 		"id": "P3",
 		"input": {
-			"a": "P2.output"
+			"a": "P2.output",  // Dynamic reference as a string for later evaluation
+			"b": 5
+		},
+		"process": "multiply",
+		"output": null,
+		"next_process": "P4"
+	},
+	{
+		"id": "P4",
+		"input": {
+			"a": "P3.output"
 		},
 		"process": "store",
 		"output": null,
@@ -1092,6 +1102,10 @@ let chain = [
 // Function definitions
 function add(a, b) {
 	return a + b;
+}
+
+function reduce(a, b) {
+	return a - b;
 }
 
 function multiply(a, b) {
@@ -1108,6 +1122,7 @@ function store(a) {
 // Process function lookup table
 const processFunctions = {
 	"add": add,
+	"reduce": reduce,
 	"multiply": multiply,
 	"store": store
 };
