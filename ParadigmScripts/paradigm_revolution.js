@@ -35,6 +35,114 @@ document.addEventListener('UtilitiesLoaded', () => {
 		});
 	
 	
+// Process chain as provided
+let chain = [
+	{
+		"id": "P1",
+		"input": {
+			"a": [1, 2, 3],
+		},
+		"process": "add",
+		"output": null,
+		"next_process": "P2"
+	},
+	{
+		"id": "P2",
+		"input": {
+			"a": ["P1.output", 3],
+		},
+		"process": "subtract",
+		"output": null,
+		"next_process": "P3"
+	},
+	{
+		"id": "P3",
+		"input": {
+			"a": ["P2.output", 5],  // Dynamic reference as a string for later evaluation
+		},
+		"process": "multiply",
+		"output": null,
+		"next_process": "P4"
+	},
+	{
+		"id": "P4",
+		"input": {
+			"a": "P3.output"
+		},
+		"process": "store",
+		"output": null,
+		"next_process": null
+	}
+		];
+		window.chain = chain;
+
+		let flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(ParadigmREVOLUTION.Utility.BasicMath, chain);
+		window.flow = flow;
+		flow.executeChain();
+// Process function lookup table
+// const processFunctions = ParadigmREVOLUTION.Utility.BasicMath;
+
+// // Helper to get input values, resolving dynamic references
+// function resolveInput(input, chain) {
+// 	let resolvedInput = {};
+// 	for (let key in input) {
+// 		let value = input[key];
+
+// 		if (Array.isArray(value)) {
+// 			// If the value is an array, resolve each element in it
+// 			resolvedInput[key] = value.map(item => {
+// 				if (typeof item === "string" && item.includes(".output")) {
+// 					let processId = item.split(".")[0];
+// 					let processItem = chain.find(item => item.id === processId);
+// 					return processItem ? processItem.output : null;
+// 				}
+// 				return item;  // Return literal value if no resolution needed
+// 			});
+// 		} else if (typeof value === "string" && value.includes(".output")) {
+// 			// If it's a string and references an output, resolve it
+// 			let processId = value.split(".")[0];
+// 			let processItem = chain.find(item => item.id === processId);
+// 			resolvedInput[key] = processItem ? processItem.output : null;
+// 		} else {
+// 			// Otherwise, use the value as-is
+// 			resolvedInput[key] = value;
+// 		}
+// 	}
+// 	return resolvedInput;
+// }
+
+// // Function to execute the chain
+// function executeChain(chain) {
+// 	let currentProcess = chain.find(item => item.id === "P1");
+
+// 	while (currentProcess) {
+// 		// Resolve inputs
+// 		const resolvedInput = resolveInput(currentProcess.input, chain);
+
+// 		// Execute the process
+// 		const processFunc = processFunctions[currentProcess.process];
+// 		if (processFunc) {
+// 			// Pass resolved inputs to the function using spread syntax
+// 			const output = processFunc(...Object.values(resolvedInput));
+// 			currentProcess.output = output;
+// 			console.log(`Process ${currentProcess.id} executed. Output:`, output);
+// 		} else {
+// 			console.error(`Process function ${currentProcess.process} not found`);
+// 			break;
+// 		}
+
+// 		// Move to the next process
+// 		if (currentProcess.next_process) {
+// 			currentProcess = chain.find(item => item.id === currentProcess.next_process);
+// 		} else {
+// 			currentProcess = null; // End of chain
+// 		}
+// 	}
+// }
+
+// // Run the execution chain
+// executeChain(chain);
+
 		// $('.text_input').keyup(function (e) {
 		//     $(this).val(convert_to_safe_string($(this).val()));
 		// });
@@ -1054,126 +1162,3 @@ document.querySelector('#add_graph_button').addEventListener('click', () => {
 document.querySelector('#add_form_button').addEventListener('click', () => {
 	document.querySelector('#app_helper').innerHTML += makeCol(5, 'default');
 });
-
-
-// Process chain as provided
-let chain = [
-	{
-		"id": "P1",
-		"input": {
-			"a": 1,
-			"b": 2
-		},
-		"process": "add",
-		"output": null,
-		"next_process": "P2"
-	},
-	{
-		"id": "P2",
-		"input": {
-			"a": "P1.output",
-			"b": 1
-		},
-		"process": "reduce",
-		"output": null,
-		"next_process": "P3"
-	},
-	{
-		"id": "P3",
-		"input": {
-			"a": "P2.output",  // Dynamic reference as a string for later evaluation
-			"b": 5
-		},
-		"process": "multiply",
-		"output": null,
-		"next_process": "P4"
-	},
-	{
-		"id": "P4",
-		"input": {
-			"a": "P3.output"
-		},
-		"process": "store",
-		"output": null,
-		"next_process": null
-	}
-];
-
-// Function definitions
-function add(a, b) {
-	return a + b;
-}
-
-function reduce(a, b) {
-	return a - b;
-}
-
-function multiply(a, b) {
-	return a * b;
-}
-
-function store(a) {
-	console.log("Storing in database:", a);
-	// Simulated DB operation
-	// db.query("insert into db.test (content) values ($content)", { content: a });
-	return a;
-}
-
-// Process function lookup table
-const processFunctions = {
-	"add": add,
-	"reduce": reduce,
-	"multiply": multiply,
-	"store": store
-};
-
-// Helper to get input values, resolving dynamic references
-function resolveInput(input, chain) {
-	let resolvedInput = {};
-	for (let key in input) {
-		let value = input[key];
-		if (typeof value === "string" && value.includes(".output")) {
-			// Extract process ID and get output from chain
-			let processId = value.split(".")[0];
-			let processItem = chain.find(item => item.id === processId);
-			if (processItem) {
-				resolvedInput[key] = processItem.output;
-			}
-		} else {
-			resolvedInput[key] = value;
-		}
-	}
-	return resolvedInput;
-}
-
-// Function to execute the chain
-function executeChain(chain) {
-	let currentProcess = chain.find(item => item.id === "P1");
-
-	while (currentProcess) {
-		// Resolve inputs
-		const resolvedInput = resolveInput(currentProcess.input, chain);
-
-		// Execute the process
-		const processFunc = processFunctions[currentProcess.process];
-		if (processFunc) {
-			// Pass resolved inputs to the function using spread syntax
-			const output = processFunc(...Object.values(resolvedInput));
-			currentProcess.output = output;
-			console.log(`Process ${currentProcess.id} executed. Output:`, output);
-		} else {
-			console.error(`Process function ${currentProcess.process} not found`);
-			break;
-		}
-
-		// Move to the next process
-		if (currentProcess.next_process) {
-			currentProcess = chain.find(item => item.id === currentProcess.next_process);
-		} else {
-			currentProcess = null; // End of chain
-		}
-	}
-}
-
-// Run the execution chain
-executeChain(chain);

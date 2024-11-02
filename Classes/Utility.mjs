@@ -175,42 +175,6 @@ export class Utility {
 			return "Unknown";
 		}
 	}
-	
-	checkTypeV1 = function (variable) {
-		// console.log(typeof variable);
-		if (variable instanceof Date) {
-			return "DateTime";
-		} else if (typeof variable === 'number') {
-			return "Number";
-		} else if (typeof variable === 'string') {
-			// Check for string representations of numbers, allowing for commas as thousand separators
-			if (/^-?(\d{1,3}(,\d{4})*|\d+)(\.\d+)?$/.test(variable)) {
-				return "Number";
-			} else if (variable.toLowerCase() === "true" || variable.toLowerCase() === "yes" || variable.toLowerCase() === "ya" || variable.toLowerCase() === "sudah") {
-				return "Boolean";
-			} else if (variable.toLowerCase() === "false" || variable.toLowerCase() === "no" || variable.toLowerCase() === "tidak" || variable.toLowerCase() === "belum") {
-				return "Boolean";
-			} else {
-				return "String";
-			}
-		} else if (typeof variable === 'boolean') {
-			return "Boolean";
-		} else if (Array.isArray(variable)) {
-			return "Array";
-		} else if (typeof variable === 'function') {
-			return "Function";
-		} else if (typeof variable === 'object') {
-			if (variable instanceof Element || variable instanceof HTMLElement) {
-				return "DOM Element";
-			} else {
-				return "Object";
-			}
-		} else if (variable === null) {
-			return 'null';
-		} else {
-			return "Unknown";
-		}
-	}
 	//NOTE - sanitizeInput function added to handle date time input sanitization;
 	sanitizeInput = (function (zinput) {
 		let input = zinput;
@@ -272,7 +236,117 @@ export class Utility {
 				break;
 		}
 	}).bind(this);
+	sanitizeHTML = (html) => {
+		// Use a basic sanitizer to strip out unsafe HTML
+		const tempDiv = document.createElement('div');
+		tempDiv.textContent = html;
+		return tempDiv.innerHTML;
+	};
+
+	// Helper to validate hrefs
+	isSafeHref = (href) => {
+		// Only allow safe links; adjust regex based on what "safe" means in context
+		return /^https?:\/\/|^\/\//i.test(href);
+	};
 	// NOTE - Booleans related methods.
+	BasicMath = {
+		calc: ((numbers, sign) => {
+			if (!Array.isArray(numbers)) {
+				console.error("Input must be an array.");
+				return 0;
+			}
+		
+			// Ensure array has at least one number; return early if empty
+			if (numbers.length === 0) {
+				console.warn("Input array is empty. Returning 0.");
+				return 0;
+			}
+		
+			// Initialize result based on operation
+			let result;
+			switch (sign) {
+				case '+':
+					result = 0;
+					for (let i = 0; i < numbers.length; i++) {
+						const num = numbers[i];
+						if (typeof num === "number" && isFinite(num)) {
+							result += num;
+						} else {
+							console.warn(`Invalid number at index ${i}: ${num} - ignored in sum.`);
+						}
+					}
+					break;
+		
+				case '-':
+					result = numbers[0];
+					for (let i = 1; i < numbers.length; i++) {
+						const num = numbers[i];
+						if (typeof num === "number" && isFinite(num)) {
+							result -= num;
+						} else {
+							console.warn(`Invalid number at index ${i}: ${num} - ignored in subtraction.`);
+						}
+					}
+					break;
+		
+				case '*':
+					result = 1;
+					for (let i = 0; i < numbers.length; i++) {
+						const num = numbers[i];
+						if (typeof num === "number" && isFinite(num)) {
+							result *= num;
+						} else {
+							console.warn(`Invalid number at index ${i}: ${num} - ignored in multiplication.`);
+						}
+					}
+					break;
+		
+				case '/':
+					result = numbers[0];
+					for (let i = 1; i < numbers.length; i++) {
+						const num = numbers[i];
+						if (typeof num === "number" && isFinite(num)) {
+							if (num === 0) {
+								console.warn(`Division by zero at index ${i}. Ignoring this value.`);
+								continue;
+							}
+							result /= num;
+						} else {
+							console.warn(`Invalid number at index ${i}: ${num} - ignored in division.`);
+						}
+					}
+					break;
+		
+				default:
+					console.error(`Invalid operation sign: ${sign}. Use +, -, *, or /.`);
+					return 0;
+			}
+		
+			return result;
+		}).bind(this),
+			
+		add: (numbers) => {
+			return this.BasicMath.calc(numbers, '+');
+		},
+		
+		// Subtraction function
+		subtract: (numbers) => {
+			return this.BasicMath.calc(numbers, '-');
+		},
+		
+		// Multiplication function
+		multiply: (numbers) => {
+			return this.BasicMath.calc(numbers, '*');
+		},
+		
+		// Division function
+		divide: (numbers) => {
+			return this.BasicMath.calc(numbers, '/');
+		},
+		store: (data) => {
+			return `Storing data into database: ${data}`;
+		}
+	};
 	Booleans = {
 		"SafeBoolean": (function (bool, return_false = true) {
 			let datatype = this.checkType(bool);
@@ -326,6 +400,31 @@ export class Utility {
 	}
 	// NOTE - Strings related methods
 	Strings = {
+		"Concat": (function (strings) {
+			if (!Array.isArray(strings)) {
+				console.error("Input must be an array.");
+				return "";
+			}
+	
+			let result = "";
+	
+			for (let i = 0; i < strings.length; i++) {
+				const str = strings[i];
+				if (typeof str === "string") {
+					result += str;
+				} else {
+					console.warn(`Invalid string at index ${i}: ${str} - ignored in concatenation.`);
+				}
+			}
+			return result;
+		}).bind(this),
+		"IndexOf": (function (string, needle) {				const str = strings[i];
+			if (typeof str === "string") {
+				return str.indexOf(needle);
+			} else {
+				console.warn(`Invalid string.`);
+			}
+		}).bind(this),
 		"SafeString": (function (str, textDecoration) {
 			/*
 				textDecoration = {
@@ -339,7 +438,6 @@ export class Utility {
 					}
 				}
 			*/
-
 			let datatype = this.checkType(str);
 			let sanitizedString = '';
 			switch (datatype) {
@@ -1020,6 +1118,13 @@ export class Utility {
 	};
 	// NOTE - Array related methods
 	Array = {
+		"forEach": (function (array, callback) {
+			if (Array.isArray(array)) {
+				array.forEach(callback);
+			} else {
+				console.warn('Invalid array.');
+			}
+		}).bind(this),
 		"IsArrayOK": (function (array, zlabel, return_array = false) {
 			if (arguments.length > 1) if (this.Strings.SafeString(zlabel).length === 0) label = '';
 			let label = zlabel + ' ';
@@ -3028,20 +3133,6 @@ export class Utility {
 					content = "", 
 					footer = "" 
 				}) => {
-					// Helper to sanitize HTML content
-					const sanitize = (html) => {
-						// Use a basic sanitizer to strip out unsafe HTML
-						const tempDiv = document.createElement('div');
-						tempDiv.textContent = html;
-						return tempDiv.innerHTML;
-					};
-				
-					// Helper to validate hrefs
-					const isSafeHref = (href) => {
-						// Only allow safe links; adjust regex based on what "safe" means in context
-						return /^https?:\/\/|^\/\//i.test(href);
-					};
-				
 					// Basic card structure
 					const card = {
 						comment: "Card",
@@ -3049,7 +3140,7 @@ export class Utility {
 						class: `card ${className}`,
 						id,
 						style,
-						href: isSafeHref(href) ? href : "",
+						href: this.isSafeHref(href) ? href : "",
 						data,
 						aria,
 						order,
@@ -3076,7 +3167,7 @@ export class Utility {
 								comment: "card-header-title",
 								tag: "p",
 								class: "card-header-title",
-								innerHTML: sanitize(header)
+								innerHTML: this.sanitizeHTML(header)
 							}
 						].filter(Boolean); // Remove null if headerIcon is empty
 				
@@ -3134,26 +3225,13 @@ export class Utility {
 					title = "", 
 					subtitle = ""
 				}) => {
-					const sanitize = (html) => {
-						// Use a basic sanitizer to strip out unsafe HTML
-						const tempDiv = document.createElement('div');
-						tempDiv.textContent = html;
-						return tempDiv.innerHTML;
-					};
-				
-					// Helper to validate hrefs
-					const isSafeHref = (href) => {
-						// Only allow safe links; adjust regex based on what "safe" means in context
-						return /^https?:\/\/|^\/\//i.test(href);
-					};
-
 					const heroContainer = {
 						comment: "Header container",
 						tag: "div",
 						class: `hero ${className}`,
 						id,
 						style,
-						href: isSafeHref(href) ? href : "",
+						href: this.isSafeHref(href) ? href : "",
 						data,
 						aria,
 						order,
@@ -3170,7 +3248,7 @@ export class Utility {
 								comment: "Hero Body",
 								tag: "div",
 								class: "hero-body",
-								innerHTML: `<p class="title">${sanitize(title)}</p><p class="subtitle">${sanitize(subtitle)}</p>`,
+								innerHTML: `<p class="title">${this.sanitizeHTML(title)}</p><p class="subtitle">${this.sanitizeHTML(subtitle)}</p>`,
 								content: []
 							}
 						]

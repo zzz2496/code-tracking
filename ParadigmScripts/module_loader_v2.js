@@ -4,12 +4,12 @@ if (cr) console.log('>>> Module Loader');
 // import { GraphSurface } from "../Classes/GraphSurface.mjs";
 // import { Connection} 	from "../Classes/GraphConnection.mjs";
 // import { WorkerThread } from "../Classes/WorkerThread.mjs";
-// import { Flowchart } 	from "../Classes/Flowchart.mjs";
+// import { Flow } 	from "../Classes/Flow.mjs";
 // import { Surreal } from '../../node_modules/surrealdb.js/dist/index.bundled.mjs';
 // import { surrealdbWasmEngines } from '../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js';
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 
-let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surrealdbWasmEngines, mqtt;
+let Utility, GraphSurface, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
 	"SystemCore": {
@@ -50,10 +50,10 @@ let ParadigmREVOLUTION = {
 				"Label": "WorkerThread",
 				"ShortLabel": "WT"
 			},
-			"Flowchart": {
+			"Flow": {
 				"Status": "NOT LOADED",
 				"Icon": "diagram-project",
-				"Label": "Flowchart",
+				"Label": "Flow",
 				"ShortLabel": "FCH"
 			},
 			"Surreal": {
@@ -98,7 +98,7 @@ let ParadigmREVOLUTION = {
 			"GraphSurface": GraphSurface,
 			"Connection": Connection,
 			"WorkerThread": WorkerThread,
-			"Flowchart": Flowchart,
+			"Flow": Flow,
 			"Surreal": Surreal,
 			"surrealdbWasmEngines": surrealdbWasmEngines,
 			"mqtt": mqtt
@@ -231,18 +231,18 @@ if (typeof finder !== 'undefined') {
 			}
 		},
 		{
-			importPromise: import("../Classes/Flowchart.mjs"),
+			importPromise: import("../Classes/Flow.mjs"),
 			onSuccess: (module) => {
-				const { Flowchart } = module;
-				if (cr) console.log(">>> ||| Flowchart imported successfully.");
-				ParadigmREVOLUTION.SystemCore.CoreStatus.Flowchart.Status = "LOADED";
-				ParadigmREVOLUTION.SystemCore.Modules.Flowchart = Flowchart;
-				document.dispatchEvent(new Event('FlowchartLoaded'));
+				const { Flow } = module;
+				if (cr) console.log(">>> ||| Flow imported successfully.");
+				ParadigmREVOLUTION.SystemCore.CoreStatus.Flow.Status = "LOADED";
+				ParadigmREVOLUTION.SystemCore.Modules.Flow = Flow;
+				document.dispatchEvent(new Event('FlowLoaded'));
 			},
 			onFailure: () => {
-				document.querySelector('#debugging').innerHTML += "Failed to import Flowchart.<br>";
-				ParadigmREVOLUTION.SystemCore.CoreStatus.Flowchart.Status = "FAILED TO LOAD";
-				console.error("Failed to import Flowchart.");
+				document.querySelector('#debugging').innerHTML += "Failed to import Flow.<br>";
+				ParadigmREVOLUTION.SystemCore.CoreStatus.Flow.Status = "FAILED TO LOAD";
+				console.error("Failed to import Flow.");
 			}
 		},
 		{
