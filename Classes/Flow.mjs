@@ -92,7 +92,7 @@ export class Flow {
 			}
 			
 			// Step mode stops after each process
-			if (this.run_mode_selected === "step") {
+			if (this.run_mode_selected === "step" ||this.run_mode_selected === "debug") {
 				this.cursor = this.cursor.next_process ? 
 					this.chain.find(item => item.id === this.cursor.next_process) : null;
 				break; // Stop after one step in step mode
