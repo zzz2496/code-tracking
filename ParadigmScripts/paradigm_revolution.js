@@ -1,18 +1,19 @@
-; let cr = true;
+let cr = true;
 if (cr) console.log('>>> >>> >>> >>> ParadigmREVOLUTION');
+
 
 document.addEventListener('UtilitiesLoaded', () => {
 	console.log('>>>>>> check for UtilitiesLoaded in paradigm_revolution.js');
 	(() => {
-		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.text_input', (e) => {
+		ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener('keyup', '.text_input', (e) => {
 			e.target.value = ParadigmREVOLUTION.Utility.Strings.SafeString(e.target.value);
 			e.target.dataset.textinput = 'initialized';
 		}, document.querySelector('#testform'));
-		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.number_input', (e) => {
+		ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener('keyup', '.number_input', (e) => {
 			e.target.value = ParadigmREVOLUTION.Utility.Numbers.ThousandSeparator(e.target.value.replace(/[^0-9\.\-]/gmi, ''), '.');
 			e.target.dataset.numberinput = 'initialized';
 		}, document.querySelector('#testform'));
-		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('keyup', '.number_input', (e) => {
+		ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener('keyup', '.number_input', (e) => {
 			// Clear any previous timer
 			clearTimeout(e.target.debounceTimeout);
 	
@@ -25,7 +26,7 @@ document.addEventListener('UtilitiesLoaded', () => {
 				e.target.dataset.numberinput = 'initialized';
 			}, 500);
 		}, document.querySelector('#testform'));
-		ParadigmREVOLUTION.Utility.DOMComponents.addGlobalEventListener('focusin', '.text_select', (e) => {
+		ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener('focusin', '.text_select', (e) => {
 			console.log('init text_select');
 			if (e.target.dataset.textselectinput !== 'initialized') {
 				console.log('id >>>>', e.target.id.split('___'));
@@ -35,51 +36,57 @@ document.addEventListener('UtilitiesLoaded', () => {
 		});
 	
 	
-// Process chain as provided
-let chain = [
-	{
-		"id": "P1",
-		"input": {
-			"a": [1, 2, 3],
-		},
-		"process": "add",
-		"output": null,
-		"next_process": "P2"
-	},
-	{
-		"id": "P2",
-		"input": {
-			"a": ["P1.output", 3],
-		},
-		"process": "subtract",
-		"output": null,
-		"next_process": "P3"
-	},
-	{
-		"id": "P3",
-		"input": {
-			"a": ["P2.output", 5],  // Dynamic reference as a string for later evaluation
-		},
-		"process": "multiply",
-		"output": null,
-		"next_process": "P4"
-	},
-	{
-		"id": "P4",
-		"input": {
-			"a": "P3.output"
-		},
-		"process": "store",
-		"output": null,
-		"next_process": null
-	}
+		// Process chain as provided
+		let chain = [
+			{
+				"id": "P1",
+				"input": {
+					"a": [1, 2, 3],
+				},
+				"process": "add",
+				"output": null,
+				"next_process": "P2"
+			},
+			{
+				"id": "P2",
+				"input": {
+					"a": ["P1.output", 3],
+				},
+				"process": "subtract",
+				"output": null,
+				"next_process": "P3"
+			},
+			{
+				"id": "P3",
+				"input": {
+					"a": ["P2.output", 5],  // Dynamic reference as a string for later evaluation
+				},
+				"process": "multiply",
+				"output": null,
+				"next_process": "P4"
+			},
+			{
+				"id": "P4",
+				"input": {
+					"a": "P3.output"
+				},
+				"process": "store",
+				"output": null,
+				"next_process": null
+			}
 		];
 		window.chain = chain;
 
+		// let flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(ParadigmREVOLUTION.Utility.BasicMath, chain);
+		// window.flow = flow;
+		// flow.executeChain();
+
 		let flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(ParadigmREVOLUTION.Utility.BasicMath, chain);
 		window.flow = flow;
-		flow.executeChain();
-// Process function lookup table
+		console.log(flow);
+		flow.Form.Run.executeChain();
+
+		// Process function lookup table
 // const processFunctions = ParadigmREVOLUTION.Utility.BasicMath;
 
 // // Helper to get input values, resolving dynamic references
@@ -447,10 +454,10 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		Preview: {"comment": "ROOT Preview Container", "tag": "div", "class": "", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": []},
 	}
 
-	let testcard1 = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Elements.Box({
+	let testcard1 = ParadigmREVOLUTION.Flow.Form.Components.BulmaCSS.Elements.Box({
 		id: "Form Box", 
 		className: "", 
-		content: [ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Layout.Hero({
+		content: [ParadigmREVOLUTION.Flow.Form.Components.BulmaCSS.Layout.Hero({
 			id: "Form Hero",
 			className: "is-link",
 			title: "Transaksi Terima Faktur Kendaraan Bermotor",
@@ -460,7 +467,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
 	form.Dataset.Layout.Form.content = [testcard1];
 	console.log('testcard1 :>> ', testcard1);
-	testcard1 = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard1);
+	testcard1 = ParadigmREVOLUTION.Flow.Form.Render.traverseDOMProxyOBJ(testcard1);
 	console.log('testcard1 :>> ', testcard1);
 	
 	
@@ -494,7 +501,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 					"value": ['Voluptates', 'dolores', 'qui', 'eum', 'adipisci', 'non', 'ut', 'occaecati', 'Et', 'expedita', 'autem', 'distinctio', 'commodi', 'sapiente', 'Harum', 'et', 'facere', 'non', 'Ipsum', 'laudantium', 'eius', 'dicta', 'consequatur', 'quaerat'],
 					"head": {
 						"type": "select", //input/select/label
-						"value": 'Mata Uang', //string or array
+						"value":  ["IDR", "USD", "SGD"], //string or array
 						"append_to_value": 1,
 						"readonly":0
 					},
@@ -523,7 +530,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 				},
 				{
 					"id": "purchase_order",
-					"type": "select",
+					"type": "text_select",
 					"form": 1,
 					"value": ["Sed", "atque", "suscipit", "Consequatur", "ipsum", "cum", "quia", "mollitia", "et", "rerum", "inventore", "occaecati", "molestias.", "Velit", "reprehenderit", "voluptatum", "ut", "hic", "rerum.", "Natus", "perferendis", "laboriosam", "omnis.", "Dolor", "voluptatem", "et", "eligendi", "ducimus.", "Omnis", "ratione", "enim", "et", "quis", "consequatur", "quia", "voluptatum", "ut."],
 					"head": {
@@ -921,15 +928,23 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		"string": "begin transaction;\n\n",
 		"array": ['begin transaction']
 	};
-	for (let index = 1; index <= 5; index++) {
-		let q = `create test:{ "DocumentType": "TFKB", "Version": 1, "DocumentID":${index}} content ${JSON.stringify(form)};`;
-		qstr.string += q + "\n\n";
-		qstr.array.push(q);
-	};
+for (let index = 1; index <= 50; index++) {
+	form.Order = index;
+	let q = `
+	create test:{ 
+		"DocumentType": "TFKB",
+		"Version": 1,
+		"DocumentID":${index},
+		"Timestamp": time::now() + ${index-1}d,
+	} content ${JSON.stringify(form)};`;
+	qstr.string += q + "\n\n";
+	qstr.array.push(q);
+};
 	qstr.string += 'commit transaction;';
 	qstr.array.push('commit transaction;');
 
 
+	console.log(qstr.string);
 	(async () => {
 		if (qstr != "") {
 			console.log('query :>> ', qstr);
@@ -938,12 +953,12 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 			await ram_db.Instance.connect('mem://');
 			await ram_db.Instance.query(qstr.string);
 
-			// console.log('Insert into TEST DB');
-			// await test_db.Instance.connect(test_db.Metadata.ConnectionInfo[0]);
-			// await test_db.Instance.signin(test_db.Metadata.ConnectionInfo[1].user);
+			console.log('Insert into TEST DB');
+			await test_db.Instance.connect(test_db.Metadata.ConnectionInfo[0]);
+			await test_db.Instance.signin(test_db.Metadata.ConnectionInfo[1].user);
 
-			// await test_db.Instance.use(test_db.Metadata.NSDB);
-			// await test_db.Instance.query(qstr);
+			await test_db.Instance.use(test_db.Metadata.NSDB);
+			await test_db.Instance.query(qstr);
 		}
 
 	})();
@@ -1041,7 +1056,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// });
 	// console.log('str :>> ', str);
 
-	// let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	// let formstr = ParadigmREVOLUTION.Flow.Form.Components.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
 	// document.querySelector('#testform').innerHTML = formstr;
 
 	let row = {
@@ -1051,7 +1066,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	};
 	let cardstr ;
 
-	let testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	let testcard = ParadigmREVOLUTION.Flow.Form.Components.BulmaCSS.Components.Card({
 		id: "informasi_faktur", 
 		order: 0,
 		style: "width:100%;",
@@ -1059,9 +1074,9 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		header: form.Dataset.Schema[0].Dataset.Layout.Properties.Preview.Label, 
 		content: formgen.GenerateFormArray(form.Dataset.Schema[0].id, form.Dataset.Schema[0].Dataset.Schema)
 	});
-	row.content[0].innerHTML = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	row.content[0].innerHTML = ParadigmREVOLUTION.Flow.Form.Render.traverseDOMProxyOBJ(testcard);
 	form.Dataset.Layout.Form.content.push(row);
-	let formstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	let formstr = ParadigmREVOLUTION.Flow.Form.Render.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
 
 
 	row = {
@@ -1070,7 +1085,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] }
 	] }
 
-	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	testcard = ParadigmREVOLUTION.Flow.Form.Components.BulmaCSS.Components.Card({
 		id: "identitas_pemilik", 
 		class: "is-flex-grow-1", 
 		style: "width:100%;", 
@@ -1079,10 +1094,10 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		header: form.Dataset.Schema[1].Dataset.Layout.Properties.Preview.Label, 
 		content: formgen.GenerateFormArray(form.Dataset.Schema[1].id, form.Dataset.Schema[1].Dataset.Schema)
 	});
-	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	cardstr = ParadigmREVOLUTION.Flow.Form.Render.traverseDOMProxyOBJ(testcard);
 	row.content[0].innerHTML += cardstr;
 
-	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	testcard = ParadigmREVOLUTION.Flow.Form.Components.BulmaCSS.Components.Card({
 		id: "identitas_kendaraan", 
 		class: "is-flex-grow-1", 
 		style: "width:100%;", 
@@ -1092,17 +1107,17 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		content: formgen.GenerateFormArray(form.Dataset.Schema[2].id, form.Dataset.Schema[2].Dataset.Schema)
 	});
 	
-	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	cardstr = ParadigmREVOLUTION.Flow.Form.Render.traverseDOMProxyOBJ(testcard);
 	row.content[1].innerHTML += cardstr;
 	form.Dataset.Layout.Form.content.push(row);
 
-	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(row);
+	// document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Flow.Form.Components.traverseDOMProxyOBJ(row);
 
 	row = {
 		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
 		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
 	] }
-	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	testcard = ParadigmREVOLUTION.Flow.Form.Components.BulmaCSS.Components.Card({
 		id: "data_pendukung", 
 		class: "is-flex-grow-1", 
 		style: "width:100%;", 
@@ -1111,7 +1126,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		header: form.Dataset.Schema[3].Dataset.Layout.Properties.Preview.Label, 
 		content: formgen.GenerateFormArray(form.Dataset.Schema[3].id, form.Dataset.Schema[3].Dataset.Schema)
 	});
-	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	cardstr = ParadigmREVOLUTION.Flow.Form.Render.traverseDOMProxyOBJ(testcard);
 	row.content[0].innerHTML += cardstr;
 	form.Dataset.Layout.Form.content.push(row);
 
@@ -1119,7 +1134,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		"comment": "Columns", "tag": "div", "class": "columns is-gapless is-mobile is-flex is-centered", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [
 		{ "comment": "Column", "tag": "div", "class": "column is-flex", "id": "", "style": "", "href": "", "data": {}, "aria": {}, "order": 0, "innerHTML": "", "content": [] },
 	] }
-	testcard = ParadigmREVOLUTION.Utility.DOMComponents.BulmaCSS.Components.Card({
+	testcard = ParadigmREVOLUTION.Flow.Form.Components.BulmaCSS.Components.Card({
 		id: "keterangan", 
 		class: "is-flex-grow-1", 
 		style: "width:100%;", 
@@ -1128,11 +1143,11 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		header: form.Dataset.Schema[4].Dataset.Layout.Properties.Preview.Label, 
 		content: formgen.GenerateFormArray(form.Dataset.Schema[4].id, form.Dataset.Schema[4].Dataset.Schema)
 	});
-	cardstr = ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(testcard);
+	cardstr = ParadigmREVOLUTION.Flow.Form.Render.traverseDOMProxyOBJ(testcard);
 	row.content[0].innerHTML += cardstr;
 	form.Dataset.Layout.Form.content.push(row);
 	// console.log('form.Dataset.Layout.Form :>> ', form.Dataset.Layout.Form);
-	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Utility.DOMComponents.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+	document.querySelector('#testform').innerHTML += ParadigmREVOLUTION.Flow.Form.Render.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
 });
 
 function makeCol(rows, color) {

@@ -122,6 +122,7 @@ let ParadigmREVOLUTION = {
 		},
 	},
 	"Utility": null,
+	"Form": null,
 	"Datastores": {},
 	"Initialization_Status": 0
 };
@@ -237,6 +238,7 @@ if (typeof finder !== 'undefined') {
 				if (cr) console.log(">>> ||| Flow imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Flow.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.Flow = Flow;
+				ParadigmREVOLUTION.Flow = new Flow();
 				document.dispatchEvent(new Event('FlowLoaded'));
 			},
 			onFailure: () => {

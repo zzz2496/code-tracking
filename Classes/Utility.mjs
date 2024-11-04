@@ -2954,335 +2954,7 @@ export class Utility {
 		}
 	};
 	DOMComponents = {
-		addGlobalEventListener: function (type, selector, callback, parent = document) {
-			const nonBubblingEvents = ['focus', 'blur', 'keyup'];
 		
-			// Add event listener on the parent (or global) scope
-			parent.addEventListener(type, (e) => {
-				console.log('addGlobalEventListener :>> ', type, selector);
-		
-				// Check if the event target matches the selector
-				if (e.target.matches(selector)) {
-					// Directly call callback if the event bubbles
-					if (!nonBubblingEvents.includes(type)) {
-						callback(e);
-					} else {
-						// For non-bubbling events, manually trigger on ancestors
-						let currentElement = e.target;
-						while (currentElement && currentElement !== parent) {
-							if (currentElement.matches(selector)) {
-								callback(e);
-							}
-							currentElement = currentElement.parentElement;
-						}
-					}
-				}
-			}, true); // Using capture phase to catch events early, for non-bubbling events
-		},
-		
-		
-		"addGlobalEventListenerV1": (type, selector, callback, parent = document) => {
-			parent.addEventListener(type, e => {
-				console.log('addGlobalEventListener :>> ', type, selector);
-				if (e.target.matches(selector)) callback(e);
-			});
-		},
-		"traverseDOMProxyOBJ": ((element, callback) => {
-			let html = `<${element.tag}`;
-	
-			if (element.class) html += ` class="${element.class}"`;
-			if (element.id) html += ` id="${element.id}"`;
-			if (element.style) html += ` style="${element.style}"`;
-			if (element.href) html += ` href="${element.href}"`;
-			if (element.type) html += ` type="${element.type}"`;
-			if (element.value) html += ` value="${element.value}"`;
-	
-			if (element.data) {
-				for (let [key, value] of Object.entries(element.data)) {
-					html += ` data-${key}="${value}"`;
-				}
-			}
-			if (element.aria) {
-				for (let [key, value] of Object.entries(element.aria)) {
-					html += ` aria-${key}="${value}"`;
-				}
-			}
-	
-			html += ">";
-			if (element.innerHTML) html += element.innerHTML;
-			if (element.content && Array.isArray(element.content)) {
-				for (let child of element.content) {
-					// console.log(this);
-					html += this.DOMComponents.traverseDOMProxyOBJ(child); // Recursively generate HTML for child elements
-				}
-			}
-	
-			html += `</${element.tag}>`;
-			
-			if (callback) callback();
-
-			return html;
-		}).bind(this),
-		"BulmaCSS": {
-			"Elements": {
-				"Block": (({ 
-					id = "", 
-					class: className = "", 
-					style = "", 
-					href = "", 
-					data = {}, 
-					aria = {}, 
-					order = 0,
-					innerHTML = "", 
-					content = []
-				} )=> {
-					return {
-						comment: "Block container",
-						tag: "div",
-						class: `block ${className}`,
-						id,
-						style,
-						href: isSafeHref(href) ? href : "",
-						data,
-						aria,
-						order,
-						innerHTML,
-						content
-					};
-				}).bind(this),
-				"Box": (({ 
-					id = "", 
-					class: className = "", 
-					style = "", 
-					href = "", 
-					data = {}, 
-					aria = {}, 
-					order = 0, 
-					innerHTML = "", 
-					content = []
-				}) => {
-					const sanitize = (html) => {
-						// Use a basic sanitizer to strip out unsafe HTML
-						const tempDiv = document.createElement('div');
-						tempDiv.textContent = html;
-						return tempDiv.innerHTML;
-					};
-				
-					// Helper to validate hrefs
-					const isSafeHref = (href) => {
-						// Only allow safe links; adjust regex based on what "safe" means in context
-						return /^https?:\/\/|^\/\//i.test(href);
-					};
-
-					return {
-						comment: "Box container",
-						tag: "div",
-						class: `box ${className}`,
-						id,
-						style,
-						href: isSafeHref(href) ? href : "",
-						data,
-						aria,
-						order,
-						innerHTML,
-						content
-					};
-				}).bind(this),
-				"Button": (() => {
-					
-				}).bind(this),
-				"Content": (() => {
-					
-				}).bind(this),
-				"Delete": (() => {
-					
-				}).bind(this),
-				"Icon": (() => {
-					
-				}).bind(this),
-				"Image": (() => {
-					
-				}).bind(this),
-				"Notification": (() => {
-					
-				}).bind(this),
-				"ProgressBars": (() => {
-					
-				}).bind(this),
-				"Table": (() => {
-					
-				}).bind(this),
-				"Tag": (() => {
-					
-				}).bind(this),
-				"Title": (() => {
-					
-				}).bind(this),
-			},
-			"Components": {
-				"Card": (({
-					id = "", 
-					className = "", 
-					style = "", 
-					href = "", 
-					data = {}, 
-					aria = {}, 
-					order = 0, 
-					headerIcon = "", 
-					header = "", 
-					content = "", 
-					footer = "" 
-				}) => {
-					// Basic card structure
-					const card = {
-						comment: "Card",
-						tag: "div",
-						class: `card ${className}`,
-						id,
-						style,
-						href: this.isSafeHref(href) ? href : "",
-						data,
-						aria,
-						order,
-						content: []
-					};
-				
-					// Add header if provided
-					if (header || headerIcon) {
-						const headerContent = [
-							headerIcon ? {
-								comment: "card-header-icon",
-								tag: "button",
-								class: "card-header-icon",
-								aria: { label: "more options" },
-								content: [
-									{
-										tag: "span",
-										class: "icon",
-										innerHTML: headerIcon
-									}
-								]
-							} : null,
-							{
-								comment: "card-header-title",
-								tag: "p",
-								class: "card-header-title",
-								innerHTML: this.sanitizeHTML(header)
-							}
-						].filter(Boolean); // Remove null if headerIcon is empty
-				
-						card.content.push({
-							comment: "card-header",
-							tag: "header",
-							class: "card-header",
-							content: headerContent
-						});
-					}
-				
-					// Add main content
-					card.content.push({
-						comment: "card-content",
-						tag: "div",
-						class: "card-content",
-						content: [
-							{
-								comment: "content",
-								tag: "div",
-								class: "content",
-								innerHTML: (content)
-							}
-						]
-					});
-				
-					// Add footer items if provided
-					if (footer) {
-						const footerContent = footer.map(item => ({
-							tag: "a",
-							class: "card-footer-item",
-							href: isSafeHref(item.href) ? item.href : "",
-							innerHTML: sanitize(item.label)
-						}));
-				
-						card.content.push({
-							comment: "Card Footer",
-							tag: "footer",
-							class: "card-footer",
-							content: footerContent
-						});
-					}
-					return card;
-				}).bind(this)
-			},
-			"Layout": {
-				"Hero": (({ 
-					id = "", 
-					className = "", 
-					style = "", 
-					href = "", 
-					data = {}, 
-					aria = {}, 
-					order = 0, 
-					title = "", 
-					subtitle = ""
-				}) => {
-					const heroContainer = {
-						comment: "Header container",
-						tag: "div",
-						class: `hero ${className}`,
-						id,
-						style,
-						href: this.isSafeHref(href) ? href : "",
-						data,
-						aria,
-						order,
-						content: []
-					};
-				
-					// Hero section with title and subtitle
-					const heroSection = {
-						comment: "Hero Container",
-						tag: "section",
-						class: "hero m-0 p-0",
-						content: [
-							{
-								comment: "Hero Body",
-								tag: "div",
-								class: "hero-body",
-								innerHTML: `<p class="title">${this.sanitizeHTML(title)}</p><p class="subtitle">${this.sanitizeHTML(subtitle)}</p>`,
-								content: []
-							}
-						]
-					};
-					heroContainer.content.push(heroSection);
-					return heroContainer;
-				}).bind(this),
-				"Section": (({ 
-					id = "", 
-					class: className = "", 
-					style = "", 
-					href = "", 
-					data = {}, 
-					aria = {}, 
-					order = 0, 
-					innerHTML = "", 
-					content = []
-				} )=> {
-					return {
-						comment: "Section container",
-						tag: "section",
-						class: `section ${className}`,
-						id,
-						style,
-						href: isSafeHref(href) ? href : "",
-						data,
-						aria,
-						order,
-						innerHTML,
-						content
-					};
-				}).bind(this),
-			}
-		}
 	};
 	// NOTE - DOMElements related methods
 	DOMElements = {
@@ -5765,43 +5437,37 @@ export class Utility {
 					if (!tableName || !data) {
 						throw new Error('Table name and/or data cannot be null or empty');
 					}
-					return `CREATE ${tableName} CONTENT ${JSON.stringify(data)};
-`;
+					return `CREATE tableName CONTENT $data;`;
 				}).bind(this),
 				"insert": (function (tableName, data) {
 					if (!tableName || !data) {
 						throw new Error('Table name and/or data cannot be null or empty');
 					}
-					return `INSERT INTO ${tableName} (${JSON.stringify(data)});
-`;
+					return `INSERT INTO $tableName $data;`;
 				}).bind(this),
 				"insert_array": (function (tableName, data) {
 					if (!tableName || !data) {
 						throw new Error('Table name and/or data cannot be null or empty');
 					}
-					return `INSERT INTO ${tableName} ${JSON.stringify(data)};
-`;
+					return `INSERT INTO ${tableName} ${JSON.stringify(data)};`;
 				}).bind(this),
 				"insert_uppdate_on_duplicate": (function (tableName, data) {
 					if (!tableName || !data) {
 						throw new Error('Table name and/or data cannot be null or empty');
 					}
-					return `INSERT INTO ${tableName} CONTENT ${JSON.stringify(data)};
-`;
+					return `INSERT INTO ${tableName} CONTENT ${JSON.stringify(data)};`;
 				}).bind(this),
 				"select": (function (columns, tableName, where = '', limit = 25) {
 					if (!tableName || !columns) {
 						throw new Error('Table name and/or Columns cannot be null or empty');
 					}
-					return `SELECT ${columns} FROM ${tableName} ${where ? `WHERE ${where}` : ''} LIMIT ${limit};
-`;
+					return `SELECT ${columns} FROM ${tableName} ${where ? `WHERE ${where}` : ''} LIMIT ${limit};`;
 				}).bind(this),
 				"update": (function (recordId, data) {
 					if (!recordId || !data) {
 						throw new Error('RecordID name and/or data cannot be null or empty');
 					}
-					return `UPDATE ${recordId} CONTENT ${JSON.stringify(data)};
-`;
+					return `UPDATE ${recordId} CONTENT ${JSON.stringify(data)};`;
 				}).bind(this),
 				"delete": (function (recordID) {
 					console.log('arguments in delete', arguments)
