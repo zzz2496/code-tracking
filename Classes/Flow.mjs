@@ -7,12 +7,15 @@ const OperatorTemplate = {
 };
 
 export class Flow {
-	constructor(funcObject, chain) {
+	constructor(container = null, funcObject = null, chain = []) {
 		this.cursor = null; // Track the current process
 		this.chain = chain;
 		this.run_mode = ["run", "stop", "pause", "step", "debug"];
 		this.run_mode_selected = "run"; // Default to "run"
 		this.processFunctions = funcObject;
+		this.FormOBJ = null;
+		this.FormContainer = container;
+		this.SnapScroll = true;
 	}
 	checkType = function (variable) {
 		if (variable instanceof Date) {
@@ -125,18 +128,18 @@ export class Flow {
 		"Components": {
 			"DOMElement": () => { 
 				return {
-					"comment": "",
-					"tag": "",
-					"class": "",
-					"id": "",
-					"style": "",
-					"href": "",
-					"title": "",
-					"data": {},
-					"aria": {},
-					"order": 0,
-					"innerHTML": "",
-					"content": []
+					"comment": comment,
+					"tag": tag,
+					"class": className,
+					"id": id,
+					"style": style,
+					"href": href,
+					"title": title,
+					"data": data,
+					"aria": aria,
+					"order": order,
+					"innerHTML": innerHTML,
+					"content": content
 				}
 			},
 			"BulmaCSS": {
@@ -426,8 +429,142 @@ export class Flow {
 					}
 				}, true); // Using capture phase to catch events early, for non-bubbling events
 			},
+			InitializeFormControls: () => {
+				let SnapScroll = true; // Flag to enable/disable snapping
+				const scrollContainer = document.querySelector('#app_root_container');
+				const snapRange = 130;
+				const sensitivity = 0.05; // Sensitivity for snap - lower means it snaps less often
+				
+				// Variables to track scroll velocity
+				let lastScrollLeft = 0;
+				let lastTimestamp = 0;
+
+				scrollContainer.addEventListener('scroll', (event) => {
+					if (!SnapScroll) return; // Exit if snapping is temporarily disabled
+
+					// console.log('>>>> Scrolling!');
+					const snapPosition = document.querySelector('#app_menu').clientWidth;
+					const scrollLeft = scrollContainer.scrollLeft;
+					const currentTime = Date.now();
+				
+					// Calculate scroll velocity
+					const deltaTime = currentTime - lastTimestamp;
+					const deltaScroll = Math.abs(scrollLeft - lastScrollLeft);
+					const velocity = deltaScroll / deltaTime; // pixels per ms
+				
+					// Update last scroll position and time
+					lastScrollLeft = scrollLeft;
+					lastTimestamp = currentTime;
+				
+					// Only snap if within the snap range and velocity is below sensitivity threshold
+					console.log('scrollLeft :>> ', scrollLeft);
+					if (
+						scrollLeft >= snapPosition - snapRange &&
+						scrollLeft <= snapPosition + snapRange &&
+						velocity < sensitivity
+					) {
+						console.log('SNAPPING :>> ', scrollLeft, snapPosition);
+						// Snap to the target position
+						console.log('SNAP!!');
+						scrollContainer.scrollTo({ left: snapPosition, behavior: 'smooth' });
+					}
+				
+				});
+
+				document.querySelector('#app_menu_button').addEventListener('click', () => {
+					document.querySelector('#app_menu').classList.toggle('open');
+				});
+
+				document.querySelector('#app_graph_button').addEventListener('click', () => {
+					document.querySelector('#app_graph_container').classList.toggle('show');
+					document.querySelector('#app_graph_controls').classList.toggle('show');
+
+				});
+
+				document.querySelector('#app_helper_button').addEventListener('click', () => {
+					document.querySelector('#app_helper').classList.toggle('show');
+					document.querySelector('#app_root_container').scrollTo({
+						left: 4000,
+					});
+					setTimeout(() => {
+						document.querySelector('#app_root_container').scrollTo({
+							left:131+document.querySelector('#app_menu').clientWidth,
+						});
+						setTimeout(() => {
+							document.querySelector('#app_root_container').scrollTo({
+								left: document.querySelector('#app_root_container').scrollWidth,
+								behavior: 'smooth'
+							});	
+						}, 350);
+					}, 500);
+				});
+
+				document.querySelector('#app_console_button').addEventListener('click', () => {
+					document.querySelector('#app_console').classList.toggle('show');
+				});
+			}
 		},
-		"Initialize": () => { },
+		"Initialize": () => {
+			let form = {comment: "BODY", tag: "div", id: "", content: [
+				{
+					comment: "App Root Container", tag: "div", id: "app_root_container", content: [
+					{ comment: "App Menu", tag: "div", id: "app_menu", class:"", innerHTML: "MENU",content: [] },
+					{
+						comment: "App Container", tag: "div", id: "app_container", content: [
+							{
+								comment: "App Top Menu Container", tag: "div", id: "app_top_menu_container", innerHTML: "", class: "columns is-gapless is-mobile m-0", content: [
+									{
+										comment: "Left Container", tag: "div", id: "app_left_container", innerHTML: "", class: "column is-gapless", content: [
+											{comment: "Menu button", tag:"button", class:"button is-default", id:"app_menu_button", innerHTML:"&nbsp;<li class=\"fa fa-bars\"></li>&nbsp;"},
+											{comment: "Graph button", tag:"button", class:"button is-default", id:"app_graph_button", innerHTML:"&nbsp;<li class=\"fa fa-circle-nodes\"></li>&nbsp;"},
+									]},
+									{
+										comment: "Right Container", tag: "div", id: "app_right_container", innerHTML: "", class: "column is-gapless is-justify-content-flex-end is-flex", content: [
+											{comment: "Console button", tag:"button", class:"button is-default", id:"app_console_button", innerHTML:"&nbsp;<li class=\"fa fa-terminal\"></li>&nbsp;"},
+											{comment: "Helper button", tag:"button", class:"button is-default", id:"app_helper_button", innerHTML:"&nbsp;<li class=\"fa fa-question\"></li>&nbsp;"},
+									]},
+								]
+							},
+							{
+								comment: "App Graph Controls", tag: "div", innerHTML: "", id: "app_graph_controls", class:"m-0", content: [
+								{
+								comment: "Center Container", tag: "div", id: "app_center_container", innerHTML: "", class:"is-flex is-justify-content-center", content: [
+									{comment: "Rewind Fast button", tag:"button", class:"button is-default", id:"graph_rewindfast_button", innerHTML:"&nbsp;<li class=\"fa fa-backward-fast\"></li>&nbsp;"},
+									{comment: "Rewind button", tag:"button", class:"button is-default", id:"graph_rewind_button", innerHTML:"&nbsp;<li class=\"fa fa-backward\"></li>&nbsp;"},
+									{comment: "Play button", tag:"button", class:"button is-success", id:"graph_play_button", innerHTML:"&nbsp;<li class=\"fa fa-play\"></li><li class=\"fa fa-pause\"></li>&nbsp;"},
+									{comment: "Forward button", tag:"button", class:"button is-default", id:"graph_forward_button", innerHTML:"&nbsp;<li class=\"fa fa-forward\"></li>&nbsp;"},
+									{comment: "Forward Fast button", tag:"button", class:"button is-default", id:"graph_forwardfast_button", innerHTML:"&nbsp;<li class=\"fa fa-forward-fast\"></li>&nbsp;"},
+								]}
+							]},
+							{
+								comment: "App Graph Container", tag: "div", class: "m-0 p-0", id: "app_graph_container", content: [
+									
+									{
+										tag: "div", id: "graph_scroll_content", style:"width:calc(100vw);overflow:scroll;", content: [
+											{ comment: "App Graph Content", tag: "div", innerHTML: "App Graph Content", class:"columns is-gapless is-mobile grid2020-background", style:"width:20000px; height:20000px;", id: "app_graph_content",content:[] },
+										]
+									}
+									,
+									
+								]
+							},
+							{comment: "App Content", tag: "div", innerHTML: "Content", id: "app_content", content: []}
+							]
+						},
+					{ comment: "App helper", tag: "div", id: "app_helper", class:"", innerHTML: "Helper", content:[] }
+				]
+				},
+				{
+					comment: "App Console", tag: "div", id: "app_console", content: [
+						{ comment: "Debugging", tag: "div", id: "debugging", innerHTML: "Console", content: [] },
+					]
+				}
+			]
+			};
+			// console.log('form :>> ', form);
+			// console.log('formHTML :>> ', formHTML);
+			return form;			
+		},
 		"Render": {
 			"traverseDOMProxyOBJ": ((element, callback) => {
 				let html = `<${element.tag}`;

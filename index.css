@@ -246,7 +246,7 @@
 }
 
 #app_graph_container {
-    width: 99vw;
+    width: 100%;
     height: 0px;
 	padding-right: 1vh;
     overflow: auto;
@@ -262,4 +262,17 @@
 
 #app_graph_container::-webkit-scrollbar {
     display: none; 
+}
+
+#app_graph_controls{
+	height: 0px;
+	width: 100%;
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+	z-index: -99;
+}
+#app_graph_controls.show{
+	width: 100%;
+	opacity: 1;
+	z-index: 1;
 }
