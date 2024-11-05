@@ -24,7 +24,7 @@ export class Flow {
 			return "Number";
 		} else if (typeof variable === 'string') {
 			// Allow flexible matching of numbers with optional commas
-			if (/^-?[\d,]+(\.\d+)?$/.test(variable.replace(/,+/g, ''))) { 
+			if (/^-?[\d,]+(\.\d+)?$/.test(variable.replace(/,+/g, ''))) {
 				return "Number";
 			} else if (["true", "yes", "ya", "sudah"].includes(variable.toLowerCase())) {
 				return "Boolean";
@@ -126,7 +126,7 @@ export class Flow {
 	};
 	Form = {
 		"Components": {
-			"DOMElement": () => { 
+			"DOMElement": () => {
 				return {
 					"comment": comment,
 					"tag": tag,
@@ -144,17 +144,17 @@ export class Flow {
 			},
 			"BulmaCSS": {
 				"Elements": {
-					"Block": (({ 
-						id = "", 
-						class: className = "", 
-						style = "", 
-						href = "", 
-						data = {}, 
-						aria = {}, 
+					"Block": (({
+						id = "",
+						class: className = "",
+						style = "",
+						href = "",
+						data = {},
+						aria = {},
 						order = 0,
-						innerHTML = "", 
+						innerHTML = "",
 						content = []
-					} )=> {
+					}) => {
 						return {
 							comment: "Block container",
 							tag: "div",
@@ -169,15 +169,15 @@ export class Flow {
 							content
 						};
 					}).bind(this),
-					"Box": (({ 
-						id = "", 
-						class: className = "", 
-						style = "", 
-						href = "", 
-						data = {}, 
-						aria = {}, 
-						order = 0, 
-						innerHTML = "", 
+					"Box": (({
+						id = "",
+						class: className = "",
+						style = "",
+						href = "",
+						data = {},
+						aria = {},
+						order = 0,
+						innerHTML = "",
 						content = []
 					}) => {
 						const sanitize = (html) => {
@@ -186,7 +186,7 @@ export class Flow {
 							tempDiv.textContent = html;
 							return tempDiv.innerHTML;
 						};
-					
+
 						// Helper to validate hrefs
 						const isSafeHref = (href) => {
 							// Only allow safe links; adjust regex based on what "safe" means in context
@@ -208,49 +208,49 @@ export class Flow {
 						};
 					}).bind(this),
 					"Button": (() => {
-						
+
 					}).bind(this),
 					"Content": (() => {
-						
+
 					}).bind(this),
 					"Delete": (() => {
-						
+
 					}).bind(this),
 					"Icon": (() => {
-						
+
 					}).bind(this),
 					"Image": (() => {
-						
+
 					}).bind(this),
 					"Notification": (() => {
-						
+
 					}).bind(this),
 					"ProgressBars": (() => {
-						
+
 					}).bind(this),
 					"Table": (() => {
-						
+
 					}).bind(this),
 					"Tag": (() => {
-						
+
 					}).bind(this),
 					"Title": (() => {
-						
+
 					}).bind(this),
 				},
 				"Components": {
 					"Card": (({
-						id = "", 
-						className = "", 
-						style = "", 
-						href = "", 
-						data = {}, 
-						aria = {}, 
-						order = 0, 
-						headerIcon = "", 
-						header = "", 
-						content = "", 
-						footer = "" 
+						id = "",
+						className = "",
+						style = "",
+						href = "",
+						data = {},
+						aria = {},
+						order = 0,
+						headerIcon = "",
+						header = "",
+						content = "",
+						footer = ""
 					}) => {
 						// Basic card structure
 						const card = {
@@ -265,7 +265,7 @@ export class Flow {
 							order,
 							content: []
 						};
-					
+
 						// Add header if provided
 						if (header || headerIcon) {
 							const headerContent = [
@@ -289,7 +289,7 @@ export class Flow {
 									innerHTML: this.sanitizeHTML(header)
 								}
 							].filter(Boolean); // Remove null if headerIcon is empty
-					
+
 							card.content.push({
 								comment: "card-header",
 								tag: "header",
@@ -297,7 +297,7 @@ export class Flow {
 								content: headerContent
 							});
 						}
-					
+
 						// Add main content
 						card.content.push({
 							comment: "card-content",
@@ -312,7 +312,7 @@ export class Flow {
 								}
 							]
 						});
-					
+
 						// Add footer items if provided
 						if (footer) {
 							const footerContent = footer.map(item => ({
@@ -321,7 +321,7 @@ export class Flow {
 								href: isSafeHref(item.href) ? item.href : "",
 								innerHTML: sanitize(item.label)
 							}));
-					
+
 							card.content.push({
 								comment: "Card Footer",
 								tag: "footer",
@@ -333,15 +333,15 @@ export class Flow {
 					}).bind(this)
 				},
 				"Layout": {
-					"Hero": (({ 
-						id = "", 
-						className = "", 
-						style = "", 
-						href = "", 
-						data = {}, 
-						aria = {}, 
-						order = 0, 
-						title = "", 
+					"Hero": (({
+						id = "",
+						className = "",
+						style = "",
+						href = "",
+						data = {},
+						aria = {},
+						order = 0,
+						title = "",
 						subtitle = ""
 					}) => {
 						const heroContainer = {
@@ -356,7 +356,7 @@ export class Flow {
 							order,
 							content: []
 						};
-					
+
 						// Hero section with title and subtitle
 						const heroSection = {
 							comment: "Hero Container",
@@ -375,17 +375,17 @@ export class Flow {
 						heroContainer.content.push(heroSection);
 						return heroContainer;
 					}).bind(this),
-					"Section": (({ 
-						id = "", 
-						class: className = "", 
-						style = "", 
-						href = "", 
-						data = {}, 
-						aria = {}, 
-						order = 0, 
-						innerHTML = "", 
+					"Section": (({
+						id = "",
+						class: className = "",
+						style = "",
+						href = "",
+						data = {},
+						aria = {},
+						order = 0,
+						innerHTML = "",
 						content = []
-					} )=> {
+					}) => {
 						return {
 							comment: "Section container",
 							tag: "section",
@@ -406,11 +406,11 @@ export class Flow {
 		"Events": {
 			addGlobalEventListener: function (type, selector, callback, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
-			
+
 				// Add event listener on the parent (or global) scope
 				parent.addEventListener(type, (e) => {
 					console.log('addGlobalEventListener :>> ', type, selector);
-			
+
 					// Check if the event target matches the selector
 					if (e.target.matches(selector)) {
 						// Directly call callback if the event bubbles
@@ -432,9 +432,9 @@ export class Flow {
 			InitializeFormControls: () => {
 				let SnapScroll = true; // Flag to enable/disable snapping
 				const scrollContainer = document.querySelector('#app_root_container');
-				const snapRange = 130;
-				const sensitivity = 0.05; // Sensitivity for snap - lower means it snaps less often
-				
+				const snapRange = 90;
+				const sensitivity = 0.1; // Sensitivity for snap - lower means it snaps less often
+
 				// Variables to track scroll velocity
 				let lastScrollLeft = 0;
 				let lastTimestamp = 0;
@@ -446,29 +446,29 @@ export class Flow {
 					const snapPosition = document.querySelector('#app_menu').clientWidth;
 					const scrollLeft = scrollContainer.scrollLeft;
 					const currentTime = Date.now();
-				
+
 					// Calculate scroll velocity
 					const deltaTime = currentTime - lastTimestamp;
 					const deltaScroll = Math.abs(scrollLeft - lastScrollLeft);
 					const velocity = deltaScroll / deltaTime; // pixels per ms
-				
+
 					// Update last scroll position and time
 					lastScrollLeft = scrollLeft;
 					lastTimestamp = currentTime;
-				
+
 					// Only snap if within the snap range and velocity is below sensitivity threshold
-					console.log('scrollLeft :>> ', scrollLeft);
+					// console.log('scrollLeft :>> ', scrollLeft);
 					if (
 						scrollLeft >= snapPosition - snapRange &&
 						scrollLeft <= snapPosition + snapRange &&
 						velocity < sensitivity
 					) {
-						console.log('SNAPPING :>> ', scrollLeft, snapPosition);
+						// console.log('SNAPPING :>> ', scrollLeft, snapPosition);
 						// Snap to the target position
-						console.log('SNAP!!');
+						// console.log('SNAP!!');
 						scrollContainer.scrollTo({ left: snapPosition, behavior: 'smooth' });
 					}
-				
+
 				});
 
 				document.querySelector('#app_menu_button').addEventListener('click', () => {
@@ -483,99 +483,116 @@ export class Flow {
 
 				document.querySelector('#app_helper_button').addEventListener('click', () => {
 					document.querySelector('#app_helper').classList.toggle('show');
-					document.querySelector('#app_root_container').scrollTo({
-						left: 4000,
-					});
+					SnapScroll = false;
 					setTimeout(() => {
 						document.querySelector('#app_root_container').scrollTo({
-							left:131+document.querySelector('#app_menu').clientWidth,
+							left: document.querySelector('#app_root_container').scrollWidth,
+							behavior: 'smooth'
 						});
-						setTimeout(() => {
-							document.querySelector('#app_root_container').scrollTo({
-								left: document.querySelector('#app_root_container').scrollWidth,
-								behavior: 'smooth'
-							});	
-						}, 350);
-					}, 500);
+					}, 300);
+					setTimeout(() => {
+						SnapScroll = true;
+					}, 1000);
 				});
-
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
 			}
 		},
 		"Initialize": () => {
-			let form = {comment: "BODY", tag: "div", id: "", content: [
-				{
-					comment: "App Root Container", tag: "div", id: "app_root_container", content: [
-					{ comment: "App Menu", tag: "div", id: "app_menu", class:"", innerHTML: "MENU",content: [] },
+			let form = {
+				comment: "BODY", tag: "div", id: "", content: [
 					{
-						comment: "App Container", tag: "div", id: "app_container", content: [
+						comment: "App Root Container", tag: "div", id: "app_root_container", content: [
+							{ comment: "App Menu", tag: "div", id: "app_menu", class: "", innerHTML: "MENU", content: [] },
 							{
-								comment: "App Top Menu Container", tag: "div", id: "app_top_menu_container", innerHTML: "", class: "columns is-gapless is-mobile m-0", content: [
+								comment: "App Container", tag: "div", id: "app_container", content: [
 									{
-										comment: "Left Container", tag: "div", id: "app_left_container", innerHTML: "", class: "column is-gapless", content: [
-											{comment: "Menu button", tag:"button", class:"button is-default", id:"app_menu_button", innerHTML:"&nbsp;<li class=\"fa fa-bars\"></li>&nbsp;"},
-											{comment: "Graph button", tag:"button", class:"button is-default", id:"app_graph_button", innerHTML:"&nbsp;<li class=\"fa fa-circle-nodes\"></li>&nbsp;"},
-									]},
-									{
-										comment: "Right Container", tag: "div", id: "app_right_container", innerHTML: "", class: "column is-gapless is-justify-content-flex-end is-flex", content: [
-											{comment: "Console button", tag:"button", class:"button is-default", id:"app_console_button", innerHTML:"&nbsp;<li class=\"fa fa-terminal\"></li>&nbsp;"},
-											{comment: "Helper button", tag:"button", class:"button is-default", id:"app_helper_button", innerHTML:"&nbsp;<li class=\"fa fa-question\"></li>&nbsp;"},
-									]},
-								]
-							},
-							{
-								comment: "App Graph Controls", tag: "div", innerHTML: "", id: "app_graph_controls", class:"m-0", content: [
-								{
-								comment: "Center Container", tag: "div", id: "app_center_container", innerHTML: "", class:"is-flex is-justify-content-center", content: [
-									{comment: "Rewind Fast button", tag:"button", class:"button is-default", id:"graph_rewindfast_button", innerHTML:"&nbsp;<li class=\"fa fa-backward-fast\"></li>&nbsp;"},
-									{comment: "Rewind button", tag:"button", class:"button is-default", id:"graph_rewind_button", innerHTML:"&nbsp;<li class=\"fa fa-backward\"></li>&nbsp;"},
-									{comment: "Play button", tag:"button", class:"button is-success", id:"graph_play_button", innerHTML:"&nbsp;<li class=\"fa fa-play\"></li><li class=\"fa fa-pause\"></li>&nbsp;"},
-									{comment: "Forward button", tag:"button", class:"button is-default", id:"graph_forward_button", innerHTML:"&nbsp;<li class=\"fa fa-forward\"></li>&nbsp;"},
-									{comment: "Forward Fast button", tag:"button", class:"button is-default", id:"graph_forwardfast_button", innerHTML:"&nbsp;<li class=\"fa fa-forward-fast\"></li>&nbsp;"},
-								]}
-							]},
-							{
-								comment: "App Graph Container", tag: "div", class: "m-0 p-0", id: "app_graph_container", content: [
-									
-									{
-										tag: "div", id: "graph_scroll_content", style:"width:calc(100vw);overflow:scroll;", content: [
-											{ comment: "App Graph Content", tag: "div", innerHTML: "App Graph Content", class:"columns is-gapless is-mobile grid2020-background", style:"width:20000px; height:20000px;", id: "app_graph_content",content:[] },
+										comment: "App Top Menu Container", tag: "div", id: "app_top_menu_container", innerHTML: "", class: "columns is-gapless is-mobile m-0", content: [
+											{
+												comment: "Left Container", tag: "div", id: "app_left_container", innerHTML: "", class: "column is-gapless", content: [
+													{ comment: "Menu button", tag: "button", class: "button is-default", id: "app_menu_button", innerHTML: "<li class=\"fa fa-bars\"></li>" },
+													{ comment: "Graph button", tag: "button", class: "button is-default", id: "app_graph_button", innerHTML: "<li class=\"fa fa-circle-nodes\"></li>" },
+												]
+											},
+											{
+												comment: "Right Container", tag: "div", id: "app_right_container", innerHTML: "", class: "column is-gapless is-justify-content-flex-end is-flex", content: [
+													{ comment: "Console button", tag: "button", class: "button is-default", id: "app_console_button", innerHTML: "<li class=\"fa fa-terminal\"></li>" },
+													{ comment: "Helper button", tag: "button", class: "button is-default", id: "app_helper_button", innerHTML: "<li class=\"fa fa-question\"></li>" },
+												]
+											},
 										]
-									}
-									,
-									
+									},
+									{
+										comment: "App Graph Controls", tag: "div", innerHTML: "", id: "app_graph_controls", class: "columns m-0 is-gapless", content: [
+											{
+												comment: "Left Container", tag: "div", id: "app_graph_controls_container_left", innerHTML: "", class: "app_graph_controls_containers column is-gapless m-0 p-0 is-flex is-justify-content-left", content: [
+													{ comment: "Rewind Fast button", tag: "button", class: "button is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"fa fa-backward-fast\"></li>" },
+													{ comment: "Rewind button", tag: "button", class: "button is-default", id: "graph_rewind_button", innerHTML: "<li class=\"fa fa-backward\"></li>" },
+													{ comment: "Play button", tag: "button", class: "button is-success", id: "graph_play_button", innerHTML: "<li class=\"fa fa-play\"></li><li class=\"fa fa-pause\"></li>" },
+													{ comment: "Forward button", tag: "button", class: "button is-default", id: "graph_forward_button", innerHTML: "<li class=\"fa fa-forward\"></li>" },
+													{ comment: "Forward Fast button", tag: "button", class: "button is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"fa fa-forward-fast\"></li>" },
+												]
+											},
+											{
+												comment: "Center Container", tag: "div", id: "app_graph_controls_container_center", innerHTML: "", class: "app_graph_controls_containers column is-gapless m-0 p-0 is-flex is-justify-content-center", content: [
+													{ comment: "Rewind Fast button", tag: "button", class: "button is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"fa fa-backward-fast\"></li>" },
+													{ comment: "Rewind button", tag: "button", class: "button is-default", id: "graph_rewind_button", innerHTML: "<li class=\"fa fa-backward\"></li>" },
+													{ comment: "Play button", tag: "button", class: "button is-success", id: "graph_play_button", innerHTML: "<li class=\"fa fa-play\"></li><li class=\"fa fa-pause\"></li>" },
+													{ comment: "Forward button", tag: "button", class: "button is-default", id: "graph_forward_button", innerHTML: "<li class=\"fa fa-forward\"></li>" },
+													{ comment: "Forward Fast button", tag: "button", class: "button is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"fa fa-forward-fast\"></li>" },
+												]
+											},{
+												comment: "Right Container", tag: "div", id: "app_graph_controls_container_right", innerHTML: "", class: "app_graph_controls_containers column is-gapless m-0 p-0 is-flex is-justify-content-right", content: [
+													{ comment: "Rewind Fast button", tag: "button", class: "button is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"fa fa-backward-fast\"></li>" },
+													{ comment: "Rewind button", tag: "button", class: "button is-default", id: "graph_rewind_button", innerHTML: "<li class=\"fa fa-backward\"></li>" },
+													{ comment: "Play button", tag: "button", class: "button is-success", id: "graph_play_button", innerHTML: "<li class=\"fa fa-play\"></li><li class=\"fa fa-pause\"></li>" },
+													{ comment: "Forward button", tag: "button", class: "button is-default", id: "graph_forward_button", innerHTML: "<li class=\"fa fa-forward\"></li>" },
+													{ comment: "Forward Fast button", tag: "button", class: "button is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"fa fa-forward-fast\"></li>" },
+												]
+											}
+										]
+									},
+									{
+										comment: "App Graph Container", tag: "div", class: "m-0 p-0", id: "app_graph_container", content: [
+
+											{
+												tag: "div", id: "graph_scroll_content", style: "width:calc(100vw);overflow:scroll;", content: [
+													{ comment: "App Graph Content", tag: "div", innerHTML: "App Graph Content", class: "columns is-gapless is-mobile grid2020-background", style: "width:20000px; height:20000px;", id: "app_graph_content", content: [] },
+												]
+											}
+											,
+
+										]
+									},
+									{ comment: "App Content", tag: "div", innerHTML: "Content", id: "app_content", content: [] }
 								]
 							},
-							{comment: "App Content", tag: "div", innerHTML: "Content", id: "app_content", content: []}
-							]
-						},
-					{ comment: "App helper", tag: "div", id: "app_helper", class:"", innerHTML: "Helper", content:[] }
+							{ comment: "App helper", tag: "div", id: "app_helper", class: "", innerHTML: "Helper", content: [] }
+						]
+					},
+					{
+						comment: "App Console", tag: "div", id: "app_console", content: [
+							{ comment: "Debugging", tag: "div", id: "debugging", innerHTML: "Console", content: [] },
+						]
+					}
 				]
-				},
-				{
-					comment: "App Console", tag: "div", id: "app_console", content: [
-						{ comment: "Debugging", tag: "div", id: "debugging", innerHTML: "Console", content: [] },
-					]
-				}
-			]
 			};
 			// console.log('form :>> ', form);
 			// console.log('formHTML :>> ', formHTML);
-			return form;			
+			return form;
 		},
 		"Render": {
 			"traverseDOMProxyOBJ": ((element, callback) => {
 				let html = `<${element.tag}`;
-		
+
 				if (element.class) html += ` class="${element.class}"`;
 				if (element.id) html += ` id="${element.id}"`;
 				if (element.style) html += ` style="${element.style}"`;
 				if (element.href) html += ` href="${element.href}"`;
 				if (element.type) html += ` type="${element.type}"`;
 				if (element.value) html += ` value="${element.value}"`;
-		
+
 				if (element.data) {
 					for (let [key, value] of Object.entries(element.data)) {
 						html += ` data-${key}="${value}"`;
@@ -586,7 +603,7 @@ export class Flow {
 						html += ` aria-${key}="${value}"`;
 					}
 				}
-		
+
 				html += ">";
 				if (element.innerHTML) html += element.innerHTML;
 				if (element.content && Array.isArray(element.content)) {
@@ -595,16 +612,16 @@ export class Flow {
 						html += this.Form.Render.traverseDOMProxyOBJ(child); // Recursively generate HTML for child elements
 					}
 				}
-		
+
 				html += `</${element.tag}>`;
-				
+
 				if (callback) callback();
 
 				return html;
 			})
 		},
 		"Run": {
-			setRunMode: (mode) =>{
+			setRunMode: (mode) => {
 				if (this.run_mode.includes(mode)) {
 					this.run_mode_selected = mode;
 					if (mode === "stop") {
@@ -614,13 +631,13 @@ export class Flow {
 					console.error(`Invalid run mode: ${mode}`);
 				}
 			},
-			
+
 			// Resolve input, handling dynamic references
 			resolveInput: (input, chain) => {
 				let resolvedInput = {};
 				for (let key in input) {
 					let value = input[key];
-			
+
 					if (Array.isArray(value)) {
 						// Resolve each element in arrays
 						resolvedInput[key] = value.map(item => {
@@ -641,10 +658,11 @@ export class Flow {
 				}
 				return resolvedInput;
 			},
-			
+
 			// Execute the chain with respect to the current run mode
 			executeChain: () => {
-				if (this.run_mode_selected === "stop") {8
+				if (this.run_mode_selected === "stop") {
+					8
 					console.log("Execution stopped.");
 					this.cursor = this.chain.find(item => item.id === "P1"); // Reset cursor
 					return;
@@ -654,17 +672,17 @@ export class Flow {
 				if (!this.cursor) {
 					this.cursor = this.chain.find(item => item.id === "P1");
 				}
-				
+
 				// Loop to execute processes until end of chain or as per run mode
 				while (this.cursor) {
 					const resolvedInput = this.Form.Run.resolveInput(this.cursor.input, this.chain);
 					const processFunc = this.processFunctions[this.cursor.process];
-					
+
 					// Execute if the function exists
 					if (processFunc) {
 						const output = processFunc(...Object.values(resolvedInput));
 						this.cursor.output = output;
-						
+
 						// Debug mode output for step-by-step tracing
 						if (this.run_mode_selected === "debug") {
 							console.log(`DEBUG - Process ${this.cursor.id}:`);
@@ -678,14 +696,14 @@ export class Flow {
 						console.error(`Process function ${this.cursor.process} not found`);
 						break;
 					}
-					
+
 					// Step mode stops after each process
-					if (this.run_mode_selected === "step" ||this.run_mode_selected === "debug") {
-						this.cursor = this.cursor.next_process ? 
+					if (this.run_mode_selected === "step" || this.run_mode_selected === "debug") {
+						this.cursor = this.cursor.next_process ?
 							this.chain.find(item => item.id === this.cursor.next_process) : null;
 						break; // Stop after one step in step mode
 					}
-					
+
 					// Move to the next process for run/debug modes
 					if (this.cursor.next_process) {
 						this.cursor = this.chain.find(item => item.id === this.cursor.next_process);

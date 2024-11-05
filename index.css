@@ -254,7 +254,6 @@
 	scrollbar-width: none; 
     -ms-overflow-style: none;
 	transition: height 0.3s ease-in-out;
-
 }
 #app_graph_container.show {
 	height: calc(80vh);
@@ -263,8 +262,10 @@
 #app_graph_container::-webkit-scrollbar {
     display: none; 
 }
-
-#app_graph_controls{
+.app_graph_controls_containers{
+	height: 3rem;
+}
+#app_graph_controls {
 	height: 0px;
 	width: 100%;
 	opacity: 0;
@@ -275,4 +276,22 @@
 	width: 100%;
 	opacity: 1;
 	z-index: 1;
+}
+#app_graph_content{
+	padding-top: 3rem;
+}
+.app_graph_controls_containers {
+	backdrop-filter: blur(2px);
+}
+
+@media screen and (max-width: 800px) {
+	#app_graph_content{
+		padding-top: 9rem;
+	}
+	 /* Center all columns on small screens */
+	.app_graph_controls_containers {
+		justify-content: space-around !important; /* Center align content */
+		text-align: center; /* Optional: Center text inside */
+		backdrop-filter: blur(2px);
+	}
 }
