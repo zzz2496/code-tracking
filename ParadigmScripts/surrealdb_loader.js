@@ -48,8 +48,8 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
         { name: 'Memory', label:'Memory Datastore', shortlabel:'MEMD', connect:1, instance: SurrealDB },
         { name: 'IndexedDB', label:'IndexedDB Datastore', shortlabel:'IDXD', connect:1, instance: SurrealDB },
         { name: 'TestServer', label:'TestServer Datastore', shortlabel:'TEST', connect:1, instance: SurrealDB },
-        { name: 'BackupServer', label:'BackupServer Datastore', shortlabel:'BCKP', connect:0, instance: SurrealDB },
-        { name: 'ProductionServer', label:'ProductionServer Datastore', shortlabel:'PROD', connect:0, instance: SurrealDB }
+        // { name: 'BackupServer', label:'BackupServer Datastore', shortlabel:'BCKP', connect:0, instance: SurrealDB },
+        // { name: 'ProductionServer', label:'ProductionServer Datastore', shortlabel:'PROD', connect:0, instance: SurrealDB }
 	];
 	window.ParadigmREVOLUTION.Datastores = {
 		Tokens: Tokens,

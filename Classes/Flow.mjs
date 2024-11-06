@@ -15,7 +15,7 @@ export class Flow {
 		this.processFunctions = funcObject;
 		this.FormOBJ = null;
 		this.FormContainer = container;
-		this.SnapScroll = true;
+		this.SnapScroll = null;
 	}
 	checkType = function (variable) {
 		if (variable instanceof Date) {
@@ -429,47 +429,45 @@ export class Flow {
 					}
 				}, true); // Using capture phase to catch events early, for non-bubbling events
 			},
-			InitializeFormControls: () => {
-				let SnapScroll = true; // Flag to enable/disable snapping
-				const scrollContainer = document.querySelector('#app_root_container');
-				const snapRange = 90;
-				const sensitivity = 0.1; // Sensitivity for snap - lower means it snaps less often
-
+			initializeScrollSnap: (scrollContainer, snapRange = 90, sensitivity = 0.1) => {
 				// Variables to track scroll velocity
 				let lastScrollLeft = 0;
 				let lastTimestamp = 0;
-
+			
 				scrollContainer.addEventListener('scroll', (event) => {
-					if (!SnapScroll) return; // Exit if snapping is temporarily disabled
-
-					// console.log('>>>> Scrolling!');
+					if (!this.SnapScroll) return; // Exit if snapping is temporarily disabled
+			
 					const snapPosition = document.querySelector('#app_menu').clientWidth;
 					const scrollLeft = scrollContainer.scrollLeft;
 					const currentTime = Date.now();
-
+			
 					// Calculate scroll velocity
 					const deltaTime = currentTime - lastTimestamp;
 					const deltaScroll = Math.abs(scrollLeft - lastScrollLeft);
 					const velocity = deltaScroll / deltaTime; // pixels per ms
-
+			
 					// Update last scroll position and time
 					lastScrollLeft = scrollLeft;
 					lastTimestamp = currentTime;
-
+			
 					// Only snap if within the snap range and velocity is below sensitivity threshold
-					// console.log('scrollLeft :>> ', scrollLeft);
 					if (
 						scrollLeft >= snapPosition - snapRange &&
 						scrollLeft <= snapPosition + snapRange &&
 						velocity < sensitivity
 					) {
-						// console.log('SNAPPING :>> ', scrollLeft, snapPosition);
-						// Snap to the target position
-						// console.log('SNAP!!');
 						scrollContainer.scrollTo({ left: snapPosition, behavior: 'smooth' });
 					}
-
 				});
+			},
+			InitializeFormControls: () => {
+				this.SnapScroll = true; // Flag to enable/disable snapping
+				const scrollContainer = document.querySelector('#app_root_container');
+				const snapRange = 90;
+				const sensitivity = 0.1;
+			
+				// Initialize the scroll snap functionality
+				this.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);			
 
 				document.querySelector('#app_menu_button').addEventListener('click', () => {
 					document.querySelector('#app_menu').classList.toggle('open');
@@ -483,7 +481,7 @@ export class Flow {
 
 				document.querySelector('#app_helper_button').addEventListener('click', () => {
 					document.querySelector('#app_helper').classList.toggle('show');
-					SnapScroll = false;
+					this.SnapScroll = false;
 					setTimeout(() => {
 						document.querySelector('#app_root_container').scrollTo({
 							left: document.querySelector('#app_root_container').scrollWidth,
@@ -491,96 +489,497 @@ export class Flow {
 						});
 					}, 300);
 					setTimeout(() => {
-						SnapScroll = true;
+						this.SnapScroll = true;
 					}, 1000);
+				});
+				document.querySelector('#graph_addnode_button').addEventListener('click', () => {
+					document.querySelector('#app_helper').classList.toggle('show');
+					this.SnapScroll = false;
+					setTimeout(() => {
+						document.querySelector('#app_root_container').scrollTo({
+							left: document.querySelector('#app_root_container').scrollWidth,
+							behavior: 'smooth'
+						});
+					}, 300);
+					setTimeout(() => {
+						this.SnapScroll = true;
+					}, 1000);
+					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput();
 				});
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
-			}
-		},
-		"Initialize": () => {
-			let form = {
-				comment: "BODY", tag: "div", id: "", content: [
-					{
-						comment: "App Root Container", tag: "div", id: "app_root_container", content: [
-							{ comment: "App Menu", tag: "div", id: "app_menu", class: "", innerHTML: "MENU", content: [] },
-							{
-								comment: "App Container", tag: "div", id: "app_container", content: [
-									{
-										comment: "App Top Menu Container", tag: "div", id: "app_top_menu_container", innerHTML: "", class: "columns is-gapless is-mobile m-0", content: [
-											{
-												comment: "Left Container", tag: "div", id: "app_left_container", innerHTML: "", class: "column is-gapless", content: [
-													{ comment: "Menu button", tag: "button", class: "button is-default", id: "app_menu_button", innerHTML: "<li class=\"fa fa-bars\"></li>" },
-													{ comment: "Graph button", tag: "button", class: "button is-default", id: "app_graph_button", innerHTML: "<li class=\"fa fa-circle-nodes\"></li>" },
-												]
-											},
-											{
-												comment: "Right Container", tag: "div", id: "app_right_container", innerHTML: "", class: "column is-gapless is-justify-content-flex-end is-flex", content: [
-													{ comment: "Console button", tag: "button", class: "button is-default", id: "app_console_button", innerHTML: "<li class=\"fa fa-terminal\"></li>" },
-													{ comment: "Helper button", tag: "button", class: "button is-default", id: "app_helper_button", innerHTML: "<li class=\"fa fa-question\"></li>" },
-												]
-											},
-										]
-									},
-									{
-										comment: "App Graph Controls", tag: "div", innerHTML: "", id: "app_graph_controls", class: "columns m-0 is-gapless", content: [
-											{
-												comment: "Left Container", tag: "div", id: "app_graph_controls_container_left", innerHTML: "", class: "app_graph_controls_containers column is-gapless m-0 p-0 is-flex is-justify-content-left", content: [
-													{ comment: "Rewind Fast button", tag: "button", class: "button is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"fa fa-backward-fast\"></li>" },
-													{ comment: "Rewind button", tag: "button", class: "button is-default", id: "graph_rewind_button", innerHTML: "<li class=\"fa fa-backward\"></li>" },
-													{ comment: "Play button", tag: "button", class: "button is-success", id: "graph_play_button", innerHTML: "<li class=\"fa fa-play\"></li><li class=\"fa fa-pause\"></li>" },
-													{ comment: "Forward button", tag: "button", class: "button is-default", id: "graph_forward_button", innerHTML: "<li class=\"fa fa-forward\"></li>" },
-													{ comment: "Forward Fast button", tag: "button", class: "button is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"fa fa-forward-fast\"></li>" },
-												]
-											},
-											{
-												comment: "Center Container", tag: "div", id: "app_graph_controls_container_center", innerHTML: "", class: "app_graph_controls_containers column is-gapless m-0 p-0 is-flex is-justify-content-center", content: [
-													{ comment: "Rewind Fast button", tag: "button", class: "button is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"fa fa-backward-fast\"></li>" },
-													{ comment: "Rewind button", tag: "button", class: "button is-default", id: "graph_rewind_button", innerHTML: "<li class=\"fa fa-backward\"></li>" },
-													{ comment: "Play button", tag: "button", class: "button is-success", id: "graph_play_button", innerHTML: "<li class=\"fa fa-play\"></li><li class=\"fa fa-pause\"></li>" },
-													{ comment: "Forward button", tag: "button", class: "button is-default", id: "graph_forward_button", innerHTML: "<li class=\"fa fa-forward\"></li>" },
-													{ comment: "Forward Fast button", tag: "button", class: "button is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"fa fa-forward-fast\"></li>" },
-												]
-											},{
-												comment: "Right Container", tag: "div", id: "app_graph_controls_container_right", innerHTML: "", class: "app_graph_controls_containers column is-gapless m-0 p-0 is-flex is-justify-content-right", content: [
-													{ comment: "Rewind Fast button", tag: "button", class: "button is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"fa fa-backward-fast\"></li>" },
-													{ comment: "Rewind button", tag: "button", class: "button is-default", id: "graph_rewind_button", innerHTML: "<li class=\"fa fa-backward\"></li>" },
-													{ comment: "Play button", tag: "button", class: "button is-success", id: "graph_play_button", innerHTML: "<li class=\"fa fa-play\"></li><li class=\"fa fa-pause\"></li>" },
-													{ comment: "Forward button", tag: "button", class: "button is-default", id: "graph_forward_button", innerHTML: "<li class=\"fa fa-forward\"></li>" },
-													{ comment: "Forward Fast button", tag: "button", class: "button is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"fa fa-forward-fast\"></li>" },
-												]
-											}
-										]
-									},
-									{
-										comment: "App Graph Container", tag: "div", class: "m-0 p-0", id: "app_graph_container", content: [
+			},
+			"GenerateFormArray": (function ($id, $schema) {
+				function makeField($id, field, utilily) {
+					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
+					let inputField = '';
 
-											{
-												tag: "div", id: "graph_scroll_content", style: "width:calc(100vw);overflow:scroll;", content: [
-													{ comment: "App Graph Content", tag: "div", innerHTML: "App Graph Content", class: "columns is-gapless is-mobile grid2020-background", style: "width:20000px; height:20000px;", id: "app_graph_content", content: [] },
-												]
-											}
-											,
-
-										]
-									},
-									{ comment: "App Content", tag: "div", innerHTML: "Content", id: "app_content", content: [] }
-								]
-							},
-							{ comment: "App helper", tag: "div", id: "app_helper", class: "", innerHTML: "Helper", content: [] }
-						]
-					},
-					{
-						comment: "App Console", tag: "div", id: "app_console", content: [
-							{ comment: "Debugging", tag: "div", id: "debugging", innerHTML: "Console", content: [] },
-						]
+					switch (type) {
+						case 'button':
+							inputField = `<button id="${$id}___${id}" name="${id}" class="button ${d_class}" value="${value}" ${readonly ? 'disabled' : '' } autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
+						break;
+						case 'separator':
+							inputField = `<hr />`;
+							break;
+						case 'boolean':
+							inputField = `
+							<label class="checkbox">
+								<input type="checkbox" id="${$id}___${id}" name="${id}" class="checkbox ${d_class}" ${value ? 'checked' : ''} ${readonly ? 'disabled' : ''} autocomplete="off"/>
+								${utilily.Strings.UCwords(id.replace(/\_/g, ' '))}
+							</label>`;
+							break;
+						case 'number':
+							inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input number_input is-success ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
+							break;
+						case 'textarea':
+							inputField = `<textarea id="${$id}___${id}" name="${id}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''} autocomplete="off">${value}</textarea>`;
+							break;
+							case 'select':
+							inputField = `<div class="select is-link">
+											<select id="${$id}___${id}" name="${id}" class="select_input ${d_class}">
+												${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+											</select>
+										</div>`;
+							break;
+						case 'text_select':
+							inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input text_select is-link ${d_class}" value="" ${readonly ? 'readonly' : ''} autocomplete="off" data-select-values='${JSON.stringify(value)}'/>`;
+							break;
+						default:
+							inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input text_input is-info ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
+							break;
 					}
-				]
-			};
-			// console.log('form :>> ', form);
-			// console.log('formHTML :>> ', formHTML);
-			return form;
+
+					// Handle $head and $tail cases
+					if (!head && !tail) {
+						return `<div class="control">${inputField}</div>`;
+					}
+
+					if (head && !tail) {
+						switch (head.type) {
+							case 'label': 
+								return `<p class="control"><a class="button is-static">${head.value}</a></p><p class="control">${inputField}</p>`;
+								break;
+							case 'input':
+								return `<p class="control"><input type="text" id="" name="" class="input head_input" value="" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+								break;
+							case 'select':
+								return `<p class="control">
+										<div class="select">
+											<select id="" name="" class="select_input head_input ${d_class}">
+												${Array.isArray(head.value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+											</select>
+										</div>
+									</p>`;
+								break;
+						}
+					}
+					if (!head && tail) {
+						switch (tail.type) {
+							case 'label': 
+								return `<p class="control">${inputField}</p><p class="control"><a class="button is-static">${tail.value}</a></p>`;
+								break;
+							case 'input':
+								return `<p class="control"><input type="text" id="" name="" class="input tail_input" value="" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+								break;
+							case 'select':
+								return `<p class="control">
+										<div class="select">
+											<select id="" name="" class="select_input tail_input ${d_class}">
+												${Array.isArray(tail.value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+											</select>
+										</div>
+									</p>`;
+								break;
+						}
+					}
+					if (head && tail) {
+						let zstr = "";
+						switch (head.type) {
+							case 'label': 
+								zstr += `<p class="control"><a class="button is-static">${Array.isArray(head.value) ? head.value[0] : head.value}</a></p>`;
+								break;
+							case 'input':
+								zstr += `<p class="control"><input type="text" id="" name="" class="input head_input" value="" placeholder="${Array.isArray(head.value) ? head.value[0] : head.value}" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+								break;
+							case 'select':
+								zstr += `<p class="control">
+										<span class="select">
+											<select id="" name="" class="select_input head_input ${d_class}">
+												${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+											</select>
+										</span>
+									</p>`;
+								break;
+						}
+						zstr += `<p class="control">${inputField}</p>`;
+						switch (tail.type) {
+							case 'label': 
+								zstr += `<p class="control"><a class="button is-static">${Array.isArray(tail.value) ? tail.value[0] : tail.value}</a></p>`;
+								break;
+							case 'input':
+								zstr += `<p class="control"><input type="text" id="" name="" class="input tail_input" value="" placeholder="${Array.isArray(tail.value) ? tail.value[0] : tail.value}" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+								break;
+							case 'select':
+								zstr += `<p class="control">
+										<span class="select">
+											<select id="" name="" class="select_input tail_input ${d_class}">
+												${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+											</select>
+										</span>
+									</p>`;
+								break;
+						}
+						return zstr;
+					}
+				}
+				let str = '<div class="paradigm-form">';
+				let Util = this;
+				// console.log('Util :>> ', Util);
+				$schema.forEach((field) => {
+					const { id, label = '', form } = field;
+					if (form === 1) {
+						str += `<div class="field is-horizontal">`;
+
+						if (label || field.type !== 'separator') {
+							let tlabel = field.label || (field.type === 'button' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
+							str += `<div class="field-label is-normal">
+										<label class="label" id="id_label___${$id}___${id}">
+											${tlabel}
+										</label>
+									</div>`;
+						}
+						
+						str += `<div class="field-body">`;
+						str += (field.head || field.tail) ? `<div class="field has-addons">` : `<div class="field">`;
+						str += makeField($id, field, Util);
+						str += `</div></div></div>`;
+					}
+				});
+				str += '</div>';
+				// console.log('str :>> ', str);
+				return str;
+			}).bind(this),
+			"initSearchDropdown": (function(inputElement, source) {
+				const parent = inputElement.parentElement;
+				const wrapper = document.createElement('div');
+				wrapper.classList.add('control', 'has-icons-left');
+
+				const magnifierIcon = document.createElement('span');
+				magnifierIcon.classList.add('icon', 'is-left');
+				magnifierIcon.innerHTML = '<i class="fas fa-search"></i>';
+
+				// Preserve the input's attributes and move it inside the wrapper
+				wrapper.appendChild(inputElement);
+				wrapper.appendChild(magnifierIcon);
+				console.log('wrapper', wrapper);
+				parent.innerHTML = '';
+				parent.appendChild(wrapper, inputElement); // Insert wrapper in the same position as the original input
+
+				// Set input styling (class, padding) if it's not already there
+				inputElement.classList.add('input');
+				inputElement.style.paddingLeft = '2.5em'; // Add padding to make room for the icon
+
+				// Step 2: Create the dropdown container
+				const dropdownMenu = document.createElement('div');
+				dropdownMenu.classList.add('dropdown');
+				dropdownMenu.style.cssText = `
+					width: 100%;
+					position: absolute; /* Make dropdown position absolute */
+					top: 100%; /* Position it directly below the input */
+					left: 0;
+					z-index: 10; /* Ensure it appears on top of other content */
+				`;
+
+				// Create dropdown menu structure
+				dropdownMenu.innerHTML = `
+				<div class="dropdown-menu" style="width: 100%; left: 0; right: 0;">
+					<div class="dropdown-content" style="max-height: 300px; overflow-y: auto; width: 100%; "></div>
+				</div>
+				`;
+
+				const searchResults = dropdownMenu.querySelector('.dropdown-content');
+				parent.appendChild(dropdownMenu); // Append the dropdown to the parent of the input
+
+
+				let activeIndex = -1;  // Track the currently selected result
+				let results = [];  // Store the current search results
+
+				inputElement.addEventListener('input', async function () {
+				const query = inputElement.value.trim();
+
+				if (query.length > 0) {
+					if (typeof source === 'string') {
+						results = await fetchResults(query); // If source is an API string, use fetch
+					} else if (Array.isArray(source)) {
+						results = filterLocalResults(query); // If source is an array, search locally
+					}
+					displayResults(results);
+				} else {
+					dropdownMenu.classList.remove('is-active');
+					results = [];
+					activeIndex = -1;
+				}
+				});
+
+				// Show all results when the input gains focus
+				inputElement.addEventListener('focus', function () {
+					if (Array.isArray(source)) {
+						// Display all available options
+						results = source;
+						displayResults(results);
+					}
+				});
+				inputElement.addEventListener('focusout', function () {
+					setTimeout(() => {
+						dropdownMenu.classList.remove('is-active');
+						activeIndex = -1; // Reset the active index
+					}, 100);
+				});
+
+				// Fetch results from API
+				async function fetchResults(query) {
+					try {
+						const response = await fetch(`${source}?name=${query}`);
+						const data = await response.json();
+						return data.results || [];
+					} catch (error) {
+						console.error('Error fetching results:', error);
+						return [];
+					}
+				}
+
+				// Filter results from local array
+				function filterLocalResults(query) {
+					const lowerCaseQuery = query.toLowerCase();
+					return source.filter(item => item.toLowerCase().includes(lowerCaseQuery));
+				}
+
+				function displayResults(results) {
+					searchResults.innerHTML = '';
+					activeIndex = -1; // Reset the active index
+
+					if (results.length === 0) {
+						searchResults.innerHTML = '<div class="dropdown-item">No results found</div>';
+					} else {
+						results.forEach((result, index) => {
+							const item = document.createElement('a');
+							item.classList.add('dropdown-item');
+							item.textContent = typeof result === 'string' ? result : result.name; // Handle both string and object results
+							item.addEventListener('click', () => selectResult(index));
+							searchResults.appendChild(item);
+						});
+					}
+					dropdownMenu.classList.add('is-active');
+				}
+
+				function selectResult(index) {
+					if (results[index]) {
+						const selectedValue = typeof results[index] === 'string' ? results[index] : results[index].name;
+						inputElement.value = selectedValue; // Populate the input with selected result
+						dropdownMenu.classList.remove('is-active');
+						activeIndex = -1; // Reset the active index
+					}
+				}
+
+				inputElement.addEventListener('keydown', function (e) {
+					const items = searchResults.getElementsByClassName('dropdown-item');
+					if (e.key === 'ArrowDown') {
+						e.preventDefault();
+						if (activeIndex < items.length - 1) {
+							activeIndex++;
+							updateActiveItem(items);
+						}
+					} else if (e.key === 'ArrowUp') {
+						e.preventDefault();
+						if (activeIndex > 0) {
+							activeIndex--;
+							updateActiveItem(items);
+						}
+					} else if (e.key === 'Enter') {
+						e.preventDefault();
+						if (activeIndex >= 0) {
+							selectResult(activeIndex);
+						}
+					}
+				});
+
+				function updateActiveItem(items) {
+					// Remove 'is-selected' class from all items
+					for (let i = 0; i < items.length; i++) {
+						items[i].classList.remove('is-selected');
+					}
+
+					// Add 'is-selected' class to the active item
+					if (items[activeIndex]) {
+						items[activeIndex].classList.add('is-selected');
+					}
+				}
+			}),
+		},
+		"Initialize": {
+			MainForm:() => {
+				return {
+					comment: "BODY", tag: "div", id: "", content: [
+						{
+							comment: "App Root Container", tag: "div", id: "app_root_container", content: [
+								{ comment: "App Menu", tag: "div", id: "app_menu", class: "", innerHTML: "MENU", content: [] },
+								{
+									comment: "App Container", tag: "div", id: "app_container", content: [
+										{
+											comment: "App Top Menu Container", tag: "div", id: "app_top_menu_container", innerHTML: "", class: "columns is-gapless is-mobile m-0", content: [
+												{
+													comment: "Left Container", tag: "div", id: "app_left_container", innerHTML: "", class: "column is-gapless is-one-quarter", content: [
+														{ comment: "Menu button", tag: "button", class: "button is-default", id: "app_menu_button", title: "Open Menu", innerHTML: "<li class=\"fa fa-bars\"></li>" },
+														{ comment: "Graph button", tag: "button", class: "button is-default", id: "app_graph_button", title: "Open Graph", innerHTML: "<li class=\"fa fa-circle-nodes\"></li>" },
+													]
+												},
+												{
+													comment: "Right Container", tag: "div", id: "app_right_container", innerHTML: "", class: "column is-gapless is-three-quarters is-justify-content-flex-end is-flex", content: [
+														{ comment: "Datastore Status", tag: "div", class: "is-inline", id: "datastore_status", innerHTML: "" },
+														{ comment: "Console button", tag: "button", class: "button is-default", id: "app_console_button", title: "Open Console", innerHTML: "<li class=\"fa fa-terminal\"></li>" },
+														{ comment: "Helper button", tag: "button", class: "button is-default", id: "app_helper_button", title: "Open Helper Sidebar", innerHTML: "<li class=\"fa fa-arrows-left-right\"></li>" },
+													]
+												},
+											]
+										},
+										{
+											comment: "App Graph Controls", tag: "div", innerHTML: "", id: "app_graph_controls", class: "columns m-0 is-gapless is-multiline", content: [
+												{
+													comment: "Left Container", tag: "div", id: "app_graph_controls_container_left", innerHTML: "", class: "app_graph_controls_containers column my-2 p-0 is-flex is-justify-content-left", content: [
+														{ comment: "Load button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_loadnodes_button", title: "Load Nodes", innerHTML: `<i class="p-1 fa-solid fa-file-arrow-down"></i>` },
+														{ comment: "Remove button", tag: "button", class: "button mr-1 is-small is-danger", id: "graph_removenode_button", title: "Remove Node", innerHTML: `<i class="p-1 fa-solid fa-minus"></i>` },
+														{ comment: "Add Node", tag: "button", class: "button mr-1 is-small is-link", id: "graph_addnode_button", title: "Add Node", innerHTML: `<i class="p-1 fa-solid fa-plus"></i>`},
+														{ comment: "Save Nodes", tag: "button", class: "button mr-1 is-small is-default", id: "graph_savenodes_button", title: "Save Nodes", innerHTML:`<i class="p-1 fa-solid fa-file-arrow-up"></i>` },
+													]
+												},
+												{
+													comment: "Center Container", tag: "div", id: "app_graph_controls_container_center", innerHTML: "", class: "app_graph_controls_containers column my-2 p-0 is-flex is-justify-content-center", content: [
+														{ comment: "Rewind Fast button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"p-1 fa fa-backward-fast\"></li>" },
+														{ comment: "Rewind button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_rewind_button", innerHTML: "<li class=\"p-1 fa fa-backward\"></li>" },
+														{ comment: "Stop button", tag: "button", class: "button mr-1 is-small is-info", id: "graph_stop_button", innerHTML: `<li class="fa fa-stop"></li>` },
+														{ comment: "Play button", tag: "button", class: "button mr-1 is-small is-success", id: "graph_play_button", innerHTML: `<li class="fa fa-play"></li>`},
+														{ comment: "Pause button", tag: "button", class: "button mr-1 is-small is-warning", id: "graph_pause_button", innerHTML: `<li class="fa fa-pause"></li>`},
+														{ comment: "Forward button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_forward_button", innerHTML: "<li class=\"p-1 fa fa-forward\"></li>" },
+														{ comment: "Forward Fast button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"p-1 fa fa-forward-fast\"></li>" },
+													]
+												},
+												{ comment: "Right Container", tag: "div", id: "app_graph_controls_container_right", innerHTML: "", class: "app_graph_controls_containers column is-gapless m-0 p-0 is-flex is-justify-content-right", content: [] }
+											]
+										},
+										{
+											comment: "App Graph Container", tag: "div", class: "m-0 p-0", id: "app_graph_container", content: [
+
+												{
+													tag: "div", id: "graph_scroll_content", style: "width:calc(100vw);height:calc(80vh);overflow:scroll;", content: [
+														{ comment: "App Graph Content", tag: "div", innerHTML: "App Graph Content", class: "columns is-gapless is-mobile grid2020-background", style: "width:20000px; height:20000px;", id: "app_graph_content", content: [] },
+													]
+												}
+												,
+
+											]
+										},
+										{ comment: "App Content", tag: "div", innerHTML: "Content", id: "app_content", content: [] }
+									]
+								},
+								{ comment: "App helper", tag: "div", id: "app_helper", class: "", innerHTML: "Helper", content: [] }
+							]
+						},
+						{
+							comment: "App Console", tag: "div", id: "app_console", content: [
+								{ comment: "Core Status Container", tag: "div", id: "core_status", innerHTML: "", class: "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", content: []},
+								{ comment: "Debugging", tag: "div", id: "debugging", innerHTML: "Console", content: [] },
+							]
+						}
+					]
+				};
+			},
+			FormInput:() => {
+				let testcard = this.Form.Components.BulmaCSS.Components.Card({
+					id: "form_components",
+					order: 0,
+					style: "width:100%;",
+					headerIcon: `<i class="fa-brands fa-wpforms"></i>`,
+					header: `Form Components`,
+					// content: this.Form.Events.GenerateFormArray(form.Dataset.Schema[0].id, form.Dataset.Schema[0].Dataset.Schema)
+					innerHTML: 'wiiiiiiiiiiii'
+				});
+				console.log(this.Form.Events.GenerateFormArray(this.Form.Initialize.FormComponents()));
+				// row.content[0].innerHTML = this.Form.Render.traverseDOMProxyOBJ(testcard);
+				// form.Dataset.Layout.Form.content.push(row);
+				// let formstr = this.Form.Render.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
+				return this.Form.Render.traverseDOMProxyOBJ(testcard);
+			},
+			FormComponents: () => {
+				return {
+					"id": "form_components",
+					"type": "record", //record or array >>> array of records
+					"icon": `<li class="fa fa-wpforms"></li>`,
+					"order": 100,
+					"Dataset": {
+						"Layout": {
+							"Form": {},
+							"Properties": {
+								"FormEntry": {
+									"Show": 1,
+									"Label": "Form Components",
+									"ShowLabel": 1,
+								},
+								"Preview": {
+									"Show": 1,
+									"Label": "Form Components",
+									"ShowLabel": 1,
+								}
+							}
+						},
+						"Schema": [{
+							"id": "id",
+							"label": "ID",
+							"type": "text",
+							"form": 1,
+							"value": "",
+						},
+						{
+							"id": "name",
+							"label": "Nama",
+							"type": "text",
+							"form": 1,
+						},
+						{
+							"id": "label",
+							"label": "Label",
+							"type": "text",
+							"form": 1,
+						},
+						{
+							"id": "type",
+							"label": "Type",
+							"type": "select",
+							"form": 1,
+							"value": ["text", "number", "boolean", "select", "textarea", "button", "separator"],
+						},
+						{
+							"id": "form",
+							"label": "Form",
+							"type": "boolean",
+							"form": 1,
+							"value": 1
+						},
+						{
+							"id": "readonly",
+							"label": "Readonly",
+							"type": "boolean",
+							"form": 1,
+						},
+						{
+							"id": "value",
+							"label": "Value",
+							"type": "text",
+							"form": 1,
+						}]
+					}
+				}
+			}
 		},
 		"Render": {
 			"traverseDOMProxyOBJ": ((element, callback) => {
@@ -592,6 +991,7 @@ export class Flow {
 				if (element.href) html += ` href="${element.href}"`;
 				if (element.type) html += ` type="${element.type}"`;
 				if (element.value) html += ` value="${element.value}"`;
+				if (element.title) html += ` title="${element.title}"`;
 
 				if (element.data) {
 					for (let [key, value] of Object.entries(element.data)) {

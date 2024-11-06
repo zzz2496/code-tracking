@@ -8,6 +8,9 @@
 	margin: 0;
 	padding: 0;
 }
+.button {
+	min-width: 2.5rem;
+}
 
 @media (prefers-color-scheme: light) {
 	.grid2020-background {
@@ -108,7 +111,7 @@
 	width: 100vw;
 	/* padding-right: 0rem; */
 	scrollbar-width: none; 
-    -ms-overflow-style: none; 
+	-ms-overflow-style: none; 
 
 
 }
@@ -133,46 +136,83 @@
 
 /* APP_CONTAINER */
 #app_container {
-    flex-grow: 0;
-    flex-shrink: 0;
+	flex-grow: 0; /* Do not grow to fill the remaining space */
+    flex-shrink: 0; /* Do not shrink */
     flex-basis: auto;
 	width: 100%;
-    min-height: 0;
-    min-width: 0;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
+    /* min-height: 0;
+    min-width: 0; */
+    overflow: scroll;
+    /* display: flex; */
+    /* flex-direction: column; */
     height: auto;
     padding-bottom: 1rem;
 	padding-right: 0rem;
 }
 
 
-#app_top_container {
-    flex-grow: 0;
-    flex-shrink: 0;
+#app_top_menu_container{
 	height: auto;
-	transition: flex-basis 0.3s ease-in-out, max-height 0.3s ease-in-out, height 0.3s ease-in-out;
-	overflow: hidden;
-	/* border: solid pink 1px; */
+}
+
+#app_graph_container {
+    width: 100%;
+    height: 0px;
+	padding-right: 1vh;
+    overflow: auto;
+    /* border: solid green 1px;  */
 	scrollbar-width: none; 
-    -ms-overflow-style: none; 
-	/* padding-right: 1rem; */
-
+    -ms-overflow-style: none;
+	transition: height 0.3s ease-in-out;
 }
-/* #app_top_container.show {
-	max-height: 85vh;
-	flex-basis: 85vh;
+#app_graph_container.show {
+	height: calc(80vh);
+}
 
-	height: 85vh;
-	overflow: auto;
-	padding: 0;
+#app_graph_container::-webkit-scrollbar {
+	display: none; 
+}
+.app_graph_controls_containers{
+	height: auto;
+}
+#app_graph_controls {
+	height: 0px;
 	width: 100%;
-} */
-#app_top_container::-webkit-scrollbar {
-    display: none; 
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+	z-index: -99;
 }
-/* Adjust APP_CONTENT */
+#app_graph_controls.show{
+	width: 100%;
+	opacity: 1;
+	z-index: 1;
+}
+#app_graph_content{
+	padding-top: 2.5rem;
+}
+.app_graph_controls_containers {
+	backdrop-filter: blur(2px);
+}
+.system-status-indicator{
+	min-width: 3.5rem;
+}
+#graph_scroll_content{
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+}
+@media screen and (max-width: 800px) {
+	#app_graph_content{
+		padding-top: 4.5rem;
+	}
+	 /* Center all columns on small screens */
+	.app_graph_controls_containers {
+		justify-content: center !important; /* Center align content */
+		text-align: center; /* Optional: Center text inside */
+		backdrop-filter: blur(2px);
+	}
+}
+
 #app_content {
 	flex: 1;
 	display: flex;
@@ -245,53 +285,3 @@
 	/* Fly it up to the visible screen */
 }
 
-#app_graph_container {
-    width: 100%;
-    height: 0px;
-	padding-right: 1vh;
-    overflow: auto;
-    /* border: solid green 1px;  */
-	scrollbar-width: none; 
-    -ms-overflow-style: none;
-	transition: height 0.3s ease-in-out;
-}
-#app_graph_container.show {
-	height: calc(80vh);
-}
-
-#app_graph_container::-webkit-scrollbar {
-    display: none; 
-}
-.app_graph_controls_containers{
-	height: 3rem;
-}
-#app_graph_controls {
-	height: 0px;
-	width: 100%;
-	opacity: 0;
-	transition: opacity 0.3s ease-in-out;
-	z-index: -99;
-}
-#app_graph_controls.show{
-	width: 100%;
-	opacity: 1;
-	z-index: 1;
-}
-#app_graph_content{
-	padding-top: 3rem;
-}
-.app_graph_controls_containers {
-	backdrop-filter: blur(2px);
-}
-
-@media screen and (max-width: 800px) {
-	#app_graph_content{
-		padding-top: 9rem;
-	}
-	 /* Center all columns on small screens */
-	.app_graph_controls_containers {
-		justify-content: space-around !important; /* Center align content */
-		text-align: center; /* Optional: Center text inside */
-		backdrop-filter: blur(2px);
-	}
-}

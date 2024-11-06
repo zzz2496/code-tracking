@@ -101,16 +101,18 @@ document.addEventListener('SurrealDBLoaded', () => {
 		// if (cr) console.log(idx, value);
 		switch (value.Status) {
 			case 'NOT LOADED':
-				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-outline-secondary runtime-controls-button" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-disabled" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 			case 'LOADED':
-				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary runtime-controls-button" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-success" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 			case 'FAILED TO LOAD':
-				corestatus_str += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-danger runtime-controls-button" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-danger" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 		}
 	});
+	// console.log('corestatus_str :>> ', corestatus_str);
+	document.querySelector('#core_status').innerHTML = corestatus_str;
 	// ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status').innerHTML = corestatus_str;
 	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Core Status');
 
@@ -119,13 +121,14 @@ document.addEventListener('SurrealDBLoaded', () => {
 	Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
 		// console.log('>>>>>>', idx, window.ParadigmREVOLUTION.Datastores.SurrealDB[idx].Instance, entry);
 		if (entry.Instance == false) { 
-			datastore_status += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-outline-secondary" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
+			datastore_status += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
 		} else if (typeof entry.Instance.connection != "undefined") {
-			datastore_status += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-primary" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>` ;
+			datastore_status += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>` ;
 		} else {
-			datastore_status += `<button class="datastore-status-light toolbar-kit btn btn-sm btn-danger" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>` ;
+			datastore_status += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>` ;
 		}
 	});
+	document.querySelector('#datastore_status').innerHTML = datastore_status;
 	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status');
 
 	// ParadigmREVOLUTION.Utility.DOMElements.hide(ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status'), function () { 
