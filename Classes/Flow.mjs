@@ -7,7 +7,7 @@ const OperatorTemplate = {
 };
 
 export class Flow {
-	constructor(container = null, funcObject = null, chain = []) {
+	constructor(container = null, utility = null, funcObject = null, chain = []) {
 		this.cursor = null; // Track the current process
 		this.chain = chain;
 		this.run_mode = ["run", "stop", "pause", "step", "debug"];
@@ -16,6 +16,7 @@ export class Flow {
 		this.FormOBJ = null;
 		this.FormContainer = container;
 		this.SnapScroll = null;
+		this.Utility = utility;
 	}
 	checkType = function (variable) {
 		if (variable instanceof Date) {
@@ -125,26 +126,26 @@ export class Flow {
 		return /^https?:\/\/|^\/\//i.test(href);
 	};
 	Form = {
-		"Components": {
-			"DOMElement": () => {
+		Components: {
+			DOMElement: () => {
 				return {
-					"comment": comment,
-					"tag": tag,
-					"class": className,
-					"id": id,
-					"style": style,
-					"href": href,
-					"title": title,
-					"data": data,
-					"aria": aria,
-					"order": order,
-					"innerHTML": innerHTML,
-					"content": content
+					comment: comment,
+					tag: tag,
+					class: className,
+					id: id,
+					style: style,
+					href: href,
+					title: title,
+					data: data,
+					aria: aria,
+					order: order,
+					innerHTML: innerHTML,
+					content: content
 				}
 			},
-			"BulmaCSS": {
-				"Elements": {
-					"Block": (({
+			BulmaCSS: {
+				Elements: {
+					Block: (({
 						id = "",
 						class: className = "",
 						style = "",
@@ -169,7 +170,7 @@ export class Flow {
 							content
 						};
 					}).bind(this),
-					"Box": (({
+					Box: (({
 						id = "",
 						class: className = "",
 						style = "",
@@ -207,39 +208,39 @@ export class Flow {
 							content
 						};
 					}).bind(this),
-					"Button": (() => {
+					Button: (() => {
 
 					}).bind(this),
-					"Content": (() => {
+					Content: (() => {
 
 					}).bind(this),
-					"Delete": (() => {
+					Delete: (() => {
 
 					}).bind(this),
-					"Icon": (() => {
+					Icon: (() => {
 
 					}).bind(this),
-					"Image": (() => {
+					Image: (() => {
 
 					}).bind(this),
-					"Notification": (() => {
+					Notification: (() => {
 
 					}).bind(this),
-					"ProgressBars": (() => {
+					ProgressBars: (() => {
 
 					}).bind(this),
-					"Table": (() => {
+					Table: (() => {
 
 					}).bind(this),
-					"Tag": (() => {
+					Tag: (() => {
 
 					}).bind(this),
-					"Title": (() => {
+					Title: (() => {
 
 					}).bind(this),
 				},
-				"Components": {
-					"Card": (({
+				Components: {
+					Card: (({
 						id = "",
 						className = "",
 						style = "",
@@ -332,8 +333,8 @@ export class Flow {
 						return card;
 					}).bind(this)
 				},
-				"Layout": {
-					"Hero": (({
+				Layout: {
+					Hero: (({
 						id = "",
 						className = "",
 						style = "",
@@ -375,7 +376,7 @@ export class Flow {
 						heroContainer.content.push(heroSection);
 						return heroContainer;
 					}).bind(this),
-					"Section": (({
+					Section: (({
 						id = "",
 						class: className = "",
 						style = "",
@@ -403,7 +404,7 @@ export class Flow {
 				}
 			}
 		},
-		"Events": {
+		Events: {
 			addGlobalEventListener: function (type, selector, callback, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
 
@@ -504,20 +505,58 @@ export class Flow {
 					setTimeout(() => {
 						this.SnapScroll = true;
 					}, 1000);
-					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput();
+					let num = 1;
+					document.querySelector('#app_helper.show').style.flexBasis = '22rem';
+					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput('form_component_types'+num, 'FormComponentsTypes');
+					this.Form.Events.addGlobalEventListener('click', '.in_form_button', ((e) => {
+						num++;
+						document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components' + num, 'FormComponents', true);
+						// document.querySelector('#app_helper').style.width = (num * 22) + 'rem';
+
+						// Calculate the new width
+						const currentWidth = parseFloat(getComputedStyle(document.querySelector('#app_helper')).width); // Get width in px
+						console.log('currentWidth :>> ', currentWidth);
+						const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize); // 1 rem in px
+						console.log('remToPx :>> ', remToPx);
+						const newWidth = (currentWidth / remToPx + 22) + 'rem'; // Convert width to rem and add 22
+						console.log('newWidth :>> ', newWidth);
+
+						// Set the new width
+						document.querySelector('#app_helper.show').style.flexBasis = newWidth;
+
+						this.SnapScroll = false;
+						setTimeout(() => {
+							document.querySelector('#app_root_container').scrollTo({
+								left: document.querySelector('#app_root_container').scrollWidth,
+								behavior: 'smooth'
+							});
+						}, 300);
+						setTimeout(() => {
+							this.SnapScroll = true;
+						}, 1000);
+						setTimeout(() => {
+							document.querySelector('#app_helper').scrollTo({
+								left: document.querySelector('#app_helper').scrollWidth,
+								behavior: 'smooth'
+							});
+						}, 300);
+
+
+					}), document.querySelector('#app_helper'));
 				});
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
 			},
-			"GenerateFormArray": (function ($id, $schema) {
+			GenerateFormArray: (function ($id, $schema, $util, is_horizontal = false) {
+				console.log('arguments :>> ', arguments);
+				console.log('$util :>> ', $util);
 				function makeField($id, field, utilily) {
 					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 					let inputField = '';
-
 					switch (type) {
 						case 'button':
-							inputField = `<button id="${$id}___${id}" name="${id}" class="button ${d_class}" value="${value}" ${readonly ? 'disabled' : '' } autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
+							inputField = `<button id="${$id}___${id}" name="${id}" class="button in_form_button ${d_class} " value="${value}" ${readonly ? 'disabled' : '' } autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
 						break;
 						case 'separator':
 							inputField = `<hr />`;
@@ -525,7 +564,7 @@ export class Flow {
 						case 'boolean':
 							inputField = `
 							<label class="checkbox">
-								<input type="checkbox" id="${$id}___${id}" name="${id}" class="checkbox ${d_class}" ${value ? 'checked' : ''} ${readonly ? 'disabled' : ''} autocomplete="off"/>
+								<input type="checkbox" id="${$id}___${id}" name="${id}" class="${d_class}" ${value ? 'checked' : ''} ${readonly ? 'disabled' : ''} autocomplete="off"/>
 								${utilily.Strings.UCwords(id.replace(/\_/g, ' '))}
 							</label>`;
 							break;
@@ -634,25 +673,31 @@ export class Flow {
 					}
 				}
 				let str = '<div class="paradigm-form">';
-				let Util = this;
-				// console.log('Util :>> ', Util);
+				
+				console.log('$util :>> ', $util);
 				$schema.forEach((field) => {
 					const { id, label = '', form } = field;
 					if (form === 1) {
-						str += `<div class="field is-horizontal">`;
+						str += `<div class="field ${is_horizontal ? 'is-horizontal' : ''}">`;
 
 						if (label || field.type !== 'separator') {
 							let tlabel = field.label || (field.type === 'button' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
-							str += `<div class="field-label is-normal">
+							if (is_horizontal) {
+								str += `<div class="field-label is-normal is-left">
 										<label class="label" id="id_label___${$id}___${id}">
 											${tlabel}
 										</label>
 									</div>`;
+							} else {
+								str += `<label class="label" id="id_label___${$id}___${id}">
+											${tlabel}
+										</label>`;
+							}
 						}
 						
 						str += `<div class="field-body">`;
 						str += (field.head || field.tail) ? `<div class="field has-addons">` : `<div class="field">`;
-						str += makeField($id, field, Util);
+						str += makeField($id, field, $util);
 						str += `</div></div></div>`;
 					}
 				});
@@ -660,7 +705,7 @@ export class Flow {
 				// console.log('str :>> ', str);
 				return str;
 			}).bind(this),
-			"initSearchDropdown": (function(inputElement, source) {
+			initSearchDropdown: (function(inputElement, source) {
 				const parent = inputElement.parentElement;
 				const wrapper = document.createElement('div');
 				wrapper.classList.add('control', 'has-icons-left');
@@ -817,7 +862,7 @@ export class Flow {
 				}
 			}),
 		},
-		"Initialize": {
+		Initialize: {
 			MainForm:() => {
 				return {
 					comment: "BODY", tag: "div", id: "", content: [
@@ -882,7 +927,7 @@ export class Flow {
 										{ comment: "App Content", tag: "div", innerHTML: "Content", id: "app_content", content: [] }
 									]
 								},
-								{ comment: "App helper", tag: "div", id: "app_helper", class: "", innerHTML: "Helper", content: [] }
+								{ comment: "App helper", tag: "div", id: "app_helper", class: "columns is-gapless is-mobile", innerHTML: "Helper", content: [] }
 							]
 						},
 						{
@@ -894,21 +939,82 @@ export class Flow {
 					]
 				};
 			},
-			FormInput:() => {
+			FormInput: (id, type, is_horizontal) => {
+				let formc = this.Form.Initialize[type]();
 				let testcard = this.Form.Components.BulmaCSS.Components.Card({
 					id: "form_components",
 					order: 0,
 					style: "width:100%;",
 					headerIcon: `<i class="fa-brands fa-wpforms"></i>`,
 					header: `Form Components`,
-					// content: this.Form.Events.GenerateFormArray(form.Dataset.Schema[0].id, form.Dataset.Schema[0].Dataset.Schema)
-					innerHTML: 'wiiiiiiiiiiii'
+					content: this.Form.Events.GenerateFormArray(id, formc.Dataset.Schema, this.Utility, is_horizontal)
 				});
-				console.log(this.Form.Events.GenerateFormArray(this.Form.Initialize.FormComponents()));
-				// row.content[0].innerHTML = this.Form.Render.traverseDOMProxyOBJ(testcard);
-				// form.Dataset.Layout.Form.content.push(row);
-				// let formstr = this.Form.Render.traverseDOMProxyOBJ(form.Dataset.Layout.Form);
-				return this.Form.Render.traverseDOMProxyOBJ(testcard);
+				let column = {comment: "Column", tag: "div", class: "column is-flex", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
+				return this.Form.Render.traverseDOMProxyOBJ(column);
+			},
+			FormComponentsTypes: () => {
+				return {
+					"id": "form_components_types",
+					"type": "record", //record or array >>> array of records
+					"icon": `<li class="fa fa-wpforms"></li>`,
+					"order": 100,
+					"Dataset": {
+						"Layout": {
+							"Form": {},
+							"Properties": {
+								"FormEntry": {
+									"Show": 1,
+									"Label": "Form Components Types",
+									"ShowLabel": 1,
+								},
+								"Preview": {
+									"Show": 1,
+									"Label": "Form Components Types",
+									"ShowLabel": 1,
+								}
+							}
+						},
+						"Schema": [{
+							"id": "textbox",
+							"label": "Text Box",
+							"type": "text",
+							"form": 1,
+							"value": "",
+						},
+						{
+							"id": "searchable_textbox",
+							"label": "Searchable Text Box",
+							"type": "text_select",
+							"form": 1,
+							"value": ["Nostrum","earum","quis","repudiandae","optio","qui","fuga.","Quos","optio","ab.","Ipsam","aperiam","sed","facilis.","Aut","eos","eaque","inventore","ipsam","aut","voluptatem","non."],
+						},
+						{
+							"id": "dropdownbox",
+							"label": "Dropdown Box",
+							"type": "select",
+							"form": 1,
+						},
+						{
+							"id": "textarea",
+							"label": "Text Area",
+							"type": "text",
+							"form": 1,
+						},
+						{
+							"id": "boolean",
+							"label": "Checkbox",
+							"type": "checkbox",
+							"form": 1
+						},
+						{
+							"id": "add",
+							"label": "",
+							"type": "button",
+							"class": "is-link",
+							"form": 1,
+						}]
+					}
+				}
 			},
 			FormComponents: () => {
 				return {
@@ -976,13 +1082,20 @@ export class Flow {
 							"label": "Value",
 							"type": "text",
 							"form": 1,
+						},
+						{
+							"id": "add",
+							"label": "",
+							"type": "button",
+							"class": "is-link",
+							"form": 1,
 						}]
 					}
 				}
 			}
 		},
-		"Render": {
-			"traverseDOMProxyOBJ": ((element, callback) => {
+		Render: {
+			traverseDOMProxyOBJ: ((element, callback) => {
 				let html = `<${element.tag}`;
 
 				if (element.class) html += ` class="${element.class}"`;
@@ -1018,9 +1131,9 @@ export class Flow {
 				if (callback) callback();
 
 				return html;
-			})
+			}),
 		},
-		"Run": {
+		Run: {
 			setRunMode: (mode) => {
 				if (this.run_mode.includes(mode)) {
 					this.run_mode_selected = mode;
@@ -1120,14 +1233,14 @@ export class Flow {
 
 	};
 	Decision = {
-		"if": {
-			"input_pin1": null,
-			"input_pin2": null,
-			"operator": null,
-			"output_pin1": null,
-			"output_pin2": null,
-			"operator_template": OperatorTemplate,
-			"do_if": function () {
+		if: {
+			input_pin1: null,
+			input_pin2: null,
+			operator: null,
+			output_pin1: null,
+			output_pin2: null,
+			operator_template: OperatorTemplate,
+			do_if: function () {
 				switch (operator) {
 					case '<':
 
@@ -1157,7 +1270,7 @@ export class Flow {
 				}
 			}
 		},
-		"switch": function (input_pin1, operator) {
+		switch: function (input_pin1, operator) {
 
 		}
 	};
