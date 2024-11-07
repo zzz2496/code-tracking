@@ -554,6 +554,7 @@ export class Flow {
 				function makeField($id, field, utilily) {
 					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 					let inputField = '';
+					console.log('type :>> ', type);
 					switch (type) {
 						case 'button':
 							inputField = `<button id="${$id}___${id}" name="${id}" class="button in_form_button ${d_class} " value="${value}" ${readonly ? 'disabled' : '' } autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
@@ -572,9 +573,10 @@ export class Flow {
 							inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input number_input is-success ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 							break;
 						case 'textarea':
+							
 							inputField = `<textarea id="${$id}___${id}" name="${id}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''} autocomplete="off">${value}</textarea>`;
 							break;
-							case 'select':
+						case 'select':
 							inputField = `<div class="select is-link">
 											<select id="${$id}___${id}" name="${id}" class="select_input ${d_class}">
 												${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
@@ -992,12 +994,13 @@ export class Flow {
 							"id": "dropdownbox",
 							"label": "Dropdown Box",
 							"type": "select",
+							"value":["Value example", "Value example 2", "Some city name", "Something something", "Something something else"],
 							"form": 1,
 						},
 						{
 							"id": "textarea",
 							"label": "Text Area",
-							"type": "text",
+							"type": "textarea",
 							"form": 1,
 						},
 						{
@@ -1005,6 +1008,13 @@ export class Flow {
 							"label": "Checkbox",
 							"type": "checkbox",
 							"form": 1
+						},
+						{
+							"id": "button",
+							"label": "Button",
+							"type": "button",
+							"class": "is-default",
+							"form": 1,
 						},
 						{
 							"id": "add",
