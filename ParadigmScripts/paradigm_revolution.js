@@ -126,6 +126,34 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	document.querySelector('#app_content').innerHTML += `<br>Dolorem dolor quidem esse et et possimus. Sed ipsam libero nostrum quia enim dignissimos et nostrum. Fugiat possimus laboriosam sapiente ut dicta. Dolor sit sequi fuga adipisci nihil quos et nisi.
 		Voluptatem occaecati quo et nobis vero ipsa. Expedita laboriosam odio incidunt architecto culpa rerum quia ea cupiditate. Facere qui tempora nulla praesentium fuga. Incidunt consectetur autem. Accusamus quam ut dolores voluptas ipsa laborum. Et neque laudantium soluta nostrum est ipsum architecto.
 		Ipsam ducimus facere eius quia voluptatum ipsum quas et. Debitis totam explicabo earum est dicta ipsa praesentium perspiciatis. Enim iure reprehenderit maiores nesciunt quia fugiat consequatur nisi. Blanditiis minima ut molestiae a iusto sed soluta.`;
+	document.querySelector('#app_content').innerHTML += `
+	<div class="buttons has-addons">
+    <!-- Main Button with primary action -->
+    <button class="button is-primary" onclick="primaryAction()">
+      Main Action
+    </button>
+
+    <!-- Dropdown Button -->
+    <div class="dropdown is-hoverable">
+      <div class="dropdown-trigger">
+        <button class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span class="icon is-small">
+            <i class="fas fa-caret-down"></i>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <a href="#" class="dropdown-item" onclick="secondaryAction1()">
+            Secondary Action 1
+          </a>
+          <a href="#" class="dropdown-item" onclick="secondaryAction2()">
+            Secondary Action 2
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>`;
 
 	console.log('Yggdrasil :>> ', Yggdrasil);
 	console.log('DONE YGGDRASIL INITIALIZATION');

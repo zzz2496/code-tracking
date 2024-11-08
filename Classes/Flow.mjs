@@ -598,7 +598,7 @@ export class Flow {
 					// Handle $head and $tail cases 
 					if (!head && !tail) {
 						// console.log('masuk !head && !tail');
-						return { comment: "Container inputbox", tag: "div", class:`control ${type == 'boolean' ? 'mt-2' : ''}`, content: [inputField] };
+						return { comment: "Container inputbox", tag: "div", class:`control  ${type == 'boolean' ? 'mt-2' : ''}`, content: [inputField] };
 					}
 
 					if (head && !tail) {
@@ -606,36 +606,36 @@ export class Flow {
 						switch (head.type) {
 							case 'button':
 								return [{
-									comment: "Container form", tag: "p", class: "control", content: [
+									comment: "Container form", tag: "p", class: "control ", content: [
 										{ comment: "Label button", tag: "button", class: "button in-head-button is-primary", innerHTML: Array.isArray(head.value) ? head.value[0] : head.value },
 									]
-								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
+								}, { comment: "Container form", tag: "p", class: "control ", content: [inputField] }];
 								break;
 							case 'label':
 								return [{
-									comment: "Container form", tag: "p", class: "control", content: [
+									comment: "Container form", tag: "p", class: "control ", content: [
 										{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(head.value) ? head.value.join(', ') : head.value },
 
 									]
-								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
+								}, { comment: "Container form", tag: "p", class: "control ", content: [inputField] }];
 								break;
 							case 'input':
 								return [{
-									comment: "Container form", tag: "p", class: "control", content: [
+									comment: "Container form", tag: "p", class: "control ", content: [
 										{ comment: "Head input", tag: "input", type: "text", class: "input head_input", placeholder: head.value, readonly: readonly }
 									]
-								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
+								}, { comment: "Container form", tag: "p", class: "control ", content: [inputField] }];
 								break;
 							case 'select':
 								return [{
-									comment: "Container form", tag: "p", class: "control", content: [
+									comment: "Container form", tag: "p", class: "control ", content: [
 										{
 											comment: "Container form", tag: "div", class: "select", content: [
 												{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, class: `select_input ${d_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
 											]
 										}
 									]
-								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
+								}, { comment: "Container form", tag: "p", class: "control ", content: [inputField] }];
 								break;
 						}
 					}
@@ -643,18 +643,18 @@ export class Flow {
 						switch (tail.type) {
 							case 'button':
 								return [
-									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
+									{ comment: "Container form", tag: "p", class: "control ", content: [inputField] },
 									{
-									comment: "Container form", tag: "p", class: "control", content: [
+									comment: "Container form", tag: "p", class: "control ", content: [
 										{ comment: "Label button", tag: "button", class: "button in-tail-button is-link", innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value },
 									]
 								}];
 								break
 							case 'label':
 								return [
-									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
+									{ comment: "Container form", tag: "p", class: "control ", content: [inputField] },
 									{
-										comment: "Container form", tag: "p", class: "control", content: [
+										comment: "Container form", tag: "p", class: "control ", content: [
 											{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value }
 										]
 									}
@@ -662,9 +662,9 @@ export class Flow {
 								break;
 							case 'input':
 								return [
-									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
+									{ comment: "Container form", tag: "p", class: "control ", content: [inputField] },
 									{
-										comment: "Container form", tag: "p", class: "control", content: [
+										comment: "Container form", tag: "p", class: "control ", content: [
 											{ comment: "Tail input", tag: "input", type: "text", class: "input tail_input", placeholder: Array.isArray(tail.value) ? tail.value[0] : tail.value, readonly: readonly }
 										]
 									}];
@@ -672,9 +672,9 @@ export class Flow {
 								break;
 							case 'select':
 								return [
-									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
+									{ comment: "Container form", tag: "p", class: "control ", content: [inputField] },
 									{
-										comment: "Container form", tag: "p", class: "control", content: [
+										comment: "Container form", tag: "p", class: "control ", content: [
 											{
 												comment: "Container form", tag: "div", class: "select", content: [
 													{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, class: `select_input ${d_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
