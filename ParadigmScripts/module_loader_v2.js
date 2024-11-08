@@ -8,8 +8,10 @@ if (cr) console.log('>>> Module Loader');
 // import { Surreal } from '../../node_modules/surrealdb.js/dist/index.bundled.mjs';
 // import { surrealdbWasmEngines } from '../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js';
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
+// import { Flow } from "../Classes/Flow.mjs";
 
 let Utility, GraphSurface, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, mqtt;
+// let Utility, GraphSurface, Connection, WorkerThread, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
 	"SystemCore": {

@@ -52,7 +52,6 @@ export class Flow {
 			return "Unknown";
 		}
 	}
-	//NOTE - sanitizeInput function added to handle date time input sanitization;
 	sanitizeInput = (function (zinput) {
 		let input = zinput;
 		// Check for datetime string
@@ -250,7 +249,8 @@ export class Flow {
 						order = 0,
 						headerIcon = "",
 						header = "",
-						content = "",
+						innerHTML = "",
+						content = [],
 						footer = ""
 					}) => {
 						// Basic card structure
@@ -309,7 +309,8 @@ export class Flow {
 									comment: "content",
 									tag: "div",
 									class: "content",
-									innerHTML: (content)
+									innerHTML: innerHTML,
+									content: content
 								}
 							]
 						});
@@ -434,23 +435,23 @@ export class Flow {
 				// Variables to track scroll velocity
 				let lastScrollLeft = 0;
 				let lastTimestamp = 0;
-			
+
 				scrollContainer.addEventListener('scroll', (event) => {
 					if (!this.SnapScroll) return; // Exit if snapping is temporarily disabled
-			
+
 					const snapPosition = document.querySelector('#app_menu').clientWidth;
 					const scrollLeft = scrollContainer.scrollLeft;
 					const currentTime = Date.now();
-			
+
 					// Calculate scroll velocity
 					const deltaTime = currentTime - lastTimestamp;
 					const deltaScroll = Math.abs(scrollLeft - lastScrollLeft);
 					const velocity = deltaScroll / deltaTime; // pixels per ms
-			
+
 					// Update last scroll position and time
 					lastScrollLeft = scrollLeft;
 					lastTimestamp = currentTime;
-			
+
 					// Only snap if within the snap range and velocity is below sensitivity threshold
 					if (
 						scrollLeft >= snapPosition - snapRange &&
@@ -466,9 +467,9 @@ export class Flow {
 				const scrollContainer = document.querySelector('#app_root_container');
 				const snapRange = 90;
 				const sensitivity = 0.1;
-			
+
 				// Initialize the scroll snap functionality
-				this.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);			
+				this.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);
 
 				document.querySelector('#app_menu_button').addEventListener('click', () => {
 					document.querySelector('#app_menu').classList.toggle('open');
@@ -507,7 +508,7 @@ export class Flow {
 					}, 1000);
 					let num = 1;
 					document.querySelector('#app_helper.show').style.flexBasis = '22rem';
-					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput('form_component_types'+num, 'FormComponentsTypes');
+					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput('form_component_types' + num, 'FormComponentsTypes');
 					this.Form.Events.addGlobalEventListener('click', '.in_form_button', ((e) => {
 						num++;
 						document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components' + num, 'FormComponents', true);
@@ -548,7 +549,202 @@ export class Flow {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
 			},
-			GenerateFormArray: (function ($id, $schema, $util, is_horizontal = false) {
+			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false) {
+				// NOTE - GENERATE FORM TO PARADIGM JSON
+				function makeFieldParadigmJSON($id, field, utilily) {
+					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
+					let inputField = {};
+					console.log('type :>> ', type);
+					switch (type) {
+						case 'button':
+							console.log('masuk button');
+							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, class: `button in_form_button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							console.log('inputField :>> ', inputField);
+							break;
+						case 'separator':
+							inputField = { comment: "HR", tag: "hr" };
+							break;
+						case 'boolean':
+							inputField = {
+								comment: "label", tag: "label", class: "checkbox", content: [
+									{ comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, class: `${d_class}`, value: value, readonly: readonly, type: 'checkbox', label: utilily.Strings.UCwords(id.replace(/\_/g, ' ')) }
+								]
+							};
+							break;
+						case 'number':
+							inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, class: ` ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							break;
+						case 'textarea':
+							inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, class: `textarea ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							break;
+						case 'select':
+							inputField = {
+								comment: "Select container", tag: "div", class: "select is-link", content: [
+									{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, class: `select_input ${d_class}`, innerHTML: `${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+								]
+							};
+							break;
+
+						case 'text_select':
+							inputField = { comment: "Searchable textbox", tag: "input", id: `${$id}___${id}`, name: id, class: `input text_select is-link ${d_class} `, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value } };
+							break;
+						default:
+							inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, name: id, class: `input text_input is-info ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value } };
+							break;
+					}
+
+					// Handle $head and $tail cases
+					if (!head && !tail) {
+						console.log('masuk !head && !tail');
+						return { comment: "Container inputbox", tag: "div", class:"control", content: [inputField] };
+					}
+
+					if (head && !tail) {
+						switch (head.type) {
+							case 'label':
+								return [{
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Label", tag: "a", class: "button is-static", value: head.value },
+
+									]
+								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
+								break;
+							case 'input':
+								return {
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Head input", tag: "input", type: "text", class: "input head_input", value: head.value, readonly: readonly }
+									]
+								};
+								break;
+							case 'select':
+								return {
+									comment: "Container form", tag: "p", class: "control", content: [
+										{
+											comment: "Container form", tag: "div", class: "select", content: [
+												{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, class: `select_input ${d_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+											]
+										}
+									]
+								};
+								break;
+						}
+					}
+					if (!head && tail) {
+						switch (tail.type) {
+							case 'label':
+								return [
+									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
+									{
+										comment: "Container form", tag: "p", class: "control", content: [
+											{ comment: "Label", tag: "a", class: "button is-static", value: head.value }
+										]
+									}
+								];
+								break;
+							case 'input':
+								return {
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Tail input", tag: "input", type: "text", class: "input tail_input", value: tail.value, readonly: readonly }
+									]
+								};
+								break;
+								break;
+							case 'select':
+								return {
+									comment: "Container form", tag: "p", class: "control", content: [
+										{
+											comment: "Container form", tag: "div", class: "select", content: [
+												{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, class: `select_input ${d_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+											]
+										}
+									]
+								};
+								break;
+						}
+					}
+					if (head && tail) {
+						let zstr = "";
+						let tObj = [];
+						switch (head.type) {
+							case 'label':
+								zstr += `<p class="control"><a class="button is-static">${Array.isArray(head.value) ? head.value[0] : head.value}</a></p>`;
+								tObj.push({comment: "Container form", tag: "p", class: "control", content: [
+									{ comment: "Container form", tag: "a", class: "button is-static", innerHTML: `${Array.isArray(head.value) ? head.value[0] : head.value}` }
+								]});
+								break;
+							case 'input':
+								zstr += `<p class="control"><input type="text" id="" name="" class="input head_input" value="" placeholder="${Array.isArray(head.value) ? head.value[0] : head.value}" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+								tObj.push({
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Head input", tag: "input", type: "text", class: "input head_input", value: head.value, readonly: readonly }
+									]
+								});
+								break;
+							case 'select':
+								zstr += `<p class="control">
+										<span class="select">
+											<select id="" name="" class="select_input head_input ${d_class}">
+												${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+											</select>
+										</span>
+									</p>`;
+								break;
+						}
+						zstr += `<p class="control">${inputField}</p>`;
+						switch (tail.type) {
+							case 'label':
+								zstr += `<p class="control"><a class="button is-static">${Array.isArray(tail.value) ? tail.value[0] : tail.value}</a></p>`;
+								break;
+							case 'input':
+								zstr += `<p class="control"><input type="text" id="" name="" class="input tail_input" value="" placeholder="${Array.isArray(tail.value) ? tail.value[0] : tail.value}" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
+								break;
+							case 'select':
+								zstr += `<p class="control">
+										<span class="select">
+											<select id="" name="" class="select_input tail_input ${d_class}">
+												${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
+											</select>
+										</span>
+									</p>`;
+								break;
+						}
+						return zstr;
+					}
+				}
+				let Obj = { comment: "Paradigm Form", tag: "div", class: "paradigm-form", style: "", content: [] };
+				let tObj = {};
+				let tfield = {};
+				$schema.forEach((field, index) => {
+					const { id, label = '', form } = field;
+					if (form === 1) {
+						if (label || field.type !== 'separator') {
+							tfield = {comment: "Field", tag: "div", class: `field ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
+
+							let tlabel = field.label || (field.type === 'button' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
+							if (is_horizontal) {
+								console.log('masuk is-horizontal');
+								tObj = {
+									comment: "Field label", tag: "div", class: `field-label is-normal is-left`, style: "", innerHTML: "", content: [
+										{ comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] }
+									]
+								};
+							} else {
+								console.log('masuk bawah');
+								tObj = { comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] };
+							}
+							tfield.content.push(tObj);
+						}
+						tObj = { comment: "Field body", tag: "div", class: `${field.head || field.tail ? 'field has-addons' : 'field'}`, style: "", innerHTML: "", content: [] };
+						let temp = makeFieldParadigmJSON($id, field, $util);
+						tfield.content.push({ comment: "Field", tag: "div", class: `${field.head || field.tail ? 'field has-addons' : 'field'}`, style: "", innerHTML: "", content: [makeFieldParadigmJSON($id, field, $util)] });
+						Obj.content.push(tfield);
+					}
+				});
+				// Obj.content.push(tObj);
+				if(cr) console.log('Obj final :>> ', Obj);
+				return Obj;
+			}).bind(this),
+			GenerateFormToHTML: (function ($id, $schema, $util, is_horizontal= false) {
 				console.log('arguments :>> ', arguments);
 				console.log('$util :>> ', $util);
 				function makeField($id, field, utilily) {
@@ -557,8 +753,8 @@ export class Flow {
 					console.log('type :>> ', type);
 					switch (type) {
 						case 'button':
-							inputField = `<button id="${$id}___${id}" name="${id}" class="button in_form_button ${d_class} " value="${value}" ${readonly ? 'disabled' : '' } autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
-						break;
+							inputField = `<button id="${$id}___${id}" name="${id}" class="button in_form_button ${d_class} " value="${value}" ${readonly ? 'disabled' : ''} autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
+							break;
 						case 'separator':
 							inputField = `<hr />`;
 							break;
@@ -573,7 +769,7 @@ export class Flow {
 							inputField = `<input type="text" id="${$id}___${id}" name="${id}" class="input number_input is-success ${d_class}" value="${value}" ${readonly ? 'readonly' : ''} autocomplete="off"/>`;
 							break;
 						case 'textarea':
-							
+
 							inputField = `<textarea id="${$id}___${id}" name="${id}" class="textarea ${d_class}" ${readonly ? 'readonly' : ''} autocomplete="off">${value}</textarea>`;
 							break;
 						case 'select':
@@ -598,7 +794,7 @@ export class Flow {
 
 					if (head && !tail) {
 						switch (head.type) {
-							case 'label': 
+							case 'label':
 								return `<p class="control"><a class="button is-static">${head.value}</a></p><p class="control">${inputField}</p>`;
 								break;
 							case 'input':
@@ -617,7 +813,7 @@ export class Flow {
 					}
 					if (!head && tail) {
 						switch (tail.type) {
-							case 'label': 
+							case 'label':
 								return `<p class="control">${inputField}</p><p class="control"><a class="button is-static">${tail.value}</a></p>`;
 								break;
 							case 'input':
@@ -637,7 +833,7 @@ export class Flow {
 					if (head && tail) {
 						let zstr = "";
 						switch (head.type) {
-							case 'label': 
+							case 'label':
 								zstr += `<p class="control"><a class="button is-static">${Array.isArray(head.value) ? head.value[0] : head.value}</a></p>`;
 								break;
 							case 'input':
@@ -655,7 +851,7 @@ export class Flow {
 						}
 						zstr += `<p class="control">${inputField}</p>`;
 						switch (tail.type) {
-							case 'label': 
+							case 'label':
 								zstr += `<p class="control"><a class="button is-static">${Array.isArray(tail.value) ? tail.value[0] : tail.value}</a></p>`;
 								break;
 							case 'input':
@@ -675,11 +871,12 @@ export class Flow {
 					}
 				}
 				let str = '<div class="paradigm-form">';
-				
+
 				console.log('$util :>> ', $util);
 				$schema.forEach((field) => {
 					const { id, label = '', form } = field;
 					if (form === 1) {
+						// console.log('is_horizontal', is_horizontal);
 						str += `<div class="field ${is_horizontal ? 'is-horizontal' : ''}">`;
 
 						if (label || field.type !== 'separator') {
@@ -696,7 +893,7 @@ export class Flow {
 										</label>`;
 							}
 						}
-						
+
 						str += `<div class="field-body">`;
 						str += (field.head || field.tail) ? `<div class="field has-addons">` : `<div class="field">`;
 						str += makeField($id, field, $util);
@@ -707,7 +904,7 @@ export class Flow {
 				// console.log('str :>> ', str);
 				return str;
 			}).bind(this),
-			initSearchDropdown: (function(inputElement, source) {
+			initSearchDropdown: (function (inputElement, source) {
 				const parent = inputElement.parentElement;
 				const wrapper = document.createElement('div');
 				wrapper.classList.add('control', 'has-icons-left');
@@ -753,20 +950,20 @@ export class Flow {
 				let results = [];  // Store the current search results
 
 				inputElement.addEventListener('input', async function () {
-				const query = inputElement.value.trim();
+					const query = inputElement.value.trim();
 
-				if (query.length > 0) {
-					if (typeof source === 'string') {
-						results = await fetchResults(query); // If source is an API string, use fetch
-					} else if (Array.isArray(source)) {
-						results = filterLocalResults(query); // If source is an array, search locally
+					if (query.length > 0) {
+						if (typeof source === 'string') {
+							results = await fetchResults(query); // If source is an API string, use fetch
+						} else if (Array.isArray(source)) {
+							results = filterLocalResults(query); // If source is an array, search locally
+						}
+						displayResults(results);
+					} else {
+						dropdownMenu.classList.remove('is-active');
+						results = [];
+						activeIndex = -1;
 					}
-					displayResults(results);
-				} else {
-					dropdownMenu.classList.remove('is-active');
-					results = [];
-					activeIndex = -1;
-				}
 				});
 
 				// Show all results when the input gains focus
@@ -865,7 +1062,7 @@ export class Flow {
 			}),
 		},
 		Initialize: {
-			MainForm:() => {
+			MainForm: () => {
 				return {
 					comment: "BODY", tag: "div", id: "", content: [
 						{
@@ -891,13 +1088,13 @@ export class Flow {
 											]
 										},
 										{
-											comment: "App Graph Controls", tag: "div", innerHTML: "", id: "app_graph_controls", class: "columns m-0 is-gapless is-multiline", content: [
+											comment: "App Graph Controls", tag: "div", innerHTML: "", id: "app_graph_controls", class: "columns m-0 is-gapless is-multiline show", content: [
 												{
 													comment: "Left Container", tag: "div", id: "app_graph_controls_container_left", innerHTML: "", class: "app_graph_controls_containers column my-2 p-0 is-flex is-justify-content-left", content: [
 														{ comment: "Load button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_loadnodes_button", title: "Load Nodes", innerHTML: `<i class="p-1 fa-solid fa-file-arrow-down"></i>` },
 														{ comment: "Remove button", tag: "button", class: "button mr-1 is-small is-danger", id: "graph_removenode_button", title: "Remove Node", innerHTML: `<i class="p-1 fa-solid fa-minus"></i>` },
-														{ comment: "Add Node", tag: "button", class: "button mr-1 is-small is-link", id: "graph_addnode_button", title: "Add Node", innerHTML: `<i class="p-1 fa-solid fa-plus"></i>`},
-														{ comment: "Save Nodes", tag: "button", class: "button mr-1 is-small is-default", id: "graph_savenodes_button", title: "Save Nodes", innerHTML:`<i class="p-1 fa-solid fa-file-arrow-up"></i>` },
+														{ comment: "Add Node", tag: "button", class: "button mr-1 is-small is-link", id: "graph_addnode_button", title: "Add Node", innerHTML: `<i class="p-1 fa-solid fa-plus"></i>` },
+														{ comment: "Save Nodes", tag: "button", class: "button mr-1 is-small is-default", id: "graph_savenodes_button", title: "Save Nodes", innerHTML: `<i class="p-1 fa-solid fa-file-arrow-up"></i>` },
 													]
 												},
 												{
@@ -905,8 +1102,8 @@ export class Flow {
 														{ comment: "Rewind Fast button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"p-1 fa fa-backward-fast\"></li>" },
 														{ comment: "Rewind button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_rewind_button", innerHTML: "<li class=\"p-1 fa fa-backward\"></li>" },
 														{ comment: "Stop button", tag: "button", class: "button mr-1 is-small is-info", id: "graph_stop_button", innerHTML: `<li class="fa fa-stop"></li>` },
-														{ comment: "Play button", tag: "button", class: "button mr-1 is-small is-success", id: "graph_play_button", innerHTML: `<li class="fa fa-play"></li>`},
-														{ comment: "Pause button", tag: "button", class: "button mr-1 is-small is-warning", id: "graph_pause_button", innerHTML: `<li class="fa fa-pause"></li>`},
+														{ comment: "Play button", tag: "button", class: "button mr-1 is-small is-success", id: "graph_play_button", innerHTML: `<li class="fa fa-play"></li>` },
+														{ comment: "Pause button", tag: "button", class: "button mr-1 is-small is-warning", id: "graph_pause_button", innerHTML: `<li class="fa fa-pause"></li>` },
 														{ comment: "Forward button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_forward_button", innerHTML: "<li class=\"p-1 fa fa-forward\"></li>" },
 														{ comment: "Forward Fast button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"p-1 fa fa-forward-fast\"></li>" },
 													]
@@ -915,7 +1112,7 @@ export class Flow {
 											]
 										},
 										{
-											comment: "App Graph Container", tag: "div", class: "m-0 p-0", id: "app_graph_container", content: [
+											comment: "App Graph Container", tag: "div", class: "m-0 p-0 show", id: "app_graph_container", content: [
 
 												{
 													tag: "div", id: "graph_scroll_content", style: "width:calc(100vw);height:calc(80vh);overflow:scroll;", content: [
@@ -934,7 +1131,7 @@ export class Flow {
 						},
 						{
 							comment: "App Console", tag: "div", id: "app_console", content: [
-								{ comment: "Core Status Container", tag: "div", id: "core_status", innerHTML: "", class: "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", content: []},
+								{ comment: "Core Status Container", tag: "div", id: "core_status", innerHTML: "", class: "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", content: [] },
 								{ comment: "Debugging", tag: "div", id: "debugging", innerHTML: "Console", content: [] },
 							]
 						}
@@ -943,15 +1140,21 @@ export class Flow {
 			},
 			FormInput: (id, type, is_horizontal) => {
 				let formc = this.Form.Initialize[type]();
+				// NOTE - FORM INPUT DEBUG
+				let testform = this.Form.Events.GenerateFormToParadigmJSON(id, formc.Dataset.Schema, this.Utility, is_horizontal);
 				let testcard = this.Form.Components.BulmaCSS.Components.Card({
 					id: "form_components",
 					order: 0,
 					style: "width:100%;",
 					headerIcon: `<i class="fa-brands fa-wpforms"></i>`,
 					header: `Form Components`,
-					content: this.Form.Events.GenerateFormArray(id, formc.Dataset.Schema, this.Utility, is_horizontal)
+					// innerHTML: this.Form.Events.GenerateFormToHTML(id, formc.Dataset.Schema, this.Utility, is_horizontal),
+					content: [this.Form.Events.GenerateFormToParadigmJSON(id, formc.Dataset.Schema, this.Utility, is_horizontal)]
 				});
-				let column = {comment: "Column", tag: "div", class: "column is-flex", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
+				console.log('testcard', testcard);
+				let column = { comment: "Column", tag: "div", class: "column is-flex", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
+				console.log('column >>>>', column);
+				console.log('HTML :>>', this.Form.Render.traverseDOMProxyOBJ(column));
 				return this.Form.Render.traverseDOMProxyOBJ(column);
 			},
 			FormComponentsTypes: () => {
@@ -988,13 +1191,13 @@ export class Flow {
 							"label": "Searchable Text Box",
 							"type": "text_select",
 							"form": 1,
-							"value": ["Nostrum","earum","quis","repudiandae","optio","qui","fuga.","Quos","optio","ab.","Ipsam","aperiam","sed","facilis.","Aut","eos","eaque","inventore","ipsam","aut","voluptatem","non."],
+							"value": ["Nostrum", "earum", "quis", "repudiandae", "optio", "qui", "fuga.", "Quos", "optio", "ab.", "Ipsam", "aperiam", "sed", "facilis.", "Aut", "eos", "eaque", "inventore", "ipsam", "aut", "voluptatem", "non."],
 						},
 						{
 							"id": "dropdownbox",
 							"label": "Dropdown Box",
 							"type": "select",
-							"value":["Value example", "Value example 2", "Some city name", "Something something", "Something something else"],
+							"value": ["Value example", "Value example 2", "Some city name", "Something something", "Something something else"],
 							"form": 1,
 						},
 						{
@@ -1105,33 +1308,52 @@ export class Flow {
 			}
 		},
 		Render: {
-			traverseDOMProxyOBJ: ((element, callback) => {
+			traverseDOMProxyOBJ: ((element, callback, cr=0) => {
+				if(cr) console.log('start traverseDOMProxyOBJ', element);
+				
 				let html = `<${element.tag}`;
-
+				if (cr) console.log('html :>> ', html);
 				if (element.class) html += ` class="${element.class}"`;
+				if (cr) console.log('html :>> ', html);
 				if (element.id) html += ` id="${element.id}"`;
+				if (cr) console.log('html :>> ', html);
 				if (element.style) html += ` style="${element.style}"`;
+				if (cr) console.log('html :>> ', html);
 				if (element.href) html += ` href="${element.href}"`;
+				if (cr) console.log('html :>> ', html);
 				if (element.type) html += ` type="${element.type}"`;
+				if (cr) console.log('html :>> ', html);
 				if (element.value) html += ` value="${element.value}"`;
+				if (cr) console.log('html :>> ', html);
 				if (element.title) html += ` title="${element.title}"`;
+				if (cr) console.log('html :>> ', html);
+				if (element.readonly) html += ` readonly="${element.readonly}"`;
+				if (cr) console.log('html :>> ', html);
+				if (element.placeholder) html += ` placeholder="${element.placeholder}"`;
+				if (cr) console.log('html :>> ', html);
+				if (element.checked) html += ` checked`;
+				if (cr) console.log('html :>> ', html);
 
 				if (element.data) {
 					for (let [key, value] of Object.entries(element.data)) {
 						html += ` data-${key}="${value}"`;
 					}
 				}
+				if (cr) console.log('html :>> ', html);
 				if (element.aria) {
 					for (let [key, value] of Object.entries(element.aria)) {
 						html += ` aria-${key}="${value}"`;
 					}
 				}
+				if (cr) console.log('html :>> ', html);
 
 				html += ">";
+				if (cr) console.log('html :>> ', html);
 				if (element.innerHTML) html += element.innerHTML;
 				if (element.content && Array.isArray(element.content)) {
+					if (cr) console.log('element.content :>> ', element.content);
 					for (let child of element.content) {
-						// console.log(this);
+						if (cr) console.log('child', child);
 						html += this.Form.Render.traverseDOMProxyOBJ(child); // Recursively generate HTML for child elements
 					}
 				}
@@ -1139,7 +1361,7 @@ export class Flow {
 				html += `</${element.tag}>`;
 
 				if (callback) callback();
-
+				if (cr) console.log('html :>> ', html);
 				return html;
 			}),
 		},
