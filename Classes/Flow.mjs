@@ -411,7 +411,7 @@ export class Flow {
 
 				// Add event listener on the parent (or global) scope
 				parent.addEventListener(type, (e) => {
-					console.log('addGlobalEventListener :>> ', type, selector);
+					console.log('addGlobalEventListener :>> ', type, selector, e.target);
 
 					// Check if the event target matches the selector
 					if (e.target.matches(selector)) {
@@ -509,9 +509,9 @@ export class Flow {
 					let num = 1;
 					document.querySelector('#app_helper.show').style.flexBasis = '22rem';
 					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput('form_component_types' + num, 'FormComponentsTypes');
-					this.Form.Events.addGlobalEventListener('click', '.in_form_button', ((e) => {
+					this.Form.Events.addGlobalEventListener('click', '.in-tail-button', ((e) => {
 						num++;
-						document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components' + num, 'FormComponents', true);
+						document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components' + num, 'FormComponents', 1);
 						// document.querySelector('#app_helper').style.width = (num * 22) + 'rem';
 
 						// Calculate the new width
@@ -550,16 +550,16 @@ export class Flow {
 				});
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false) {
-				// NOTE - GENERATE FORM TO PARADIGM JSON
 				function makeFieldParadigmJSON($id, field, utilily) {
 					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 					let inputField = {};
 					console.log('type :>> ', type);
 					switch (type) {
+						case 'action':
+							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, class: `button form-action-button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							break;
 						case 'button':
-							console.log('masuk button');
-							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, class: `button in_form_button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
-							console.log('inputField :>> ', inputField);
+							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, class: `button in-form-button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
 							break;
 						case 'separator':
 							inputField = { comment: "HR", tag: "hr" };
@@ -567,7 +567,10 @@ export class Flow {
 						case 'boolean':
 							inputField = {
 								comment: "label", tag: "label", class: "checkbox", content: [
-									{ comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, class: `${d_class}`, value: value, readonly: readonly, type: 'checkbox', label: utilily.Strings.UCwords(id.replace(/\_/g, ' ')) }
+									{
+										comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, class: `${d_class}`, value: value, readonly: readonly, type: 'checkbox', content: [
+											{tag:"label", class:"m-1", innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) }
+									] }
 								]
 							};
 							break;
@@ -584,7 +587,6 @@ export class Flow {
 								]
 							};
 							break;
-
 						case 'text_select':
 							inputField = { comment: "Searchable textbox", tag: "input", id: `${$id}___${id}`, name: id, class: `input text_select is-link ${d_class} `, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value } };
 							break;
@@ -592,32 +594,40 @@ export class Flow {
 							inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, name: id, class: `input text_input is-info ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value } };
 							break;
 					}
-
-					// Handle $head and $tail cases
+					// NOTE - DEBUG HEAD/TAIL
+					// Handle $head and $tail cases 
 					if (!head && !tail) {
-						console.log('masuk !head && !tail');
-						return { comment: "Container inputbox", tag: "div", class:"control", content: [inputField] };
+						// console.log('masuk !head && !tail');
+						return { comment: "Container inputbox", tag: "div", class:`control ${type == 'boolean' ? 'mt-2' : ''}`, content: [inputField] };
 					}
 
 					if (head && !tail) {
+						console.log('head && !tail');
 						switch (head.type) {
+							case 'button':
+								return [{
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Label button", tag: "button", class: "button in-head-button is-primary", innerHTML: Array.isArray(head.value) ? head.value[0] : head.value },
+									]
+								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
+								break;
 							case 'label':
 								return [{
 									comment: "Container form", tag: "p", class: "control", content: [
-										{ comment: "Label", tag: "a", class: "button is-static", value: head.value },
+										{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(head.value) ? head.value.join(', ') : head.value },
 
 									]
 								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
 								break;
 							case 'input':
-								return {
+								return [{
 									comment: "Container form", tag: "p", class: "control", content: [
-										{ comment: "Head input", tag: "input", type: "text", class: "input head_input", value: head.value, readonly: readonly }
+										{ comment: "Head input", tag: "input", type: "text", class: "input head_input", placeholder: head.value, readonly: readonly }
 									]
-								};
+								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
 								break;
 							case 'select':
-								return {
+								return [{
 									comment: "Container form", tag: "p", class: "control", content: [
 										{
 											comment: "Container form", tag: "div", class: "select", content: [
@@ -625,32 +635,118 @@ export class Flow {
 											]
 										}
 									]
-								};
+								}, { comment: "Container form", tag: "p", class: "control", content: [inputField] }];
 								break;
 						}
 					}
 					if (!head && tail) {
 						switch (tail.type) {
+							case 'button':
+								return [
+									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
+									{
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Label button", tag: "button", class: "button in-tail-button is-link", innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value },
+									]
+								}];
+								break
 							case 'label':
 								return [
 									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
 									{
 										comment: "Container form", tag: "p", class: "control", content: [
-											{ comment: "Label", tag: "a", class: "button is-static", value: head.value }
+											{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value }
 										]
 									}
 								];
 								break;
 							case 'input':
-								return {
-									comment: "Container form", tag: "p", class: "control", content: [
-										{ comment: "Tail input", tag: "input", type: "text", class: "input tail_input", value: tail.value, readonly: readonly }
-									]
-								};
+								return [
+									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
+									{
+										comment: "Container form", tag: "p", class: "control", content: [
+											{ comment: "Tail input", tag: "input", type: "text", class: "input tail_input", placeholder: Array.isArray(tail.value) ? tail.value[0] : tail.value, readonly: readonly }
+										]
+									}];
 								break;
 								break;
 							case 'select':
-								return {
+								return [
+									{ comment: "Container form", tag: "p", class: "control", content: [inputField] },
+									{
+										comment: "Container form", tag: "p", class: "control", content: [
+											{
+												comment: "Container form", tag: "div", class: "select", content: [
+													{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, class: `select_input ${d_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+												]
+											}
+										]
+									}];
+								break;
+						}
+					}
+					if (head && tail) {
+						let tObj = [];
+						switch (head.type) {
+							case 'button':
+								tObj.push({
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Label button", tag: "button", class: "button in-head-button is-primary", innerHTML: Array.isArray(head.value) ? head.value[0] : head.value },
+									]
+								});
+								break;
+							case 'label':
+								tObj.push({
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(head.value) ? head.value.join(', ') : head.value },
+									]
+								});
+								break;
+							case 'input':
+								tObj.push({
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Head input", tag: "input", type: "text", class: "input head_input", placeholder: head.value, readonly: readonly }
+									]
+								});
+								break;
+							case 'select':
+								tObj.push({
+									comment: "Container form", tag: "p", class: "control", content: [
+										{
+											comment: "Container form", tag: "div", class: "select", content: [
+												{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, class: `select_input ${d_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+											]
+										}
+									]
+								})
+								break;
+						}
+						tObj.push({comment: "Container form", tag: "p", class: "control", content: [inputField]});
+						switch (tail.type) {
+							case 'button':
+								tObj.push(
+									{
+										comment: "Container form", tag: "p", class: "control", content: [
+											{ comment: "Label button", tag: "button", class: "button in-tail-button is-link", innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value },
+										]
+									});
+								break;
+							case 'label':
+								tObj.push({
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value }
+									]
+								});
+								break;
+							case 'input':
+								tObj.push({
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Tail input", tag: "input", type: "text", class: "input tail_input", placeholder: Array.isArray(tail.value) ? tail.value[0] : tail.value, readonly: readonly }
+									]
+								});
+								break;
+							case 'select':
+								tObj.push({
 									comment: "Container form", tag: "p", class: "control", content: [
 										{
 											comment: "Container form", tag: "div", class: "select", content: [
@@ -658,62 +754,16 @@ export class Flow {
 											]
 										}
 									]
-								};
-								break;
-						}
-					}
-					if (head && tail) {
-						let zstr = "";
-						let tObj = [];
-						switch (head.type) {
-							case 'label':
-								zstr += `<p class="control"><a class="button is-static">${Array.isArray(head.value) ? head.value[0] : head.value}</a></p>`;
-								tObj.push({comment: "Container form", tag: "p", class: "control", content: [
-									{ comment: "Container form", tag: "a", class: "button is-static", innerHTML: `${Array.isArray(head.value) ? head.value[0] : head.value}` }
-								]});
-								break;
-							case 'input':
-								zstr += `<p class="control"><input type="text" id="" name="" class="input head_input" value="" placeholder="${Array.isArray(head.value) ? head.value[0] : head.value}" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
-								tObj.push({
-									comment: "Container form", tag: "p", class: "control", content: [
-										{ comment: "Head input", tag: "input", type: "text", class: "input head_input", value: head.value, readonly: readonly }
-									]
 								});
 								break;
-							case 'select':
-								zstr += `<p class="control">
-										<span class="select">
-											<select id="" name="" class="select_input head_input ${d_class}">
-												${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
-											</select>
-										</span>
-									</p>`;
-								break;
 						}
-						zstr += `<p class="control">${inputField}</p>`;
-						switch (tail.type) {
-							case 'label':
-								zstr += `<p class="control"><a class="button is-static">${Array.isArray(tail.value) ? tail.value[0] : tail.value}</a></p>`;
-								break;
-							case 'input':
-								zstr += `<p class="control"><input type="text" id="" name="" class="input tail_input" value="" placeholder="${Array.isArray(tail.value) ? tail.value[0] : tail.value}" ${readonly ? 'readonly' : ''} autocomplete="off"/></p>`;
-								break;
-							case 'select':
-								zstr += `<p class="control">
-										<span class="select">
-											<select id="" name="" class="select_input tail_input ${d_class}">
-												${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}
-											</select>
-										</span>
-									</p>`;
-								break;
-						}
-						return zstr;
+						return tObj;
 					}
 				}
 				let Obj = { comment: "Paradigm Form", tag: "div", class: "paradigm-form", style: "", content: [] };
 				let tObj = {};
 				let tfield = {};
+				let Util = $util;
 				$schema.forEach((field, index) => {
 					const { id, label = '', form } = field;
 					if (form === 1) {
@@ -722,21 +772,28 @@ export class Flow {
 
 							let tlabel = field.label || (field.type === 'button' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
 							if (is_horizontal) {
-								console.log('masuk is-horizontal');
 								tObj = {
-									comment: "Field label", tag: "div", class: `field-label is-normal is-left`, style: "", innerHTML: "", content: [
+									comment: "Field label", tag: "div", class: `field-label is-normal `, style: "", innerHTML: "", content: [
 										{ comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] }
 									]
 								};
 							} else {
-								console.log('masuk bawah');
 								tObj = { comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] };
 							}
 							tfield.content.push(tObj);
 						}
-						tObj = { comment: "Field body", tag: "div", class: `${field.head || field.tail ? 'field has-addons' : 'field'}`, style: "", innerHTML: "", content: [] };
 						let temp = makeFieldParadigmJSON($id, field, $util);
-						tfield.content.push({ comment: "Field", tag: "div", class: `${field.head || field.tail ? 'field has-addons' : 'field'}`, style: "", innerHTML: "", content: [makeFieldParadigmJSON($id, field, $util)] });
+						console.log('temp setelah makeFieldParadigmJSON :>> ', temp);
+						if (Array.isArray(temp)) {
+							temp = [...temp];
+						} else { 
+							temp = [temp];
+						}
+						tObj = {
+							comment: "Field body", tag: "div", class: `field-body`, title:"weleh", style: "", innerHTML: "", content: [
+								{ comment: "Field", tag: "div", class: `${field.head || field.tail ? 'field has-addons' : 'field'}`, style: "", innerHTML: "", content: temp }
+						] };
+						tfield.content.push(tObj);
 						Obj.content.push(tfield);
 					}
 				});
@@ -744,16 +801,16 @@ export class Flow {
 				if(cr) console.log('Obj final :>> ', Obj);
 				return Obj;
 			}).bind(this),
-			GenerateFormToHTML: (function ($id, $schema, $util, is_horizontal= false) {
-				console.log('arguments :>> ', arguments);
-				console.log('$util :>> ', $util);
+			GenerateFormToHTML: (function ($id, $schema, $util, is_horizontal = 0) {
+				// jconsole.log('arguments :>> ', arguments);
+				// console.log('$util :>> ', $util);
 				function makeField($id, field, utilily) {
 					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 					let inputField = '';
 					console.log('type :>> ', type);
 					switch (type) {
 						case 'button':
-							inputField = `<button id="${$id}___${id}" name="${id}" class="button in_form_button ${d_class} " value="${value}" ${readonly ? 'disabled' : ''} autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
+							inputField = `<button id="${$id}___${id}" name="${id}" class="button in-form-button ${d_class} " value="${value}" ${readonly ? 'disabled' : ''} autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
 							break;
 						case 'separator':
 							inputField = `<hr />`;
@@ -1140,7 +1197,6 @@ export class Flow {
 			},
 			FormInput: (id, type, is_horizontal) => {
 				let formc = this.Form.Initialize[type]();
-				// NOTE - FORM INPUT DEBUG
 				let testform = this.Form.Events.GenerateFormToParadigmJSON(id, formc.Dataset.Schema, this.Utility, is_horizontal);
 				let testcard = this.Form.Components.BulmaCSS.Components.Card({
 					id: "form_components",
@@ -1178,13 +1234,25 @@ export class Flow {
 									"ShowLabel": 1,
 								}
 							}
-						},
+						}, // NOTE - SCHEMA HEAD/TAIL
 						"Schema": [{
 							"id": "textbox",
 							"label": "Text Box",
 							"type": "text",
 							"form": 1,
 							"value": "",
+							// "head": {
+							// 	"type": "button", //input/select/label/button
+							// 	"value": ['IDR', 'SGD', 'USD', 'AUD', 'MYR'], //string or array
+							// 	"append_to_value": 1,
+							// 	"readonly":0
+							// },
+							"tail": {
+								"type": "button", //input/select/label/button
+								"value": "Select", //string or array
+								"append_to_value": 1,
+								"readonly":0
+							}
 						},
 						{
 							"id": "searchable_textbox",
@@ -1192,25 +1260,49 @@ export class Flow {
 							"type": "text_select",
 							"form": 1,
 							"value": ["Nostrum", "earum", "quis", "repudiandae", "optio", "qui", "fuga.", "Quos", "optio", "ab.", "Ipsam", "aperiam", "sed", "facilis.", "Aut", "eos", "eaque", "inventore", "ipsam", "aut", "voluptatem", "non."],
+							"tail": {
+								"type": "button", //input/select/label/button
+								"value": "Select", //string or array
+								"append_to_value": 1,
+								"readonly":0
+							}
 						},
 						{
 							"id": "dropdownbox",
 							"label": "Dropdown Box",
 							"type": "select",
-							"value": ["Value example", "Value example 2", "Some city name", "Something something", "Something something else"],
+							"value": ["Value example", "Jakarta", "Magelang", "Malaysia", "Singapura"],
 							"form": 1,
+							"tail": {
+								"type": "button", //input/select/label/button
+								"value": "Select", //string or array
+								"append_to_value": 1,
+								"readonly":0
+							}
 						},
 						{
 							"id": "textarea",
 							"label": "Text Area",
 							"type": "textarea",
 							"form": 1,
+							"tail": {
+								"type": "button", //input/select/label/button
+								"value": "Select", //string or array
+								"append_to_value": 1,
+								"readonly":0
+							}
 						},
 						{
 							"id": "boolean",
 							"label": "Checkbox",
 							"type": "checkbox",
-							"form": 1
+							"form": 1,
+							"tail": {
+								"type": "button", //input/select/label/button
+								"value": "Select", //string or array
+								"append_to_value": 1,
+								"readonly":0
+							}
 						},
 						{
 							"id": "button",
@@ -1218,11 +1310,17 @@ export class Flow {
 							"type": "button",
 							"class": "is-default",
 							"form": 1,
+							"tail": {
+								"type": "button", //input/select/label/button
+								"value": "Select", //string or array
+								"append_to_value": 1,
+								"readonly":0
+							}
 						},
 						{
 							"id": "add",
 							"label": "",
-							"type": "button",
+							"type": "action",
 							"class": "is-link",
 							"form": 1,
 						}]
