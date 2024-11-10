@@ -171,6 +171,15 @@ if (typeof finder !== 'undefined') {
 				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Blueprints.URL, function (results) {
 					window.ParadigmREVOLUTION.SystemCore.Blueprints.Data = results;
 					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Blueprints = "LOADED";
+
+					//NOTE - Load the default blueprints to Window object
+					let template__node = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
+					window.template__node = template__node;
+					let template__node__datastatus = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Template__Node__DataStatus));
+					window.template__node__datastatus = template__node__datastatus;
+					let template__edge = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
+					window.template__edge = template__edge;
+				
 					document.dispatchEvent(new Event('BlueprintsLoaded'));
 					if (cr) console.log('>>> ||| Blueprint Loader | SUCCESS');
 				}, function (key, url, status) {

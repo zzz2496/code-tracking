@@ -292,6 +292,36 @@ export class Flow {
 									tag: "p",
 									class: "card-header-title",
 									innerHTML: this.sanitizeHTML(header)
+								}, {
+									comment: "card-header-icon",
+									tag: "button",
+									class: "card-header-icon",
+									aria: { label: "more options" },
+									content: [
+										{
+											tag: "span",
+											class: "icon form-shade-button",
+											data: {
+												formid: id	
+											},
+													innerHTML: `<i class="fas fa-angle-down"></i>`
+										}
+									]
+								}, {
+									comment: "card-header-icon",
+									tag: "button",
+									class: "card-header-icon form-close-button",
+									data: {
+										formid: id	
+									},
+									aria: { label: "more options" },
+									content: [
+										{
+											tag: "span",
+											class: "icon",
+											innerHTML: `<i class="fa-solid fa-xmark"></i>`
+										}
+									]
 								}
 							].filter(Boolean); // Remove null if headerIcon is empty
 
@@ -410,13 +440,47 @@ export class Flow {
 			}
 		},
 		Events: {
-			addGlobalEventListener: function (type, selector, callback, parent = document) {
+			addGlobalEventListener: function (type, selectors, parent = document) {
+				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
+			
+				// Add event listener on the parent (or global) scope
+				parent.addEventListener(type, (e) => {
+					console.log('addGlobalEventListener :>> ', type, e.target);
+			
+					// Loop through each selector-callback pair
+					for (const { selector, callback } of selectors) {
+						// Find the closest matching ancestor with the selector
+						const targetElement = e.target.closest(selector);
+			
+						// Only trigger callback if the closest match is the element itself (not a child)
+						if (targetElement && targetElement === e.target) {
+							if (!nonBubblingEvents.includes(type)) {
+								callback(e);  // Trigger the callback if the event bubbles
+							} else {
+								// For non-bubbling events, manually check ancestor chain
+								let currentElement = e.target;
+								while (currentElement && currentElement !== parent) {
+									if (currentElement.matches(selector)) {
+										callback(e);
+										break;
+									}
+									currentElement = currentElement.parentElement;
+								}
+							}
+							// Stop processing once a match is found and callback is triggered
+							break;
+						}
+					}
+				}, true); // Using capture phase to catch events early, for non-bubbling events
+			},
+			
+			
+			addGlobalEventListenerV1: function (type, selector, callback, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
 
 				// Add event listener on the parent (or global) scope
 				parent.addEventListener(type, (e) => {
 					console.log('addGlobalEventListener :>> ', type, selector, e.target);
-
 					// Check if the event target matches the selector
 					if (e.target.matches(selector)) {
 						// Directly call callback if the event bubbles
@@ -513,7 +577,8 @@ export class Flow {
 					let num = 1;
 					document.querySelector('#app_helper.show').style.flexBasis = '22rem';
 					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput('form_component_types' + num, 'FormComponentsTypes');
-					this.Form.Events.addGlobalEventListener('click', '.in-tail-button', ((e) => {
+					this.Form.Events.addGlobalEventListenerV1('click', '.in-tail-button', ((e) => {
+						console.log('RUNNING in-tail-button :>> ');
 						num++;
 						document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components' + num, 'FormComponents', 1);
 						// document.querySelector('#app_helper').style.width = (num * 22) + 'rem';
@@ -545,9 +610,83 @@ export class Flow {
 								behavior: 'smooth'
 							});
 						}, 300);
-
-
 					}), document.querySelector('#app_helper'));
+					this.Form.Events.addGlobalEventListener('click', [
+						{ 
+							selector: '.in-tail-button', 
+							callback: (e) => {
+								console.log('RUNNING in-tail-button :>> ');
+								num++;
+								document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components' + num, 'FormComponents', 1);
+								// document.querySelector('#app_helper').style.width = (num * 22) + 'rem';
+		
+								// Calculate the new width
+								const currentWidth = parseFloat(getComputedStyle(document.querySelector('#app_helper')).width); // Get width in px
+								console.log('currentWidth :>> ', currentWidth);
+								const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize); // 1 rem in px
+								console.log('remToPx :>> ', remToPx);
+								const newWidth = (currentWidth / remToPx + 22) + 'rem'; // Convert width to rem and add 22
+								console.log('newWidth :>> ', newWidth);
+		
+								// Set the new width
+								document.querySelector('#app_helper.show').style.flexBasis = newWidth;
+		
+								this.SnapScroll = false;
+								setTimeout(() => {
+									document.querySelector('#app_root_container').scrollTo({
+										left: document.querySelector('#app_root_container').scrollWidth,
+										behavior: 'smooth'
+									});
+								}, 300);
+								setTimeout(() => {
+									this.SnapScroll = true;
+								}, 1000);
+								setTimeout(() => {
+									document.querySelector('#app_helper').scrollTo({
+										left: document.querySelector('#app_helper').scrollWidth,
+										behavior: 'smooth'
+									});
+								}, 300);
+							} 
+						},
+						{ 
+							selector: '.form-close-button', 
+							callback: (e) => {
+								console.log('CLOSE button clicked :>> ');
+								console.log(e.target);
+								let formid = e.target.dataset.formid;
+								console.log('formid :>> ', formid);
+								console.log(document.querySelector(`#${formid}`));
+								setTimeout(() => {
+									console.log('document.querySelector(#app_helper).childElementCount :>> ', document.querySelector('#app_helper').childElementCount);
+									if (document.querySelector('#app_helper').childElementCount === 1){
+										document.querySelector('#app_helper').classList.remove('show');
+										num = document.querySelector('#app_helper').childElementCount;
+									}
+									document.querySelector(`#${formid}`).parentElement.remove();
+									
+								}, 300);
+						} 
+						}
+					]);
+					
+
+
+					// this.Form.Events.addGlobalEventListener('click', 'button.form-close-button', ((e) => {
+					// 	console.log(e.target);
+					// 	let formid = e.target.dataset.formid;
+					// 	console.log('formid :>> ', formid);
+					// 	console.log(document.querySelector(`#${formid}`));
+					// 	setTimeout(() => {
+					// 		console.log('document.querySelector(#app_helper).childElementCount :>> ', document.querySelector('#app_helper').childElementCount);
+					// 		if (document.querySelector('#app_helper').childElementCount === 1){
+					// 			document.querySelector('#app_helper').classList.remove('show');
+					// 			num = document.querySelector('#app_helper').childElementCount;
+					// 		}
+					// 		document.querySelector(`#${formid}`).parentElement.remove();
+							
+					// 	}, 300);
+					// }), document.querySelector('#app_helper'));
 				});
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
@@ -557,7 +696,6 @@ export class Flow {
 				function makeFieldParadigmJSON($id, field, utilily) {
 					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 					let inputField = {};
-					console.log('type :>> ', type);
 					switch (type) {
 						case 'action':
 							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, class: `button form-action-button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
@@ -606,7 +744,6 @@ export class Flow {
 					}
 
 					if (head && !tail) {
-						console.log('head && !tail');
 						switch (head.type) {
 							case 'button':
 								return [{
@@ -787,7 +924,6 @@ export class Flow {
 							tfield.content.push(tObj);
 						}
 						let temp = makeFieldParadigmJSON($id, field, $util);
-						console.log('temp setelah makeFieldParadigmJSON :>> ', temp);
 						if (Array.isArray(temp)) {
 							temp = [...temp];
 						} else { 
@@ -1209,10 +1345,7 @@ export class Flow {
 					// innerHTML: this.Form.Events.GenerateFormToHTML(id, formc.Dataset.Schema, this.Utility, is_horizontal),
 					content: [this.Form.Events.GenerateFormToParadigmJSON(id, formc.Dataset.Schema, this.Utility, is_horizontal)]
 				});
-				console.log('testcard', testcard);
 				let column = { comment: "Column", tag: "div", class: "column is-flex", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
-				console.log('column >>>>', column);
-				console.log('HTML :>>', this.Form.Render.traverseDOMProxyOBJ(column));
 				return this.Form.Render.traverseDOMProxyOBJ(column);
 			},
 			FormComponentsTypes: () => {
