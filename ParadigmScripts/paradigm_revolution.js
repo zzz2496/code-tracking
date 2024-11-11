@@ -99,9 +99,19 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(document.body, ParadigmREVOLUTION.Utility);
 	console.log('Flow :>> ', Flow);
+	// NOTE - Initialize Main Form (App_menu, App_Container, App_Helper, App_console)
 	Node.Dataset.Layout = Flow.Form.Initialize.MainForm();
+	// NOTE - Render Main Form, get something on the screen
 	Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(Node.Dataset.Layout);
+	let forms = ['FormComponentsTypes', 'FormComponents'];
+	forms.forEach((form) => {
+		let tform = Flow.Form.Initialize[form]();
+		Node.Dataset.Forms.push(tform);	
+	});
+	
+	console.log('>>>',Node.Dataset.Forms);
 	Flow.Form.Events.InitializeFormControls();
+	window.Flow = Flow;
 
 	// document.querySelector('#app_content').innerHTML = `Dolorem dolor quidem esse et et possimus. Sed ipsam libero nostrum quia enim dignissimos et nostrum. Fugiat possimus laboriosam sapiente ut dicta. Dolor sit sequi fuga adipisci nihil quos et nisi.
 	// 	Voluptatem occaecati quo et nobis vero ipsa. Expedita laboriosam odio incidunt architecto culpa rerum quia ea cupiditate. Facere qui tempora nulla praesentium fuga. Incidunt consectetur autem. Accusamus quam ut dolores voluptas ipsa laborum. Et neque laudantium soluta nostrum est ipsum architecto. 

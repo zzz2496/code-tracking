@@ -617,21 +617,22 @@ export class Flow {
 					setTimeout(() => {
 						this.SnapScroll = true;
 					}, 1000);
+
 					let num = Date.now();
 					document.querySelector('#app_helper.show').style.flexBasis = '22rem';
-					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput('form_component_types' + num, 'FormComponentsTypes');
+					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormCard('form_component_types' + num, 'FormComponentsTypes', 1);
 				});
 				//NOTE - NEW VERSION
 				this.Form.Events.addGlobalEventListener('click', [
 					{ 
 						selector: '.in-tail-button', 
 						callback: (e) => {
-							console.log('RUNNING in-tail-button :>> ');
 							let num = Date.now();
-							document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components___' + num, 'FormComponents', 1);
-	
+							//ADD FORM COLUMN HERE
+							document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormCard('form_components___' + num, 'FormComponents', 1);
+							
+							// Calculate WIDTH
 							const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
-							console.log('newWidth :>> ', newWidth);
 	
 							// Set the new width
 							document.querySelector('#app_helper.show').style.flexBasis = newWidth;
@@ -1299,7 +1300,13 @@ export class Flow {
 														{ comment: "Forward Fast button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"p-1 fa fa-forward-fast\"></li>" },
 													]
 												},
-												{ comment: "Right Container", tag: "div", id: "app_graph_controls_container_right", innerHTML: "", class: "app_graph_controls_containers column is-gapless m-0 p-0 is-flex is-justify-content-right", content: [] }
+												{
+													comment: "Right Container", tag: "div", id: "app_graph_controls_container_right", innerHTML: "", class: "app_graph_controls_containers column is-gapless my-2 p-0 is-flex is-justify-content-right", content: [
+														{ comment: "Node Definition button", tag: "button", class: "button mr-1 is-small is-default is-default", id: "node_definition_button", title: "Node Definition", innerHTML: `<i class="fa-regular fa-rectangle-list"></i>` },
+														{ comment: "Define Form button", tag: "button", class: "button mr-1 is-small is-default is-default", id: "graph_defineform_button", title: "Define Form", innerHTML: `<i class="fa-brands fa-wpforms"></i>` },
+														{ comment: "Define Schema button", tag: "button", class: "button mr-1 is-small is-default is-default", id: "graph_defineform_button", title: "Define Schema", innerHTML: `<i class="fa-solid fa-folder-tree"></i>` },
+													]
+												}
 											]
 										},
 										{
@@ -1329,24 +1336,24 @@ export class Flow {
 					]
 				};
 			},
-			FormInput: (id, type, is_horizontal) => {
-				let formc = this.Form.Initialize[type]();
-				let testform = this.Form.Events.GenerateFormToParadigmJSON(id, formc.Dataset.Schema, this.Utility, is_horizontal);
+			FormCard: (id, form, is_horizontal, isHTML = false, order = 0) => {
+				console.log('form in FormCard', form);
+				let testform = this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal);
 				let testcard = this.Form.Components.BulmaCSS.Components.Card({
 					id: id,
-					order: 0,
+					order: order,
 					style: "width:100%;",
-					headerIcon: `<i class="fa-brands fa-wpforms"></i>`,
-					header: `Form Components`,
-					// innerHTML: this.Form.Events.GenerateFormToHTML(id, formc.Dataset.Schema, this.Utility, is_horizontal),
+					headerIcon: form.icon,
+					header: form.label,
 					content: [this.Form.Events.GenerateFormToParadigmJSON(id, formc.Dataset.Schema, this.Utility, is_horizontal)]
 				});
 				let column = { comment: "Column", tag: "div", class: "column is-flex", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
-				return this.Form.Render.traverseDOMProxyOBJ(column);
+				return isHTML ? this.Form.Render.traverseDOMProxyOBJ(column) : column;
 			},
 			FormComponentsTypes: () => {
 				return {
 					"id": "form_components_types",
+					"label": "Form Components Types",
 					"type": "record", //record or array >>> array of records
 					"icon": `<li class="fa fa-wpforms"></li>`,
 					"order": 100,
@@ -1476,6 +1483,7 @@ export class Flow {
 			FormComponents: () => {
 				return {
 					"id": "form_components",
+					"label": "Form Components",
 					"type": "record", //record or array >>> array of records
 					"icon": `<li class="fa fa-wpforms"></li>`,
 					"order": 100,
@@ -1550,7 +1558,7 @@ export class Flow {
 						}]
 					}
 				}
-			}
+			},
 		},
 		Render: {
 			traverseDOMProxyOBJ: ((element, callback, cr=0) => {				

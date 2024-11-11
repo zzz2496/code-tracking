@@ -108,8 +108,12 @@
 		"PinDescriptions": "Blueprint__Node__DatasetDesciptions.json",
 		"Query": "",
 		"Layout": {},
+		"Forms": [],
 		"Schema": {},
-		"Parameters": [],
+		"State": {
+			"Interaction": [],
+			"Flow":[]
+		},
 		"Data": {},
 		"Checksum": "",
 		"DataType": "",
