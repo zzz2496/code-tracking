@@ -310,16 +310,13 @@ export class Flow {
 								}, {
 									comment: "card-header-icon",
 									tag: "button",
-									class: "card-header-icon form-close-button",
-									data: {
-										formid: id	
-									},
+									class: "card-header-icon ",
 									aria: { label: "more options" },
 									content: [
 										{
 											tag: "span",
-											class: "icon",
-											innerHTML: `<i class="fa-solid fa-xmark"></i>`
+											class: "icon", //NOTE - form-close-button
+											innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
 										}
 									]
 								}
@@ -440,7 +437,52 @@ export class Flow {
 			}
 		},
 		Events: {
+			// NOTE - addGlobalEventListener
 			addGlobalEventListener: function (type, selectors, parent = document) {
+				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
+				const initiatedElements = new Set(); // Track selectors that have been handled
+			
+				// Add event listener on the parent (or global) scope
+				parent.addEventListener(
+					type,
+					(e) => {
+						console.log('addGlobalEventListener :>> ', type, e.target);
+			
+						// Loop through each selector-callback pair
+						for (const { selector, callback } of selectors) {
+							// Find the closest matching ancestor with the selector
+							const targetElement = e.target.closest(selector);
+			
+							// Check if this element has already been initiated
+							if (targetElement && !initiatedElements.has(targetElement)) {
+								initiatedElements.add(targetElement); // Mark as initiated
+			
+								// Only trigger callback if the closest match is the element itself (not a child)
+								if (targetElement === e.target) {
+									if (!nonBubblingEvents.includes(type)) {
+										callback(e); // Trigger the callback if the event bubbles
+									} else {
+										// For non-bubbling events, manually check ancestor chain
+										let currentElement = e.target;
+										while (currentElement && currentElement !== parent) {
+											if (currentElement.matches(selector)) {
+												callback(e);
+												break;
+											}
+											currentElement = currentElement.parentElement;
+										}
+									}
+									// Stop processing once a match is found and callback is triggered
+									break;
+								}
+							}
+						}
+					},
+					true // Using capture phase to catch events early, for non-bubbling events
+				);
+			},
+			
+			addGlobalEventListenerV2: function (type, selectors, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
 			
 				// Add event listener on the parent (or global) scope
@@ -531,6 +573,7 @@ export class Flow {
 				});
 			},
 			InitializeFormControls: () => {
+				console.log('Running InitializeFormControls');
 				this.SnapScroll = true; // Flag to enable/disable snapping
 				const scrollContainer = document.querySelector('#app_root_container');
 				const snapRange = 90;
@@ -574,120 +617,74 @@ export class Flow {
 					setTimeout(() => {
 						this.SnapScroll = true;
 					}, 1000);
-					let num = 1;
+					let num = Date.now();
 					document.querySelector('#app_helper.show').style.flexBasis = '22rem';
 					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormInput('form_component_types' + num, 'FormComponentsTypes');
-					this.Form.Events.addGlobalEventListenerV1('click', '.in-tail-button', ((e) => {
-						console.log('RUNNING in-tail-button :>> ');
-						num++;
-						document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components' + num, 'FormComponents', 1);
-						// document.querySelector('#app_helper').style.width = (num * 22) + 'rem';
+				});
+				//NOTE - NEW VERSION
+				this.Form.Events.addGlobalEventListener('click', [
+					{ 
+						selector: '.in-tail-button', 
+						callback: (e) => {
+							console.log('RUNNING in-tail-button :>> ');
+							let num = Date.now();
+							document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components___' + num, 'FormComponents', 1);
+	
+							const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
+							console.log('newWidth :>> ', newWidth);
+	
+							// Set the new width
+							document.querySelector('#app_helper.show').style.flexBasis = newWidth;
+	
+							this.SnapScroll = false;
+							setTimeout(() => {
+								document.querySelector('#app_root_container').scrollTo({
+									left: document.querySelector('#app_root_container').scrollWidth,
+									behavior: 'smooth'
+								});
+							}, 300);
+							setTimeout(() => {
+								this.SnapScroll = true;
+							}, 1000);
+							setTimeout(() => {
+								document.querySelector('#app_helper').scrollTo({
+									left: document.querySelector('#app_helper').scrollWidth,
+									behavior: 'smooth'
+								});
+							}, 300);
+						} 
+					},
+					{ 
+						selector: '.form-close-button', 
+						callback: (e) => {
+							console.log('CLOSE button clicked :>> ');
+							console.log(e.target);
+							let formid = e.target.dataset.formid;
+							console.log('formid :>> ', formid);
+							console.log(document.querySelector(`#${formid}`));
+							setTimeout(() => {
+								console.log('document.querySelector(#app_helper).childElementCount :>> ', document.querySelector('#app_helper').childElementCount);
+								if (document.querySelector('#app_helper').childElementCount === 1){
+									document.querySelector('#app_helper').classList.remove('show');
+								}
 
-						// Calculate the new width
-						const currentWidth = parseFloat(getComputedStyle(document.querySelector('#app_helper')).width); // Get width in px
-						console.log('currentWidth :>> ', currentWidth);
-						const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize); // 1 rem in px
-						console.log('remToPx :>> ', remToPx);
-						const newWidth = (currentWidth / remToPx + 22) + 'rem'; // Convert width to rem and add 22
-						console.log('newWidth :>> ', newWidth);
+								//NOTE - HMMM
+								
+								console.log(formid);
+								console.log(document.querySelector(`#${formid}`));
+								console.log(document.querySelector(`#${formid}`).parentElement);
+								document.querySelector(`#${formid}`).parentElement.remove();
 
-						// Set the new width
-						document.querySelector('#app_helper.show').style.flexBasis = newWidth;
-
-						this.SnapScroll = false;
-						setTimeout(() => {
-							document.querySelector('#app_root_container').scrollTo({
-								left: document.querySelector('#app_root_container').scrollWidth,
-								behavior: 'smooth'
-							});
-						}, 300);
-						setTimeout(() => {
-							this.SnapScroll = true;
-						}, 1000);
-						setTimeout(() => {
-							document.querySelector('#app_helper').scrollTo({
-								left: document.querySelector('#app_helper').scrollWidth,
-								behavior: 'smooth'
-							});
-						}, 300);
-					}), document.querySelector('#app_helper'));
-					this.Form.Events.addGlobalEventListener('click', [
-						{ 
-							selector: '.in-tail-button', 
-							callback: (e) => {
-								console.log('RUNNING in-tail-button :>> ');
-								num++;
-								document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormInput('form_components' + num, 'FormComponents', 1);
-								// document.querySelector('#app_helper').style.width = (num * 22) + 'rem';
-		
-								// Calculate the new width
-								const currentWidth = parseFloat(getComputedStyle(document.querySelector('#app_helper')).width); // Get width in px
-								console.log('currentWidth :>> ', currentWidth);
-								const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize); // 1 rem in px
-								console.log('remToPx :>> ', remToPx);
-								const newWidth = (currentWidth / remToPx + 22) + 'rem'; // Convert width to rem and add 22
-								console.log('newWidth :>> ', newWidth);
+								const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem';
 		
 								// Set the new width
-								document.querySelector('#app_helper.show').style.flexBasis = newWidth;
-		
-								this.SnapScroll = false;
-								setTimeout(() => {
-									document.querySelector('#app_root_container').scrollTo({
-										left: document.querySelector('#app_root_container').scrollWidth,
-										behavior: 'smooth'
-									});
-								}, 300);
-								setTimeout(() => {
-									this.SnapScroll = true;
-								}, 1000);
-								setTimeout(() => {
-									document.querySelector('#app_helper').scrollTo({
-										left: document.querySelector('#app_helper').scrollWidth,
-										behavior: 'smooth'
-									});
-								}, 300);
-							} 
-						},
-						{ 
-							selector: '.form-close-button', 
-							callback: (e) => {
-								console.log('CLOSE button clicked :>> ');
-								console.log(e.target);
-								let formid = e.target.dataset.formid;
-								console.log('formid :>> ', formid);
-								console.log(document.querySelector(`#${formid}`));
-								setTimeout(() => {
-									console.log('document.querySelector(#app_helper).childElementCount :>> ', document.querySelector('#app_helper').childElementCount);
-									if (document.querySelector('#app_helper').childElementCount === 1){
-										document.querySelector('#app_helper').classList.remove('show');
-										num = document.querySelector('#app_helper').childElementCount;
-									}
-									document.querySelector(`#${formid}`).parentElement.remove();
-									
-								}, 300);
+								if (document.querySelector('#app_helper').childElementCount > 0) document.querySelector('#app_helper.show').style.flexBasis = newWidth;
+
+								
+							}, 300);
 						} 
-						}
-					]);
-					
-
-
-					// this.Form.Events.addGlobalEventListener('click', 'button.form-close-button', ((e) => {
-					// 	console.log(e.target);
-					// 	let formid = e.target.dataset.formid;
-					// 	console.log('formid :>> ', formid);
-					// 	console.log(document.querySelector(`#${formid}`));
-					// 	setTimeout(() => {
-					// 		console.log('document.querySelector(#app_helper).childElementCount :>> ', document.querySelector('#app_helper').childElementCount);
-					// 		if (document.querySelector('#app_helper').childElementCount === 1){
-					// 			document.querySelector('#app_helper').classList.remove('show');
-					// 			num = document.querySelector('#app_helper').childElementCount;
-					// 		}
-					// 		document.querySelector(`#${formid}`).parentElement.remove();
-							
-					// 	}, 300);
-					// }), document.querySelector('#app_helper'));
-				});
+					}
+				]);
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
@@ -736,7 +733,6 @@ export class Flow {
 							inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value }};
 							break;
 					}
-					// NOTE - DEBUG HEAD/TAIL
 					// Handle $head and $tail cases 
 					if (!head && !tail) {
 						// console.log('masuk !head && !tail');
@@ -1337,7 +1333,7 @@ export class Flow {
 				let formc = this.Form.Initialize[type]();
 				let testform = this.Form.Events.GenerateFormToParadigmJSON(id, formc.Dataset.Schema, this.Utility, is_horizontal);
 				let testcard = this.Form.Components.BulmaCSS.Components.Card({
-					id: "form_components",
+					id: id,
 					order: 0,
 					style: "width:100%;",
 					headerIcon: `<i class="fa-brands fa-wpforms"></i>`,
@@ -1369,7 +1365,7 @@ export class Flow {
 									"ShowLabel": 1,
 								}
 							}
-						}, // NOTE - SCHEMA HEAD/TAIL
+						},
 						"Schema": [{
 							"id": "textbox",
 							"label": "Text Box",
