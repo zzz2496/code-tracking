@@ -27,17 +27,17 @@
 								{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
 									{ "tag": "div", "class": "tabs", "content": [
 										{ "tag": "ul", "content": [
-											{ "tag": "li", "class": "is-active", "content": [
-												{ "tag": "a", "innerHTML": "Graph" }
+											{ "tag": "li", "class": "is-active ", "content": [
+												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Graph"}, "innerHTML": "Graph" }
 											] },
-											{ "tag": "li", "content": [
-												{ "tag": "a", "innerHTML": "Page Layout" }
+											{ "tag": "li", "class":"", "content": [
+												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"PageLayout"}, "innerHTML": "Page Layout" }
 											] },
-											{ "tag": "li", "content": [
-												{ "tag": "a", "innerHTML": "Forms" }
+											{ "tag": "li", "class":"", "content": [
+												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
 											] },
-											{ "tag": "li", "content": [
-												{ "tag": "a", "innerHTML": "Schema" }
+											{ "tag": "li", "class":"", "content": [
+												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
 											] }
 										] }
 									]}
@@ -62,15 +62,33 @@
 								{ "comment": "Add Node", "tag": "button", "class": "button is-outlined mr-1 is-small is-link", "id": "graph_addnode_button", "title": "Add Node", "innerHTML": "<i class=\"p-1 fa-solid fa-plus\"></i>" }
 							]}
 						] },
-						{
-							"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 show", "id": "app_graph_container", "content": [
-								{
-									"tag": "div", "id": "graph_scroll_content", "style": "width:calc(100vw);height:calc(80vh);overflow:scroll;", "content": [
-										{ "comment": "App Graph Content", "tag": "div", "innerHTML": "App Graph Content", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }
-									]
-								}
-							]
-						},
+						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show", "innerHTML": "", "content": [
+							{
+								"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 show app_configurator_containers", "id": "app_graph_container", "content": [
+									{
+										"tag": "div", "id": "graph_scroll_content", "style": "width:calc(100vw);height:calc(80vh);overflow:scroll;", "content": [
+											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "App Graph Content", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }
+										]
+									}
+								]
+							},
+							{
+								"comment": "App Page Layout Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "id": "app_page_layout_container", "content": [
+									{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile",  "id": "app_page_layout_content", "content": [] }
+								]
+							},
+							{
+								"comment": "App Form Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "id": "app_form_container", "content": [
+									{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile", "id": "app_form_content", "content": [] }
+								]
+							},
+							{
+								"comment": "App Schema Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "id": "app_schema_container", "content": [
+									{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile", "id": "app_schema_content", "content": [] }									
+								]
+							}
+						] },
+						
 						{ "comment": "App Content", "tag": "div", "innerHTML": "Content", "id": "app_content", "content": [] }
 					]
 				},

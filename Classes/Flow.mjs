@@ -587,7 +587,7 @@ export class Flow {
 				});
 
 				document.querySelector('#app_graph_button').addEventListener('click', () => {
-					document.querySelector('#app_graph_container').classList.toggle('show');
+					document.querySelector('#app_configurator_container').classList.toggle('show');
 					document.querySelector('#app_graph_tabs_container').classList.toggle('show');
 
 				});
@@ -690,6 +690,69 @@ export class Flow {
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
+				// document.querySelectorAll('.tab-graph-selector').forEach((tab) => {
+				// 	tab.addEventListener('click', () => {
+				// 		document.querySelectorAll('.tab-graph-selector').forEach((t) => t.parentElement.classList.remove('is-active'));
+				// 		document.querySelectorAll('.app_configurator_containers').forEach((t) => t.classList.remove('show'));
+				// 		tab.parentElement.classList.add('is-active');
+						
+				// 		console.log('tab.dataset.tabtype :>> ', tab.dataset.tabtype);
+				// 		switch (tab.dataset.tabtype) {
+				// 			case 'Graph':
+				// 				document.querySelector('#app_graph_container').classList.toggle('show');
+				// 				break;
+				// 			case 'PageLayout':
+				// 				document.querySelector('#app_page_layout_container').classList.toggle('show');
+				// 			break;
+				// 			case 'Forms':
+				// 				document.querySelector('#app_form_container').classList.toggle('show');								
+				// 				break;
+				// 			case 'Schema':
+				// 				document.querySelector('#app_schema_container').classList.toggle('show');								
+				// 				break;
+						
+				// 		}
+				// 	});
+				// });
+				document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
+					tab.addEventListener('click', () => {
+						// Remove 'is-active' class from all tabs
+						tabs.forEach((t) => t.parentElement.classList.remove('is-active'));
+				
+						// Add 'is-active' to the clicked tab
+						tab.parentElement.classList.add('is-active');
+				
+						// Remove 'show' from all containers
+						document.querySelectorAll('.app_configurator_containers').forEach((container) => {
+							container.classList.remove('show');
+							container.style.transform = '';  // Reset transform
+						});
+				
+						// Determine the selected container and apply sliding effect
+						const selectedContainerId = {
+							'Graph': '#app_graph_container',
+							'PageLayout': '#app_page_layout_container',
+							'Forms': '#app_form_container',
+							'Schema': '#app_schema_container'
+						}[tab.dataset.tabtype];
+				
+						const selectedContainer = document.querySelector(selectedContainerId);
+						
+						// Slide out all other containers to the left, except the selected one
+						document.querySelectorAll('.app_configurator_containers').forEach((container, containerIndex) => {
+							if (container !== selectedContainer) {
+								// Set position for sliding left or right based on current index vs. selected index
+								container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
+							}
+						});
+				
+						// Show and slide in the selected container
+						selectedContainer.classList.add('show');
+						selectedContainer.style.transform = 'translateX(0)'; // Center it on the screen
+					});
+				});
+				
+				
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false) {
 				function makeFieldParadigmJSON($id, field, utilily) {

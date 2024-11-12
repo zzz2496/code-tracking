@@ -144,16 +144,16 @@
 /* APP_CONTAINER */
 #app_container {
 	flex-grow: 0; /* Do not grow to fill the remaining space */
-    flex-shrink: 0; /* Do not shrink */
-    flex-basis: auto;
+	flex-shrink: 0; /* Do not shrink */
+	flex-basis: auto;
 	width: 100%;
-    /* min-height: 0;
-    min-width: 0; */
-    overflow: scroll;
-    /* display: flex; */
-    /* flex-direction: column; */
-    height: auto;
-    padding-bottom: 1rem;
+	/* min-height: 0;
+	min-width: 0; */
+	overflow: scroll;
+	/* display: flex; */
+	/* flex-direction: column; */
+	height: auto;
+	padding-bottom: 1rem;
 	padding-right: 0rem;
 }
 
@@ -161,22 +161,50 @@
 #app_top_menu_container{
 	height: auto;
 }
-
-#app_graph_container {
-    width: 100%;
-    height: 0px;
-	padding-right: 1vh;
-    overflow: auto;
-    /* border: solid green 1px;  */
+/* .app_configurator_containers{
+	width: 100%;
+	height: 0px;
 	scrollbar-width: none; 
-    -ms-overflow-style: none;
+	-ms-overflow-style: none;
+	overflow: hidden;
+}
+.app_configurator_containers.show{
+	width: 100%;
+	height: auto;
+} */
+/* Default container style */
+.app_configurator_containers {
+    min-width: 100%;           /* Full width so only one shows at a time */
+    transition: transform 0.5s ease;
+    position: absolute;         /* Stack them on top of each other initially */
+    top: 0;
+    left: 0;
+}
+
+/* This class will apply a slide-in transform based on the active tab */
+.app_configurator_containers.show {
+    position: relative;         /* Set the active tab to be visible */
+    z-index: 1;
+    transform: translateX(0);   /* Default position when active */
+}
+#app_configurator_container {
+	display: flex;
+    overflow: hidden;
+    position: relative;
+	width: 100%;
+	height: 0px;
+	padding-right: 1vh;
+	/* overflow: auto; */
+	/* border: solid green 1px;  */
+	scrollbar-width: none; 
+	-ms-overflow-style: none;
 	transition: height 0.3s ease-in-out;
 }
-#app_graph_container.show {
+#app_configurator_container.show {
 	height: calc(80vh);
 }
 
-#app_graph_container::-webkit-scrollbar {
+#app_configurator_container::-webkit-scrollbar {
 	display: none; 
 }
 .app_graph_controls_containers{
@@ -185,12 +213,14 @@
 #app_graph_tabs_container {
 	height: 0px;
 	width: 100%;
+	overflow: hidden;
 	/* opacity: 0; */
 	transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out;
 }
 #app_graph_tabs_container.show{
 	width: 100%;
-	height: auto;
+	height: 2.9rem;
+	/* height: 2.9rem; */
 	/* opacity: 1; */
 }
 .system-status-indicator{
@@ -202,12 +232,38 @@
 
 }
 @media screen and (max-width: 800px) {
-	 /* Center all columns on small screens */
-	.app_graph_controls_containers {
-		justify-content: center !important; /* Center align content */
-		text-align: center; /* Optional: Center text inside */
-		backdrop-filter: blur(2px);
-	}
+	/* Center all columns on small screens */
+   .app_graph_controls_containers {
+	   justify-content: center !important; /* Center align content */
+	   text-align: center; /* Optional: Center text inside */
+	   backdrop-filter: blur(2px);
+   }
+   #app_graph_tabs_container.show{
+	   width: 100%;
+	   height: 7.3rem;
+	   /* opacity: 1; */
+   }
+   #app_configurator_container.show {
+	   height: calc(70vh);
+   }
+   
+}
+@media screen and (min-width: 801px) and (max-width: 1000px) {
+	/* Center all columns on small screens */
+   .app_graph_controls_containers {
+	   justify-content: end !important; /* Center align content */
+	   text-align: end; /* Optional: Center text inside */
+	   backdrop-filter: blur(2px);
+   }
+   #app_graph_tabs_container.show{
+	   width: 100%;
+	   height: 5.8rem;
+	   /* opacity: 1; */
+   }
+   #app_configurator_container.show {
+	   height: calc(70vh);
+   }
+   
 }
 
 #app_content {
@@ -246,7 +302,6 @@
 	height: 100vh;
 
 }
-
 
 #app_helper.show {
 	flex-basis: 22rem;
