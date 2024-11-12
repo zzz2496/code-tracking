@@ -1,0 +1,78 @@
+{
+	"id": "form_input_type_definition",
+	"label": "Form Input Type Definition",
+	"type": "record",
+	"typeSelection": ["record","array"],
+	"icon": "<li class=\"fa fa-wpforms\"></li>",
+	"order": 100,
+	"Dataset": {
+		"Layout": {
+			"Form": {},
+			"Properties": {
+				"FormEntry": {
+					"Show": 1,
+					"Label": "Form Input Type Definition",
+					"ShowLabel": 1
+				},
+				"Preview": {
+					"Show": 1,
+					"Label": "Form Input Type Definition",
+					"ShowLabel": 1
+				}
+			}
+		},
+		"Schema": [{
+			"id": "id",
+			"label": "ID",
+			"type": "text",
+			"form": 1,
+			"value": ""
+		},
+		{
+			"id": "name",
+			"label": "Nama",
+			"type": "text",
+			"form": 1
+		},
+		{
+			"id": "label",
+			"label": "Label",
+			"type": "text",
+			"form": 1
+		},
+		{
+			"id": "type",
+			"label": "Type",
+			"type": "text",
+			"form": 1,
+			"readonly": 1,
+			"value": "text"
+		},
+		{
+			"id": "form",
+			"label": "Form",
+			"type": "checkbox",
+			"form": 1,
+			"value": 1
+		},
+		{
+			"id": "readonly",
+			"label": "Readonly",
+			"type": "checkbox",
+			"form": 1
+		},
+		{
+			"id": "value",
+			"label": "Value",
+			"type": "text",
+			"form": 1
+		},
+		{
+			"id": "add",
+			"label": "",
+			"type": "button",
+			"class": "is-link",
+			"form": 1
+		}]
+	}
+}

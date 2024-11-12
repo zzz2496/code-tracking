@@ -183,22 +183,23 @@
 	height: auto;
 }
 #app_graph_controls {
-	height: 0px;
+	height: auto;
 	width: 100%;
-	opacity: 0;
+	/* opacity: 0; */
 	transition: opacity 0.3s ease-in-out;
-	z-index: -99;
+	/* z-index: -99; */
+	z-index: auto;
 }
 #app_graph_controls.show{
-	width: 100%;
-	opacity: 1;
-	z-index: 1;
+	/* width: 100%;
+	opacity: 1; */
+	/* z-index: 1; */
 }
 #app_graph_content{
 	padding-top: 2.5rem;
 }
 .app_graph_controls_containers {
-	backdrop-filter: blur(2px);
+	/* backdrop-filter: blur(2px); */
 }
 .system-status-indicator{
 	min-width: 3.5rem;

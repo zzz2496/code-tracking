@@ -1,0 +1,187 @@
+{
+	"id": "form_input_types",
+	"label": "Form Input Types",
+	"type": "record",
+	"typeSelection": ["record","array"],
+	"icon": "<li class=\"fa fa-wpforms\"></li>",
+	"order": 100,
+	"Dataset": {
+		"Layout": {
+			"Form": {},
+			"Properties": {
+				"FormEntry": {
+					"Show": 1,
+					"Label": "Form Input Types",
+					"ShowLabel": 1
+				},
+				"Preview": {
+					"Show": 1,
+					"Label": "Form Input Types",
+					"ShowLabel": 1
+				}
+			}
+		},
+		"Schema": [
+			{
+				"id": "textbox",
+				"label": "Text Box",
+				"type": "text",
+				"form": 1,
+				"value": "",
+				"head": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "select",
+					"value": ["IDR", "SGD", "USD", "AUD", "MYR"], 
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				},
+				"tail": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "button", 
+					"value": "Select",
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				}
+			},
+			{
+				"id": "searchable_textbox",
+				"label": "Searchable Text Box",
+				"type": "text_select",
+				"form": 1,
+				"value": [
+					"Nostrum",
+					"earum",
+					"quis",
+					"repudiandae",
+					"optio",
+					"qui",
+					"fuga.",
+					"Quos",
+					"optio",
+					"ab.",
+					"Ipsam",
+					"aperiam",
+					"sed",
+					"facilis.",
+					"Aut",
+					"eos",
+					"eaque",
+					"inventore",
+					"ipsam",
+					"aut",
+					"voluptatem",
+					"non."
+				],
+				"tail": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "button",
+					"value": "Select",
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				}
+			},
+			{
+				"id": "dropdownbox",
+				"label": "Dropdown Box",
+				"type": "select",
+				"value": [
+					"Value example",
+					"Jakarta",
+					"Magelang",
+					"Malaysia",
+					"Singapura"
+				],
+				"form": 1,
+				"tail": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "button",
+					"value": "Select",
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				}
+			},
+			{
+				"id": "textarea",
+				"label": "Text Area",
+				"type": "textarea",
+				"form": 1,
+				"tail": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "button", 
+					"value": "Select",
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				}
+			},
+			{
+				"id": "boolean",
+				"label": "Checkbox",
+				"type": "checkbox",
+				"form": 1,
+				"tail": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "button",
+					"value": "Select",
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				}
+			},
+			{
+				"id": "button",
+				"label": "Button",
+				"type": "button",
+				"class": "is-default",
+				"form": 1,
+				"tail": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "button", 
+					"value": "Select",
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				}
+			},
+			{
+				"id": "button",
+				"label": "Main Action",
+				"type": "button",
+				"class": "is-default",
+				"form": 1,
+				"tail": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "select",
+					"value": [
+						"",
+						"Action 1",
+						"Action 2",
+						"Action 3"
+					],
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": "short"
+				}
+			},
+			{
+				"id": "add",
+				"label": "",
+				"type": "action",
+				"class": "is-link",
+				"form": 1
+			}
+		]
+	}
+}

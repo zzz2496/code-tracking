@@ -118,7 +118,10 @@ let ParadigmREVOLUTION = {
 				"Node": { "URL": "./SystemBlueprint/Blueprint__Node.json" },
 				"Template__Node__DataStatus": { "URL": "./SystemBlueprint/Blueprint__Template__Node__DataStatus.json" },
 				"Edge": { "URL": "./SystemBlueprint/Blueprint__Edge.json" },
-				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" }
+				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" },
+				"MainAppLayout": { "URL": "./SystemBlueprint/Blueprint__MainAppLayout.json" },
+				"FormInputTypes": { "URL": "./SystemBlueprint/Blueprint__FormInputTypes.json" },
+				"FormInputTypeDefinition": { "URL": "./SystemBlueprint/Blueprint__FormInputTypeDefinition.json" },
 			},
 			"Data": {}
 		},
@@ -173,12 +176,18 @@ if (typeof finder !== 'undefined') {
 					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Blueprints = "LOADED";
 
 					//NOTE - Load the default blueprints to Window object
-					let template__node = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
-					window.template__node = template__node;
-					let template__node__datastatus = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Template__Node__DataStatus));
-					window.template__node__datastatus = template__node__datastatus;
-					let template__edge = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
-					window.template__edge = template__edge;
+					let template__Node = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
+					window.template__Node = template__Node;
+					let template__Node__Datastatus = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Template__Node__DataStatus));
+					window.template__Node__Datastatus = template__Node__Datastatus;
+					let template__Edge = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
+					window.template__Edge = template__Edge;
+					let template__MainAppLayout = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.MainAppLayout));
+					window.template__MainAppLayout = template__MainAppLayout;
+					let template__FormInputTypes = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.FormInputTypes));
+					window.template__FormInputTypes = template__FormInputTypes;
+					let template__FormInputTypeDefinition = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.FormInputTypeDefinition));
+					window.template__FormInputTypeDefinition = template__FormInputTypeDefinition;
 				
 					document.dispatchEvent(new Event('BlueprintsLoaded'));
 					if (cr) console.log('>>> ||| Blueprint Loader | SUCCESS');

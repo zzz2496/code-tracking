@@ -13,7 +13,7 @@ export class Flow {
 		this.run_mode = ["run", "stop", "pause", "step", "debug"];
 		this.run_mode_selected = "run"; // Default to "run"
 		this.processFunctions = funcObject;
-		this.FormOBJ = null;
+		this.Forms  = null;
 		this.FormContainer = container;
 		this.SnapScroll = null;
 		this.Utility = utility;
@@ -620,7 +620,8 @@ export class Flow {
 
 					let num = Date.now();
 					document.querySelector('#app_helper.show').style.flexBasis = '22rem';
-					document.querySelector('#app_helper').innerHTML = this.Form.Initialize.FormCard('form_component_types' + num, 'FormComponentsTypes', 1);
+					let str = this.Form.Initialize.FormCard('form_component_types' + num, this.Forms[0], 0, 1);
+					document.querySelector('#app_helper').innerHTML = str;
 				});
 				//NOTE - NEW VERSION
 				this.Form.Events.addGlobalEventListener('click', [
@@ -629,7 +630,7 @@ export class Flow {
 						callback: (e) => {
 							let num = Date.now();
 							//ADD FORM COLUMN HERE
-							document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormCard('form_components___' + num, 'FormComponents', 1);
+							document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormCard('form_components___' + num, this.Forms[1], 1, 1);
 							
 							// Calculate WIDTH
 							const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
@@ -1254,90 +1255,8 @@ export class Flow {
 			}),
 		},
 		Initialize: {
-			MainForm: () => {
-				return {
-					comment: "BODY", tag: "div", id: "", content: [
-						{
-							comment: "App Root Container", tag: "div", id: "app_root_container", content: [
-								{ comment: "App Menu", tag: "div", id: "app_menu", class: "", innerHTML: "MENU", content: [] },
-								{
-									comment: "App Container", tag: "div", id: "app_container", content: [
-										{
-											comment: "App Top Menu Container", tag: "div", id: "app_top_menu_container", innerHTML: "", class: "columns is-gapless is-mobile m-0", content: [
-												{
-													comment: "Left Container", tag: "div", id: "app_left_container", innerHTML: "", class: "column is-gapless is-one-quarter", content: [
-														{ comment: "Menu button", tag: "button", class: "button is-default", id: "app_menu_button", title: "Open Menu", innerHTML: "<li class=\"fa fa-bars\"></li>" },
-														{ comment: "Graph button", tag: "button", class: "button is-default", id: "app_graph_button", title: "Open Graph", innerHTML: "<li class=\"fa fa-circle-nodes\"></li>" },
-													]
-												},
-												{
-													comment: "Right Container", tag: "div", id: "app_right_container", innerHTML: "", class: "column is-gapless is-three-quarters is-justify-content-flex-end is-flex", content: [
-														{ comment: "Datastore Status", tag: "div", class: "is-inline", id: "datastore_status", innerHTML: "" },
-														{ comment: "Console button", tag: "button", class: "button is-default", id: "app_console_button", title: "Open Console", innerHTML: "<li class=\"fa fa-terminal\"></li>" },
-														{ comment: "Helper button", tag: "button", class: "button is-default", id: "app_helper_button", title: "Open Helper Sidebar", innerHTML: "<li class=\"fa fa-arrows-left-right\"></li>" },
-													]
-												},
-											]
-										},
-										{
-											comment: "App Graph Controls", tag: "div", innerHTML: "", id: "app_graph_controls", class: "columns m-0 is-gapless is-multiline show", content: [
-												{
-													comment: "Left Container", tag: "div", id: "app_graph_controls_container_left", innerHTML: "", class: "app_graph_controls_containers column my-2 p-0 is-flex is-justify-content-left", content: [
-														{ comment: "Load button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_loadnodes_button", title: "Load Nodes", innerHTML: `<i class="p-1 fa-solid fa-file-arrow-down"></i>` },
-														{ comment: "Remove button", tag: "button", class: "button mr-1 is-small is-danger", id: "graph_removenode_button", title: "Remove Node", innerHTML: `<i class="p-1 fa-solid fa-minus"></i>` },
-														{ comment: "Add Node", tag: "button", class: "button mr-1 is-small is-link", id: "graph_addnode_button", title: "Add Node", innerHTML: `<i class="p-1 fa-solid fa-plus"></i>` },
-														{ comment: "Save Nodes", tag: "button", class: "button mr-1 is-small is-default", id: "graph_savenodes_button", title: "Save Nodes", innerHTML: `<i class="p-1 fa-solid fa-file-arrow-up"></i>` },
-													]
-												},
-												{
-													comment: "Center Container", tag: "div", id: "app_graph_controls_container_center", innerHTML: "", class: "app_graph_controls_containers column my-2 p-0 is-flex is-justify-content-center", content: [
-														{ comment: "Rewind Fast button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_rewindfast_button", innerHTML: "<li class=\"p-1 fa fa-backward-fast\"></li>" },
-														{ comment: "Rewind button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_rewind_button", innerHTML: "<li class=\"p-1 fa fa-backward\"></li>" },
-														{ comment: "Stop button", tag: "button", class: "button mr-1 is-small is-info", id: "graph_stop_button", innerHTML: `<li class="fa fa-stop"></li>` },
-														{ comment: "Play button", tag: "button", class: "button mr-1 is-small is-success", id: "graph_play_button", innerHTML: `<li class="fa fa-play"></li>` },
-														{ comment: "Pause button", tag: "button", class: "button mr-1 is-small is-warning", id: "graph_pause_button", innerHTML: `<li class="fa fa-pause"></li>` },
-														{ comment: "Forward button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_forward_button", innerHTML: "<li class=\"p-1 fa fa-forward\"></li>" },
-														{ comment: "Forward Fast button", tag: "button", class: "button mr-1 is-small is-default", id: "graph_forwardfast_button", innerHTML: "<li class=\"p-1 fa fa-forward-fast\"></li>" },
-													]
-												},
-												{
-													comment: "Right Container", tag: "div", id: "app_graph_controls_container_right", innerHTML: "", class: "app_graph_controls_containers column is-gapless my-2 p-0 is-flex is-justify-content-right", content: [
-														{ comment: "Node Definition button", tag: "button", class: "button mr-1 is-small is-default is-default", id: "node_definition_button", title: "Node Definition", innerHTML: `<i class="fa-regular fa-rectangle-list"></i>` },
-														{ comment: "Define Form button", tag: "button", class: "button mr-1 is-small is-default is-default", id: "graph_defineform_button", title: "Define Form", innerHTML: `<i class="fa-brands fa-wpforms"></i>` },
-														{ comment: "Define Schema button", tag: "button", class: "button mr-1 is-small is-default is-default", id: "graph_defineform_button", title: "Define Schema", innerHTML: `<i class="fa-solid fa-folder-tree"></i>` },
-													]
-												}
-											]
-										},
-										{
-											comment: "App Graph Container", tag: "div", class: "m-0 p-0 show", id: "app_graph_container", content: [
-
-												{
-													tag: "div", id: "graph_scroll_content", style: "width:calc(100vw);height:calc(80vh);overflow:scroll;", content: [
-														{ comment: "App Graph Content", tag: "div", innerHTML: "App Graph Content", class: "columns is-gapless is-mobile grid2020-background", style: "width:20000px; height:20000px;", id: "app_graph_content", content: [] },
-													]
-												}
-												,
-
-											]
-										},
-										{ comment: "App Content", tag: "div", innerHTML: "Content", id: "app_content", content: [] }
-									]
-								},
-								{ comment: "App helper", tag: "div", id: "app_helper", class: "columns is-gapless is-mobile", innerHTML: "Helper", content: [] }
-							]
-						},
-						{
-							comment: "App Console", tag: "div", id: "app_console", content: [
-								{ comment: "Core Status Container", tag: "div", id: "core_status", innerHTML: "", class: "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", content: [] },
-								{ comment: "Debugging", tag: "div", id: "debugging", innerHTML: "Console", content: [] },
-							]
-						}
-					]
-				};
-			},
 			FormCard: (id, form, is_horizontal, isHTML = false, order = 0) => {
-				console.log('form in FormCard', form);
+				console.log('form in FormCard', typeof form, form);
 				let testform = this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal);
 				let testcard = this.Form.Components.BulmaCSS.Components.Card({
 					id: id,
@@ -1345,219 +1264,11 @@ export class Flow {
 					style: "width:100%;",
 					headerIcon: form.icon,
 					header: form.label,
-					content: [this.Form.Events.GenerateFormToParadigmJSON(id, formc.Dataset.Schema, this.Utility, is_horizontal)]
+					content: [this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal)]
 				});
 				let column = { comment: "Column", tag: "div", class: "column is-flex", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
+				console.log('column sebelum return', column, this.Form.Render.traverseDOMProxyOBJ(column));
 				return isHTML ? this.Form.Render.traverseDOMProxyOBJ(column) : column;
-			},
-			FormComponentsTypes: () => {
-				return {
-					"id": "form_components_types",
-					"label": "Form Components Types",
-					"type": "record", //record or array >>> array of records
-					"icon": `<li class="fa fa-wpforms"></li>`,
-					"order": 100,
-					"Dataset": {
-						"Layout": {
-							"Form": {},
-							"Properties": {
-								"FormEntry": {
-									"Show": 1,
-									"Label": "Form Components Types",
-									"ShowLabel": 1,
-								},
-								"Preview": {
-									"Show": 1,
-									"Label": "Form Components Types",
-									"ShowLabel": 1,
-								}
-							}
-						},
-						"Schema": [{
-							"id": "textbox",
-							"label": "Text Box",
-							"type": "text",
-							"form": 1,
-							"value": "",
-							"head": {
-								"type": "select", //input/select/label/button
-								"value": ['IDR', 'SGD', 'USD', 'AUD', 'MYR'], //string or array
-								"append_to_value": 1,
-								"readonly": 0,
-								// "width": "short"
-							},
-							"tail": {
-								"type": "button", //input/select/label/button
-								"value": "Select", //string or array
-								"append_to_value": 1,
-								"readonly":0
-							}
-						},
-						{
-							"id": "searchable_textbox",
-							"label": "Searchable Text Box",
-							"type": "text_select",
-							"form": 1,
-							"value": ["Nostrum", "earum", "quis", "repudiandae", "optio", "qui", "fuga.", "Quos", "optio", "ab.", "Ipsam", "aperiam", "sed", "facilis.", "Aut", "eos", "eaque", "inventore", "ipsam", "aut", "voluptatem", "non."],
-							"tail": {
-								"type": "button", //input/select/label/button
-								"value": "Select", //string or array
-								"append_to_value": 1,
-								"readonly":0
-							}
-						},
-						{
-							"id": "dropdownbox",
-							"label": "Dropdown Box",
-							"type": "select",
-							"value": ["Value example", "Jakarta", "Magelang", "Malaysia", "Singapura"],
-							"form": 1,
-							"tail": {
-								"type": "button", //input/select/label/button
-								"value": "Select", //string or array
-								"append_to_value": 1,
-								"readonly":0
-							}
-						},
-						{
-							"id": "textarea",
-							"label": "Text Area",
-							"type": "textarea",
-							"form": 1,
-							"tail": {
-								"type": "button", //input/select/label/button
-								"value": "Select", //string or array
-								"append_to_value": 1,
-								"readonly":0
-							}
-						},
-						{
-							"id": "boolean",
-							"label": "Checkbox",
-							"type": "checkbox",
-							"form": 1,
-							"tail": {
-								"type": "button", //input/select/label/button
-								"value": "Select", //string or array
-								"append_to_value": 1,
-								"readonly":0
-							}
-						},
-						{
-							"id": "button",
-							"label": "Button",
-							"type": "button",
-							"class": "is-default",
-							"form": 1,
-							"tail": {
-								"type": "button", //input/select/label/button
-								"value": "Select", //string or array
-								"append_to_value": 1,
-								"readonly":0
-							}
-						},
-						{
-							"id": "button",
-							"label": "Main Action",
-							"type": "button",
-							"class": "is-default",
-							"form": 1,
-							"tail": {
-								"type": "select", //input/select/label/button
-								"value": ["", "Action 1", "Action 2", "Action 3"], //string or array
-								"append_to_value": 1,
-								"readonly": 0,
-								"width": "short"
-							}
-						},
-						{
-							"id": "add",
-							"label": "",
-							"type": "action",
-							"class": "is-link",
-							"form": 1,
-						}]
-					}
-				}
-			},
-			FormComponents: () => {
-				return {
-					"id": "form_components",
-					"label": "Form Components",
-					"type": "record", //record or array >>> array of records
-					"icon": `<li class="fa fa-wpforms"></li>`,
-					"order": 100,
-					"Dataset": {
-						"Layout": {
-							"Form": {},
-							"Properties": {
-								"FormEntry": {
-									"Show": 1,
-									"Label": "Form Components",
-									"ShowLabel": 1,
-								},
-								"Preview": {
-									"Show": 1,
-									"Label": "Form Components",
-									"ShowLabel": 1,
-								}
-							}
-						},
-						"Schema": [{
-							"id": "id",
-							"label": "ID",
-							"type": "text",
-							"form": 1,
-							"value": "",
-						},
-						{
-							"id": "name",
-							"label": "Nama",
-							"type": "text",
-							"form": 1,
-						},
-						{
-							"id": "label",
-							"label": "Label",
-							"type": "text",
-							"form": 1,
-						},
-						{
-							"id": "type",
-							"label": "Type",
-							"type": "text",
-							"form": 1,
-							"readonly": 1,
-							"value": "text",
-						},
-						{
-							"id": "form",
-							"label": "Form",
-							"type": "checkbox",
-							"form": 1,
-							"value": 1
-						},
-						{
-							"id": "readonly",
-							"label": "Readonly",
-							"type": "checkbox",
-							"form": 1,
-						},
-						{
-							"id": "value",
-							"label": "Value",
-							"type": "text",
-							"form": 1,
-						},
-						{
-							"id": "add",
-							"label": "",
-							"type": "button",
-							"class": "is-link",
-							"form": 1,
-						}]
-					}
-				}
 			},
 		},
 		Render: {
