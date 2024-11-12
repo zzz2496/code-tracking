@@ -182,24 +182,16 @@
 .app_graph_controls_containers{
 	height: auto;
 }
-#app_graph_controls {
-	height: auto;
+#app_graph_tabs_container {
+	height: 0px;
 	width: 100%;
 	/* opacity: 0; */
-	transition: opacity 0.3s ease-in-out;
-	/* z-index: -99; */
-	z-index: auto;
+	transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out;
 }
-#app_graph_controls.show{
-	/* width: 100%;
-	opacity: 1; */
-	/* z-index: 1; */
-}
-#app_graph_content{
-	padding-top: 2.5rem;
-}
-.app_graph_controls_containers {
-	/* backdrop-filter: blur(2px); */
+#app_graph_tabs_container.show{
+	width: 100%;
+	height: auto;
+	/* opacity: 1; */
 }
 .system-status-indicator{
 	min-width: 3.5rem;
@@ -210,9 +202,6 @@
 
 }
 @media screen and (max-width: 800px) {
-	#app_graph_content{
-		padding-top: 4.5rem;
-	}
 	 /* Center all columns on small screens */
 	.app_graph_controls_containers {
 		justify-content: center !important; /* Center align content */

@@ -101,13 +101,13 @@ document.addEventListener('SurrealDBLoaded', () => {
 		// if (cr) console.log(idx, value);
 		switch (value.Status) {
 			case 'NOT LOADED':
-				corestatus_str += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-disabled" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="system-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 			case 'LOADED':
-				corestatus_str += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-success" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="system-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 			case 'FAILED TO LOAD':
-				corestatus_str += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-danger" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
+				corestatus_str += `<button class="system-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" id="${value.Label}--${idx}Loaded" title="${idx}"><i class="fa-solid fa-${value.Icon}"></i></button>`;
 				break;
 		}
 	});
@@ -121,11 +121,11 @@ document.addEventListener('SurrealDBLoaded', () => {
 	Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
 		// console.log('>>>>>>', idx, window.ParadigmREVOLUTION.Datastores.SurrealDB[idx].Instance, entry);
 		if (entry.Instance == false) { 
-			datastore_status += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
+			datastore_status += `<button class="system-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
 		} else if (typeof entry.Instance.connection != "undefined") {
-			datastore_status += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>` ;
+			datastore_status += `<button class="system-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>` ;
 		} else {
-			datastore_status += `<button class="system-status-indicator button is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>` ;
+			datastore_status += `<button class="system-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>` ;
 		}
 	});
 	document.querySelector('#datastore_status').innerHTML = datastore_status;

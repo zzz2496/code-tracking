@@ -22,56 +22,48 @@
 								}
 							]
 						},
-						{
-							"comment": "App Graph Controls", "tag": "div", "innerHTML": "", "id": "app_graph_controls", "class": "columns m-0 is-gapless is-multiline show", "content": [
-								{
-									"comment": "Left Container", "tag": "div", "id": "app_graph_controls_container_left", "innerHTML": "", "class": "app_graph_controls_containers column my-2 p-0 is-flex is-justify-content-left", "content": [
-										{ "comment": "Load button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_loadnodes_button", "title": "Load Nodes", "innerHTML": "<i class=\"p-1 fa-solid fa-file-arrow-down\"></i>" },
-										{ "comment": "Remove button", "tag": "button", "class": "button mr-1 is-small is-danger", "id": "graph_removenode_button", "title": "Remove Node", "innerHTML": "<i class=\"p-1 fa-solid fa-minus\"></i>" },
-										{ "comment": "Add Node", "tag": "button", "class": "button mr-1 is-small is-link", "id": "graph_addnode_button", "title": "Add Node", "innerHTML": "<i class=\"p-1 fa-solid fa-plus\"></i>" },
-										{ "comment": "Save Nodes", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_savenodes_button", "title": "Save Nodes", "innerHTML": "<i clas=\"p-1 fa-solid fa-file-arrow-up\"></i>" }
-									]
-								},
-								{
-									"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "app_graph_controls_containers column my-2 p-0 is-flex is-justify-content-center", "content": [
-										{ "comment": "Rewind Fast button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_rewindfast_button", "innerHTML": "<li class=\"p-1 fa fa-backward-fast\"></li>" },
-										{ "comment": "Rewind button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_rewind_button", "innerHTML": "<li class=\"p-1 fa fa-backward\"></li>" },
-										{ "comment": "Stop button", "tag": "button", "class": "button mr-1 is-small is-info", "id": "graph_stop_button", "innerHTML": "<li class=\"fa fa-stop\"></li>" },
-										{ "comment": "Play button", "tag": "button", "class": "button mr-1 is-small is-success", "id": "graph_play_button", "innerHTML": "<li class=\"fa fa-play\"></li>" },
-										{ "comment": "Pause button", "tag": "button", "class": "button mr-1 is-small is-warning", "id": "graph_pause_button", "innerHTML": "<li class=\"fa fa-pause\"></li>" },
-										{ "comment": "Forward button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_forward_button", "innerHTML": "<li class=\"p-1 fa fa-forward\"></li>" },
-										{ "comment": "Forward Fast button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_forwardfast_button", "innerHTML": "<li class=\"p-1 fa fa-forward-fast\"></li>" }
-									]
-								},
-								{
-									"comment": "Right Container", "tag": "div", "id": "app_graph_controls_container_right", "innerHTML": "", "class": "app_graph_controls_containers column is-gapless my-2 p-0 is-flex is-justify-content-right", "content": [
-										{ "comment": "Node Definition button", "tag": "button", "class": "button mr-1 is-small is-default is-default", "id": "node_definition_button", "title": "Node Definition", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
-										{ "comment": "Define Form button", "tag": "button", "class": "button mr-1 is-small is-default is-default", "id": "graph_defineform_button", "title": "Define Form", "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
-										{ "comment": "Define Schema button", "tag": "button", "class": "button mr-1 is-small is-default is-default", "id": "graph_defineform_button", "title": "Define Schema", "innerHTML": "<i class=\"fa-solid fa-folder-tree\"></i>" }
-									]
-								}
-							]
-						},
-						{
-							"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 show", "id": "app_graph_container", "content": [
+						{ "comment": "App Graph Tabs", "tag": "div", "id": "app_graph_tabs_container", "innerHTML": "", "class": "columns is-gapless m-0 is-multiline show", "content": [
+							{ "comment": "Left Container", "tag": "div", "id": "app_graph_tabs_container_left", "innerHTML": "", "class": "column mt-1 p-0 is-flex is-justify-content-left app_graph_controls_containers", "content": [
 								{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
-									{ "tag": "div", "class": "tabs is-centered", "content": [
+									{ "tag": "div", "class": "tabs", "content": [
 										{ "tag": "ul", "content": [
 											{ "tag": "li", "class": "is-active", "content": [
 												{ "tag": "a", "innerHTML": "Graph" }
 											] },
 											{ "tag": "li", "content": [
-												{ "tag": "a", "innerHTML": "Nodes" }
+												{ "tag": "a", "innerHTML": "Page Layout" }
 											] },
 											{ "tag": "li", "content": [
 												{ "tag": "a", "innerHTML": "Forms" }
 											] },
 											{ "tag": "li", "content": [
-												{ "tag": "a", "innerHTML": "Schemas" }
+												{ "tag": "a", "innerHTML": "Schema" }
 											] }
 										] }
 									]}
-								] },
+								] }
+							] },
+							{"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "app_graph_controls_containers column mt-1 p-0 is-flex is-justify-content-center", "content": [
+									{ "comment": "Rewind Fast button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_rewindfast_button", "innerHTML": "<li class=\"p-1 fa fa-backward-fast\"></li>" },
+									{ "comment": "Rewind button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_rewind_button", "innerHTML": "<li class=\"p-1 fa fa-backward\"></li>" },
+									{ "comment": "Stop button", "tag": "button", "class": "button is-outlined mr-1 is-small is-danger", "id": "graph_stop_button", "innerHTML": "<li class=\"fa fa-stop\"></li>" },
+									{ "comment": "Play button", "tag": "button", "class": "button is-outlined mr-1 is-small is-success", "id": "graph_play_button", "innerHTML": "<li class=\"fa fa-play\"></li>" },
+									{ "comment": "Pause button", "tag": "button", "class": "button is-outlined mr-1 is-small is-warning", "id": "graph_pause_button", "innerHTML": "<li class=\"fa fa-pause\"></li>" },
+									{ "comment": "Forward button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_forward_button", "innerHTML": "<li class=\"p-1 fa fa-forward\"></li>" },
+									{ "comment": "Forward Fast button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_forwardfast_button", "innerHTML": "<li class=\"p-1 fa fa-forward-fast\"></li>" }
+							]},
+							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "column mt-1 p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
+								{ "comment": "Load button", "tag": "button", "class": "button mr-1 is-small is-outlined is-success", "id": "graph_loadnodes_button", "title": "Load Nodes", "innerHTML": "<i class=\"p-1 fa-solid fa-file-arrow-down\"></i>" },
+								{ "comment": "Save Nodes", "tag": "button", "class": "button mr-1 is-small is-outlined is-danger", "id": "graph_savenodes_button", "title": "Save Nodes", "innerHTML": "<i class=\"p-1 fa-solid fa-file-arrow-up\"></i>" },
+								{ "comment": "Node Definition button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "node_definition_button", "title": "Node Definition", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
+								{ "comment": "Define Form button", "tag": "button", "class": "button mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Form", "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
+								{ "comment": "Define Schema button", "tag": "button", "class": "button mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Schema", "innerHTML": "<i class=\"fa-solid fa-folder-tree\"></i>" },
+								{ "comment": "Remove button", "tag": "button", "class": "button is-outlined mr-1 is-small is-danger", "id": "graph_removenode_button", "title": "Remove Node", "innerHTML": "<i class=\"p-1 fa-solid fa-minus\"></i>" },
+								{ "comment": "Add Node", "tag": "button", "class": "button is-outlined mr-1 is-small is-link", "id": "graph_addnode_button", "title": "Add Node", "innerHTML": "<i class=\"p-1 fa-solid fa-plus\"></i>" }
+							]}
+						] },
+						{
+							"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 show", "id": "app_graph_container", "content": [
 								{
 									"tag": "div", "id": "graph_scroll_content", "style": "width:calc(100vw);height:calc(80vh);overflow:scroll;", "content": [
 										{ "comment": "App Graph Content", "tag": "div", "innerHTML": "App Graph Content", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }

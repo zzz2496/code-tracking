@@ -588,7 +588,7 @@ export class Flow {
 
 				document.querySelector('#app_graph_button').addEventListener('click', () => {
 					document.querySelector('#app_graph_container').classList.toggle('show');
-					document.querySelector('#app_graph_controls').classList.toggle('show');
+					document.querySelector('#app_graph_tabs_container').classList.toggle('show');
 
 				});
 

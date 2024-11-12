@@ -3,7 +3,7 @@
 	"label": "Form Input Type Definition",
 	"type": "record",
 	"typeSelection": ["record","array"],
-	"icon": "<li class=\"fa fa-wpforms\"></li>",
+	"icon": "<i class=\"fa-regular fa-rectangle-list\"></i>",
 	"order": 100,
 	"Dataset": {
 		"Layout": {
