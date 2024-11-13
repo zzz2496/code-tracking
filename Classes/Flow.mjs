@@ -296,7 +296,10 @@ export class Flow {
 								}, {
 									comment: "card-header-icon",
 									tag: "button",
-									class: "card-header-icon ",
+									class: "card-header-icon form-close-button",
+									data: {
+										formid: id	
+									},
 									aria: { label: "more options" },
 									content: [
 										{
@@ -704,14 +707,38 @@ export class Flow {
 						selector: '.form-close-button',
 						callback: (e) => {
 							let formid = e.target.dataset.formid;
+							const formElement = document.querySelector(`#${formid}`).parentElement;
+
+							// Step 1: Add collapsing class to trigger CSS transition
+							formElement.classList.add('collapsing');
+
+							// Step 2: Use a timeout slightly longer than the CSS transition duration
 							setTimeout(() => {
-								if (document.querySelector('#app_helper').childElementCount === 1){
+								// Check child elements count to handle visibility
+								if (document.querySelector('#app_helper').childElementCount === 1) {
 									document.querySelector('#app_helper').classList.remove('show');
 								}
-								document.querySelector(`#${formid}`).parentElement.remove()
+
+								// Remove the element from DOM after the transition
+								formElement.remove();
+
+								// Recalculate width if there are remaining child elements
 								const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem';
-								if (document.querySelector('#app_helper').childElementCount > 0) document.querySelector('#app_helper.show').style.flexBasis = newWidth;
-							}, 300);
+								if (document.querySelector('#app_helper').childElementCount > 0) {
+									document.querySelector('#app_helper.show').style.flexBasis = newWidth;
+								}
+							}, 350); // Timeout slightly longer than the CSS transition (0.3s)
+
+
+							// let formid = e.target.dataset.formid;
+							// setTimeout(() => {
+							// 	if (document.querySelector('#app_helper').childElementCount === 1){
+							// 		document.querySelector('#app_helper').classList.remove('show');
+							// 	}
+							// 	document.querySelector(`#${formid}`).parentElement.remove()
+							// 	const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem';
+							// 	if (document.querySelector('#app_helper').childElementCount > 0) document.querySelector('#app_helper.show').style.flexBasis = newWidth;
+							// }, 300);
 						}
 					}
 				]);
@@ -775,6 +802,9 @@ export class Flow {
 								break;
 						}
 					});
+				});
+				document.querySelector('#dark_light_selector').addEventListener('click', () => {
+					document.documentElement.dataset.theme = document.documentElement.dataset.theme == 'light'? 'dark' : 'light';
 				});
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false) {
@@ -1348,7 +1378,7 @@ export class Flow {
 					header: form.label,
 					content: [this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal)]
 				});
-				let column = { comment: "Column", tag: "div", class: "column is-flex", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
+				let column = { comment: "Column", tag: "div", class: "column is-flex collapsible", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
 				return isHTML ? this.Form.Render.traverseDOMProxyOBJ(column) : column;
 			},
 		},

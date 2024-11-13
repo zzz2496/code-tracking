@@ -2,7 +2,9 @@
 	"comment": "BODY", "tag": "div", "id": "", "content": [
 		{
 			"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
-				{ "comment": "App Menu", "tag": "div", "id": "app_menu", "class": "", "innerHTML": "MENU", "content": [] },
+				{ "comment": "App Menu", "tag": "div", "id": "app_menu", "class": "", "innerHTML": "", "content": [
+					{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"fa fa-moon\"></li>"}
+				] },
 				{
 					"comment": "App Container", "tag": "div", "id": "app_container", "content": [
 						{
@@ -123,7 +125,7 @@
 			]
 		},
 		{
-			"comment": "App Console", "tag": "div", "id": "app_console", "class":"has-background-black-bis", "content": [
+			"comment": "App Console", "tag": "div", "id": "app_console", "class":"", "innerHTML": "", "content": [
 				{ "comment": "Core Status Container", "tag": "div", "id": "core_status", "innerHTML": "", "class": "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
 				{ "comment": "Debugging", "tag": "div", "id": "debugging", "innerHTML": "Console", "content": [] }
 			]

@@ -305,6 +305,23 @@
 	/* display: flex; */
 }
 
+/* Initial state for the divs */
+#app_helper .collapsible {
+    transition: opacity 0.3s ease;
+    opacity: 1;
+    overflow: hidden; /* Prevents content overflow during transition */
+}
+
+/* Collapsing and fading-out state */
+#app_helper .collapsing {
+    width: 0; /* Collapses the width smoothly */
+    opacity: 0;
+    padding: 0; /* Optional: Adjusts padding during collapse */
+    margin: 0;  /* Optional: Removes any outer spacing */
+	
+}
+
+
 /* APP_CONSOLE */
 #app_console {
 	position: fixed;
@@ -315,6 +332,7 @@
 	max-height: 95vh;
 	border-radius: 10px;
 	box-shadow: 0 0 10px #00000033;
+	background-color: var(--bulma-background);
 	overflow: auto;
 	transition: transform 0.3s ease-in-out;
 	transform: translateY(0%);
