@@ -62,56 +62,42 @@ export class Flow {
 		const datetimeRegex224 = /^\d{1,2}[-\/]\d{1,2}[-\/]\d{4}(\s\d{1,2}:\d{2}:\d{2})?$/;
 		const datetimeRegex422 = /^\d{4}[-\/]\d{1,2}[-\/]\d{1,2}(\s\d{1,2}:\d{2}:\d{2})?$/;
 		if (datetimeRegex224.test(zinput)) {
-			console.log('match regex224');
 			input = new Date(zinput);
 		} else if (datetimeRegex422.test(zinput)) {
-			console.log('match regex422');
 			input = new Date(zinput);
 		}
 		let varType = this.checkType(input);
-		console.log('input', input);
-		console.log('varType', varType);
 		// const datetimeRegex = /^\d{1,2,4}\/\d{1,2}\/\d{1,2,4}(\s\d{1,2}:\d{2}:\d{2})?$/;
 
 		switch (varType) {
 			case 'DateTime':
-				console.log('masuk datetime');
 				return this.Time.SafeDateTime(input);
 				break;
 			case 'Number':
-				console.log('masuk number');
 				return this.Numbers.SafeNumber(input);
 				break;
 			case 'Boolean':
-				console.log('masuk boolean');
 				return this.Booleans.SafeBoolean(input, true);
 				break;
 			case 'String':
-				console.log('masuk string');
 				return this.Strings.SafeString(input);
 				break;
 			case 'Array':
-				console.log('masuk array');
 				return this.Array.IsArrayOK(input);
 				break;
 			case 'Function':
-				console.log('masuk function');
 				return input;
 				break;
 			case 'DOM Element':
-				console.log('masuk dom element');
 				return input;
 				break;
 			case 'Object':
-				console.log('masuk object');
 				return input;
 				break;
 			case 'null':
-				console.log('masuk null');
 				return null;
 				break;
 			default:
-				console.log('masuk default undefined');
 				return undefined;
 				break;
 		}
@@ -446,7 +432,6 @@ export class Flow {
 				parent.addEventListener(
 					type,
 					(e) => {
-						console.log('addGlobalEventListener :>> ', type, e.target);
 
 						// Loop through each selector-callback pair
 						for (const { selector, callback } of selectors) {
@@ -487,7 +472,6 @@ export class Flow {
 
 				// Add event listener on the parent (or global) scope
 				parent.addEventListener(type, (e) => {
-					console.log('addGlobalEventListener :>> ', type, e.target);
 
 					// Loop through each selector-callback pair
 					for (const { selector, callback } of selectors) {
@@ -522,7 +506,6 @@ export class Flow {
 
 				// Add event listener on the parent (or global) scope
 				parent.addEventListener(type, (e) => {
-					console.log('addGlobalEventListener :>> ', type, selector, e.target);
 					// Check if the event target matches the selector
 					if (e.target.matches(selector)) {
 						// Directly call callback if the event bubbles
@@ -573,7 +556,6 @@ export class Flow {
 				});
 			},
 			InitializeFormControls: () => {
-				console.log('Running InitializeFormControls');
 				this.SnapScroll = true; // Flag to enable/disable snapping
 				const scrollContainer = document.querySelector('#app_root_container');
 				const snapRange = 90;
@@ -603,10 +585,11 @@ export class Flow {
 					}, 300);
 					setTimeout(() => {
 						this.SnapScroll = true;
-					}, 1000);
+					}, 500);
 				});
-				document.querySelector('#graph_addnode_button').addEventListener('click', () => {
-					document.querySelector('#app_helper').classList.toggle('show');
+				document.querySelector('#graph_addform_button').addEventListener('click', () => {
+					if (document.querySelector('#app_helper').classList.contains('show')) return;
+					document.querySelector('#app_helper').classList.add('show');
 					this.SnapScroll = false;
 					setTimeout(() => {
 						document.querySelector('#app_root_container').scrollTo({
@@ -616,7 +599,7 @@ export class Flow {
 					}, 300);
 					setTimeout(() => {
 						this.SnapScroll = true;
-					}, 1000);
+					}, 500);
 
 					let num = Date.now();
 					document.querySelector('#app_helper.show').style.flexBasis = '22rem';
@@ -628,46 +611,15 @@ export class Flow {
 					{
 						selector: '.datastore-status-indicator',
 						callback: async (e) => {
-							console.log('waaa');
-							let SurrealDB = {
-								"Memory": {
-									"Metadata":{},
-									"Instance": null
-								},
-								"IndexedDB": {
-									"Metadata":{},
-									"Instance": null
-								}
-							};
 							let Tokens = {};
+							
+							let initConfigs = ParadigmREVOLUTION.Datastores.Parameters;
 							window.SurrealDB = SurrealDB;
-							SurrealDB = {
-								"Memory": {
-									"Metadata": {},
-									"Instance": new window.ParadigmREVOLUTION.SystemCore.Modules.Surreal({
-										engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
-									})
-								},
-								"IndexedDB": {
-									"Metadata": {},
-									"Instance": new window.ParadigmREVOLUTION.SystemCore.Modules.Surreal({
-										engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
-									})
-								}
-							};
-							 const initConfigs = [
-								{ name: 'Memory', label:'Memory Datastore', shortlabel:'MEMD', connect:1, instance: SurrealDB },
-								{ name: 'IndexedDB', label:'IndexedDB Datastore', shortlabel:'IDXD', connect:1, instance: SurrealDB },
-								{ name: 'TestServer', label:'TestServer Datastore', shortlabel:'TEST', connect:1, instance: SurrealDB },
-								// { name: 'BackupServer', label:'BackupServer Datastore', shortlabel:'BCKP', connect:0, instance: SurrealDB },
-								// { name: 'ProductionServer', label:'ProductionServer Datastore', shortlabel:'PROD', connect:0, instance: SurrealDB }
-							];
 							window.ParadigmREVOLUTION.Datastores = {
 								Tokens: Tokens,
-								Parameters: initConfigs,
-								SurrealDB: SurrealDB
+								Parameters: ParadigmREVOLUTION.Datastores.Parameters,
+								SurrealDB: ParadigmREVOLUTION.Datastores.SurrealDB,
 							};
-							// window.ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = 'Loading...';
 
 							const promises = initConfigs.map(config =>
 								ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
@@ -680,18 +632,41 @@ export class Flow {
 							});
 							window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
 
-							let datastore_status = '';
-							Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
-								if (entry.Instance == false) {
-									datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
-								} else if (typeof entry.Instance.connection != "undefined") {
-									datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>` ;
-								} else {
-									datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>` ;
+							async function getDatastoreStatus() {
+								let datastore_status = '';
+								for (const [idx, entry] of Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB)) {									
+									// Check if Instance is false
+									if (!entry.Instance) {
+										datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
+									} else {
+										try {
+											// Await the promise for connection status
+											if (entry.Instance == false) { 
+												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
+											} else if (entry.Instance.connection == undefined) {
+												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
+											} else { 
+												const status = await entry.Instance.connection.status;
+												// Check connection status
+												if (status === "connected") {
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
+												} else if (status === "disconnected") {
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
+												} else {
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
+												}	
+											}
+										} catch (error) {
+											console.error(`Error fetching status for ${idx}:`, error);
+											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} ERROR">${entry.Metadata.ShortLabel}</button>`;
+										}
+									}
 								}
-							});
-							document.querySelector('#datastore_status').innerHTML = datastore_status;
-
+								return datastore_status;
+							};
+							getDatastoreStatus().then(datastore_status => {
+								document.querySelector('#datastore_status').innerHTML = datastore_status;
+						});
 						}
 					},
 					{
@@ -716,7 +691,7 @@ export class Flow {
 							}, 300);
 							setTimeout(() => {
 								this.SnapScroll = true;
-							}, 1000);
+							}, 500);
 							setTimeout(() => {
 								document.querySelector('#app_helper').scrollTo({
 									left: document.querySelector('#app_helper').scrollWidth,
@@ -728,30 +703,14 @@ export class Flow {
 					{
 						selector: '.form-close-button',
 						callback: (e) => {
-							console.log('CLOSE button clicked :>> ');
-							console.log(e.target);
 							let formid = e.target.dataset.formid;
-							console.log('formid :>> ', formid);
-							console.log(document.querySelector(`#${formid}`));
 							setTimeout(() => {
-								console.log('document.querySelector(#app_helper).childElementCount :>> ', document.querySelector('#app_helper').childElementCount);
 								if (document.querySelector('#app_helper').childElementCount === 1){
 									document.querySelector('#app_helper').classList.remove('show');
 								}
-
-								//NOTE - HMMM
-
-								console.log(formid);
-								console.log(document.querySelector(`#${formid}`));
-								console.log(document.querySelector(`#${formid}`).parentElement);
-								document.querySelector(`#${formid}`).parentElement.remove();
-
+								document.querySelector(`#${formid}`).parentElement.remove()
 								const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem';
-
-								// Set the new width
 								if (document.querySelector('#app_helper').childElementCount > 0) document.querySelector('#app_helper.show').style.flexBasis = newWidth;
-
-
 							}, 300);
 						}
 					}
@@ -759,45 +718,7 @@ export class Flow {
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
-				// document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
-				// 	tab.addEventListener('click', () => {
-				// 		// Remove 'is-active' class from all tabs
-				// 		tabs.forEach((t) => t.parentElement.classList.remove('is-active'));
 
-				// 		// Add 'is-active' to the clicked tab
-				// 		tab.parentElement.classList.add('is-active');
-
-				// 		// Remove 'show' from all containers
-				// 		document.querySelectorAll('.app_configurator_containers').forEach((container) => {
-				// 			container.classList.remove('show');
-				// 			container.style.transform = '';  // Reset transform
-				// 		});
-
-				// 		// Determine the selected container and apply sliding effect
-				// 		const selectedContainerId = {
-				// 			'Graph': '#app_graph_container',
-				// 			'PageLayout': '#app_page_layout_container',
-				// 			'Forms': '#app_form_container',
-				// 			'Schema': '#app_schema_container'
-				// 		}[tab.dataset.tabtype];
-
-				// 		const selectedContainer = document.querySelector(selectedContainerId);
-
-				// 		// Slide out all other containers to the left, except the selected one
-				// 		document.querySelectorAll('.app_configurator_containers').forEach((container, containerIndex) => {
-				// 			if (container !== selectedContainer) {
-				// 				// Set position for sliding left or right based on current index vs. selected index
-				// 				container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
-				// 			}
-				// 		});
-
-				// 		// Show and slide in the selected container
-				// 		selectedContainer.classList.add('show');
-				// 		selectedContainer.style.transform = 'translateX(0)'; // Center it on the screen
-
-
-				// 	});
-				// });
 				document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
 					tab.addEventListener('click', () => {
 						// Remove 'is-active' class from all tabs
@@ -902,7 +823,7 @@ export class Flow {
 					}
 					// Handle $head and $tail cases
 					if (!head && !tail) {
-						// console.log('masuk !head && !tail');
+					
 						return { comment: "Container inputbox", tag: "div", class:`control ${field.type == 'action' ? '' : 'is-expanded'}   ${type == 'boolean' ? 'mt-2' : ''}`, content: [inputField] };
 					}
 
@@ -1101,14 +1022,13 @@ export class Flow {
 					}
 				});
 				// Obj.content.push(tObj);
-				if(cr) console.log('Obj final :>> ', Obj);
+			
 				return Obj;
 			}).bind(this),
 			GenerateFormToHTML: (function ($id, $schema, $util, is_horizontal = 0) {
 				function makeField($id, field, utilily) {
 					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 					let inputField = '';
-					console.log('type :>> ', type);
 					switch (type) {
 						case 'button':
 							inputField = `<button id="${$id}___${id}" name="${id}" class="button in-form-button ${d_class} " value="${value}" ${readonly ? 'disabled' : ''} autocomplete="off">${label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))}</button>`;
@@ -1230,11 +1150,10 @@ export class Flow {
 				}
 				let str = '<div class="paradigm-form">';
 
-				console.log('$util :>> ', $util);
 				$schema.forEach((field) => {
 					const { id, label = '', form } = field;
 					if (form === 1) {
-						// console.log('is_horizontal', is_horizontal);
+					
 						str += `<div class="field ${is_horizontal ? 'is-horizontal' : ''}">`;
 
 						if (label || field.type !== 'separator') {
@@ -1259,7 +1178,7 @@ export class Flow {
 					}
 				});
 				str += '</div>';
-				// console.log('str :>> ', str);
+			
 				return str;
 			}).bind(this),
 			initSearchDropdown: (function (inputElement, source) {
@@ -1274,7 +1193,6 @@ export class Flow {
 				// Preserve the input's attributes and move it inside the wrapper
 				wrapper.appendChild(inputElement);
 				wrapper.appendChild(magnifierIcon);
-				console.log('wrapper', wrapper);
 				parent.innerHTML = '';
 				parent.appendChild(wrapper, inputElement); // Insert wrapper in the same position as the original input
 
@@ -1421,7 +1339,6 @@ export class Flow {
 		},
 		Initialize: {
 			FormCard: (id, form, is_horizontal, isHTML = false, order = 0) => {
-				console.log('form in FormCard', typeof form, form);
 				let testform = this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal);
 				let testcard = this.Form.Components.BulmaCSS.Components.Card({
 					id: id,
@@ -1432,7 +1349,6 @@ export class Flow {
 					content: [this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal)]
 				});
 				let column = { comment: "Column", tag: "div", class: "column is-flex", id: "", style: "max-width:22rem;min-width:22rem;", href: "", data: {}, aria: {}, order: 0, innerHTML: "", content: [testcard] }
-				console.log('column sebelum return', column, this.Form.Render.traverseDOMProxyOBJ(column));
 				return isHTML ? this.Form.Render.traverseDOMProxyOBJ(column) : column;
 			},
 		},
@@ -1466,7 +1382,7 @@ export class Flow {
 				if (element.innerHTML) html += element.innerHTML;
 				if (element.content && Array.isArray(element.content)) {
 					for (let child of element.content) {
-						if (cr) console.log('child', child);
+					
 						html += this.Form.Render.traverseDOMProxyOBJ(child); // Recursively generate HTML for child elements
 					}
 				}
@@ -1520,7 +1436,6 @@ export class Flow {
 			executeChain: () => {
 				if (this.run_mode_selected === "stop") {
 					8
-					console.log("Execution stopped.");
 					this.cursor = this.chain.find(item => item.id === "P1"); // Reset cursor
 					return;
 				}
@@ -1542,12 +1457,7 @@ export class Flow {
 
 						// Debug mode output for step-by-step tracing
 						if (this.run_mode_selected === "debug") {
-							console.log(`DEBUG - Process ${this.cursor.id}:`);
-							console.log(`  Input:`, resolvedInput);
-							console.log(`  Output:`, output);
-							console.log(`  Next process:`, this.cursor.next_process);
 						} else {
-							console.log(`Process ${this.cursor.id} executed. Output:`, output);
 						}
 					} else {
 						console.error(`Process function ${this.cursor.process} not found`);

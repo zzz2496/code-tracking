@@ -87,7 +87,6 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	console.log('>>> >>> >>> >>> ||| STARTING YGGDRASIL INITIALIZATION');
 
 	let Node = JSON.parse(JSON.stringify(template__Node));
-	console.log('Node :>> ', Node);
 	// form.Dataset.Schema = {
 	// 	informasi_faktur: JSON.parse(JSON.stringify(template__node)),
 	// 	identitas_pemilik: JSON.parse(JSON.stringify(template__node)),
@@ -98,7 +97,6 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 
 	let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(document.body, ParadigmREVOLUTION.Utility);
-	console.log('Flow :>> ', Flow);
 	// NOTE - Initialize Main Form (App_menu, App_Container, App_Helper, App_console)
 	Node.Dataset.Layout = template__MainAppLayout;
 	// NOTE - Render Main Form, get something on the screen
@@ -106,10 +104,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	Node.Dataset.Forms = [template__FormInputTypes, template__FormInputTypeDefinition];
 	Flow.Forms = Node.Dataset.Forms;
 
-	console.log('>>>',Node.Dataset.Forms);
 	Flow.Form.Events.InitializeFormControls();
 	window.Flow = Flow;
-
 
 	let ram_db = ParadigmREVOLUTION.Datastores.SurrealDB.Memory;
 	let local_db = ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB;
@@ -118,6 +114,8 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	window.ram_db = ram_db;
 	window.local_db = local_db;
 	window.test_db = test_db;
+
+
 
 	// 	<!-- Dropdown Button -->
 	// 	<div class="dropdown is-hoverable">

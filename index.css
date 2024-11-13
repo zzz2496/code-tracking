@@ -354,11 +354,12 @@
 }
 /* Always-visible document-saveload-container (no animation) */
 .document-saveload-container {
-    width: 5.5rem;               /* Fixed width to keep it always visible */
+    width: auto;               /* Fixed width to keep it always visible */
     overflow: hidden;            /* Hide any overflow if needed */
     display: flex;
     align-items: center;         /* Center buttons vertically */
     gap: 0.01rem;                 /* Add space between buttons */
+	margin-right: 0.6rem;
 }
 
 /* Base styles for the other control containers (with animation) */
@@ -382,7 +383,7 @@
 }
 
 .layout-control-container.show {
-    width: 8.3rem;
+    width: 5.5rem;
     opacity: 1;
 }
 
