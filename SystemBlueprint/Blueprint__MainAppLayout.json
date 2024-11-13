@@ -43,48 +43,49 @@
 									]}
 								] }
 							] },
-							{"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "app_graph_controls_containers column mt-1 p-0 is-flex is-justify-content-center", "content": [
-									{ "comment": "Rewind Fast button",  "tag": "button", "title":"Reset back to start",                      "class": "button runtime-controls             mr-1 is-small is-default", "id": "graph_rewindfast_button",  "innerHTML": "<li class=\"fa fa-backward-fast\"></li>" },
-									{ "comment": "Rewind button",       "tag": "button", "title":"Set mode to Step and do One Step back",    "class": "button runtime-controls             mr-1 is-small is-default", "id": "graph_rewind_button",      "innerHTML": "<li class=\"fa fa-backward\"></li>" },
-									{ "comment": "Stop button",         "tag": "button", "title":"Reset the form and Reload everything",     "class": "button runtime-controls is-outlined mr-1 is-small is-danger",  "id": "graph_stop_button",        "innerHTML": "<li class=\"fa fa-stop\"></li>" },
-									{ "comment": "Play button",         "tag": "button", "title":"Set mode to RUN",                          "class": "button runtime-controls is-outlined mr-1 is-small is-success", "id": "graph_play_button",        "innerHTML": "<li class=\"fa fa-play\"></li>" },
-									{ "comment": "Pause button",        "tag": "button", "title":"Pause runtime and set mode to Step",       "class": "button runtime-controls is-outlined mr-1 is-small is-warning", "id": "graph_pause_button",       "innerHTML": "<li class=\"fa fa-pause\"></li>" },
-									{ "comment": "Forward button",      "tag": "button", "title":"Set mode to Step and do One Step forward", "class": "button runtime-controls             mr-1 is-small is-default", "id": "graph_forward_button",     "innerHTML": "<li class=\"fa fa-forward\"></li>" },
-									{ "comment": "Forward Fast button", "tag": "button", "title":"Jump forward to the end",                  "class": "button runtime-controls             mr-1 is-small is-default", "id": "graph_forwardfast_button", "innerHTML": "<li class=\"fa fa-forward-fast\"></li>" }
+							{"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "m-1 p-0 app_graph_controls_containers column is-flex is-justify-content-center", "content": [
+								{"tag":"div", "class":"field has-addons mx-1 my-0 ", "style":"min-width:5.4rem;", "content":[
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "Rewind Fast button",  "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Reset back to start",                      "class": "button runtime-controls             is-small is-default", "id": "graph_rewindfast_button",  "innerHTML": "<li class=\"fa fa-backward-fast\"></li>" },
+										{ "comment": "Rewind button",       "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Set mode to Step and do One Step back",    "class": "button runtime-controls             is-small is-default", "id": "graph_rewind_button",      "innerHTML": "<li class=\"fa fa-backward\"></li>" }
+									]}
+								]},
+								{"tag":"div", "class":"field has-addons mx-1 my-0", "style":"min-width:8rem;", "content":[
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "Stop button",         "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Reset the form and Reload everything",     "class": "button runtime-controls is-outlined is-small is-danger",  "id": "graph_stop_button",        "innerHTML": "<li class=\"fa fa-stop\"></li>" },
+										{ "comment": "Play button",         "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Set mode to RUN",                          "class": "button runtime-controls is-outlined is-small is-success", "id": "graph_play_button",        "innerHTML": "<li class=\"fa fa-play\"></li>" },
+										{ "comment": "Pause button",        "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Pause runtime and set mode to Step",       "class": "button runtime-controls is-outlined is-small is-warning", "id": "graph_pause_button",       "innerHTML": "<li class=\"fa fa-pause\"></li>" }
+										]}
+								]},
+								{"tag":"div", "class":"field has-addons mx-1 my-0", "style":"min-width:5.4rem;", "content":[
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "Forward button",      "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Set mode to Step and do One Step forward", "class": "button runtime-controls             is-small is-default", "id": "graph_forward_button",     "innerHTML": "<li class=\"fa fa-forward\"></li>" },
+										{ "comment": "Forward Fast button", "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Jump forward to the end",                  "class": "button runtime-controls             is-small is-default", "id": "graph_forwardfast_button", "innerHTML": "<li class=\"fa fa-forward-fast\"></li>" }
+									]}
+								]}
 							]},
-							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "column mt-1 p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
-								{"tag":"div", "class":"field has-addons", "content":[
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "Load Document button", "tag": "button", "class": "button is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" }
-									]},
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "", "tag": "button", "class": "button is-default", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-server\"></i>" }
-									]},
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "Save Document button", "tag": "button", "class": "button is-outlined is-danger", "id": "graph_remove_data_button", "title": "Save Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-up\"></i>" }
-									]}
+							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "column p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
+								{"tag":"div", "class":"document-saveload-container show", "content":[
+									{ "comment": "Load Document button", "tag": "button", "class": "button mr-1 document-saveload is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" },
+									{ "comment": "Save Document button", "tag": "button", "class": "button mr-1 document-saveload is-outlined is-danger", "id": "graph_remove_data_button", "title": "Save Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-up\"></i>" }
 								]},
-								{"tag":"div", "class":"field has-addons", "content":[
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "Save Nodes", "tag": "button", "class": "button mr-1 is-outlined is-danger", "id": "graph_savenodes_button", "title": "Save Nodes", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" }
-									]},
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "", "tag": "button", "class": "button is-default", "id": "", "title": "Nodes", "innerHTML": "<i class=\"fa-solid fa-circle-nodes\"></i>" }
-									]},
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "Add Node", "tag": "button", "class": "button mr-1 is-outlined is-link", "id": "graph_addnode_button", "title": "Add Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
-									]}
+								{"tag":"div", "class":"graph-control-container show", "content":[
+									{ "comment": "Remove Nodes", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removenodes_button", "title": "Remove Node(s)", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Node", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addnode_button", "title": "Add Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
 								]},
-	
-								{ "comment": "Add Schema", "tag": "button", "class": "button is-outlined mr-1 is-small is-link", "id": "graph_addschema_button", "title": "Add Node", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
-								{ "comment": "Remove Schema", "tag": "button", "class": "button mr-1 is-small is-outlined is-danger", "id": "graph_removeschema_button", "title": "Save Nodes", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
-
-								{ "comment": "Add Form", "tag": "button", "class": "button is-outlined mr-1 is-small is-link", "id": "graph_addform_button", "title": "Add Form", "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
-								{ "comment": "Remove Form", "tag": "button", "class": "button mr-1 is-small is-outlined is-danger", "id": "graph_removeform_button", "title": "Remove form", "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
-
-								{ "comment": "Document Definition button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "node_definition_button", "title": "Node Definition", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
-								{ "comment": "Define Form button", "tag": "button", "class": "button mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Form", "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
-								{ "comment": "Define Schema button", "tag": "button", "class": "button mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Schema", "innerHTML": "<i class=\"fa-solid fa-folder-tree\"></i>" }
+								{"tag":"div", "class":"layout-control-container", "content":[
+									{ "comment": "Document Definition button", "tag": "button", "class": "button mr-1 layout-controls mr-1 is-small is-default", "id": "node_definition_button", "title": "Node Definition", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
+									{ "comment": "Define Form button", "tag": "button",         "class": "button mr-1 layout-controls mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Form",   "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
+									{ "comment": "Define Schema button", "tag": "button",       "class": "button mr-1 layout-controls mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Schema", "innerHTML": "<i class=\"fa-solid fa-folder-tree\"></i>" }
+								]},
+								{"tag":"div", "class":"form-control-container", "content":[
+									{ "comment": "Remove Form", "tag": "button", "class": "button mr-1 form-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeform_button", "title": "Remove Form", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Form", "tag": "button",    "class": "button mr-1 form-controls mr-1 is-small is-outlined is-link", "id": "graph_addform_button", "title": "Add Form", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"schema-control-container", "content":[
+									{ "comment": "Remove Schema", "tag": "button", "class": "button mr-1 schema-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeschema_button", "title": "Remove Schema", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Schema", "tag": "button",    "class": "button mr-1 schema-controls mr-1 is-small is-outlined is-link", "id": "graph_addschema_button", "title": "Add Schema", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]}
 							]}
 						] },
 						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show", "innerHTML": "", "content": [

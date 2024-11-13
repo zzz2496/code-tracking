@@ -110,6 +110,15 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	Flow.Form.Events.InitializeFormControls();
 	window.Flow = Flow;
 
+
+	let ram_db = ParadigmREVOLUTION.Datastores.SurrealDB.Memory;
+	let local_db = ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB;
+	let test_db = ParadigmREVOLUTION.Datastores.SurrealDB.TestServer;
+
+	window.ram_db = ram_db;
+	window.local_db = local_db;
+	window.test_db = test_db;
+
 	// 	<!-- Dropdown Button -->
 	// 	<div class="dropdown is-hoverable">
 	// 		<div class="dropdown-trigger">

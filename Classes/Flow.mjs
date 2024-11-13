@@ -759,69 +759,102 @@ export class Flow {
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
-				// document.querySelectorAll('.tab-graph-selector').forEach((tab) => {
+				// document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
 				// 	tab.addEventListener('click', () => {
-				// 		document.querySelectorAll('.tab-graph-selector').forEach((t) => t.parentElement.classList.remove('is-active'));
-				// 		document.querySelectorAll('.app_configurator_containers').forEach((t) => t.classList.remove('show'));
+				// 		// Remove 'is-active' class from all tabs
+				// 		tabs.forEach((t) => t.parentElement.classList.remove('is-active'));
+
+				// 		// Add 'is-active' to the clicked tab
 				// 		tab.parentElement.classList.add('is-active');
 
-				// 		console.log('tab.dataset.tabtype :>> ', tab.dataset.tabtype);
-				// 		switch (tab.dataset.tabtype) {
-				// 			case 'Graph':
-				// 				document.querySelector('#app_graph_container').classList.toggle('show');
-				// 				break;
-				// 			case 'PageLayout':
-				// 				document.querySelector('#app_page_layout_container').classList.toggle('show');
-				// 			break;
-				// 			case 'Forms':
-				// 				document.querySelector('#app_form_container').classList.toggle('show');
-				// 				break;
-				// 			case 'Schema':
-				// 				document.querySelector('#app_schema_container').classList.toggle('show');
-				// 				break;
+				// 		// Remove 'show' from all containers
+				// 		document.querySelectorAll('.app_configurator_containers').forEach((container) => {
+				// 			container.classList.remove('show');
+				// 			container.style.transform = '';  // Reset transform
+				// 		});
 
-				// 		}
+				// 		// Determine the selected container and apply sliding effect
+				// 		const selectedContainerId = {
+				// 			'Graph': '#app_graph_container',
+				// 			'PageLayout': '#app_page_layout_container',
+				// 			'Forms': '#app_form_container',
+				// 			'Schema': '#app_schema_container'
+				// 		}[tab.dataset.tabtype];
+
+				// 		const selectedContainer = document.querySelector(selectedContainerId);
+
+				// 		// Slide out all other containers to the left, except the selected one
+				// 		document.querySelectorAll('.app_configurator_containers').forEach((container, containerIndex) => {
+				// 			if (container !== selectedContainer) {
+				// 				// Set position for sliding left or right based on current index vs. selected index
+				// 				container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
+				// 			}
+				// 		});
+
+				// 		// Show and slide in the selected container
+				// 		selectedContainer.classList.add('show');
+				// 		selectedContainer.style.transform = 'translateX(0)'; // Center it on the screen
+
+
 				// 	});
 				// });
 				document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
 					tab.addEventListener('click', () => {
 						// Remove 'is-active' class from all tabs
 						tabs.forEach((t) => t.parentElement.classList.remove('is-active'));
-
+				
 						// Add 'is-active' to the clicked tab
 						tab.parentElement.classList.add('is-active');
-
-						// Remove 'show' from all containers
+				
+						// Remove 'show' from all main content containers
 						document.querySelectorAll('.app_configurator_containers').forEach((container) => {
 							container.classList.remove('show');
 							container.style.transform = '';  // Reset transform
 						});
-
-						// Determine the selected container and apply sliding effect
+				
+						// Also remove 'show' from all control containers
+						document.querySelectorAll('.app_graph_controls_containers > div').forEach((controlContainer) => {
+							controlContainer.classList.remove('show');
+						});
+				
+						// Determine the selected main container and control container based on tab type
 						const selectedContainerId = {
 							'Graph': '#app_graph_container',
 							'PageLayout': '#app_page_layout_container',
 							'Forms': '#app_form_container',
 							'Schema': '#app_schema_container'
 						}[tab.dataset.tabtype];
-
+				
 						const selectedContainer = document.querySelector(selectedContainerId);
-
-						// Slide out all other containers to the left, except the selected one
+				
+						// Slide out all other containers to the left or right except the selected one
 						document.querySelectorAll('.app_configurator_containers').forEach((container, containerIndex) => {
 							if (container !== selectedContainer) {
-								// Set position for sliding left or right based on current index vs. selected index
 								container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
 							}
 						});
-
-						// Show and slide in the selected container
+				
+						// Show and slide in the selected main container
 						selectedContainer.classList.add('show');
-						selectedContainer.style.transform = 'translateX(0)'; // Center it on the screen
+						selectedContainer.style.transform = 'translateX(0)';
+				
+						// Show the appropriate control container based on the selected tab
+						switch (tab.dataset.tabtype) {
+							case 'Graph':
+								document.querySelector('.graph-control-container').classList.add('show');
+								break;
+							case 'PageLayout':
+								document.querySelector('.layout-control-container').classList.add('show');
+								break;
+							case 'Forms':
+								document.querySelector('.form-control-container').classList.add('show');
+								break;
+							case 'Schema':
+								document.querySelector('.schema-control-container').classList.add('show');
+								break;
+						}
 					});
 				});
-
-
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false) {
 				function makeFieldParadigmJSON($id, field, utilily) {

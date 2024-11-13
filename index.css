@@ -11,12 +11,6 @@
 .button {
 	min-width: 2.5rem;
 }
-
-.runtime-controls{
-	width: 2.5rem;
-	height: 2.5rem;
-}
-
 @media (prefers-color-scheme: light) {
 	.grid2020-background {
 		background-color: var(--bulma-text-95);
@@ -245,7 +239,7 @@
    }
    #app_graph_tabs_container.show{
 	   width: 100%;
-	   height: 7.3rem;
+	   height: 8.5rem;
 	   /* opacity: 1; */
    }
    #app_configurator_container.show {
@@ -332,4 +326,80 @@
 #app_console.show {
 	transform: translateY(-72vh);
 	/* Fly it up to the visible screen */
+}
+
+.runtime-controls{
+	width: 2.5rem;
+	height: 2.5rem;
+}
+.graph-controls{
+	width: 2.5rem;
+	height: 2.5rem;
+}
+.layout-controls{
+	width: 2.5rem;
+	height: 2.5rem;
+}
+.schema-controls{
+	width: 2.5rem;
+	height: 2.5rem;
+}
+.form-controls{
+	width: 2.5rem;
+	height: 2.5rem;
+}
+.document-saveload {
+	width: 2.5rem;
+	height: 2.5rem
+}
+/* Always-visible document-saveload-container (no animation) */
+.document-saveload-container {
+    width: 5.5rem;               /* Fixed width to keep it always visible */
+    overflow: hidden;            /* Hide any overflow if needed */
+    display: flex;
+    align-items: center;         /* Center buttons vertically */
+    gap: 0.01rem;                 /* Add space between buttons */
+}
+
+/* Base styles for the other control containers (with animation) */
+.graph-control-container,
+.layout-control-container,
+.form-control-container,
+.schema-control-container {
+    width: 0;                       /* Start collapsed */
+    overflow: hidden;               /* Hide overflowing content */
+    transition: width 0.5s ease, opacity 0.5s ease; /* Animate width and opacity */
+    opacity: 0;                     /* Hidden by default */
+    display: flex;                  /* Keeps buttons in a row */
+    align-items: center;            /* Center-aligns buttons vertically */
+    gap: 0.01rem;                    /* Adds spacing between buttons */
+}
+
+/* Expanded states with target widths */
+.graph-control-container.show {
+    width: 5.5rem;
+    opacity: 1;                     /* Fade in */
+}
+
+.layout-control-container.show {
+    width: 8.3rem;
+    opacity: 1;
+}
+
+.form-control-container.show {
+    width: 5.5rem;
+    opacity: 1;
+}
+
+.schema-control-container.show {
+    width: 5.5rem;
+    opacity: 1;
+}
+
+/* Prevent content shrinking for all control buttons */
+.graph-control-container > button,
+.layout-control-container > button,
+.form-control-container > button,
+.schema-control-container > button {
+    flex-shrink: 0;                 /* Prevent buttons from shrinking */
 }
