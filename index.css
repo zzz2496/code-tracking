@@ -12,6 +12,11 @@
 	min-width: 2.5rem;
 }
 
+.runtime-controls{
+	width: 2.5rem;
+	height: 2.5rem;
+}
+
 @media (prefers-color-scheme: light) {
 	.grid2020-background {
 		background-color: var(--bulma-text-95);
@@ -276,13 +281,6 @@
 	box-sizing: border-box;
 }
 
-#app_console {
-	height: 2rem;
-	max-height: 80vh;
-	/*border: 1px solid orange;*/
-	overflow: auto;
-	transition: max-height 0.3s ease-in-out;
-}
 
 /* Helper section */
 #app_helper {
@@ -321,7 +319,6 @@
 	width: 96vw;
 	height: 70vh;
 	max-height: 95vh;
-	background-color: white;
 	border-radius: 10px;
 	box-shadow: 0 0 10px #00000033;
 	overflow: auto;

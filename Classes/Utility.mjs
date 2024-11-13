@@ -4999,7 +4999,7 @@ export class Utility {
 		// NOTE - SurrealDB
 		"SurrealDB": {
 			// "initiateSurrealDB": async function(storage, namespace, database, server, user, pass) {
-			initSurrealDB: async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA, Modules, cr) {
+			initSurrealDB: async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA, Modules, callback, callbackfailed, cr) {
 				let token = mode;
 				switch (mode) {
 					case 'Memory':
@@ -5016,22 +5016,14 @@ export class Utility {
 								}
 								await SurrealDB.Memory.Instance.connect('mem://');
 								await SurrealDB.Memory.Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
-
-								//NOTE - CREATE DUMMY DATA 
-								let query;
-								// query = await SurrealDB.Memory.Instance.query('create test:data1 content {nama:"Damir"}');
-								// query = await SurrealDB.Memory.Instance.query('create test:data2 content {nama:"Putri"}');
-								// query = await SurrealDB.Memory.Instance.query('create test:data3 content {nama:"Olive"}');
-								// query = await SurrealDB.Memory.Instance.query('create test:data4 content {nama:"Puji"}');
-								// query = await SurrealDB.Memory.Instance.query('create test:data5 content {nama:"Listyono"}');
-								// query = await SurrealDB.Memory.query('select * from test');
-								// console.log('query', query);								
 							} else {
 								SurrealDB.Memory.Instance = false;
+								if (callbackfailed)	callbackfailed('Cannot connect to SurrealDB.Memory');
 							}
 							if (cr) console.info('Done SurrealDB.Memory connection...');
 						} catch (e) {
 							console.error("ERROR SurrealDB.Memory on initialization, ", e);
+							if (callbackfailed)	callbackfailed("ERROR SurrealDB.Memory on initialization, ", e);
 						}
 						break;
 					case 'IndexedDB':
@@ -5052,10 +5044,13 @@ export class Utility {
 								await SurrealDB.IndexedDB.Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
 							} else {
 								SurrealDB.IndexedDB.Instance = false;
+								if (callbackfailed)	callbackfailed('Cannot connect to SurrealDB.IndexedDB');
+
 							}
 							if (cr) console.info('Done SurrealDB.IndexedDB connection...');
 						} catch (e) {
 							console.error("ERROR SurrealDB.IndexedDB on initialization, ", e);
+							if (callbackfailed)	callbackfailed("ERROR SurrealDB.IndexedDB on initialization, ", e);
 						}
 						break;
 					default:
@@ -5094,11 +5089,9 @@ export class Utility {
 									}
 								}
 								// Connect to the database
-								// await SurrealDB[mode].Instance.connect(BlueprintsDATA.Datastore[mode], { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
 								await SurrealDB[mode].Instance.connect(...SurrealDB[mode].Metadata.ConnectionInfo);
 
 								// Select a specific namespace / database
-								// await SurrealDB[mode].Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
 								await SurrealDB[mode].Instance.use(SurrealDB[mode].Metadata.NSDB);
 
 								// Signin as a namespace, database, or root user
@@ -5116,11 +5109,12 @@ export class Utility {
 									},
 									"Instance": false
 								};
+								if (callbackfailed)	callbackfailed('Cannot connect to SurrealDB.' + mode);
 							}
-
 							if (cr) console.info(`Done SurrealDB.${mode}. connection...`);
 						} catch (e) {
 							console.error(`ERROR SurrealDB.${mode} on initialization, `, e);
+							if (callbackfailed)	callbackfailed(`ERROR SurrealDB.${mode} on initialization, `, e);
 						}
 						break;
 				}

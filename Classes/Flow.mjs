@@ -302,7 +302,7 @@ export class Flow {
 											tag: "span",
 											class: "icon form-shade-button",
 											data: {
-												formid: id	
+												formid: id
 											},
 													innerHTML: `<i class="fas fa-angle-down"></i>`
 										}
@@ -441,22 +441,22 @@ export class Flow {
 			addGlobalEventListener: function (type, selectors, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
 				const initiatedElements = new Set(); // Track selectors that have been handled
-			
+
 				// Add event listener on the parent (or global) scope
 				parent.addEventListener(
 					type,
 					(e) => {
 						console.log('addGlobalEventListener :>> ', type, e.target);
-			
+
 						// Loop through each selector-callback pair
 						for (const { selector, callback } of selectors) {
 							// Find the closest matching ancestor with the selector
 							const targetElement = e.target.closest(selector);
-			
+
 							// Check if this element has already been initiated
 							if (targetElement && !initiatedElements.has(targetElement)) {
 								initiatedElements.add(targetElement); // Mark as initiated
-			
+
 								// Only trigger callback if the closest match is the element itself (not a child)
 								if (targetElement === e.target) {
 									if (!nonBubblingEvents.includes(type)) {
@@ -481,19 +481,19 @@ export class Flow {
 					true // Using capture phase to catch events early, for non-bubbling events
 				);
 			},
-			
+
 			addGlobalEventListenerV2: function (type, selectors, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
-			
+
 				// Add event listener on the parent (or global) scope
 				parent.addEventListener(type, (e) => {
 					console.log('addGlobalEventListener :>> ', type, e.target);
-			
+
 					// Loop through each selector-callback pair
 					for (const { selector, callback } of selectors) {
 						// Find the closest matching ancestor with the selector
 						const targetElement = e.target.closest(selector);
-			
+
 						// Only trigger callback if the closest match is the element itself (not a child)
 						if (targetElement && targetElement === e.target) {
 							if (!nonBubblingEvents.includes(type)) {
@@ -515,8 +515,8 @@ export class Flow {
 					}
 				}, true); // Using capture phase to catch events early, for non-bubbling events
 			},
-			
-			
+
+
 			addGlobalEventListenerV1: function (type, selector, callback, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
 
@@ -625,19 +625,88 @@ export class Flow {
 				});
 				//NOTE - NEW VERSION
 				this.Form.Events.addGlobalEventListener('click', [
-					{ 
-						selector: '.in-tail-button', 
+					{
+						selector: '.datastore-status-indicator',
+						callback: async (e) => {
+							console.log('waaa');
+							let SurrealDB = {
+								"Memory": {
+									"Metadata":{},
+									"Instance": null
+								},
+								"IndexedDB": {
+									"Metadata":{},
+									"Instance": null
+								}
+							};
+							let Tokens = {};
+							window.SurrealDB = SurrealDB;
+							SurrealDB = {
+								"Memory": {
+									"Metadata": {},
+									"Instance": new window.ParadigmREVOLUTION.SystemCore.Modules.Surreal({
+										engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
+									})
+								},
+								"IndexedDB": {
+									"Metadata": {},
+									"Instance": new window.ParadigmREVOLUTION.SystemCore.Modules.Surreal({
+										engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
+									})
+								}
+							};
+							 const initConfigs = [
+								{ name: 'Memory', label:'Memory Datastore', shortlabel:'MEMD', connect:1, instance: SurrealDB },
+								{ name: 'IndexedDB', label:'IndexedDB Datastore', shortlabel:'IDXD', connect:1, instance: SurrealDB },
+								{ name: 'TestServer', label:'TestServer Datastore', shortlabel:'TEST', connect:1, instance: SurrealDB },
+								// { name: 'BackupServer', label:'BackupServer Datastore', shortlabel:'BCKP', connect:0, instance: SurrealDB },
+								// { name: 'ProductionServer', label:'ProductionServer Datastore', shortlabel:'PROD', connect:0, instance: SurrealDB }
+							];
+							window.ParadigmREVOLUTION.Datastores = {
+								Tokens: Tokens,
+								Parameters: initConfigs,
+								SurrealDB: SurrealDB
+							};
+							// window.ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = 'Loading...';
+
+							const promises = initConfigs.map(config =>
+								ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
+							);
+
+							const results = await Promise.all(promises);
+
+							initConfigs.forEach((config, index) => {
+								Tokens[config.name] = results[index];
+							});
+							window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
+
+							let datastore_status = '';
+							Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
+								if (entry.Instance == false) {
+									datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
+								} else if (typeof entry.Instance.connection != "undefined") {
+									datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>` ;
+								} else {
+									datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>` ;
+								}
+							});
+							document.querySelector('#datastore_status').innerHTML = datastore_status;
+
+						}
+					},
+					{
+						selector: '.in-tail-button',
 						callback: (e) => {
 							let num = Date.now();
 							//ADD FORM COLUMN HERE
 							document.querySelector('#app_helper').innerHTML += this.Form.Initialize.FormCard('form_components___' + num, this.Forms[1], 1, 1);
-							
+
 							// Calculate WIDTH
 							const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
-	
+
 							// Set the new width
 							document.querySelector('#app_helper.show').style.flexBasis = newWidth;
-	
+
 							this.SnapScroll = false;
 							setTimeout(() => {
 								document.querySelector('#app_root_container').scrollTo({
@@ -654,10 +723,10 @@ export class Flow {
 									behavior: 'smooth'
 								});
 							}, 300);
-						} 
+						}
 					},
-					{ 
-						selector: '.form-close-button', 
+					{
+						selector: '.form-close-button',
 						callback: (e) => {
 							console.log('CLOSE button clicked :>> ');
 							console.log(e.target);
@@ -671,20 +740,20 @@ export class Flow {
 								}
 
 								//NOTE - HMMM
-								
+
 								console.log(formid);
 								console.log(document.querySelector(`#${formid}`));
 								console.log(document.querySelector(`#${formid}`).parentElement);
 								document.querySelector(`#${formid}`).parentElement.remove();
 
 								const newWidth = document.querySelector('#app_helper').childElementCount * 22 + 'rem';
-		
+
 								// Set the new width
 								if (document.querySelector('#app_helper').childElementCount > 0) document.querySelector('#app_helper.show').style.flexBasis = newWidth;
 
-								
+
 							}, 300);
-						} 
+						}
 					}
 				]);
 				document.querySelector('#app_console_button').addEventListener('click', () => {
@@ -695,7 +764,7 @@ export class Flow {
 				// 		document.querySelectorAll('.tab-graph-selector').forEach((t) => t.parentElement.classList.remove('is-active'));
 				// 		document.querySelectorAll('.app_configurator_containers').forEach((t) => t.classList.remove('show'));
 				// 		tab.parentElement.classList.add('is-active');
-						
+
 				// 		console.log('tab.dataset.tabtype :>> ', tab.dataset.tabtype);
 				// 		switch (tab.dataset.tabtype) {
 				// 			case 'Graph':
@@ -705,12 +774,12 @@ export class Flow {
 				// 				document.querySelector('#app_page_layout_container').classList.toggle('show');
 				// 			break;
 				// 			case 'Forms':
-				// 				document.querySelector('#app_form_container').classList.toggle('show');								
+				// 				document.querySelector('#app_form_container').classList.toggle('show');
 				// 				break;
 				// 			case 'Schema':
-				// 				document.querySelector('#app_schema_container').classList.toggle('show');								
+				// 				document.querySelector('#app_schema_container').classList.toggle('show');
 				// 				break;
-						
+
 				// 		}
 				// 	});
 				// });
@@ -718,16 +787,16 @@ export class Flow {
 					tab.addEventListener('click', () => {
 						// Remove 'is-active' class from all tabs
 						tabs.forEach((t) => t.parentElement.classList.remove('is-active'));
-				
+
 						// Add 'is-active' to the clicked tab
 						tab.parentElement.classList.add('is-active');
-				
+
 						// Remove 'show' from all containers
 						document.querySelectorAll('.app_configurator_containers').forEach((container) => {
 							container.classList.remove('show');
 							container.style.transform = '';  // Reset transform
 						});
-				
+
 						// Determine the selected container and apply sliding effect
 						const selectedContainerId = {
 							'Graph': '#app_graph_container',
@@ -735,9 +804,9 @@ export class Flow {
 							'Forms': '#app_form_container',
 							'Schema': '#app_schema_container'
 						}[tab.dataset.tabtype];
-				
+
 						const selectedContainer = document.querySelector(selectedContainerId);
-						
+
 						// Slide out all other containers to the left, except the selected one
 						document.querySelectorAll('.app_configurator_containers').forEach((container, containerIndex) => {
 							if (container !== selectedContainer) {
@@ -745,14 +814,14 @@ export class Flow {
 								container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
 							}
 						});
-				
+
 						// Show and slide in the selected container
 						selectedContainer.classList.add('show');
 						selectedContainer.style.transform = 'translateX(0)'; // Center it on the screen
 					});
 				});
-				
-				
+
+
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false) {
 				function makeFieldParadigmJSON($id, field, utilily) {
@@ -798,7 +867,7 @@ export class Flow {
 							inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value }};
 							break;
 					}
-					// Handle $head and $tail cases 
+					// Handle $head and $tail cases
 					if (!head && !tail) {
 						// console.log('masuk !head && !tail');
 						return { comment: "Container inputbox", tag: "div", class:`control ${field.type == 'action' ? '' : 'is-expanded'}   ${type == 'boolean' ? 'mt-2' : ''}`, content: [inputField] };
@@ -987,7 +1056,7 @@ export class Flow {
 						let temp = makeFieldParadigmJSON($id, field, $util);
 						if (Array.isArray(temp)) {
 							temp = [...temp];
-						} else { 
+						} else {
 							temp = [temp];
 						}
 						tObj = {
@@ -1335,7 +1404,7 @@ export class Flow {
 			},
 		},
 		Render: {
-			traverseDOMProxyOBJ: ((element, callback, cr=0) => {				
+			traverseDOMProxyOBJ: ((element, callback, cr=0) => {
 				let html = `<${element.tag}`;
 				if (element.class) html += ` class="${element.class}"`;
 				if (element.id) html += ` id="${element.id}"`;

@@ -44,22 +44,47 @@
 								] }
 							] },
 							{"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "app_graph_controls_containers column mt-1 p-0 is-flex is-justify-content-center", "content": [
-									{ "comment": "Rewind Fast button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_rewindfast_button", "innerHTML": "<li class=\"p-1 fa fa-backward-fast\"></li>" },
-									{ "comment": "Rewind button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_rewind_button", "innerHTML": "<li class=\"p-1 fa fa-backward\"></li>" },
-									{ "comment": "Stop button", "tag": "button", "class": "button is-outlined mr-1 is-small is-danger", "id": "graph_stop_button", "innerHTML": "<li class=\"fa fa-stop\"></li>" },
-									{ "comment": "Play button", "tag": "button", "class": "button is-outlined mr-1 is-small is-success", "id": "graph_play_button", "innerHTML": "<li class=\"fa fa-play\"></li>" },
-									{ "comment": "Pause button", "tag": "button", "class": "button is-outlined mr-1 is-small is-warning", "id": "graph_pause_button", "innerHTML": "<li class=\"fa fa-pause\"></li>" },
-									{ "comment": "Forward button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_forward_button", "innerHTML": "<li class=\"p-1 fa fa-forward\"></li>" },
-									{ "comment": "Forward Fast button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "graph_forwardfast_button", "innerHTML": "<li class=\"p-1 fa fa-forward-fast\"></li>" }
+									{ "comment": "Rewind Fast button",  "tag": "button", "title":"Reset back to start",                      "class": "button runtime-controls             mr-1 is-small is-default", "id": "graph_rewindfast_button",  "innerHTML": "<li class=\"fa fa-backward-fast\"></li>" },
+									{ "comment": "Rewind button",       "tag": "button", "title":"Set mode to Step and do One Step back",    "class": "button runtime-controls             mr-1 is-small is-default", "id": "graph_rewind_button",      "innerHTML": "<li class=\"fa fa-backward\"></li>" },
+									{ "comment": "Stop button",         "tag": "button", "title":"Reset the form and Reload everything",     "class": "button runtime-controls is-outlined mr-1 is-small is-danger",  "id": "graph_stop_button",        "innerHTML": "<li class=\"fa fa-stop\"></li>" },
+									{ "comment": "Play button",         "tag": "button", "title":"Set mode to RUN",                          "class": "button runtime-controls is-outlined mr-1 is-small is-success", "id": "graph_play_button",        "innerHTML": "<li class=\"fa fa-play\"></li>" },
+									{ "comment": "Pause button",        "tag": "button", "title":"Pause runtime and set mode to Step",       "class": "button runtime-controls is-outlined mr-1 is-small is-warning", "id": "graph_pause_button",       "innerHTML": "<li class=\"fa fa-pause\"></li>" },
+									{ "comment": "Forward button",      "tag": "button", "title":"Set mode to Step and do One Step forward", "class": "button runtime-controls             mr-1 is-small is-default", "id": "graph_forward_button",     "innerHTML": "<li class=\"fa fa-forward\"></li>" },
+									{ "comment": "Forward Fast button", "tag": "button", "title":"Jump forward to the end",                  "class": "button runtime-controls             mr-1 is-small is-default", "id": "graph_forwardfast_button", "innerHTML": "<li class=\"fa fa-forward-fast\"></li>" }
 							]},
 							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "column mt-1 p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
-								{ "comment": "Load button", "tag": "button", "class": "button mr-1 is-small is-outlined is-success", "id": "graph_loadnodes_button", "title": "Load Nodes", "innerHTML": "<i class=\"p-1 fa-solid fa-file-arrow-down\"></i>" },
-								{ "comment": "Save Nodes", "tag": "button", "class": "button mr-1 is-small is-outlined is-danger", "id": "graph_savenodes_button", "title": "Save Nodes", "innerHTML": "<i class=\"p-1 fa-solid fa-file-arrow-up\"></i>" },
-								{ "comment": "Node Definition button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "node_definition_button", "title": "Node Definition", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
+								{"tag":"div", "class":"field has-addons", "content":[
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "Load Document button", "tag": "button", "class": "button is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" }
+									]},
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "", "tag": "button", "class": "button is-default", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-server\"></i>" }
+									]},
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "Save Document button", "tag": "button", "class": "button is-outlined is-danger", "id": "graph_remove_data_button", "title": "Save Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-up\"></i>" }
+									]}
+								]},
+								{"tag":"div", "class":"field has-addons", "content":[
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "Save Nodes", "tag": "button", "class": "button mr-1 is-outlined is-danger", "id": "graph_savenodes_button", "title": "Save Nodes", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" }
+									]},
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "", "tag": "button", "class": "button is-default", "id": "", "title": "Nodes", "innerHTML": "<i class=\"fa-solid fa-circle-nodes\"></i>" }
+									]},
+									{"tag":"p", "class":"control", "content":[
+										{ "comment": "Add Node", "tag": "button", "class": "button mr-1 is-outlined is-link", "id": "graph_addnode_button", "title": "Add Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+									]}
+								]},
+	
+								{ "comment": "Add Schema", "tag": "button", "class": "button is-outlined mr-1 is-small is-link", "id": "graph_addschema_button", "title": "Add Node", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
+								{ "comment": "Remove Schema", "tag": "button", "class": "button mr-1 is-small is-outlined is-danger", "id": "graph_removeschema_button", "title": "Save Nodes", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
+
+								{ "comment": "Add Form", "tag": "button", "class": "button is-outlined mr-1 is-small is-link", "id": "graph_addform_button", "title": "Add Form", "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
+								{ "comment": "Remove Form", "tag": "button", "class": "button mr-1 is-small is-outlined is-danger", "id": "graph_removeform_button", "title": "Remove form", "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
+
+								{ "comment": "Document Definition button", "tag": "button", "class": "button mr-1 is-small is-default", "id": "node_definition_button", "title": "Node Definition", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
 								{ "comment": "Define Form button", "tag": "button", "class": "button mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Form", "innerHTML": "<i class=\"fa-brands fa-wpforms\"></i>" },
-								{ "comment": "Define Schema button", "tag": "button", "class": "button mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Schema", "innerHTML": "<i class=\"fa-solid fa-folder-tree\"></i>" },
-								{ "comment": "Remove button", "tag": "button", "class": "button is-outlined mr-1 is-small is-danger", "id": "graph_removenode_button", "title": "Remove Node", "innerHTML": "<i class=\"p-1 fa-solid fa-minus\"></i>" },
-								{ "comment": "Add Node", "tag": "button", "class": "button is-outlined mr-1 is-small is-link", "id": "graph_addnode_button", "title": "Add Node", "innerHTML": "<i class=\"p-1 fa-solid fa-plus\"></i>" }
+								{ "comment": "Define Schema button", "tag": "button", "class": "button mr-1 is-small is-default ", "id": "graph_defineform_button", "title": "Define Schema", "innerHTML": "<i class=\"fa-solid fa-folder-tree\"></i>" }
 							]}
 						] },
 						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show", "innerHTML": "", "content": [
@@ -96,7 +121,7 @@
 			]
 		},
 		{
-			"comment": "App Console", "tag": "div", "id": "app_console", "content": [
+			"comment": "App Console", "tag": "div", "id": "app_console", "class":"has-background-black-bis", "content": [
 				{ "comment": "Core Status Container", "tag": "div", "id": "core_status", "innerHTML": "", "class": "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
 				{ "comment": "Debugging", "tag": "div", "id": "debugging", "innerHTML": "Console", "content": [] }
 			]
