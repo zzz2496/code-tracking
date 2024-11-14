@@ -3,7 +3,7 @@
 		{
 			"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
 				{ "comment": "App Menu", "tag": "div", "id": "app_menu", "class": "", "innerHTML": "", "content": [
-					{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"fa fa-moon\"></li>"}
+					{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"fa fa-moon\" style=\"color:red;\"></li>"}
 				] },
 				{
 					"comment": "App Container", "tag": "div", "id": "app_container", "content": [
@@ -55,7 +55,7 @@
 								{"tag":"div", "class":"field has-addons mx-2 my-0", "style":"min-width:8rem;", "content":[
 									{"tag":"p", "class":"control", "content":[
 										{ "comment": "Stop button",         "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Reset the form and Reload everything",     "class": "button runtime-controls is-outlined is-small is-danger",  "id": "graph_stop_button",        "innerHTML": "<li class=\"fa fa-stop\"></li>" },
-										{ "comment": "Play button",         "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Set mode to RUN",                          "class": "button runtime-controls is-outlined is-small is-success", "id": "graph_play_button",        "innerHTML": "<li class=\"fa fa-play\"></li>" },
+										{ "comment": "Play button",         "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Set mode to RUN and Play the form",        "class": "button runtime-controls is-outlined is-small is-success", "id": "graph_play_button",        "innerHTML": "<li class=\"fa fa-play\"></li>" },
 										{ "comment": "Pause button",        "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Pause runtime and set mode to Step",       "class": "button runtime-controls is-outlined is-small is-warning", "id": "graph_pause_button",       "innerHTML": "<li class=\"fa fa-pause\"></li>" }
 										]}
 								]},

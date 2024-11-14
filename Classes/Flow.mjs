@@ -803,9 +803,78 @@ export class Flow {
 						}
 					});
 				});
-				document.querySelector('#dark_light_selector').addEventListener('click', () => {
-					document.documentElement.dataset.theme = document.documentElement.dataset.theme == 'light'? 'dark' : 'light';
+				document.querySelector('#dark_light_selector').addEventListener('click', (e) => {
+					let root = document.documentElement;
+					let isCurrentThemeDark = this.Utility.DOMElements.detectLightDarkMode();
+					root.dataset.count = root.dataset.count ? parseInt(root.dataset.count) : 0;
+					console.log(root.dataset.count);
+					console.log('e.currentTarget :>> ', e.currentTarget);					
+					if (root.dataset.count < 2) {
+						console.log('masuk < 2');
+						if (root.dataset.theme == 'light') {
+							console.log('masuk dark');
+							root.dataset.theme = 'dark'
+							console.log('e.currentTarget.childNodes[0].classList:>', e.currentTarget.childNodes[0].classList);
+							if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
+								e.currentTarget.childNodes[0].classList.remove('fa-sun');
+							}
+							e.currentTarget.childNodes[0].classList.add('fa-moon');
+						} else if (root.dataset.theme == 'dark') {
+							console.log('masuk light');
+							root.dataset.theme = 'light';
+							console.log('e.currentTarget', e.currentTarget.childNodes);
+							console.log('e.currentTarget.childNodes[0].classList:>', e.currentTarget.childNodes[0].classList);
+							if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
+								e.currentTarget.childNodes[0].classList.remove('fa-moon');
+							}
+							e.currentTarget.childNodes[0].classList.add('fa-sun');
+						} else {
+							console.log('masuk default');
+							console.log('isCurrentThemeDark', isCurrentThemeDark);
+							root.dataset.theme = isCurrentThemeDark.matches ? 'dark' : 'light';
+							if (isCurrentThemeDark.matches) {
+								if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
+									e.currentTarget.childNodes[0].classList.remove('fa-sun');
+								}
+								e.currentTarget.childNodes[0].classList.add('fa-moon');
+							} else {
+								if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
+									e.currentTarget.childNodes[0].classList.remove('fa-moon');
+								}
+								e.currentTarget.childNodes[0].classList.add('fa-sun');	
+							}
+						}
+						e.currentTarget.childNodes[0].style.color = '';
+						root.dataset.count++;
+					} else {
+						console.log('masuk reset');
+						root.dataset.theme = '';
+						e.currentTarget.childNodes[0].style.color = 'red';
+						root.dataset.count = 0;
+						if (isCurrentThemeDark.matches) {
+							if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
+								e.currentTarget.childNodes[0].classList.remove('fa-sun');
+							}
+							e.currentTarget.childNodes[0].classList.add('fa-moon');
+						} else {
+							if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
+								e.currentTarget.childNodes[0].classList.remove('fa-moon');
+							}
+							e.currentTarget.childNodes[0].classList.add('fa-sun');	
+						}
+				}
+					// document.documentElement.dataset.theme = document.documentElement.dataset.theme == 'light'? 'dark' : 'light';
 				});
+				// let isCurrentThemeDark = this.Utility.DOMElements.detectLightDarkMode();
+				// let root = document.documentElement;
+				// root.dataset.count = isCurrentThemeDark.matches ? 2 : 1;
+				// if (isCurrentThemeDark.matches) {
+				// 	document.querySelector('#dark_light_selector').childNodes[0].classList.remove('fa-sun');
+				// 	document.querySelector('#dark_light_selector').childNodes[0].classList.add('fa-moon');
+				// } else {
+				// 	document.querySelector('#dark_light_selector').childNodes[0].classList.remove('fa-moon');
+				// 	document.querySelector('#dark_light_selector').childNodes[0].classList.add('fa-sun');
+				// }
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false) {
 				function makeFieldParadigmJSON($id, field, utilily) {
