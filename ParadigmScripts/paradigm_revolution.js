@@ -86,7 +86,7 @@ document.addEventListener('BlueprintsLoaded', () => {
 document.addEventListener('SurrealDBEnginesLoaded', () => {
 	console.log('>>> >>> >>> >>> ||| STARTING YGGDRASIL INITIALIZATION');
 
-	let Node = JSON.parse(JSON.stringify(template__Node));
+	let CurrentDocument = JSON.parse(JSON.stringify(template__Node));
 	// form.Dataset.Schema = {
 	// 	informasi_faktur: JSON.parse(JSON.stringify(template__node)),
 	// 	identitas_pemilik: JSON.parse(JSON.stringify(template__node)),
@@ -94,15 +94,15 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// 	data_pendukung: JSON.parse(JSON.stringify(template__node)),
 	// 	keterangan: JSON.parse(JSON.stringify(template__node))
 	// };
-
+	window.CurrentDocument = CurrentDocument;
 
 	let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(document.body, ParadigmREVOLUTION.Utility);
 	// NOTE - Initialize Main Form (App_menu, App_Container, App_Helper, App_console)
-	Node.Dataset.Layout = template__MainAppLayout;
+	CurrentDocument.Dataset.Layout = template__MainAppLayout;
 	// NOTE - Render Main Form, get something on the screen
-	Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(Node.Dataset.Layout);
-	Node.Dataset.Forms = [template__FormInputTypes, template__FormInputTypeDefinition];
-	Flow.Forms = Node.Dataset.Forms;
+	Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
+	CurrentDocument.Dataset.Forms = [template__FormInputTypes, template__FormInputTypeDefinition];
+	Flow.Forms = CurrentDocument.Dataset.Forms;
 
 	Flow.Form.Events.InitializeFormControls();
 	window.Flow = Flow;

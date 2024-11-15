@@ -1,5 +1,5 @@
 {
-	"comment": "BODY", "tag": "div", "id": "", "content": [
+	"comment": "BODY", "tag": "div", "style":"scrollbar-width: none; -ms-overflow-style: none;", "id": "", "content": [
 		{
 			"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
 				{ "comment": "App Menu", "tag": "div", "id": "app_menu", "class": "", "innerHTML": "", "content": [
@@ -19,7 +19,7 @@
 									"comment": "Right Container", "tag": "div", "id": "app_right_container", "innerHTML": "", "class": "column is-gapless is-three-quarters is-justify-content-flex-end is-flex", "content": [
 										{ "comment": "Datastore Status", "tag": "div", "class": "is-inline", "id": "datastore_status", "innerHTML": "" },
 										{ "comment": "Console button", "tag": "button", "class": "button is-default", "id": "app_console_button", "title": "Open Console", "innerHTML": "<li class=\"fa fa-terminal\"></li>" },
-										{ "comment": "Helper button", "tag": "button", "class": "button is-default", "id": "app_helper_button", "title": "Open Helper Sidebar", "innerHTML": "<li class=\"fa fa-arrows-left-right\"></li>" }
+										{ "comment": "Data Preparation Area button", "tag": "button", "class": "button is-default", "id": "app_data_preparation_area_button", "title": "Open Data Perparation Area Sidebar", "innerHTML": "<li class=\"fa fa-arrows-left-right\"></li>" }
 									]
 								}
 							]
@@ -36,10 +36,10 @@
 												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"PageLayout"}, "innerHTML": "Page Layout" }
 											] },
 											{ "tag": "li", "class":"", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
+												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
 											] },
 											{ "tag": "li", "class":"", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
+												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
 											] }
 										] }
 									]}
@@ -118,10 +118,10 @@
 							}
 						] },
 						
-						{ "comment": "App Content", "tag": "div", "innerHTML": "Content", "id": "app_content", "content": [] }
+						{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [] }
 					]
 				},
-				{ "comment": "App helper", "tag": "div", "id": "app_helper", "class": "columns is-gapless is-mobile", "innerHTML": "Helper", "content": [] }
+				{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "", "innerHTML": "", "content": [] }
 			]
 		},
 		{

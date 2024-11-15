@@ -154,6 +154,8 @@
 	height: auto;
 	padding-bottom: 1rem;
 	padding-right: 0rem;
+	/* scrollbar-width: none; 
+	-ms-overflow-style: none; */
 }
 
 
@@ -277,7 +279,7 @@
 
 
 /* Helper section */
-#app_helper {
+#app_data_preparation_area {
 	flex-grow: 0; 
 	flex-shrink: 0; 
 	flex-basis: 0;
@@ -295,7 +297,7 @@
 
 }
 
-#app_helper.show {
+#app_data_preparation_area.show {
 	flex-basis: 22rem;
 	/* width: 95vw; */
 	max-width: calc(var(--menu-open-width));
@@ -306,14 +308,14 @@
 }
 
 /* Initial state for the divs */
-#app_helper .collapsible {
+#app_data_preparation_area .collapsible {
     transition: opacity 0.3s ease;
     opacity: 1;
     overflow: hidden; /* Prevents content overflow during transition */
 }
 
 /* Collapsing and fading-out state */
-#app_helper .collapsing {
+#app_data_preparation_area .collapsing {
     width: 0; /* Collapses the width smoothly */
     opacity: 0;
     padding: 0; /* Optional: Adjusts padding during collapse */
