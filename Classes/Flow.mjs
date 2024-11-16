@@ -599,15 +599,18 @@ export class Flow {
 					let num = Date.now();
 					let container_id = `container_node_${Date.now()}`;
 					let str = `<div class="box m-3"><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_NODE___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
-					
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = '22rem';
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
-
+					
 					// Calculate WIDTH
-					const newWidth = document.querySelector('#app_data_preparation_area').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
+					let maxcount = 0;
+					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+					console.log('childContainers', childContainers);
+					childContainers.forEach((container) => {
+						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = newWidth;
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -635,14 +638,17 @@ export class Flow {
 					let num = Date.now();
 					let container_id = `container_layout_${Date.now()}`;
 					let str = `<div class="box m-3"><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_LAYOUT___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = '22rem';
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
 					// Calculate WIDTH
-					const newWidth = document.querySelector('#app_data_preparation_area').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
+					let maxcount = 0;
+					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+					childContainers.forEach((container) => {
+						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = newWidth;
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -669,15 +675,18 @@ export class Flow {
 
 					let num = Date.now();
 					let container_id = `container_schema_${Date.now()}`;
-					let str = `</div><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_SCHEMA___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = '22rem';
+					let str = `<div class="box m-3"><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_SCHEMA___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
 					// Calculate WIDTH
-					const newWidth = document.querySelector('#app_data_preparation_area').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
+					let maxcount = 0;
+					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+					childContainers.forEach((container) => {
+						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = newWidth;
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -705,17 +714,18 @@ export class Flow {
 
 					let num = Date.now();
 					let container_id = `container_node_${Date.now()}`;
-					let str = `</div><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_FORM___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = '22rem';
+					let str = `<div class="box m-3"><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_FORM___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
-					document.querySelector('#app_data_preparation_area').innerHTML += str;
-
-					// Calculate WIDTH
-					const newWidth = document.querySelector('#app_data_preparation_area').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
+					// Calculate WIDTH					
+					let maxcount = 0;
+					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+					childContainers.forEach((container) => {
+						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = newWidth;
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -802,18 +812,24 @@ export class Flow {
 						callback: (e) => {
 							let num = Date.now();
 							//ADD FORM COLUMN HERE
-							console.log(e.target.dataset);
+							// console.log(e.target.dataset);
 							let form_container = e.target.closest(`.${e.target.dataset.form_container}`);
-							console.log('form_container >>>>', form_container);
+							// console.log('form_container >>>>', form_container);
 							let newCol = this.Form.Initialize.FormCard('form_components___' + num, this.Forms[1], 1, 1, 100);
-							console.log('newCol :>> ', newCol);
+							// console.log('newCol :>> ', newCol);
 							form_container.innerHTML += newCol;
 
 							// Calculate WIDTH
-							const newWidth = document.querySelector('#app_data_preparation_area').childElementCount * 22 + 'rem'; // Convert width to rem and add 22
+							let maxcount = 0;
+							let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+							childContainers.forEach((container) => {
+								if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+								container.parentElement.classList.remove('box');
+								container.parentElement.classList.add('box');
+							});
 
 							// Set the new width
-							document.querySelector('#app_data_preparation_area.show').style.flexBasis = newWidth;
+							document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+1) + 'rem';
 
 							this.SnapScroll = false;
 							setTimeout(() => {
@@ -844,19 +860,25 @@ export class Flow {
 
 							// Step 2: Use a timeout slightly longer than the CSS transition duration
 							setTimeout(() => {
-								// Check child elements count to handle visibility
-								if (document.querySelector('#app_data_preparation_area').childElementCount === 1) {
-									document.querySelector('#app_data_preparation_area').classList.remove('show');
-								}
-
 								// Remove the element from DOM after the transition
 								formElement.remove();
 
-								// Recalculate width if there are remaining child elements
-								const newWidth = document.querySelector('#app_data_preparation_area').childElementCount * 22 + 'rem';
-								if (document.querySelector('#app_data_preparation_area').childElementCount > 0) {
-									document.querySelector('#app_data_preparation_area.show').style.flexBasis = newWidth;
+								// Check child elements count to handle visibility
+								if (document.querySelector('#app_data_preparation_area').childElementCount == 0) {
+									document.querySelector('#app_data_preparation_area').classList.remove('show');
 								}
+
+								// Calculate WIDTH
+								let maxcount = 0;
+								let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+								childContainers.forEach((container) => {
+									if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+									container.parentElement.classList.remove('box');
+									container.parentElement.classList.add('box');
+								});
+
+								// Set the new width
+								document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
 							}, 350); // Timeout slightly longer than the CSS transition (0.3s)
 
 
@@ -1070,9 +1092,9 @@ export class Flow {
 				console.log('Elements with both scrollbars:', scrollableElements.both);
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
-				console.log('generateFormToParadigmJSON', form_container);
+				// console.log('generateFormToParadigmJSON', form_container);
 				function makeFieldParadigmJSON($id, field, utilily, form_container) {
-					console.log('makeFieldParadigmJSON', form_container);
+					// console.log('makeFieldParadigmJSON', form_container);
 					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 					let inputField = {};
 					switch (type) {

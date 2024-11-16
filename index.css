@@ -424,3 +424,6 @@
 .schema-control-container > button {
     flex-shrink: 0;                 /* Prevent buttons from shrinking */
 }
+.box {
+	width: 100%;
+}
