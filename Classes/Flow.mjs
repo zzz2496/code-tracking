@@ -300,11 +300,11 @@ export class Flow {
 									data: {
 										formid: id	
 									},
-									aria: { label: "more options" },
+									aria: {},
 									content: [
 										{
 											tag: "span",
-											class: "icon", //NOTE - form-close-button
+											class: "icon form-close-button", //NOTE - form-close-button
 											innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
 										}
 									]
@@ -598,7 +598,33 @@ export class Flow {
 					
 					let num = Date.now();
 					let container_id = `container_node_${Date.now()}`;
-					let str = `<div class="box m-3"><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_NODE___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
+					let str = ` <div class="box m-3">
+									<div class="field has-addons">
+										<p class="control">
+											<span class="tag is-large is-info">NODE</span>
+										</p>
+										<p class="control">
+											<button class="button">
+											<span class="icon">
+												<li class="fa-solid fa-angle-up">&nbsp;</li>
+											</span>
+											</button>
+										</p>
+										<p class="control">
+											<button class="button">
+											<span class="icon">
+												<li class="fa-solid fa-angle-down">&nbsp;</li>
+											</span>
+											</button>
+										</p>
+									</div>
+									<hr>
+
+									
+									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+										${this.Form.Initialize.FormCard('New_NODE___' + num, this.Forms[0], 0, 1, 100, container_id)}
+									</div>
+								</div>`;
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 					
 					// Calculate WIDTH
@@ -637,7 +663,31 @@ export class Flow {
 
 					let num = Date.now();
 					let container_id = `container_layout_${Date.now()}`;
-					let str = `<div class="box m-3"><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_LAYOUT___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
+					let str = ` <div class="box m-3">
+									<div class="field has-addons">
+										<p class="control">
+											<span class="tag is-large is-link">FORM</span>
+										</p>
+										<p class="control">
+											<button class="button">
+											<span class="icon">
+												<li class="fa-solid fa-angle-up">&nbsp;</li>
+											</span>
+											</button>
+										</p>
+										<p class="control">
+											<button class="button">
+											<span class="icon">
+												<li class="fa-solid fa-angle-down">&nbsp;</li>
+											</span>
+											</button>
+										</p>
+									</div>
+									<hr>
+									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+										${this.Form.Initialize.FormCard('New_LAYOUT___' + num, this.Forms[0], 0, 1, 100, container_id)}
+									</div>
+								</div>`;
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
 					// Calculate WIDTH
@@ -675,7 +725,31 @@ export class Flow {
 
 					let num = Date.now();
 					let container_id = `container_schema_${Date.now()}`;
-					let str = `<div class="box m-3"><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_SCHEMA___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
+					let str = ` <div class="box m-3">
+									<div class="field has-addons">
+										<p class="control">
+											<span class="tag is-large is-link">FORM</span>
+										</p>
+										<p class="control">
+											<button class="button">
+											<span class="icon">
+												<li class="fa-solid fa-angle-up">&nbsp;</li>
+											</span>
+											</button>
+										</p>
+										<p class="control">
+											<button class="button">
+											<span class="icon">
+												<li class="fa-solid fa-angle-down">&nbsp;</li>
+											</span>
+											</button>
+										</p>
+									</div>
+									<hr>
+									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+										${this.Form.Initialize.FormCard('New_SCHEMA___' + num, this.Forms[0], 0, 1, 100, container_id)}
+									</div>
+								</div>`;
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
 					// Calculate WIDTH
@@ -714,7 +788,31 @@ export class Flow {
 
 					let num = Date.now();
 					let container_id = `container_node_${Date.now()}`;
-					let str = `<div class="box m-3"><div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">${this.Form.Initialize.FormCard('New_FORM___' + num, this.Forms[0], 0, 1, 100, container_id)}</div></div>`;
+					let str = ` <div class="box m-3">
+									<div class="field has-addons">
+										<p class="control">
+											<span class="tag is-large is-link">FORM</span>
+										</p>
+										<p class="control">
+											<button class="button">
+											<span class="icon">
+												<li class="fa-solid fa-angle-up">&nbsp;</li>
+											</span>
+											</button>
+										</p>
+										<p class="control">
+											<button class="button">
+											<span class="icon">
+												<li class="fa-solid fa-angle-down">&nbsp;</li>
+											</span>
+											</button>
+										</p>
+									</div>
+									<hr>
+									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+										${this.Form.Initialize.FormCard('New_FORM___' + num, this.Forms[0], 0, 1, 100, container_id)}
+									</div>
+								</div>`;
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
 					// Calculate WIDTH					
@@ -861,7 +959,13 @@ export class Flow {
 							// Step 2: Use a timeout slightly longer than the CSS transition duration
 							setTimeout(() => {
 								// Remove the element from DOM after the transition
-								formElement.remove();
+								console.log('formElement', formElement.parentElement);
+								let parentEl = formElement.parentElement;
+								formElement.remove(); 
+								console.log('parentEl', parentEl, parentEl.childElementCount);
+								if (parentEl.childElementCount == 0) {
+									parentEl.closest('.box').remove();
+								}
 
 								// Check child elements count to handle visibility
 								if (document.querySelector('#app_data_preparation_area').childElementCount == 0) {
@@ -878,7 +982,7 @@ export class Flow {
 								});
 
 								// Set the new width
-								document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
+								document.querySelector('#app_data_preparation_area').style.flexBasis = maxcount * (22+2) + 'rem';
 							}, 350); // Timeout slightly longer than the CSS transition (0.3s)
 
 

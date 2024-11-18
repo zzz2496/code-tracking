@@ -427,3 +427,58 @@
 .box {
 	width: 100%;
 }
+#Loader_container {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	height: 100vh;
+	font-family: Arial, sans-serif;
+	opacity: 1;
+	transition: opacity 0.3s ease-in-out;
+	overflow: hidden;
+}
+#Loader_container.show{
+	opacity: 1;
+}
+#Loader_container.hide{
+	opacity: 0;
+	height: 0vh;
+}
+
+#ParadigmREVOLUTION_Loader {
+	position: absolute;
+	top: 25%; /* 1/4 from the top */
+	width: 80vw;
+	height: 20px; /* Adjust height of the progress bar as needed */
+	/* margin-left: 10vw; */
+}
+
+#ParadigmREVOLUTION_LoaderStatus {
+	position: absolute;
+	top: calc(25% + 40px); /* Positioned below the progress bar */
+	width: 80vw;
+	height: 60vh;
+	/* display: flex;
+	align-items: center;
+	justify-content: center; */
+	/* margin-left: 10vw; */
+}
+#ParadigmREVOLUTION_LoaderTitle {
+	position: absolute;
+	top: 7%; /* Positioned just above the progress bar */
+	font-size: 5rem; /* Set text size */
+	text-align: center;
+	font-weight: bold;
+	width: 100%; /* Span full width for centering */
+	z-index: 99;
+}
+
+#ParadigmREVOLUTION {
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+}
+#ParadigmREVOLUTION.show {
+	opacity: 1;
+}

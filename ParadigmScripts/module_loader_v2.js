@@ -132,14 +132,33 @@ let ParadigmREVOLUTION = {
 	"Initialization_Status": 0
 };
 window.ParadigmREVOLUTION = ParadigmREVOLUTION;
+let loader = document.querySelector('#ParadigmREVOLUTION_Loader');
+let loaderStatus = document.querySelector('#ParadigmREVOLUTION_LoaderStatus');
+window.loader = loader;
+window.loaderStatus = loaderStatus;
+loader.max = Object.keys(ParadigmREVOLUTION.SystemCore.Modules).length + 1;
+
+let key = 'FinderJS';
+let loadingstatus = `<p>Import module <span id='${key.toLowerCase()}' class=''><b>${key}</b> <span id='${key.toLowerCase()}_status' style='font-weight: bold;'>Loading...</span></span></p>\n`;;
+key = 'UI';
+loadingstatus += `<p>Import module <span id='${key.toLowerCase()}' class=''><b>${key}</b> <span id='${key.toLowerCase()}_status' style='font-weight: bold;'>Loading...</span></span></p>\n`;;
+Object.keys(ParadigmREVOLUTION.SystemCore.Modules).forEach((key) => {
+	loadingstatus += `<p>Import module <span id='${key.toLowerCase()}' class=''><b>${key == 'surrealdbWasmEngines' ?  'SurrealDB.wasm' : key}</b> <span id='${key.toLowerCase()}_status' style='font-weight: bold;'>Loading...</span></span></p>\n`;
+});
+// console.log(loadingstatus);
+loaderStatus.innerHTML = loadingstatus;
 
 if (typeof finder !== 'undefined') {
-    if (cr) console.log(">>> ||| FinderJS module loaded successfully.");
+	if (cr) console.log(">>> ||| FinderJS module loaded successfully.");
 	document.dispatchEvent(new Event('FinderJSLoaded'));
 	ParadigmREVOLUTION.SystemCore.CoreStatus.FinderJS.Status = "LOADED";
 	ParadigmREVOLUTION.SystemCore.Modules.FinderJS = finder;
+	loader.value++;
+	document.querySelector('#finderjs').classList.add('has-text-success');
+	document.querySelector('#finderjs_status').innerHTML = "<li class='fa fa-check'></li>";
 } else {
-	document.querySelector('#debugging').innerHTML += "Failed to load FinderJS.<br>";
+	document.querySelector('#finderjs').classList.add('has-text-danger');
+	document.querySelector('#finderjs_status').innerHTML = "<li class='fa fa-xmark'></li>";
 	ParadigmREVOLUTION.SystemCore.CoreStatus.FinderJS.Status = "FAILED TO LOAD";
 	console.error("Failed to import FinderJS.");
 }
@@ -151,8 +170,12 @@ if (typeof finder !== 'undefined') {
 		ParadigmREVOLUTION.SystemCore.CoreStatus.UI.Status = "LOADED";
 		ParadigmREVOLUTION.SystemCore.Modules.UI = UI;
 		ParadigmREVOLUTION.SystemCore.Modules.FormGenerator = FormGenerator;
+		loader.value++;
+		document.querySelector('#ui').classList.add('has-text-success');
+		document.querySelector('#ui_status').innerHTML = "<li class='fa fa-check'></li>";
 	} catch (error) {
-		document.querySelector('#debugging').innerHTML += "Failed to import UI.<br>";
+		document.querySelector('#ui').classList.add('has-text-danger');
+		document.querySelector('#ui_status').innerHTML = "<li class='fa fa-xmark'></li>";
 		ParadigmREVOLUTION.SystemCore.CoreStatus.UI.Status = "FAILED TO LOAD";
 		console.error("Failed to import UI.");
 	}
@@ -163,6 +186,9 @@ if (typeof finder !== 'undefined') {
 		const { Utility } = UtilityResult;
 		ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "LOADED";
 		ParadigmREVOLUTION.SystemCore.Modules.Utility = Utility;
+		loader.value++;
+		document.querySelector('#utility').classList.add('has-text-success');
+		document.querySelector('#utility_status').innerHTML = "<li class='fa fa-check'></li>";
 		ParadigmREVOLUTION.Utility = new Utility();
 		document.dispatchEvent(new Event('UtilitiesLoaded'));
 
@@ -199,7 +225,8 @@ if (typeof finder !== 'undefined') {
 		}
 		if (cr) console.log('<<< Blueprint Loader');
 	} catch (error) {
-		document.querySelector('#debugging').innerHTML += "Failed to import Utility.<br>";
+		document.querySelector('#utility').classList.add('has-text-danger');
+		document.querySelector('#utility_status').innerHTML = "<li class='fa fa-xmark'></li>";
 		ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "FAILED TO LOAD";
 		console.error("Failed to import Utility.");
 	}
@@ -213,10 +240,14 @@ if (typeof finder !== 'undefined') {
 				if (cr) console.log(">>> ||| GraphSurface imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.GraphSurface.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.GraphSurface = GraphSurface;
+				loader.value++;
+				document.querySelector('#graphsurface').classList.add('has-text-success');
+				document.querySelector('#graphsurface_status').innerHTML = "<li class='fa fa-check'></li>";
 				document.dispatchEvent(new Event('GraphSurfaceLoaded'));
 			},
 			onFailure: () => {
-				document.querySelector('#debugging').innerHTML += "Failed to import GraphSurface.<br>";
+				document.querySelector('#graphsurface').classList.add('has-text-danger');
+				Document.querySelector('#graphsurface_status').innerHTML = "<li class='fa fa-xmark'></li>";
 				ParadigmREVOLUTION.SystemCore.CoreStatus.GraphSurface.Status = "FAILED TO LOAD";
 				console.error("Failed to import GraphSurface.");
 			}
@@ -228,10 +259,14 @@ if (typeof finder !== 'undefined') {
 				if (cr) console.log(">>> ||| Connection imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.Connection = Connection;
+				loader.value++;
+				document.querySelector('#connection').classList.add('has-text-success');
+				document.querySelector('#connection_status').innerHTML = "<li class='fa fa-check'></li>";
 				document.dispatchEvent(new Event('GraphConnectionLoaded'));
 			},
 			onFailure: () => {
-				document.querySelector('#debugging').innerHTML += "Failed to import Connection.<br>";
+				document.querySelector('#connection').classList.add('has-text-danger');
+				document.querySelector('connection_status').innerHTML = "<li class='fa fa-xmark'></li>";
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "FAILED TO LOAD";
 				console.error("Failed to import Connection.");
 			}
@@ -243,10 +278,14 @@ if (typeof finder !== 'undefined') {
 				if (cr) console.log(">>> ||| WorkerThread imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.WorkerThread = WorkerThread;
+				loader.value++;
+				document.querySelector('#workerthread').classList.add('has-text-success');
+				document.querySelector('#workerthread_status').innerHTML = "<li class='fa fa-check'></li>";
 				document.dispatchEvent(new Event('WorkerThreadLoaded'));
 			},
 			onFailure: () => {
-				document.querySelector('#debugging').innerHTML += "Failed to import WorkerThread.<br>";
+				document.querySelector('#workerthread').classList.add('has-text-danger');
+				document.querySelector('#workerthread_status').innerHTML = "<li class='fa fa-xmark'></li>";
 				ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "FAILED TO LOAD";
 				console.error("Failed to import WorkerThread.");
 			}
@@ -259,10 +298,14 @@ if (typeof finder !== 'undefined') {
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Flow.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.Flow = Flow;
 				ParadigmREVOLUTION.Flow = new Flow();
+				loader.value++;
+				document.querySelector('#flow').classList.add('has-text-success');
+				document.querySelector('#flow_status').innerHTML = "<li class='fa fa-check'></li>";
 				document.dispatchEvent(new Event('FlowLoaded'));
 			},
 			onFailure: () => {
-				document.querySelector('#debugging').innerHTML += "Failed to import Flow.<br>";
+				document.querySelector('#flow').classList.add('has-text-danger');
+				document.querySelector('#flow_status').innerHTML = "<li class='fa fa-xmark'></li>";
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Flow.Status = "FAILED TO LOAD";
 				console.error("Failed to import Flow.");
 			}
@@ -274,6 +317,9 @@ if (typeof finder !== 'undefined') {
 				if (cr) console.log(">>> ||| Surreal imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.Surreal = Surreal;
+				loader.value++;
+				document.querySelector('#surreal').classList.add('has-text-success');
+				document.querySelector('#surreal_status').innerHTML = "<li class='fa fa-check'></li>";
 				document.dispatchEvent(new Event('SurrealJSLoaded'));
 				try {
 					const surrealdbWasmEnginesModule = await import('../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js');
@@ -281,17 +327,23 @@ if (typeof finder !== 'undefined') {
 					if (cr) console.log(">>> ||| surrealdbWasmEngines imported successfully.");
 					ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "LOADED";
 					ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines = surrealdbWasmEngines;
+					loader.value++;
+					document.querySelector('#surrealdbwasmengines').classList.add('has-text-success');
+					document.querySelector('#surrealdbwasmengines_status').innerHTML = "<li class='fa fa-check'></li>";
+
 					document.dispatchEvent(new Event('SurrealDBEnginesLoaded'));
 					if (cr) console.log('>>> ||| Done Blueprint Loader >>>>');
 
 				} catch (error) {
-					document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.wasm.<br>";
+					document.querySelector('#surrealdbwasmengines').classList.add('has-text-danger');
+					document.querySelector('#surrealdbwasmengines_status').innerHTML = "<li class='fa fa-xmark'></li>";
 					ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "FAILED TO LOAD";
 					console.error("Failed to import surrealdbWasmEngines.");
 				}
 			},
 			onFailure: () => {
-				document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.js<br>";
+				document.querySelector('#sureal').classList.add('has-text-danger');
+				document.querySelector('#Sureal_status').innerHTML = "<li class='fa fa-xmark'></li>";
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "FAILED TO LOAD";
 				console.error("Failed to import Surreal.");
 			}
@@ -307,7 +359,6 @@ if (typeof finder !== 'undefined') {
 		// 		document.dispatchEvent(new Event('MQTTLoaded'));
 		// 	},
 		// 	onFailure: () => {
-		// 		document.querySelector('#debugging').innerHTML += "Failed to import MQTT.<br>";
 		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.MQTT.Status = "FAILED TO LOAD";
 		// 		console.error("Failed to import MQTT.");
 		// 	}

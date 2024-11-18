@@ -1,5 +1,5 @@
-{
-	"comment": "BODY", "tag": "div", "style":"scrollbar-width: none; -ms-overflow-style: none;", "id": "", "content": [
+
+	
 		{
 			"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
 				{ "comment": "App Menu", "tag": "div", "id": "app_menu", "class": "", "innerHTML": "", "content": [
@@ -96,7 +96,7 @@
 								"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 show app_configurator_containers", "id": "app_graph_container", "content": [
 									{
 										"tag": "div", "id": "graph_scroll_content", "style": "width:calc(100vw);height:calc(80vh);overflow:scroll;", "content": [
-											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "App Graph Content", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }
+											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "<span>App Graph Content</span><br><span style=\"font-decoration:underline\"><br>Components:</span><br><br>Datastore (where to save Data)<br>Datasource (where to get Data)<br>Page (A page to show Document)<br>Schema (Schema for Dataset)<br>Form (Input form for the afformetioned schema)<br>Programming and Graph Logics<br><br>", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }
 										]
 									}
 								]
@@ -121,14 +121,12 @@
 						{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [] }
 					]
 				},
-				{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "", "innerHTML": "", "content": [] }
-			]
-		},
-		{
-			"comment": "App Console", "tag": "div", "id": "app_console", "class":"", "innerHTML": "", "content": [
-				{ "comment": "Core Status Container", "tag": "div", "id": "core_status", "innerHTML": "", "class": "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
-				{ "comment": "Debugging", "tag": "div", "id": "debugging", "innerHTML": "Console", "content": [] }
+				{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "", "innerHTML": "", "content": [] },
+				{
+					"comment": "App Console", "tag": "div", "id": "app_console", "class":"", "innerHTML": "", "content": [
+						{ "comment": "Core Status Container", "tag": "div", "id": "core_status", "innerHTML": "", "class": "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
+						{ "comment": "Debugging", "tag": "div", "id": "debugging", "innerHTML": "Console", "content": [] }
+					]
+				}
 			]
 		}
-	]
-}
