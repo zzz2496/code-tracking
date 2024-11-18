@@ -625,6 +625,7 @@ export class Flow {
 										${this.Form.Initialize.FormCard('New_NODE___' + num, this.Forms[0], 0, 1, 100, container_id)}
 									</div>
 								</div>`;
+
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 					
 					// Calculate WIDTH
@@ -666,7 +667,7 @@ export class Flow {
 					let str = ` <div class="box m-3">
 									<div class="field has-addons">
 										<p class="control">
-											<span class="tag is-large is-link">FORM</span>
+											<span class="tag is-large is-primary">LAYOUT</span>
 										</p>
 										<p class="control">
 											<button class="button">
@@ -688,6 +689,7 @@ export class Flow {
 										${this.Form.Initialize.FormCard('New_LAYOUT___' + num, this.Forms[0], 0, 1, 100, container_id)}
 									</div>
 								</div>`;
+
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
 					// Calculate WIDTH
@@ -728,7 +730,7 @@ export class Flow {
 					let str = ` <div class="box m-3">
 									<div class="field has-addons">
 										<p class="control">
-											<span class="tag is-large is-link">FORM</span>
+											<span class="tag is-large is-warning">SCHEMA</span>
 										</p>
 										<p class="control">
 											<button class="button">
@@ -750,6 +752,7 @@ export class Flow {
 										${this.Form.Initialize.FormCard('New_SCHEMA___' + num, this.Forms[0], 0, 1, 100, container_id)}
 									</div>
 								</div>`;
+
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
 					// Calculate WIDTH
@@ -813,6 +816,7 @@ export class Flow {
 										${this.Form.Initialize.FormCard('New_FORM___' + num, this.Forms[0], 0, 1, 100, container_id)}
 									</div>
 								</div>`;
+
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
 					// Calculate WIDTH					
@@ -984,20 +988,85 @@ export class Flow {
 								// Set the new width
 								document.querySelector('#app_data_preparation_area').style.flexBasis = maxcount * (22+2) + 'rem';
 							}, 350); // Timeout slightly longer than the CSS transition (0.3s)
+						}
+					}, {
+						selector: '.button .icon .fa-angle-up, .button .icon .fa-angle-down',
+						callback: (e) => {
+							console.log('CLICK!!');
+							// // Find the current .box container
+							// const currentBox = e.target.closest('.box');
+							// console.log('currentBox :>> ', currentBox);
 
+							// // Determine the direction (up or down)
+							// const isUp = e.target.classList.contains('fa-angle-up');
+							// console.log('isUp :>> ', isUp);
+							// // Find all boxes
+							// const allBoxes = Array.from(document.querySelectorAll('.box.m-3'));
+							// console.log('allBoxes :>> ', allBoxes);
+							// // Get the current index of the active box
+							// const currentIndex = allBoxes.indexOf(currentBox);
+							// console.log('currentIndex :>> ', currentIndex);
+							// // Calculate the target index
+							// let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
+							// console.log('targetIndex :>> ', targetIndex);
+							// // Ensure the target index is within bounds
+							// if (targetIndex >= 0 && targetIndex < allBoxes.length) {
+							// 	console.log('Get the target box');
+							// 	// Get the target box
+							// 	const targetBox = allBoxes[targetIndex];
+							// 	console.log('targetBox :>> ', targetBox);
 
-							// let formid = e.target.dataset.formid;
-							// setTimeout(() => {
-							// 	if (document.querySelector('#app_data_preparation_area').childElementCount === 1){
-							// 		document.querySelector('#app_data_preparation_area').classList.remove('show');
-							// 	}
-							// 	document.querySelector(`#${formid}`).parentElement.remove()
-							// 	const newWidth = document.querySelector('#app_data_preparation_area').childElementCount * 22 + 'rem';
-							// 	if (document.querySelector('#app_data_preparation_area').childElementCount > 0) document.querySelector('#app_data_preparation_area.show').style.flexBasis = newWidth;
-							// }, 300);
+							// 	// Move focus to the target box
+							// 	targetBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+								
+							// 	// Optionally add a focus effect (e.g., add a CSS class)
+							// 	currentBox.classList.remove('focused');
+							// 	targetBox.classList.add('focused');
+							// }
 						}
 					}
 				]);
+				// Add event listeners to each up and down button
+				// document.querySelectorAll('.box .fa-angle-up, .box .fa-angle-down').forEach(button => {
+				// 	button.addEventListener('click', (event) => {
+				// 		// Find the current .box container
+				// 		const currentBox = event.target.closest('.box');
+				// 		console.log('currentBox :>> ', currentBox);
+
+				// 		// Determine the direction (up or down)
+				// 		const isUp = event.target.classList.contains('fa-angle-up');
+				// 		console.log('isUp :>> ', isUp);
+				// 		// Find all boxes
+				// 		const allBoxes = Array.from(document.querySelectorAll('.box.m-3'));
+				// 		console.log('allBoxes :>> ', allBoxes);
+				// 		// Get the current index of the active box
+				// 		const currentIndex = allBoxes.indexOf(currentBox);
+				// 		console.log('currentIndex :>> ', currentIndex);
+				// 		// Calculate the target index
+				// 		let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
+				// 		console.log('targetIndex :>> ', targetIndex);
+				// 		// Ensure the target index is within bounds
+				// 		if (targetIndex >= 0 && targetIndex < allBoxes.length) {
+				// 			console.log('Get the target box');
+				// 			// Get the target box
+				// 			const targetBox = allBoxes[targetIndex];
+				// 			console.log('targetBox :>> ', targetBox);
+
+				// 			// Move focus to the target box
+				// 			targetBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+							
+				// 			// Optionally add a focus effect (e.g., add a CSS class)
+				// 			currentBox.classList.remove('focused');
+				// 			targetBox.classList.add('focused');
+				// 		}
+				// 	});
+				// });
+
+				// // Optional: Add a CSS class for focused boxes
+				// document.querySelectorAll('.box').forEach(box => {
+				// 	box.classList.remove('focused');
+				// });
+				// document.querySelector('.box.m-3').classList.add('focused');
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
@@ -1118,19 +1187,9 @@ export class Flow {
 							}
 							e.currentTarget.childNodes[0].classList.add('fa-sun');	
 						}
-				}
-					// document.documentElement.dataset.theme = document.documentElement.dataset.theme == 'light'? 'dark' : 'light';
+					}
 				});
-				// let isCurrentThemeDark = this.Utility.DOMElements.detectLightDarkMode();
-				// let root = document.documentElement;
-				// root.dataset.count = isCurrentThemeDark.matches ? 2 : 1;
-				// if (isCurrentThemeDark.matches) {
-				// 	document.querySelector('#dark_light_selector').childNodes[0].classList.remove('fa-sun');
-				// 	document.querySelector('#dark_light_selector').childNodes[0].classList.add('fa-moon');
-				// } else {
-				// 	document.querySelector('#dark_light_selector').childNodes[0].classList.remove('fa-moon');
-				// 	document.querySelector('#dark_light_selector').childNodes[0].classList.add('fa-sun');
-				// }
+
 				document.querySelector('#app_content').innerHTML = `
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>

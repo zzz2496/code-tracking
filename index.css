@@ -482,3 +482,6 @@
 #ParadigmREVOLUTION.show {
 	opacity: 1;
 }
+.box.focused {
+    border: 2px solid blue;
+}
