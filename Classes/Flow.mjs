@@ -655,7 +655,7 @@ export class Flow {
 					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (4 * 23)+4 + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -668,10 +668,20 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 					setTimeout(() => {
-						document.querySelector('#app_data_preparation_area').scrollTo({
-							left: document.querySelector('#app_data_preparation_area').scrollWidth,
-							behavior: 'smooth'
-						});
+						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+						if (selectedBox) {
+							// Get the scrollable container
+							let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+							// Get the offset of the selected box relative to the container
+							let offsetLeft = selectedBox.offsetLeft;
+							
+							// Scroll to that position with smooth behavior
+							scrollContainer.scrollTo({
+								left: offsetLeft,
+								behavior: 'smooth'
+							});
+						}
 					}, 300);
 				});
 
@@ -731,10 +741,20 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 					setTimeout(() => {
-						document.querySelector('#app_data_preparation_area').scrollTo({
-							left: document.querySelector('#app_data_preparation_area').scrollWidth,
-							behavior: 'smooth'
-						});
+						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+						if (selectedBox) {
+							// Get the scrollable container
+							let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+							// Get the offset of the selected box relative to the container
+							let offsetLeft = selectedBox.offsetLeft;
+							
+							// Scroll to that position with smooth behavior
+							scrollContainer.scrollTo({
+								left: offsetLeft,
+								behavior: 'smooth'
+							});
+						}
 					}, 300);
 				});
 
@@ -794,10 +814,20 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 					setTimeout(() => {
-						document.querySelector('#app_data_preparation_area').scrollTo({
-							left: document.querySelector('#app_data_preparation_area').scrollWidth,
-							behavior: 'smooth'
-						});
+						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+						if (selectedBox) {
+							// Get the scrollable container
+							let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+							// Get the offset of the selected box relative to the container
+							let offsetLeft = selectedBox.offsetLeft;
+							
+							// Scroll to that position with smooth behavior
+							scrollContainer.scrollTo({
+								left: offsetLeft,
+								behavior: 'smooth'
+							});
+						}
 					}, 300);
 					
 				});
@@ -858,10 +888,20 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 					setTimeout(() => {
-						document.querySelector('#app_data_preparation_area').scrollTo({
-							left: document.querySelector('#app_data_preparation_area').scrollWidth,
-							behavior: 'smooth'
-						});
+						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+						if (selectedBox) {
+							// Get the scrollable container
+							let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+							// Get the offset of the selected box relative to the container
+							let offsetLeft = selectedBox.offsetLeft;
+							
+							// Scroll to that position with smooth behavior
+							scrollContainer.scrollTo({
+								left: offsetLeft,
+								behavior: 'smooth'
+							});
+						}
 					}, 300);
 				});
 				//NOTE - NEW VERSION
@@ -962,11 +1002,23 @@ export class Flow {
 								this.SnapScroll = true;
 							}, 500);
 							setTimeout(() => {
-								document.querySelector('#app_data_preparation_area').scrollTo({
-									left: document.querySelector('#app_data_preparation_area').scrollWidth,
-									behavior: 'smooth'
-								});
-							}, 300);
+								let selectedBox = document.querySelector(`.${e.target.dataset.form_container}`);
+								if (selectedBox) {
+									console.log('ada selected box');
+									// Get the scrollable container
+									let scrollContainer = document.querySelector('#app_data_preparation_area');
+									
+									// Get the offset of the selected box relative to the container
+									let offsetLeft = selectedBox.offsetLeft;
+									console.log('offsetLeft :>> ', offsetLeft);
+									
+									// Scroll to that position with smooth behavior
+									scrollContainer.scrollTo({
+										left: offsetLeft,
+										behavior: 'smooth'
+									});
+								}
+									}, 300);
 						}
 					},
 					{
@@ -1052,47 +1104,6 @@ export class Flow {
 						}
 					}
 				]);
-				// Add event listeners to each up and down button
-				// document.querySelectorAll('.box .fa-angle-up, .box .fa-angle-down').forEach(button => {
-				// 	button.addEventListener('click', (event) => {
-				// 		// Find the current .box container
-				// 		const currentBox = event.target.closest('.box');
-				// 		console.log('currentBox :>> ', currentBox);
-
-				// 		// Determine the direction (up or down)
-				// 		const isUp = event.target.classList.contains('fa-angle-up');
-				// 		console.log('isUp :>> ', isUp);
-				// 		// Find all boxes
-				// 		const allBoxes = Array.from(document.querySelectorAll('.box.m-3'));
-				// 		console.log('allBoxes :>> ', allBoxes);
-				// 		// Get the current index of the active box
-				// 		const currentIndex = allBoxes.indexOf(currentBox);
-				// 		console.log('currentIndex :>> ', currentIndex);
-				// 		// Calculate the target index
-				// 		let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
-				// 		console.log('targetIndex :>> ', targetIndex);
-				// 		// Ensure the target index is within bounds
-				// 		if (targetIndex >= 0 && targetIndex < allBoxes.length) {
-				// 			console.log('Get the target box');
-				// 			// Get the target box
-				// 			const targetBox = allBoxes[targetIndex];
-				// 			console.log('targetBox :>> ', targetBox);
-
-				// 			// Move focus to the target box
-				// 			targetBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-							
-				// 			// Optionally add a focus effect (e.g., add a CSS class)
-				// 			currentBox.classList.remove('focused');
-				// 			targetBox.classList.add('focused');
-				// 		}
-				// 	});
-				// });
-
-				// // Optional: Add a CSS class for focused boxes
-				// document.querySelectorAll('.box').forEach(box => {
-				// 	box.classList.remove('focused');
-				// });
-				// document.querySelector('.box.m-3').classList.add('focused');
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
