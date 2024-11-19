@@ -122,6 +122,7 @@ let ParadigmREVOLUTION = {
 				"MainAppLayout": { "URL": "./SystemBlueprint/Blueprint__MainAppLayout.json" },
 				"FormInputTypes": { "URL": "./SystemBlueprint/Blueprint__FormInputTypes.json" },
 				"FormInputTypeDefinition": { "URL": "./SystemBlueprint/Blueprint__FormInputTypeDefinition.json" },
+				"ComponentCanvas": { "URL": "./SystemBlueprint/Blueprint__ComponentCanvas.json" },
 			},
 			"Data": {}
 		},
@@ -214,6 +215,8 @@ if (typeof finder !== 'undefined') {
 					window.template__FormInputTypes = template__FormInputTypes;
 					let template__FormInputTypeDefinition = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.FormInputTypeDefinition));
 					window.template__FormInputTypeDefinition = template__FormInputTypeDefinition;
+					let template__ComponentCanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.ComponentCanvas));
+					window.template__ComponentCanvas = template__ComponentCanvas;
 				
 					document.dispatchEvent(new Event('BlueprintsLoaded'));
 					if (cr) console.log('>>> ||| Blueprint Loader | SUCCESS');

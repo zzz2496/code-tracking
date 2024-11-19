@@ -428,6 +428,23 @@ export class Flow {
 		Events: {
 			// NOTE - addGlobalEventListener
 			addGlobalEventListener: function (type, selectors, parent = document) {
+				parent.addEventListener(
+					type,
+					(e) => {
+					for (const { selector, callback } of selectors) {
+						const targetElement = e.target.closest(selector);
+				
+						if (targetElement && parent.contains(targetElement)) {
+						// Trigger callback for the matched selector
+						callback(e);
+						break; // Stop checking other selectors once matched
+						}
+					}
+					},
+					true // Capture phase
+				);
+			},
+			addGlobalEventListenerV3: function (type, selectors, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
 				const initiatedElements = new Set(); // Track selectors that have been handled
 
@@ -598,31 +615,32 @@ export class Flow {
 					
 					let num = Date.now();
 					let container_id = `container_node_${Date.now()}`;
-					let str = ` <div class="box m-3">
-									<div class="field has-addons">
-										<p class="control">
-											<span class="tag is-large is-info">NODE</span>
-										</p>
-										<p class="control">
-											<button class="button">
-											<span class="icon">
-												<li class="fa-solid fa-angle-up">&nbsp;</li>
-											</span>
-											</button>
-										</p>
-										<p class="control">
-											<button class="button">
-											<span class="icon">
-												<li class="fa-solid fa-angle-down">&nbsp;</li>
-											</span>
-											</button>
-										</p>
+					let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
+					let str = ` <div class="box m-3 p-3 data_preparation_box">
+									<div class="is-flex is-align-items-center">
+										<h1 class="subtitle is-2 m-0 p-0">NODE&nbsp;</h1>
+										<div class="field has-addons">
+											<p class="control">
+												<button class="button prev-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-up"></li>
+													</span>
+												</button>
+											</p>
+											<p class="control">
+												<button class="button next-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-down"></li>
+													</span>
+												</button>
+											</p>
+										</div> 
 									</div>
 									<hr>
 
 									
 									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
-										${this.Form.Initialize.FormCard('New_NODE___' + num, this.Forms[0], 0, 1, 100, container_id)}
+										${this.Form.Render.traverseDOMProxyOBJ(compcanvas)}
 									</div>
 								</div>`;
 
@@ -637,7 +655,7 @@ export class Flow {
 					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -664,25 +682,25 @@ export class Flow {
 
 					let num = Date.now();
 					let container_id = `container_layout_${Date.now()}`;
-					let str = ` <div class="box m-3">
-									<div class="field has-addons">
-										<p class="control">
-											<span class="tag is-large is-primary">LAYOUT</span>
-										</p>
-										<p class="control">
-											<button class="button">
-											<span class="icon">
-												<li class="fa-solid fa-angle-up">&nbsp;</li>
-											</span>
-											</button>
-										</p>
-										<p class="control">
-											<button class="button">
-											<span class="icon">
-												<li class="fa-solid fa-angle-down">&nbsp;</li>
-											</span>
-											</button>
-										</p>
+					let str = ` <div class="box m-3 p-3 data_preparation_box">
+									<div class="is-flex is-align-items-center">
+										<h1 class="subtitle is-2 m-0 p-0">LAYOUT&nbsp;</h1>
+										<div class="field has-addons">
+											<p class="control">
+												<button class="button prev-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-up"></li>
+													</span>
+												</button>
+											</p>
+											<p class="control">
+												<button class="button next-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-down"></li>
+													</span>
+												</button>
+											</p>
+										</div> 
 									</div>
 									<hr>
 									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
@@ -700,7 +718,7 @@ export class Flow {
 					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -727,25 +745,25 @@ export class Flow {
 
 					let num = Date.now();
 					let container_id = `container_schema_${Date.now()}`;
-					let str = ` <div class="box m-3">
-									<div class="field has-addons">
-										<p class="control">
-											<span class="tag is-large is-warning">SCHEMA</span>
-										</p>
-										<p class="control">
-											<button class="button">
-											<span class="icon">
-												<li class="fa-solid fa-angle-up">&nbsp;</li>
-											</span>
-											</button>
-										</p>
-										<p class="control">
-											<button class="button">
-											<span class="icon">
-												<li class="fa-solid fa-angle-down">&nbsp;</li>
-											</span>
-											</button>
-										</p>
+					let str = ` <div class="box m-3 p-3 data_preparation_box">
+									<div class="is-flex is-align-items-center">
+										<h1 class="subtitle is-2 m-0 p-0">SCHEMA&nbsp;</h1>
+										<div class="field has-addons">
+											<p class="control">
+												<button class="button prev-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-up"></li>
+													</span>
+												</button>
+											</p>
+											<p class="control">
+												<button class="button next-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-down"></li>
+													</span>
+												</button>
+											</p>
+										</div> 
 									</div>
 									<hr>
 									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
@@ -763,7 +781,7 @@ export class Flow {
 					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -791,25 +809,25 @@ export class Flow {
 
 					let num = Date.now();
 					let container_id = `container_node_${Date.now()}`;
-					let str = ` <div class="box m-3">
-									<div class="field has-addons">
-										<p class="control">
-											<span class="tag is-large is-link">FORM</span>
-										</p>
-										<p class="control">
-											<button class="button">
-											<span class="icon">
-												<li class="fa-solid fa-angle-up">&nbsp;</li>
-											</span>
-											</button>
-										</p>
-										<p class="control">
-											<button class="button">
-											<span class="icon">
-												<li class="fa-solid fa-angle-down">&nbsp;</li>
-											</span>
-											</button>
-										</p>
+					let str = ` <div class="box m-3 p-3 data_preparation_box">
+									<div class="is-flex is-align-items-center">
+										<h1 class="subtitle is-2 m-0 p-0">FORM&nbsp;</h1>
+										<div class="field has-addons">
+											<p class="control">
+												<button class="button prev-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-up"></li>
+													</span>
+												</button>
+											</p>
+											<p class="control">
+												<button class="button next-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-down"></li>
+													</span>
+												</button>
+											</p>
+										</div> 
 									</div>
 									<hr>
 									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
@@ -827,7 +845,7 @@ export class Flow {
 					});
 
 					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+2) + 'rem';
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
 
 					this.SnapScroll = false;
 					setTimeout(() => {
@@ -990,39 +1008,47 @@ export class Flow {
 							}, 350); // Timeout slightly longer than the CSS transition (0.3s)
 						}
 					}, {
-						selector: '.button .icon .fa-angle-up, .button .icon .fa-angle-down',
+						selector: ' .prev-box, .next-box',
 						callback: (e) => {
-							console.log('CLICK!!');
-							// // Find the current .box container
-							// const currentBox = e.target.closest('.box');
-							// console.log('currentBox :>> ', currentBox);
+							// Find the current .box container
+							const currentBox = e.target.closest('.box');
 
-							// // Determine the direction (up or down)
-							// const isUp = e.target.classList.contains('fa-angle-up');
-							// console.log('isUp :>> ', isUp);
-							// // Find all boxes
-							// const allBoxes = Array.from(document.querySelectorAll('.box.m-3'));
-							// console.log('allBoxes :>> ', allBoxes);
-							// // Get the current index of the active box
-							// const currentIndex = allBoxes.indexOf(currentBox);
-							// console.log('currentIndex :>> ', currentIndex);
-							// // Calculate the target index
-							// let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
-							// console.log('targetIndex :>> ', targetIndex);
-							// // Ensure the target index is within bounds
-							// if (targetIndex >= 0 && targetIndex < allBoxes.length) {
-							// 	console.log('Get the target box');
-							// 	// Get the target box
-							// 	const targetBox = allBoxes[targetIndex];
-							// 	console.log('targetBox :>> ', targetBox);
+							// Determine the direction (up or down)
+							const isPrev = e.target.closest('.prev-box') !== null;
+							const isUp = isPrev || e.target.classList.contains('fa-angle-up');
+														
+							// Find all boxes
+							const allBoxes = Array.from(document.querySelectorAll('.box.m-3'));
 
-							// 	// Move focus to the target box
-							// 	targetBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+							allBoxes.forEach((box) => {
+								box.classList.remove('focused');
+							});
+							// Get the current index of the active box
+							const currentIndex = allBoxes.indexOf(currentBox);
+							// Calculate the target index
+							let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
+							// Ensure the target index is within bounds
+							if (targetIndex >= 0 && targetIndex < allBoxes.length) {
+								// Get the target box
+								const targetBox = allBoxes[targetIndex];
+								// Move focus to the target box
+								targetBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 								
-							// 	// Optionally add a focus effect (e.g., add a CSS class)
-							// 	currentBox.classList.remove('focused');
-							// 	targetBox.classList.add('focused');
-							// }
+								// Optionally add a focus effect (e.g., add a CSS class)
+								// currentBox.classList.remove('focused');
+								targetBox.classList.add('focused');
+							}
+						}
+					}, {
+						selector: '.data_preparation_box',
+						callback: (e) => {
+							console.log('click within the box', e.target.classList);
+							const allBoxes = Array.from(document.querySelectorAll('.data_preparation_box'));
+							allBoxes.forEach((box) => {
+								box.classList.remove('focused');
+							});
+							const currentBox = e.target.closest('.data_preparation_box');
+							if (!currentBox.classList.contains('focused')) currentBox.classList.add('focused');
 						}
 					}
 				]);
@@ -1826,7 +1852,7 @@ export class Flow {
 					header: form.label,
 					content: [this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal, form_container)]
 				});
-				let column = { comment: "Column", tag: "div", class: `column is-flex collapsible`, style: "max-width:22rem;min-width:22rem;", order: 0, content: [testcard] }
+				let column = { comment: "Column", tag: "div", class: `column is-flex collapsible`, style: "max-width:27rem;min-width:22rem;", order: 0, content: [testcard] }
 				return isHTML ? this.Form.Render.traverseDOMProxyOBJ(column) : column;
 			},
 		},

@@ -1,6 +1,14 @@
+@font-face {
+	font-family: 'Rochester'; /* Name your font */
+	src: url('/paradigm_modules/Rochester/Rochester-Regular.ttf') format('truetype'); /* Path to the font file */
+}
+@font-face {
+	font-family: 'Bebas Neue'; /* Name your font */
+	src: url('/paradigm_modules/Bebas_Neue/BebasNeue-Regular.ttf') format('truetype'); /* Path to the font file */
+}
 :root {
 	--menu-closed-width: 0rem;
-	--menu-open-width: 90vw;
+	--menu-open-width: 100vw;
 }
 
 * {
@@ -298,7 +306,7 @@
 }
 
 #app_data_preparation_area.show {
-	flex-basis: 22rem;
+	flex-basis: 26rem;
 	/* width: 95vw; */
 	max-width: calc(var(--menu-open-width));
 	opacity: 1;
@@ -424,9 +432,6 @@
 .schema-control-container > button {
     flex-shrink: 0;                 /* Prevent buttons from shrinking */
 }
-.box {
-	width: 100%;
-}
 #Loader_container {
 	margin: 0;
 	display: flex;
@@ -482,6 +487,12 @@
 #ParadigmREVOLUTION.show {
 	opacity: 1;
 }
+.box {
+	display: inline-block; /* Makes the box size based on its content */
+	width: auto; /* Ensures the box's width adjusts to fit its content */
+	max-width: none; /* Removes any max-width constraints */
+	white-space: nowrap; /* Prevents content from wrapping if it's inline text */
+}
 .box.focused {
-    border: 2px solid blue;
+	border: 2px solid var(--bulma-primary);
 }

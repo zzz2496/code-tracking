@@ -61,6 +61,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	if (!OK) return;
 
 	document.querySelector('#Loader_container').classList.add('hide');
+	document.querySelector('#Loader_container').remove();
 	console.log('>>> >>> >>> >>> ||| STARTING YGGDRASIL INITIALIZATION');
 
 	let CurrentDocument = JSON.parse(JSON.stringify(template__Node));
