@@ -1,0 +1,132 @@
+{
+	"id": "properties",
+	"label": "Node Properties",
+	"type": "record",
+	"typeSelection": ["record","array"],
+	"icon": "<i class=\"fa-brands fa-wpforms\"></i>",
+	"order": 100,
+	"Dataset": {
+		"Layout": {
+			"Form": {},
+			"Properties": {
+				"FormEntry": {
+					"Show": 1,
+					"Label": "Node Properties",
+					"ShowLabel": 1
+				},
+				"Preview": {
+					"Show": 1,
+					"Label": "Node Properties",
+					"ShowLabel": 1
+				}
+			}
+		},
+		"Schema": [
+			{
+				"id": "name",
+				"label": "Name",
+				"type": "text",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "label",
+				"label": "Label",
+				"type": "text",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "header",
+				"label": "Header",
+				"type": "textarea",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "footer",
+				"label": "Footer",
+				"type": "textarea",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "isgraphenabled",
+				"label": "IsGraphEnabled",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "isprogrammingenabled",
+				"label": "IsProgrammingEnabled",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "isdatastoreenabled",
+				"label": "isDatastoreEnabled",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "isdatasourceenabled",
+				"label": "isDatasourceEnabled",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "ispagelayoutenabled",
+				"label": "isPageLayoutEnabled",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "isschemaenabled",
+				"label": "isSchemaEnabled",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "isformsenabled",
+				"label": "isFormsEnabled",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "isnew",
+				"label": "IsNew",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "ischanged",
+				"label": "isChanged",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "isreadonly",
+				"label": "isReadonly",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			},
+			{
+				"id": "executable",
+				"label": "Executable",
+				"type": "checkbox",
+				"form": 1,
+				"value": ""
+			}
+		]
+	}
+}

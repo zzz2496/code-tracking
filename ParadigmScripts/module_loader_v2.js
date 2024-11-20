@@ -123,6 +123,7 @@ let ParadigmREVOLUTION = {
 				"FormInputTypes": { "URL": "./SystemBlueprint/Blueprint__FormInputTypes.json" },
 				"FormInputTypeDefinition": { "URL": "./SystemBlueprint/Blueprint__FormInputTypeDefinition.json" },
 				"ComponentCanvas": { "URL": "./SystemBlueprint/Blueprint__ComponentCanvas.json" },
+				"Node__Datasets": { "URL": "./SystemBlueprint/Blueprint__Node__Datasets.json" }
 			},
 			"Data": {}
 		},
@@ -217,7 +218,10 @@ if (typeof finder !== 'undefined') {
 					window.template__FormInputTypeDefinition = template__FormInputTypeDefinition;
 					let template__ComponentCanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.ComponentCanvas));
 					window.template__ComponentCanvas = template__ComponentCanvas;
-				
+
+					let node__datasets = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node__Datasets));
+					window.node__datasets = node__datasets;
+
 					document.dispatchEvent(new Event('BlueprintsLoaded'));
 					if (cr) console.log('>>> ||| Blueprint Loader | SUCCESS');
 				}, function (key, url, status) {

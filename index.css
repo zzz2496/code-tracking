@@ -235,10 +235,9 @@
 .system-status-indicator{
 	min-width: 3.5rem;
 }
-#graph_scroll_content{
+#graph_scroll_content, #programming_scroll_content{
 	scrollbar-width: none;
 	-ms-overflow-style: none;
-
 }
 @media screen and (max-width: 800px) {
 	/* Center all columns on small screens */
@@ -356,6 +355,10 @@
 	/* Fly it up to the visible screen */
 }
 
+.document-saveload{
+	width: 2.5rem;
+	height: 2.5rem;
+}
 .runtime-controls{
 	width: 2.5rem;
 	height: 2.5rem;
@@ -363,22 +366,6 @@
 .graph-controls{
 	width: 2.5rem;
 	height: 2.5rem;
-}
-.layout-controls{
-	width: 2.5rem;
-	height: 2.5rem;
-}
-.schema-controls{
-	width: 2.5rem;
-	height: 2.5rem;
-}
-.form-controls{
-	width: 2.5rem;
-	height: 2.5rem;
-}
-.document-saveload {
-	width: 2.5rem;
-	height: 2.5rem
 }
 /* Always-visible document-saveload-container (no animation) */
 .document-saveload-container {
@@ -392,6 +379,9 @@
 
 /* Base styles for the other control containers (with animation) */
 .graph-control-container,
+.programming-control-container,
+.datastore-control-container,
+.datasource-control-container,
 .layout-control-container,
 .form-control-container,
 .schema-control-container {
@@ -409,7 +399,18 @@
     width: 5.5rem;
     opacity: 1;                     /* Fade in */
 }
-
+.programming-control-container.show {
+    width: 5.5rem;
+    opacity: 1;                     /* Fade in */
+}
+.datastore-control-container.show {
+    width: 5.5rem;
+    opacity: 1;
+}
+.datasource-control-container.show {
+    width: 5.5rem;
+    opacity: 1;
+}
 .layout-control-container.show {
     width: 5.5rem;
     opacity: 1;
@@ -496,3 +497,9 @@
 .box.focused {
 	border: 2px solid var(--bulma-primary);
 }
+#app_graph_tabs{
+	overflow-x: auto;
+}
+#app_graph_tabs .hidden {
+	display: none;
+  }

@@ -637,8 +637,6 @@ export class Flow {
 										</div> 
 									</div>
 									<hr>
-
-									
 									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
 										${this.Form.Render.traverseDOMProxyOBJ(compcanvas)}
 									</div>
@@ -867,7 +865,7 @@ export class Flow {
 
 					document.querySelector('#app_data_preparation_area').innerHTML += str;
 
-					// Calculate WIDTH					
+					// Calculate WIDTH
 					let maxcount = 0;
 					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
 					childContainers.forEach((container) => {
@@ -1107,7 +1105,7 @@ export class Flow {
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
-
+				
 				document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
 					tab.addEventListener('click', () => {
 						// Remove 'is-active' class from all tabs
@@ -1130,6 +1128,9 @@ export class Flow {
 						// Determine the selected main container and control container based on tab type
 						const selectedContainerId = {
 							'Graph': '#app_graph_container',
+							'Programming': '#app_programming_container',
+							'Datastore': '#app_datastore_container',
+							'Datasource': '#app_datasource_container',
 							'PageLayout': '#app_page_layout_container',
 							'Forms': '#app_form_container',
 							'Schema': '#app_schema_container'
@@ -1153,6 +1154,15 @@ export class Flow {
 							case 'Graph':
 								document.querySelector('.graph-control-container').classList.add('show');
 								break;
+							case 'Programming':
+								document.querySelector('.programming-control-container').classList.add('show');
+								break;
+							case 'Datastore':
+								document.querySelector('.datastore-control-container').classList.add('show');
+								break;
+							case 'Datasource':
+								document.querySelector('.datasource-control-container').classList.add('show');
+								break;
 							case 'PageLayout':
 								document.querySelector('.layout-control-container').classList.add('show');
 								break;
@@ -1169,30 +1179,30 @@ export class Flow {
 					let root = document.documentElement;
 					let isCurrentThemeDark = this.Utility.DOMElements.detectLightDarkMode();
 					root.dataset.count = root.dataset.count ? parseInt(root.dataset.count) : 0;
-					console.log(root.dataset.count);
-					console.log('e.currentTarget :>> ', e.currentTarget);					
+					// console.log(root.dataset.count);
+					// console.log('e.currentTarget :>> ', e.currentTarget);					
 					if (root.dataset.count < 2) {
-						console.log('masuk < 2');
+						// console.log('masuk < 2');
 						if (root.dataset.theme == 'light') {
-							console.log('masuk dark');
+							// console.log('masuk dark');
 							root.dataset.theme = 'dark'
-							console.log('e.currentTarget.childNodes[0].classList:>', e.currentTarget.childNodes[0].classList);
+							// console.log('e.currentTarget.childNodes[0].classList:>', e.currentTarget.childNodes[0].classList);
 							if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
 								e.currentTarget.childNodes[0].classList.remove('fa-sun');
 							}
 							e.currentTarget.childNodes[0].classList.add('fa-moon');
 						} else if (root.dataset.theme == 'dark') {
-							console.log('masuk light');
+							// console.log('masuk light');
 							root.dataset.theme = 'light';
-							console.log('e.currentTarget', e.currentTarget.childNodes);
-							console.log('e.currentTarget.childNodes[0].classList:>', e.currentTarget.childNodes[0].classList);
+							// console.log('e.currentTarget', e.currentTarget.childNodes);
+							// console.log('e.currentTarget.childNodes[0].classList:>', e.currentTarget.childNodes[0].classList);
 							if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
 								e.currentTarget.childNodes[0].classList.remove('fa-moon');
 							}
 							e.currentTarget.childNodes[0].classList.add('fa-sun');
 						} else {
-							console.log('masuk default');
-							console.log('isCurrentThemeDark', isCurrentThemeDark);
+							// console.log('masuk default');
+							// console.log('isCurrentThemeDark', isCurrentThemeDark);
 							root.dataset.theme = isCurrentThemeDark.matches ? 'dark' : 'light';
 							if (isCurrentThemeDark.matches) {
 								if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
@@ -1209,7 +1219,7 @@ export class Flow {
 						e.currentTarget.childNodes[0].style.color = '';
 						root.dataset.count++;
 					} else {
-						console.log('masuk reset');
+						// console.log('masuk reset');
 						root.dataset.theme = '';
 						e.currentTarget.childNodes[0].style.color = 'red';
 						root.dataset.count = 0;
@@ -1281,7 +1291,6 @@ export class Flow {
 							scrollableElements.horizontal.push(el);
 						}
 					});
-				
 					return scrollableElements;
 				}
 				
@@ -1290,6 +1299,85 @@ export class Flow {
 				console.log('Elements with vertical scrollbars:', scrollableElements.vertical);
 				console.log('Elements with horizontal scrollbars:', scrollableElements.horizontal);
 				console.log('Elements with both scrollbars:', scrollableElements.both);
+				document.querySelector('#document_properties_button').addEventListener('click', (e) => {
+					console.log('document_definition_button CLICK!');
+					let DocPID = JSON.parse(JSON.stringify(node__datasets[0]));
+					console.log('DocPID :>> ', DocPID);
+					let DocPROP = JSON.parse(JSON.stringify(node__datasets[1]));
+					console.log('DocPROP :>> ', DocPROP);
+
+					if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
+
+					let num = Date.now();
+					let container_id = `container_node_pid_${Date.now()}`;
+					let str = ` <div class="box m-3 p-3 data_preparation_box">
+									<div class="is-flex is-align-items-center">
+										<h1 class="subtitle is-2 m-0 p-0">NODE PID</h1>
+										<div class="field has-addons">
+											<p class="control">
+												<button class="button prev-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-up"></li>
+													</span>
+												</button>
+											</p>
+											<p class="control">
+												<button class="button next-box">
+													<span class="icon is-small">
+														<li class="fa-solid fa-angle-down"></li>
+													</span>
+												</button>
+											</p>
+										</div> 
+									</div>
+									<hr>
+									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+										${this.Form.Initialize.FormCard('NodePID___' + num,         DocPID, 0, 1, 100, container_id)}
+									</div>
+									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+										${this.Form.Initialize.FormCard('NodeProperties___' + num, DocPROP, 0, 1, 100, container_id)}
+									</div>
+								</div>`;
+
+					document.querySelector('#app_data_preparation_area').innerHTML += str;
+
+					// Calculate WIDTH
+					let maxcount = 0;
+					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+					childContainers.forEach((container) => {
+						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					});
+
+					// Set the new width
+					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
+
+					this.SnapScroll = false;
+					setTimeout(() => {
+						document.querySelector('#app_root_container').scrollTo({
+							left: document.querySelector('#app_root_container').scrollWidth,
+							behavior: 'smooth'
+						});
+					}, 300);
+					setTimeout(() => {
+						this.SnapScroll = true;
+					}, 500);
+					setTimeout(() => {
+						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+						if (selectedBox) {
+							// Get the scrollable container
+							let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+							// Get the offset of the selected box relative to the container
+							let offsetLeft = selectedBox.offsetLeft;
+							
+							// Scroll to that position with smooth behavior
+							scrollContainer.scrollTo({
+								left: offsetLeft,
+								behavior: 'smooth'
+							});
+						}
+					}, 300);
+				});
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
 				// console.log('generateFormToParadigmJSON', form_container);
