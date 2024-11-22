@@ -31,8 +31,8 @@
 				"head": {
 					"typeSelection": ["input","select","label","button"],
 					"valueSelection":["string","array"],
-					"type": "select",
-					"value": ["IDR", "SGD", "USD", "AUD", "MYR"], 
+					"type": "label",
+					"value": "Currency",
 					"append_to_value": 1,
 					"readonly": 0,
 					"width": ""
@@ -76,6 +76,15 @@
 					"voluptatem",
 					"non."
 				],
+				"head": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "input",
+					"value": "Currency",
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				},
 				"tail": {
 					"typeSelection": ["input","select","label","button"],
 					"valueSelection":["string","array"],
@@ -98,6 +107,15 @@
 					"Singapura"
 				],
 				"form": 1,
+				"head": {
+					"typeSelection": ["input","select","label","button"],
+					"valueSelection":["string","array"],
+					"type": "select",
+					"value": ["IDR", "SGD", "USD", "AUD", "MYR"],
+					"append_to_value": 1,
+					"readonly": 0,
+					"width": ""
+				},
 				"tail": {
 					"typeSelection": ["input","select","label","button"],
 					"valueSelection":["string","array"],

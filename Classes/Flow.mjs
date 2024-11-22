@@ -1045,16 +1045,42 @@ export class Flow {
 								}
 
 								// Calculate WIDTH
+								console.log('new calc width');
 								let maxcount = 0;
 								let childContainers = document.querySelectorAll('.data_preparation_area_container ');
 								childContainers.forEach((container) => {
 									if (maxcount < container.childElementCount) maxcount = container.childElementCount;
-									container.parentElement.classList.remove('box');
-									container.parentElement.classList.add('box');
 								});
 
 								// Set the new width
-								document.querySelector('#app_data_preparation_area').style.flexBasis = maxcount * (22+2) + 'rem';
+								document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
+
+								this.SnapScroll = false;
+								setTimeout(() => {
+									document.querySelector('#app_root_container').scrollTo({
+										left: document.querySelector('#app_root_container').scrollWidth,
+										behavior: 'smooth'
+									});
+								}, 300);
+								setTimeout(() => {
+									this.SnapScroll = true;
+								}, 500);
+								setTimeout(() => {
+									let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+									if (selectedBox) {
+										// Get the scrollable container
+										let scrollContainer = document.querySelector('#app_data_preparation_area');
+										
+										// Get the offset of the selected box relative to the container
+										let offsetLeft = selectedBox.offsetLeft;
+										
+										// Scroll to that position with smooth behavior
+										scrollContainer.scrollTo({
+											left: offsetLeft,
+											behavior: 'smooth'
+										});
+									}
+								}, 300);
 							}, 350); // Timeout slightly longer than the CSS transition (0.3s)
 						}
 					}, {
@@ -1312,7 +1338,7 @@ export class Flow {
 					let container_id = `container_node_pid_${Date.now()}`;
 					let str = ` <div class="box m-3 p-3 data_preparation_box">
 									<div class="is-flex is-align-items-center">
-										<h1 class="subtitle is-2 m-0 p-0">NODE PID</h1>
+										<h1 class="subtitle is-2 m-0 p-0">NODE Properties</h1>
 										<div class="field has-addons">
 											<p class="control">
 												<button class="button prev-box">
@@ -1406,7 +1432,7 @@ export class Flow {
 							};
 							break;
 						case 'number':
-							inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, class: ` paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, class: `input paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
 							break;
 						case 'textarea':
 							inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, class: `textarea paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
@@ -1626,7 +1652,6 @@ export class Flow {
 					}
 				});
 				// Obj.content.push(tObj);
-			
 				return Obj;
 			}).bind(this),
 			GenerateFormToHTML: (function ($id, $schema, $util, is_horizontal = 0) {

@@ -44,17 +44,26 @@
 				"value": ""
 			},
 			{
+				"id": "elementtype",
+				"label": "ElementType",
+				"type": "select",
+				"form":1,
+				"value":["Node Graph", "Programming", "Datastore", "Datasource", "PageLayout", "Schema", "Forms" ]
+			},
+			{
 				"id": "version",
 				"label": "Version",
 				"type": "number",
-				"form": 0,
+				"readonly": 1,
+				"form": 1,
 				"value": ""
 			},
 			{
 				"id": "timestamp",
 				"label": "Timestamp",
 				"type": "text",
-				"form": 0,
+				"form": 1,
+				"readonly": 1,
 				"value": ""
 			}
 		]
