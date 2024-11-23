@@ -87,7 +87,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	});
 	document.querySelector('#datastore_status').innerHTML = datastore_status;
 	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status in paradigm_revolution.js');
-	console.log('datastore_status', datastore_status, document.querySelector('#datastore_status'));
+	// console.log('datastore_status', datastore_status, document.querySelector('#datastore_status'));
 
 
 	Flow.FormContainer.classList.remove('hide');

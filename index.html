@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-count="0">
+<html lang="en" data-theme="" data-count="0">
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3, minimum-scale=0.1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3, minimum-scale=0.1">
 	<link rel="shortcut icon" href="./paradigm_modules/icons/32.png">
 	<!-- <link rel="stylesheet" href="paradigm_modules/bootstrap-5.3.0-dist/css/bootstrap.min.css"> -->
 	<!-- <link rel="stylesheet" href="paradigm_modules/uikit-3.21.13/css/uikit.min.css"> -->
@@ -32,7 +31,29 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rochester&display=swap" rel="stylesheet"> -->
 	<!--End on external resources-->
+	<script type="text/javascript">
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
+		// Function to handle changes in theme
+		function handleThemeChange(event) {
+			console.log('Theme change!');
+			if (event.matches) {
+				console.log('Switched to dark mode.');
+			} else {
+				console.log('Switched to light mode.');
+			}
+		}
+
+		// Initial check
+		if (mediaQuery.matches) {
+			console.log('Currently in dark mode.');
+		} else {
+			console.log('Currently in light mode.');
+		}
+
+		// Add event listener for changes
+		mediaQuery.addEventListener('change', handleThemeChange);
+	</script>
 
 	<title>ParadigmREVOLUTION CONTAINER</title>
 </head>

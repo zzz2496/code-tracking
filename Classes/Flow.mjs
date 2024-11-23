@@ -552,7 +552,7 @@ export class Flow {
 				scrollContainer.addEventListener('scroll', (event) => {
 					if (!this.SnapScroll) return; // Exit if snapping is temporarily disabled
 
-					const snapPosition = document.querySelector('#app_menu').clientWidth;
+					const snapPosition = document.querySelector('#object_collections').clientWidth;
 					const scrollLeft = scrollContainer.scrollLeft;
 					const currentTime = Date.now();
 
@@ -584,14 +584,13 @@ export class Flow {
 				// Initialize the scroll snap functionality
 				this.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);
 
-				document.querySelector('#app_menu_button').addEventListener('click', () => {
-					document.querySelector('#app_menu').classList.toggle('open');
+				document.querySelector('#object_collections_button').addEventListener('click', () => {
+					document.querySelector('#object_collections').classList.toggle('open');
 				});
 
 				document.querySelector('#app_graph_button').addEventListener('click', () => {
 					document.querySelector('#app_configurator_container').classList.toggle('show');
 					document.querySelector('#app_graph_tabs_container').classList.toggle('show');
-
 				});
 
 				document.querySelector('#app_data_preparation_area_button').addEventListener('click', () => {
@@ -1204,65 +1203,27 @@ export class Flow {
 				document.querySelector('#dark_light_selector').addEventListener('click', (e) => {
 					let root = document.documentElement;
 					let isCurrentThemeDark = this.Utility.DOMElements.detectLightDarkMode();
-					root.dataset.count = root.dataset.count ? parseInt(root.dataset.count) : 0;
-					// console.log(root.dataset.count);
-					// console.log('e.currentTarget :>> ', e.currentTarget);					
-					if (root.dataset.count < 2) {
-						// console.log('masuk < 2');
-						if (root.dataset.theme == 'light') {
-							// console.log('masuk dark');
-							root.dataset.theme = 'dark'
-							// console.log('e.currentTarget.childNodes[0].classList:>', e.currentTarget.childNodes[0].classList);
-							if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
-								e.currentTarget.childNodes[0].classList.remove('fa-sun');
-							}
-							e.currentTarget.childNodes[0].classList.add('fa-moon');
-						} else if (root.dataset.theme == 'dark') {
-							// console.log('masuk light');
-							root.dataset.theme = 'light';
-							// console.log('e.currentTarget', e.currentTarget.childNodes);
-							// console.log('e.currentTarget.childNodes[0].classList:>', e.currentTarget.childNodes[0].classList);
-							if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
-								e.currentTarget.childNodes[0].classList.remove('fa-moon');
-							}
-							e.currentTarget.childNodes[0].classList.add('fa-sun');
-						} else {
-							// console.log('masuk default');
-							// console.log('isCurrentThemeDark', isCurrentThemeDark);
-							root.dataset.theme = isCurrentThemeDark.matches ? 'dark' : 'light';
-							if (isCurrentThemeDark.matches) {
-								if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
-									e.currentTarget.childNodes[0].classList.remove('fa-sun');
-								}
-								e.currentTarget.childNodes[0].classList.add('fa-moon');
-							} else {
-								if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
-									e.currentTarget.childNodes[0].classList.remove('fa-moon');
-								}
-								e.currentTarget.childNodes[0].classList.add('fa-sun');	
-							}
+					console.log('isCurrentThemeDark.matches', isCurrentThemeDark.matches);
+					if (root.dataset.theme == '') root.dataset.theme = isCurrentThemeDark.matches ? 'dark' : 'light';
+
+					if (root.dataset.theme == 'light') {
+						root.dataset.theme = 'dark'
+						if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
+							e.currentTarget.childNodes[0].classList.remove('fa-sun');
+							e.currentTarget.childNodes[0].classList.remove('has-text-warning');
 						}
-						e.currentTarget.childNodes[0].style.color = '';
-						root.dataset.count++;
-					} else {
-						// console.log('masuk reset');
-						root.dataset.theme = '';
-						e.currentTarget.childNodes[0].style.color = 'red';
-						root.dataset.count = 0;
-						if (isCurrentThemeDark.matches) {
-							if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
-								e.currentTarget.childNodes[0].classList.remove('fa-sun');
-							}
-							e.currentTarget.childNodes[0].classList.add('fa-moon');
-						} else {
-							if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
-								e.currentTarget.childNodes[0].classList.remove('fa-moon');
-							}
-							e.currentTarget.childNodes[0].classList.add('fa-sun');	
+						e.currentTarget.childNodes[0].classList.add('fa-moon');
+						e.currentTarget.childNodes[0].classList.add('has-text-link');
+					} else if (root.dataset.theme == 'dark') {
+						root.dataset.theme = 'light';
+						if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
+							e.currentTarget.childNodes[0].classList.remove('fa-moon');
+							e.currentTarget.childNodes[0].classList.remove('has-text-link');
 						}
+						e.currentTarget.childNodes[0].classList.add('fa-sun');
+						e.currentTarget.childNodes[0].classList.add('has-text-warning');
 					}
 				});
-
 				document.querySelector('#app_content').innerHTML = `
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
@@ -1322,9 +1283,9 @@ export class Flow {
 				
 				// Example usage:
 				const scrollableElements = findScrollableElements();
-				console.log('Elements with vertical scrollbars:', scrollableElements.vertical);
-				console.log('Elements with horizontal scrollbars:', scrollableElements.horizontal);
-				console.log('Elements with both scrollbars:', scrollableElements.both);
+				// console.log('Elements with vertical scrollbars:', scrollableElements.vertical);
+				// console.log('Elements with horizontal scrollbars:', scrollableElements.horizontal);
+				// console.log('Elements with both scrollbars:', scrollableElements.both);
 				document.querySelector('#document_properties_button').addEventListener('click', (e) => {
 					console.log('document_definition_button CLICK!');
 					let DocPID = JSON.parse(JSON.stringify(node__datasets[0]));

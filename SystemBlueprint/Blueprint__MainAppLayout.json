@@ -2,8 +2,40 @@
 	
 		{
 			"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
-				{ "comment": "App Menu", "tag": "div", "id": "app_menu", "class": "", "innerHTML": "", "content": [
-					{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"fa fa-moon\" style=\"color:red;\"></li>"}
+				{ "comment": "Object Collections", "tag": "div", "id": "object_collections", "class": "", "innerHTML": "", "content": [
+					{"comment":"Object Collections controls", "tag":"div", "class":"container is-flex is-justify-content-center", "id":"object_collections_controls", "content":[
+						{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"fa fa-moon has-text-link\"></li>"}
+					]},
+					{"comment":"Object Collections Tabs", "tag":"div", "id":"object_collection_tabs", "class":"container is-flex is-justify-content-center", "content":[
+						{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
+							{ "tag": "div", "class": "tabs", "content": [
+								{ "tag": "ul", "class":"", "content": [
+									{ "tag": "li", "class": "is-active ", "content": [
+										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Collection"}, "innerHTML": "Collection" }
+									] },
+									{ "tag": "li", "class": " ", "content": [
+										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"RuntimeState"}, "innerHTML": "Rumtime State" }
+									] },
+									{ "tag": "li", "class": " ", "content": [
+										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Storage"}, "innerHTML": "Storage" }
+									] },
+									{ "tag": "li", "class": "", "content": [
+										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"ComponentGallery"}, "innerHTML": "Component Gallery" }
+									] },
+									{ "tag": "li", "class":"", "content": [
+										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Templates"}, "innerHTML": "Templates" }
+									] }
+								] }
+							]}
+						]}
+					]},
+					{"comment":"Object Collections Content", "tag":"div", "class":"container", "content":[
+						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content show", "id":"object_collection_collection", "innerHTML":"Collection", "content":[]},
+						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content",      "id":"object_collection_state", "innerHTML":"State", "content":[]},
+						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content",      "id":"object_collection_datastore", "innerHTML":"Datastore", "content":[]},
+						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content",      "id":"object_collection_gallery", "innerHTML":"Gallery", "content":[]},
+						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content",      "id":"object_collection_templates", "innerHTML":"Templates", "content":[]}
+					]}
 				] },
 				{
 					"comment": "App Container", "tag": "div", "id": "app_container", "content": [
@@ -11,7 +43,7 @@
 							"comment": "App Top Menu Container", "tag": "div", "id": "app_top_menu_container", "innerHTML": "", "class": "columns is-gapless is-mobile m-0", "content": [
 								{
 									"comment": "Left Container", "tag": "div", "id": "app_left_container", "innerHTML": "", "class": "column is-gapless is-one-quarter", "content": [
-										{ "comment": "Menu button", "tag": "button", "class": "button is-default", "id": "app_menu_button", "title": "Open Menu", "innerHTML": "<li class=\"fa fa-bars\"></li>" },
+										{ "comment": "Menu button", "tag": "button", "class": "button is-default", "id": "object_collections_button", "title": "Open Menu", "innerHTML": "<li class=\"fa fa-bars\"></li>" },
 										{ "comment": "Graph button", "tag": "button", "class": "button is-default", "id": "app_graph_button", "title": "Open Graph", "innerHTML": "<li class=\"fa fa-circle-nodes\"></li>" }
 									]
 								},

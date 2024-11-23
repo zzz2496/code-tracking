@@ -9,6 +9,9 @@
 :root {
 	--menu-closed-width: 0rem;
 	--menu-open-width: 100vw;
+	--object-collections-controls: 2.5rem;
+	--object-collections-tabs: 2.6rem;
+	--object-collections-content: 94.9rem;
 }
 
 * {
@@ -123,8 +126,8 @@
 
 }
 
-/* APP_MENU */
-#app_menu {
+/* OBJECT_COLLECTIONS */
+#object_collections {
 	flex-grow: 0;
 	flex-shrink: 0;
 	flex-basis: var(--menu-closed-width);
@@ -137,9 +140,9 @@
 	-ms-overflow-style: none; 
 }
 
-#app_menu.open {
+#object_collections.open {
 	/* flex-basis: var(--menu-open-width); */
-	flex-basis: 22rem;
+	flex-basis: 50vw;
 	/* width: 95vw; */
 	max-width: calc(var(--menu-open-width));
 	overflow: auto;
@@ -147,7 +150,21 @@
 	/* display: flex; */
 
 }
-
+.object-collections-content{
+	height: 0px;
+	overflow: auto;
+	scrollbar-width: none; 
+	-ms-overflow-style: none;
+}
+.object-collections-content.show{
+	height: var(--object-collections-content);
+}
+#object_collections_controls{
+	height: var(--object-collections-controls);
+}
+#object_collection_tabs{
+	height: var(--object-collections-tabs);
+}
 /* APP_CONTAINER */
 #app_container {
 	flex-grow: 0; /* Do not grow to fill the remaining space */
@@ -240,6 +257,12 @@
 	-ms-overflow-style: none;
 }
 @media screen and (max-width: 800px) {
+	#object_collections.open {
+		min-width: 100vw;
+	}
+	
+	
+	
 	/* Center all columns on small screens */
    .app_graph_controls_containers {
 	   justify-content: center !important; /* Center align content */
@@ -502,4 +525,4 @@
 }
 #app_graph_tabs .hidden {
 	display: none;
-  }
+}
