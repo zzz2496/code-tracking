@@ -11,7 +11,7 @@
 	--menu-open-width: 100vw;
 	--object-collections-controls: 2.5rem;
 	--object-collections-tabs: 2.6rem;
-	--object-collections-content: 94.9rem;
+	--object-collections-content: calc(100vh - var(--object-collections-controls) - var(--object-collections-tabs));
 }
 
 * {
@@ -122,8 +122,6 @@
 	/* padding-right: 0rem; */
 	scrollbar-width: none; 
 	-ms-overflow-style: none; 
-
-
 }
 
 /* OBJECT_COLLECTIONS */
@@ -132,7 +130,7 @@
 	flex-shrink: 0;
 	flex-basis: var(--menu-closed-width);
 	height: auto;
-	/*border: 1px solid green;*/
+	/* border: 1px solid green; */
 	overflow: auto;
 	height: 100vh;
 	transition: flex-basis 0.3s ease-in-out;
@@ -165,6 +163,52 @@
 #object_collection_tabs{
 	height: var(--object-collections-tabs);
 }
+
+#object-collections-container {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: var(--object-collections-content);
+    overflow: hidden; /* Hide the overflowing content */
+    /* border: solid green 1px; */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    transition: height 0.3s ease-in-out;
+}
+
+#object-collections-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Default container style */
+.object-collections-containers {
+    width: 100%;                /* Full width so only one shows at a time */
+    height: 100%;               /* Ensure content spans full height */
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out; 
+    position: absolute;         /* Stack them on top of each other */
+    top: 0;
+    left: 0;
+    opacity: 0;                 /* Initially, hide all content */
+    pointer-events: none;       /* Prevent interaction with hidden content */
+    z-index: -1;                /* Keep hidden content behind active content */
+	/* border: solid red 1px; */
+}
+
+/* This class will apply a slide-in transform based on the active tab */
+.object-collections-containers.show {
+    opacity: 1;                 /* Make active content visible */
+    pointer-events: auto;       /* Enable interaction with the active content */
+    z-index: 1;                 /* Bring active content in front */
+    transform: translateX(0);   /* Default position when active */
+}
+
+/* Move inactive content out of view */
+.object-collections-containers {
+    transform: translateX(100%); /* Move inactive content off-screen */
+}
+
+
+
 /* APP_CONTAINER */
 #app_container {
 	flex-grow: 0; /* Do not grow to fill the remaining space */
@@ -198,21 +242,7 @@
 	width: 100%;
 	height: auto;
 } */
-/* Default container style */
-.app_configurator_containers {
-    min-width: 100%;           /* Full width so only one shows at a time */
-    transition: transform 0.5s ease;
-    position: absolute;         /* Stack them on top of each other initially */
-    top: 0;
-    left: 0;
-}
 
-/* This class will apply a slide-in transform based on the active tab */
-.app_configurator_containers.show {
-    position: relative;         /* Set the active tab to be visible */
-    z-index: 1;
-    transform: translateX(0);   /* Default position when active */
-}
 #app_configurator_container {
 	display: flex;
     overflow: hidden;
@@ -232,6 +262,23 @@
 
 #app_configurator_container::-webkit-scrollbar {
 	display: none; 
+}
+/* Default container style */
+.app_configurator_containers {
+    min-width: 100%;           /* Full width so only one shows at a time */
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    position: absolute;         /* Stack them on top of each other initially */
+    top: 0;
+    left: 0;
+	opacity: 0;
+}
+
+/* This class will apply a slide-in transform based on the active tab */
+.app_configurator_containers.show {
+    position: relative;         /* Set the active tab to be visible */
+    z-index: 1;
+    transform: translateX(0);   /* Default position when active */
+	opacity: 1;
 }
 .app_graph_controls_containers{
 	height: auto;

@@ -520,7 +520,6 @@ export class Flow {
 				}, true); // Using capture phase to catch events early, for non-bubbling events
 			},
 
-
 			addGlobalEventListenerV1: function (type, selector, callback, parent = document) {
 				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
 
@@ -544,6 +543,47 @@ export class Flow {
 					}
 				}, true); // Using capture phase to catch events early, for non-bubbling events
 			},
+			setupTabSwitcher: ((tabSelector, contentContainerSelector, activeClass = 'is-active', showClass = 'show') => {
+				document.querySelectorAll(tabSelector).forEach((tab, index, tabs) => {
+					tab.addEventListener('click', () => {
+						const tabType = tab.dataset.tabtype;
+			
+						// Remove 'is-active' class from all tabs
+						tabs.forEach((t) => t.parentElement.classList.remove(activeClass));
+			
+						// Add 'is-active' to the clicked tab
+						tab.parentElement.classList.add(activeClass);
+			
+						// Remove 'show' class and reset transforms on all content containers
+						document.querySelectorAll(contentContainerSelector).forEach((container, containerIndex) => {
+							container.classList.remove(showClass);
+							container.style.transform = ''; // Reset transform
+			
+							// Slide out non-selected containers
+							if (container.dataset.tabtype !== tabType) {
+								container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
+							}
+						});
+			
+						// Show and slide in the selected container
+						const selectedContainer = document.querySelector(`${contentContainerSelector}[data-tabtype="${tabType}"]`);
+						if (selectedContainer) {
+							selectedContainer.classList.add(showClass);
+							selectedContainer.style.transform = 'translateX(0)';
+						}
+			
+						// Optionally show/hide additional controls (if applicable)
+						const controlContainerSelector = `[data-controltype="${tabType}"]`;
+						document.querySelectorAll('[data-controltype]').forEach((controlContainer) => {
+							controlContainer.classList.remove(showClass);
+						});
+						const selectedControlContainer = document.querySelector(controlContainerSelector);
+						if (selectedControlContainer) {
+							selectedControlContainer.classList.add(showClass);
+						}
+					});
+				});
+			}),
 			initializeScrollSnap: (scrollContainer, snapRange = 90, sensitivity = 0.1) => {
 				// Variables to track scroll velocity
 				let lastScrollLeft = 0;
@@ -1130,100 +1170,164 @@ export class Flow {
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
+				this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers');
+				this.Form.Events.setupTabSwitcher('.tab-object-collections', '.object-collections-containers');
+				// document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
+				// 	tab.addEventListener('click', () => {
+				// 		// Remove 'is-active' class from all tabs
+				// 		tabs.forEach((t) => t.parentElement.classList.remove('is-active'));
 				
-				document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
-					tab.addEventListener('click', () => {
-						// Remove 'is-active' class from all tabs
-						tabs.forEach((t) => t.parentElement.classList.remove('is-active'));
+				// 		// Add 'is-active' to the clicked tab
+				// 		tab.parentElement.classList.add('is-active');
 				
-						// Add 'is-active' to the clicked tab
-						tab.parentElement.classList.add('is-active');
+				// 		// Remove 'show' from all main content containers
+				// 		document.querySelectorAll('.app_configurator_containers').forEach((container) => {
+				// 			container.classList.remove('show');
+				// 			container.style.transform = '';  // Reset transform
+				// 		});
 				
-						// Remove 'show' from all main content containers
-						document.querySelectorAll('.app_configurator_containers').forEach((container) => {
-							container.classList.remove('show');
-							container.style.transform = '';  // Reset transform
-						});
+				// 		// Also remove 'show' from all control containers
+				// 		document.querySelectorAll('.app_graph_controls_containers > div').forEach((controlContainer) => {
+				// 			controlContainer.classList.remove('show');
+				// 		});
 				
-						// Also remove 'show' from all control containers
-						document.querySelectorAll('.app_graph_controls_containers > div').forEach((controlContainer) => {
-							controlContainer.classList.remove('show');
-						});
+				// 		// Determine the selected main container and control container based on tab type
+				// 		const selectedContainerId = {
+				// 			'Graph': '#app_graph_container',
+				// 			'Programming': '#app_programming_container',
+				// 			'Datastore': '#app_datastore_container',
+				// 			'Datasource': '#app_datasource_container',
+				// 			'PageLayout': '#app_page_layout_container',
+				// 			'Forms': '#app_form_container',
+				// 			'Schema': '#app_schema_container'
+				// 		}[tab.dataset.tabtype];
 				
-						// Determine the selected main container and control container based on tab type
-						const selectedContainerId = {
-							'Graph': '#app_graph_container',
-							'Programming': '#app_programming_container',
-							'Datastore': '#app_datastore_container',
-							'Datasource': '#app_datasource_container',
-							'PageLayout': '#app_page_layout_container',
-							'Forms': '#app_form_container',
-							'Schema': '#app_schema_container'
-						}[tab.dataset.tabtype];
+				// 		const selectedContainer = document.querySelector(selectedContainerId);
 				
-						const selectedContainer = document.querySelector(selectedContainerId);
+				// 		// Slide out all other containers to the left or right except the selected one
+				// 		document.querySelectorAll('.app_configurator_containers').forEach((container, containerIndex) => {
+				// 			if (container !== selectedContainer) {
+				// 				container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
+				// 			}
+				// 		});
 				
-						// Slide out all other containers to the left or right except the selected one
-						document.querySelectorAll('.app_configurator_containers').forEach((container, containerIndex) => {
-							if (container !== selectedContainer) {
-								container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
-							}
-						});
+				// 		// Show and slide in the selected main container
+				// 		selectedContainer.classList.add('show');
+				// 		selectedContainer.style.transform = 'translateX(0)';
 				
-						// Show and slide in the selected main container
-						selectedContainer.classList.add('show');
-						selectedContainer.style.transform = 'translateX(0)';
+				// 		// Show the appropriate control container based on the selected tab
+				// 		switch (tab.dataset.tabtype) {
+				// 			case 'Graph':
+				// 				document.querySelector('.graph-control-container').classList.add('show');
+				// 				break;
+				// 			case 'Programming':
+				// 				document.querySelector('.programming-control-container').classList.add('show');
+				// 				break;
+				// 			case 'Datastore':
+				// 				document.querySelector('.datastore-control-container').classList.add('show');
+				// 				break;
+				// 			case 'Datasource':
+				// 				document.querySelector('.datasource-control-container').classList.add('show');
+				// 				break;
+				// 			case 'PageLayout':
+				// 				document.querySelector('.layout-control-container').classList.add('show');
+				// 				break;
+				// 			case 'Forms':
+				// 				document.querySelector('.form-control-container').classList.add('show');
+				// 				break;
+				// 			case 'Schema':
+				// 				document.querySelector('.schema-control-container').classList.add('show');
+				// 				break;
+				// 		}
+				// 	});
+				// });
 				
-						// Show the appropriate control container based on the selected tab
-						switch (tab.dataset.tabtype) {
-							case 'Graph':
-								document.querySelector('.graph-control-container').classList.add('show');
-								break;
-							case 'Programming':
-								document.querySelector('.programming-control-container').classList.add('show');
-								break;
-							case 'Datastore':
-								document.querySelector('.datastore-control-container').classList.add('show');
-								break;
-							case 'Datasource':
-								document.querySelector('.datasource-control-container').classList.add('show');
-								break;
-							case 'PageLayout':
-								document.querySelector('.layout-control-container').classList.add('show');
-								break;
-							case 'Forms':
-								document.querySelector('.form-control-container').classList.add('show');
-								break;
-							case 'Schema':
-								document.querySelector('.schema-control-container').classList.add('show');
-								break;
-						}
-					});
-				});
+				// NOTE - Dark/Light Mode
 				document.querySelector('#dark_light_selector').addEventListener('click', (e) => {
 					let root = document.documentElement;
-					let isCurrentThemeDark = this.Utility.DOMElements.detectLightDarkMode();
-					console.log('isCurrentThemeDark.matches', isCurrentThemeDark.matches);
-					if (root.dataset.theme == '') root.dataset.theme = isCurrentThemeDark.matches ? 'dark' : 'light';
-
-					if (root.dataset.theme == 'light') {
-						root.dataset.theme = 'dark'
-						if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
-							e.currentTarget.childNodes[0].classList.remove('fa-sun');
-							e.currentTarget.childNodes[0].classList.remove('has-text-warning');
-						}
-						e.currentTarget.childNodes[0].classList.add('fa-moon');
-						e.currentTarget.childNodes[0].classList.add('has-text-link');
-					} else if (root.dataset.theme == 'dark') {
+					let isSystemThemeDark = window.matchMedia('(prefers-color-scheme: dark)').matches; // Detect system theme
+					let currentTheme = root.dataset.theme || 'system'; // Default to system if no theme is set
+				
+					// Cycle through themes: system -> dark -> light
+					console.log('currentTheme', currentTheme);
+					if (currentTheme === 'system') {
+						console.log('setting currentTheme to :>> dark');
+						root.dataset.theme = 'dark';
+					} else if (currentTheme === 'dark') {
+						console.log('setting currentTheme to :>> light');
 						root.dataset.theme = 'light';
-						if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
-							e.currentTarget.childNodes[0].classList.remove('fa-moon');
-							e.currentTarget.childNodes[0].classList.remove('has-text-link');
-						}
-						e.currentTarget.childNodes[0].classList.add('fa-sun');
-						e.currentTarget.childNodes[0].classList.add('has-text-warning');
+					} else if (currentTheme === 'light') {
+						console.log('setting currentTheme to :>> system');
+						root.dataset.theme = 'system';
+					}
+				
+					// Update the icon based on the new theme
+					// const icon = e.currentTarget.childNodes[0];
+					const icon = document.querySelector('.dark_light_indicator');
+					icon.classList.remove('fa-moon', 'fa-sun', 'fa-circle-half-stroke', 'has-text-link', 'has-text-warning', 'fa-regular', 'fa-solid');
+				
+					if (root.dataset.theme === 'dark') {
+						// Set dark mode icon
+						icon.classList.add('fa-moon', 'has-text-link', 'fa-regular');
+					} else if (root.dataset.theme === 'light') {
+						// Set light mode icon
+						icon.classList.add('fa-sun', 'has-text-warning', 'fa-regular');
+					} else if (root.dataset.theme === 'system') {
+						// Set system mode icon
+						icon.classList.add('fa-circle-half-stroke', 'fa-solid');
 					}
 				});
+
+				console.log('Set default theme to SYSETM');
+				const root = document.documentElement;
+			
+				root.dataset.theme = 'system'; // Default theme
+				const icon = document.querySelector('.dark_light_indicator');
+				icon.classList.remove('fa-moon', 'fa-sun', 'fa-circle-half-stroke', 'has-text-link', 'has-text-warning', 'fa-regular', 'fa-solid');
+				icon.classList.add('fa-circle-half-stroke', 'fa-solid');
+	
+				// Listen for changes in system theme only if in system mode
+				window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+					const currentTheme = document.querySelector('.dark_light_indicator');
+					if (currentTheme.classList.contains('fa-circle-half-stroke')) {						
+						console.log('System theme changed');
+						const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+						if (isDark) {
+							console.log('System theme switched to Dark');
+							document.documentElement.setAttribute('data-theme', 'dark');
+						} else {
+							console.log('System theme switched to Light');
+							document.documentElement.setAttribute('data-theme', 'light');
+						}
+					}
+				});
+	
+				// NOTE - Dark/Light Mode
+				
+				// document.querySelector('#dark_light_selector').addEventListener('click', (e) => {
+				// 	let root = document.documentElement;
+				// 	let isCurrentThemeDark = this.Utility.DOMElements.detectLightDarkMode();
+				// 	console.log('isCurrentThemeDark.matches', isCurrentThemeDark.matches);
+				// 	// if (root.dataset.theme == '') root.dataset.theme = isCurrentThemeDark.matches ? 'dark' : 'light';
+
+				// 	if (root.dataset.theme == 'light') {
+				// 		root.dataset.theme = 'dark'
+				// 		if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
+				// 			e.currentTarget.childNodes[0].classList.remove('fa-sun');
+				// 			e.currentTarget.childNodes[0].classList.remove('has-text-warning');
+				// 		}
+				// 		e.currentTarget.childNodes[0].classList.add('fa-moon');
+				// 		e.currentTarget.childNodes[0].classList.add('has-text-link');
+				// 	} else if (root.dataset.theme == 'dark') {
+				// 		root.dataset.theme = 'light';
+				// 		if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
+				// 			e.currentTarget.childNodes[0].classList.remove('fa-moon');
+				// 			e.currentTarget.childNodes[0].classList.remove('has-text-link');
+				// 		}
+				// 		e.currentTarget.childNodes[0].classList.add('fa-sun');
+				// 		e.currentTarget.childNodes[0].classList.add('has-text-warning');
+				// 	}
+				// });
 				document.querySelector('#app_content').innerHTML = `
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>

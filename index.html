@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="" data-count="0">
+<html lang="en" data-theme="">
 
 <head>
 	<meta charset="UTF-8">
@@ -31,29 +31,6 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rochester&display=swap" rel="stylesheet"> -->
 	<!--End on external resources-->
-	<script type="text/javascript">
-		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-		// Function to handle changes in theme
-		function handleThemeChange(event) {
-			console.log('Theme change!');
-			if (event.matches) {
-				console.log('Switched to dark mode.');
-			} else {
-				console.log('Switched to light mode.');
-			}
-		}
-
-		// Initial check
-		if (mediaQuery.matches) {
-			console.log('Currently in dark mode.');
-		} else {
-			console.log('Currently in light mode.');
-		}
-
-		// Add event listener for changes
-		mediaQuery.addEventListener('change', handleThemeChange);
-	</script>
 
 	<title>ParadigmREVOLUTION CONTAINER</title>
 </head>
@@ -75,7 +52,6 @@
 	<div id="ParadigmREVOLUTION" style="scrollbar-width: none; -ms-overflow-style: none;" class="">
 	</div>
 	<!-- <script type="text/javascript" 	id="service_worker_loader" 	defer src="./ParadigmScripts/sw_loader.js"></script> -->
-	<!-- <script type="module" id="ui_loader" defer src="./paradigm_modules/uikit-3.21.13/js/uikit.min.js"></script> -->
 	<!-- <script type="module" 			id="mqtt" defer src="./node_modules/mqtt//dist/mqtt.min.js"></script> -->
 	<script type="module" id="finderjs" defer src="./node_modules/finderjs/build/finder.min.js"></script>
 	<script type="module" id="ui_loader" defer src="./ParadigmScripts/UI.js"></script>

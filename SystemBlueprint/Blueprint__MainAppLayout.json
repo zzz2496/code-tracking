@@ -4,7 +4,7 @@
 			"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
 				{ "comment": "Object Collections", "tag": "div", "id": "object_collections", "class": "", "innerHTML": "", "content": [
 					{"comment":"Object Collections controls", "tag":"div", "class":"container is-flex is-justify-content-center", "id":"object_collections_controls", "content":[
-						{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"fa fa-moon has-text-link\"></li>"}
+						{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"dark_light_indicator\"></li>"}
 					]},
 					{"comment":"Object Collections Tabs", "tag":"div", "id":"object_collection_tabs", "class":"container is-flex is-justify-content-center", "content":[
 						{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
@@ -14,10 +14,10 @@
 										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Collection"}, "innerHTML": "Collection" }
 									] },
 									{ "tag": "li", "class": " ", "content": [
-										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"RuntimeState"}, "innerHTML": "Rumtime State" }
+										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"RuntimeState"}, "innerHTML": "Runtime State" }
 									] },
 									{ "tag": "li", "class": " ", "content": [
-										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Storage"}, "innerHTML": "Storage" }
+										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"DataStorage"}, "innerHTML": "Data Storage" }
 									] },
 									{ "tag": "li", "class": "", "content": [
 										{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"ComponentGallery"}, "innerHTML": "Component Gallery" }
@@ -29,12 +29,12 @@
 							]}
 						]}
 					]},
-					{"comment":"Object Collections Content", "tag":"div", "class":"container", "content":[
-						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content show", "id":"object_collection_collection", "innerHTML":"Collection", "content":[]},
-						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content",      "id":"object_collection_state", "innerHTML":"State", "content":[]},
-						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content",      "id":"object_collection_datastore", "innerHTML":"Datastore", "content":[]},
-						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content",      "id":"object_collection_gallery", "innerHTML":"Gallery", "content":[]},
-						{"comment":"Object Collections Content", "tag":"div", "class":"container object-collections-content",      "id":"object_collection_templates", "innerHTML":"Templates", "content":[]}
+					{"comment":"Object Collections Content", "id": "object-collections-container", "tag":"div", "class":"container", "content":[
+						{"comment":"Object collection space, every created object will be listed here", "tag":"div", "class":"container object-collections-containers show",                   "data":{"tabtype":"Collection"}, "id":"object_collection_collection", "innerHTML":"Object collection space, every created object will be listed here", "content":[]},
+						{"comment":"Runtime State, any action that is done to the system will be listed here", "tag":"div", "class":"container object-collections-containers",                 "data":{"tabtype":"RuntimeState"}, "id":"object_collection_state", "innerHTML":"Runtime State, any action that is done to the system will be listed here", "content":[]},
+						{"comment":"Data Storage, any database server/data storage will be listed here", "tag":"div", "class":"container object-collections-containers",                       "data":{"tabtype":"DataStorage"}, "id":"object_collection_datastore", "innerHTML":"Data Storage, any database server/data storage will be listed here", "content":[]},
+						{"comment":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "tag":"div", "class":"container object-collections-containers", "data":{"tabtype":"ComponentGallery"}, "id":"object_collection_gallery", "innerHTML":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "content":[]},
+						{"comment":"Templates, pre-made object sets made in Object collection can be saved and listed here", "tag":"div", "class":"container object-collections-containers",   "data":{"tabtype":"Templates"}, "id":"object_collection_templates", "innerHTML":"Templates, pre-made object sets made in Object collection can be saved and listed here", "content":[]}
 					]}
 				] },
 				{
@@ -146,7 +146,7 @@
 						] },
 						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show", "innerHTML": "", "content": [
 							{
-								"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 show app_configurator_containers", "id": "app_graph_container", "content": [
+								"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 show app_configurator_containers", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
 									{
 										"tag": "div", "id": "graph_scroll_content", "style": "width:calc(100vw);height:calc(80vh);overflow:scroll;", "content": [
 											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "<span>App Graph Content</span><br><span style=\"font-decoration:underline\"><br>Components:</span><br><br>Datastore (where to save Data)<br>Datasource (where to get Data)<br>Page (A page to show Document)<br>Schema (Schema for Dataset)<br>Form (Input form for the afformetioned schema)<br>Programming and Graph Logics<br><br>", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }
@@ -155,7 +155,7 @@
 								]
 							},
 							{
-								"comment": "App Programming Container", "tag": "div", "class": "m-0 p-0 show app_configurator_containers", "id": "app_programming_container", "content": [
+								"comment": "App Programming Container", "tag": "div", "class": "m-0 p-0 show app_configurator_containers", "data":{"tabtype":"Programming"}, "id": "app_programming_container", "content": [
 									{
 										"tag": "div", "id": "programming_scroll_content", "style": "width:calc(100vw);height:calc(80vh);overflow:scroll;", "content": [
 											{ "comment": "App Programming Content", "tag": "div", "innerHTML": "<span>App Programming Content</span>", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_programming_content", "content": [] }
@@ -164,27 +164,27 @@
 								]
 							},
 							{
-								"comment": "App Datastore Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "id": "app_datastore_container", "content": [
+								"comment": "App Datastore Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datastore"}, "id": "app_datastore_container", "content": [
 									{ "comment": "App Datastore Content", "tag": "div", "innerHTML": "App Datastore Content", "class": "columns is-gapless is-mobile",  "id": "app_datastore_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Datasource Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "id": "app_datasource_container", "content": [
+								"comment": "App Datasource Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datasource"}, "id": "app_datasource_container", "content": [
 									{ "comment": "App Datasource Content", "tag": "div", "innerHTML": "App Datasource Content", "class": "columns is-gapless is-mobile",  "id": "app_datasource_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Page Layout Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "id": "app_page_layout_container", "content": [
+								"comment": "App Page Layout Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"PageLayout"}, "id": "app_page_layout_container", "content": [
 									{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile",  "id": "app_page_layout_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Form Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "id": "app_form_container", "content": [
+								"comment": "App Form Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"Schema"}, "id": "app_form_container", "content": [
 									{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile", "id": "app_form_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Schema Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "id": "app_schema_container", "content": [
+								"comment": "App Schema Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"Forms"}, "id": "app_schema_container", "content": [
 									{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile", "id": "app_schema_content", "content": [] }									
 								]
 							}
