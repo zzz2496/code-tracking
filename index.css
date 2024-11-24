@@ -192,6 +192,12 @@
     pointer-events: none;       /* Prevent interaction with hidden content */
     z-index: -1;                /* Keep hidden content behind active content */
 	/* border: solid red 1px; */
+	min-width: fit-content;
+	flex-shrink: 0;
+	overflow: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+	white-space: nowrap;        /* Prevent text from wrapping */
 }
 
 /* This class will apply a slide-in transform based on the active tab */
