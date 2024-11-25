@@ -444,106 +444,7 @@ export class Flow {
 					true // Capture phase
 				);
 			},
-			addGlobalEventListenerV3: function (type, selectors, parent = document) {
-				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
-				const initiatedElements = new Set(); // Track selectors that have been handled
-
-				// Add event listener on the parent (or global) scope
-				parent.addEventListener(
-					type,
-					(e) => {
-
-						// Loop through each selector-callback pair
-						for (const { selector, callback } of selectors) {
-							// Find the closest matching ancestor with the selector
-							const targetElement = e.target.closest(selector);
-
-							// Check if this element has already been initiated
-							if (targetElement && !initiatedElements.has(targetElement)) {
-								initiatedElements.add(targetElement); // Mark as initiated
-
-								// Only trigger callback if the closest match is the element itself (not a child)
-								if (targetElement === e.target) {
-									if (!nonBubblingEvents.includes(type)) {
-										callback(e); // Trigger the callback if the event bubbles
-									} else {
-										// For non-bubbling events, manually check ancestor chain
-										let currentElement = e.target;
-										while (currentElement && currentElement !== parent) {
-											if (currentElement.matches(selector)) {
-												callback(e);
-												break;
-											}
-											currentElement = currentElement.parentElement;
-										}
-									}
-									// Stop processing once a match is found and callback is triggered
-									break;
-								}
-							}
-						}
-					},
-					true // Using capture phase to catch events early, for non-bubbling events
-				);
-			},
-
-			addGlobalEventListenerV2: function (type, selectors, parent = document) {
-				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
-
-				// Add event listener on the parent (or global) scope
-				parent.addEventListener(type, (e) => {
-
-					// Loop through each selector-callback pair
-					for (const { selector, callback } of selectors) {
-						// Find the closest matching ancestor with the selector
-						const targetElement = e.target.closest(selector);
-
-						// Only trigger callback if the closest match is the element itself (not a child)
-						if (targetElement && targetElement === e.target) {
-							if (!nonBubblingEvents.includes(type)) {
-								callback(e);  // Trigger the callback if the event bubbles
-							} else {
-								// For non-bubbling events, manually check ancestor chain
-								let currentElement = e.target;
-								while (currentElement && currentElement !== parent) {
-									if (currentElement.matches(selector)) {
-										callback(e);
-										break;
-									}
-									currentElement = currentElement.parentElement;
-								}
-							}
-							// Stop processing once a match is found and callback is triggered
-							break;
-						}
-					}
-				}, true); // Using capture phase to catch events early, for non-bubbling events
-			},
-
-			addGlobalEventListenerV1: function (type, selector, callback, parent = document) {
-				const nonBubblingEvents = ['focus', 'blur', 'keyup'];
-
-				// Add event listener on the parent (or global) scope
-				parent.addEventListener(type, (e) => {
-					// Check if the event target matches the selector
-					if (e.target.matches(selector)) {
-						// Directly call callback if the event bubbles
-						if (!nonBubblingEvents.includes(type)) {
-							callback(e);
-						} else {
-							// For non-bubbling events, manually trigger on ancestors
-							let currentElement = e.CurrentTarget;
-							while (currentElement && currentElement !== parent) {
-								if (currentElement.matches(selector)) {
-									callback(e);
-								}
-								currentElement = currentElement.parentElement;
-							}
-						}
-					}
-				}, true); // Using capture phase to catch events early, for non-bubbling events
-			},
-			setupTabSwitcher: ((tabSelector, contentContainerSelector, activeClass = 'is-active', showClass = 'show') => {
+			setupTabSwitcher: ((tabSelector, contentContainerSelector, activeClass = 'is-active', showClass = 'show', callback) => {
 				document.querySelectorAll(tabSelector).forEach((tab, index, tabs) => {
 					tab.addEventListener('click', () => {
 						const tabType = tab.dataset.tabtype;
@@ -555,23 +456,31 @@ export class Flow {
 						tab.parentElement.classList.add(activeClass);
 			
 						// Remove 'show' class and reset transforms on all content containers
-						document.querySelectorAll(contentContainerSelector).forEach((container, containerIndex) => {
-							container.classList.remove(showClass);
-							container.style.transform = ''; // Reset transform
-			
-							// Slide out non-selected containers
-							if (container.dataset.tabtype !== tabType) {
-								container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
+						const arrSelector = contentContainerSelector.includes(',') 
+							? contentContainerSelector.split(',').map(s => s.trim()) 
+							: [contentContainerSelector];
+
+						arrSelector.forEach(selector => {
+							document.querySelectorAll(selector).forEach((container, containerIndex) => {
+								container.classList.remove(showClass);
+								container.style.transform = ''; // Reset transform
+				
+								// Slide out non-selected containers
+								if (container.dataset.tabtype !== tabType) {
+									container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
+								}
+							});
+						});
+
+						// Show and slide in the selected container
+						arrSelector.forEach(selector => {
+							const selectedContainer = document.querySelector(`${selector}[data-tabtype="${tabType}"]`);
+							if (selectedContainer) {
+								selectedContainer.classList.add(showClass);
+								selectedContainer.style.transform = 'translateX(0)';
 							}
 						});
-			
-						// Show and slide in the selected container
-						const selectedContainer = document.querySelector(`${contentContainerSelector}[data-tabtype="${tabType}"]`);
-						if (selectedContainer) {
-							selectedContainer.classList.add(showClass);
-							selectedContainer.style.transform = 'translateX(0)';
-						}
-			
+								
 						// Optionally show/hide additional controls (if applicable)
 						const controlContainerSelector = `[data-controltype="${tabType}"]`;
 						document.querySelectorAll('[data-controltype]').forEach((controlContainer) => {
@@ -581,6 +490,7 @@ export class Flow {
 						if (selectedControlContainer) {
 							selectedControlContainer.classList.add(showClass);
 						}
+						if (callback) callback();
 					});
 				});
 			}),
@@ -615,6 +525,78 @@ export class Flow {
 					}
 				});
 			},
+			addDataPreparationComponent: (id, componentType, generateContent) => {
+				console.log(`add Data Preperation ${componentType} clicked`);
+				const appArea = document.querySelector('#app_data_preparation_area');
+				if (!appArea.classList.contains('show')) appArea.classList.add('show');
+			
+				let num = Date.now();
+				let container_id = `container_${componentType.toLowerCase()}_${num}`;
+				let content = generateContent(num, container_id);
+				const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+				let str = `
+					<div class="box m-3 data_preparation_box" id="${id}">
+						<div class="is-flex is-align-items-center">
+							<h1 class="subtitle is-2 m-0 p-0">${componentType.toUpperCase()}&nbsp;</h1>
+							<div class="field has-addons">
+								<p class="control">
+									<button class="button prev-box">
+										<span class="icon is-small">
+											<li class="fa-solid fa-angle-up"></li>
+										</span>
+									</button>
+								</p>
+								<p class="control">
+									<button class="button next-box">
+										<span class="icon is-small">
+											<li class="fa-solid fa-angle-down"></li>
+										</span>
+									</button>
+								</p>
+							</div> 
+						</div>
+						<hr>
+						<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+							${content}
+						</div>
+					</div>`;
+				appArea.innerHTML += str;
+
+				// Calculate WIDTH
+				let maxcount = 0;
+				document.querySelectorAll('.data_preparation_area_container').forEach(container => {
+					if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+				});
+
+				// let eleWidth = document.querySelector(`#${id}`).offsetWidth;
+				let element = document.querySelector(`#${id}`);
+				const eleWidth = element.offsetWidth;
+				
+				if (((appArea.style.flexBasis.replace('px', ''))*1) < eleWidth) appArea.style.flexBasis = 28 + eleWidth + 'px';
+			
+				// Handle scrolling
+				this.SnapScroll = false;
+				setTimeout(() => {
+					document.querySelector('#app_root_container').scrollTo({
+						left: document.querySelector('#app_root_container').scrollWidth,
+						behavior: 'smooth'
+					});
+				}, 500);
+				setTimeout(() => { this.SnapScroll = true; }, 1000);
+				setTimeout(() => {
+					let selectedBox = document.querySelector(`.${container_id}`).querySelector('.box');
+					if (selectedBox) {
+						let scrollContainer = document.querySelector('#app_data_preparation_area');
+						let offsetLeft = selectedBox.offsetLeft+24+'px';
+						console.log('offsetLeft :>> ', offsetLeft);
+						scrollContainer.scrollTo({
+							left: offsetLeft,
+							behavior: 'smooth'
+						});
+					}
+				}, 500);
+		},
 			InitializeFormControls: () => {
 				this.SnapScroll = true; // Flag to enable/disable snapping
 				const scrollContainer = document.querySelector('#app_root_container');
@@ -646,302 +628,344 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 				});
-
-				// NOTE - ADD NODE BUTTON
+				// NOTE - Add NODE Component
 				document.querySelector('#graph_addnode_button').addEventListener('click', () => {
-					console.log('add Node clicked');
-					if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
-					
-					let num = Date.now();
-					let container_id = `container_node_${Date.now()}`;
-					let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
-					let str = ` <div class="box m-3 p-3 data_preparation_box">
-									<div class="is-flex is-align-items-center">
-										<h1 class="subtitle is-2 m-0 p-0">NODE&nbsp;</h1>
-										<div class="field has-addons">
-											<p class="control">
-												<button class="button prev-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-up"></li>
-													</span>
-												</button>
-											</p>
-											<p class="control">
-												<button class="button next-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-down"></li>
-													</span>
-												</button>
-											</p>
-										</div> 
-									</div>
-									<hr>
-									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
-										${this.Form.Render.traverseDOMProxyOBJ(compcanvas)}
-									</div>
-								</div>`;
-
-					document.querySelector('#app_data_preparation_area').innerHTML += str;
-					
-					// Calculate WIDTH
-					let maxcount = 0;
-					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
-					console.log('childContainers', childContainers);
-					childContainers.forEach((container) => {
-						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
+						let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
+						return this.Form.Render.traverseDOMProxyOBJ(compcanvas);
 					});
-
-					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (4 * 23)+4 + 'rem';
-
-					this.SnapScroll = false;
-					setTimeout(() => {
-						document.querySelector('#app_root_container').scrollTo({
-							left: document.querySelector('#app_root_container').scrollWidth,
-							behavior: 'smooth'
-						});
-					}, 300);
-					setTimeout(() => {
-						this.SnapScroll = true;
-					}, 500);
-					setTimeout(() => {
-						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
-						if (selectedBox) {
-							// Get the scrollable container
-							let scrollContainer = document.querySelector('#app_data_preparation_area');
-							
-							// Get the offset of the selected box relative to the container
-							let offsetLeft = selectedBox.offsetLeft;
-							
-							// Scroll to that position with smooth behavior
-							scrollContainer.scrollTo({
-								left: offsetLeft,
-								behavior: 'smooth'
-							});
-						}
-					}, 300);
+				});
+				
+				document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_PROGRAMMING___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
 				});
 
-				// NOTE - ADD LAYOUT BUTTON
+				document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_DATASTORE___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
+				});
+
+				document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
+				});
+
 				document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
-					console.log('add Layout clicked');
-					if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
-
-					let num = Date.now();
-					let container_id = `container_layout_${Date.now()}`;
-					let str = ` <div class="box m-3 p-3 data_preparation_box">
-									<div class="is-flex is-align-items-center">
-										<h1 class="subtitle is-2 m-0 p-0">LAYOUT&nbsp;</h1>
-										<div class="field has-addons">
-											<p class="control">
-												<button class="button prev-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-up"></li>
-													</span>
-												</button>
-											</p>
-											<p class="control">
-												<button class="button next-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-down"></li>
-													</span>
-												</button>
-											</p>
-										</div> 
-									</div>
-									<hr>
-									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
-										${this.Form.Initialize.FormCard('New_LAYOUT___' + num, this.Forms[0], 0, 1, 100, container_id)}
-									</div>
-								</div>`;
-
-					document.querySelector('#app_data_preparation_area').innerHTML += str;
-
-					// Calculate WIDTH
-					let maxcount = 0;
-					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
-					childContainers.forEach((container) => {
-						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_LAYOUT___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
-
-					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
-
-					this.SnapScroll = false;
-					setTimeout(() => {
-						document.querySelector('#app_root_container').scrollTo({
-							left: document.querySelector('#app_root_container').scrollWidth,
-							behavior: 'smooth'
-						});
-					}, 300);
-					setTimeout(() => {
-						this.SnapScroll = true;
-					}, 500);
-					setTimeout(() => {
-						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
-						if (selectedBox) {
-							// Get the scrollable container
-							let scrollContainer = document.querySelector('#app_data_preparation_area');
-							
-							// Get the offset of the selected box relative to the container
-							let offsetLeft = selectedBox.offsetLeft;
-							
-							// Scroll to that position with smooth behavior
-							scrollContainer.scrollTo({
-								left: offsetLeft,
-								behavior: 'smooth'
-							});
-						}
-					}, 300);
 				});
-
-				// NOTE - ADD SCHEMA BUTTON
+				
 				document.querySelector('#graph_addschema_button').addEventListener('click', () => {
-					console.log('add Schema clicked');
-					if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
-
-					let num = Date.now();
-					let container_id = `container_schema_${Date.now()}`;
-					let str = ` <div class="box m-3 p-3 data_preparation_box">
-									<div class="is-flex is-align-items-center">
-										<h1 class="subtitle is-2 m-0 p-0">SCHEMA&nbsp;</h1>
-										<div class="field has-addons">
-											<p class="control">
-												<button class="button prev-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-up"></li>
-													</span>
-												</button>
-											</p>
-											<p class="control">
-												<button class="button next-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-down"></li>
-													</span>
-												</button>
-											</p>
-										</div> 
-									</div>
-									<hr>
-									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
-										${this.Form.Initialize.FormCard('New_SCHEMA___' + num, this.Forms[0], 0, 1, 100, container_id)}
-									</div>
-								</div>`;
-
-					document.querySelector('#app_data_preparation_area').innerHTML += str;
-
-					// Calculate WIDTH
-					let maxcount = 0;
-					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
-					childContainers.forEach((container) => {
-						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_SCHEMA___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
-
-					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
-
-					this.SnapScroll = false;
-					setTimeout(() => {
-						document.querySelector('#app_root_container').scrollTo({
-							left: document.querySelector('#app_root_container').scrollWidth,
-							behavior: 'smooth'
-						});
-					}, 300);
-					setTimeout(() => {
-						this.SnapScroll = true;
-					}, 500);
-					setTimeout(() => {
-						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
-						if (selectedBox) {
-							// Get the scrollable container
-							let scrollContainer = document.querySelector('#app_data_preparation_area');
-							
-							// Get the offset of the selected box relative to the container
-							let offsetLeft = selectedBox.offsetLeft;
-							
-							// Scroll to that position with smooth behavior
-							scrollContainer.scrollTo({
-								left: offsetLeft,
-								behavior: 'smooth'
-							});
-						}
-					}, 300);
-					
 				});
-
-				// NOTE - ADD FORM BUTTON
+				
 				document.querySelector('#graph_addform_button').addEventListener('click', () => {
-					console.log('add Form clicked');
-					if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
-
-					let num = Date.now();
-					let container_id = `container_node_${Date.now()}`;
-					let str = ` <div class="box m-3 p-3 data_preparation_box">
-									<div class="is-flex is-align-items-center">
-										<h1 class="subtitle is-2 m-0 p-0">FORM&nbsp;</h1>
-										<div class="field has-addons">
-											<p class="control">
-												<button class="button prev-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-up"></li>
-													</span>
-												</button>
-											</p>
-											<p class="control">
-												<button class="button next-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-down"></li>
-													</span>
-												</button>
-											</p>
-										</div> 
-									</div>
-									<hr>
-									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
-										${this.Form.Initialize.FormCard('New_FORM___' + num, this.Forms[0], 0, 1, 100, container_id)}
-									</div>
-								</div>`;
-
-					document.querySelector('#app_data_preparation_area').innerHTML += str;
-
-					// Calculate WIDTH
-					let maxcount = 0;
-					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
-					childContainers.forEach((container) => {
-						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+					this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
-
-					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
-
-					this.SnapScroll = false;
-					setTimeout(() => {
-						document.querySelector('#app_root_container').scrollTo({
-							left: document.querySelector('#app_root_container').scrollWidth,
-							behavior: 'smooth'
-						});
-					}, 300);
-					setTimeout(() => {
-						this.SnapScroll = true;
-					}, 500);
-					setTimeout(() => {
-						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
-						if (selectedBox) {
-							// Get the scrollable container
-							let scrollContainer = document.querySelector('#app_data_preparation_area');
-							
-							// Get the offset of the selected box relative to the container
-							let offsetLeft = selectedBox.offsetLeft;
-							
-							// Scroll to that position with smooth behavior
-							scrollContainer.scrollTo({
-								left: offsetLeft,
-								behavior: 'smooth'
-							});
-						}
-					}, 300);
 				});
-				//NOTE - NEW VERSION
+				// // NOTE - ADD NODE BUTTON
+				// document.querySelector('#graph_addnode_button').addEventListener('click', () => {
+				// 	console.log('add Node clicked');
+				// 	if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
+					
+				// 	let num = Date.now();
+				// 	let container_id = `container_node_${Date.now()}`;
+				// 	let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
+				// 	let str = ` <div class="box m-3 p-3 data_preparation_box">
+				// 					<div class="is-flex is-align-items-center">
+				// 						<h1 class="subtitle is-2 m-0 p-0">NODE&nbsp;</h1>
+				// 						<div class="field has-addons">
+				// 							<p class="control">
+				// 								<button class="button prev-box">
+				// 									<span class="icon is-small">
+				// 										<li class="fa-solid fa-angle-up"></li>
+				// 									</span>
+				// 								</button>
+				// 							</p>
+				// 							<p class="control">
+				// 								<button class="button next-box">
+				// 									<span class="icon is-small">
+				// 										<li class="fa-solid fa-angle-down"></li>
+				// 									</span>
+				// 								</button>
+				// 							</p>
+				// 						</div> 
+				// 					</div>
+				// 					<hr>
+				// 					<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+				// 						${this.Form.Render.traverseDOMProxyOBJ(compcanvas)}
+				// 					</div>
+				// 				</div>`;
+
+				// 	document.querySelector('#app_data_preparation_area').innerHTML += str;
+					
+				// 	// Calculate WIDTH
+				// 	let maxcount = 0;
+				// 	let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+				// 	console.log('childContainers', childContainers);
+				// 	childContainers.forEach((container) => {
+				// 		if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+				// 	});
+
+				// 	// Set the new width
+				// 	document.querySelector('#app_data_preparation_area.show').style.flexBasis = (4 * 23)+4 + 'rem';
+
+				// 	this.SnapScroll = false;
+				// 	setTimeout(() => {
+				// 		document.querySelector('#app_root_container').scrollTo({
+				// 			left: document.querySelector('#app_root_container').scrollWidth,
+				// 			behavior: 'smooth'
+				// 		});
+				// 	}, 300);
+				// 	setTimeout(() => {
+				// 		this.SnapScroll = true;
+				// 	}, 500);
+				// 	setTimeout(() => {
+				// 		let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+				// 		if (selectedBox) {
+				// 			// Get the scrollable container
+				// 			let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+				// 			// Get the offset of the selected box relative to the container
+				// 			let offsetLeft = selectedBox.offsetLeft;
+							
+				// 			// Scroll to that position with smooth behavior
+				// 			scrollContainer.scrollTo({
+				// 				left: offsetLeft,
+				// 				behavior: 'smooth'
+				// 			});
+				// 		}
+				// 	}, 300);
+				// });
+
+				// // NOTE - ADD LAYOUT BUTTON
+				// document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
+				// 	console.log('add Layout clicked');
+				// 	if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
+
+				// 	let num = Date.now();
+				// 	let container_id = `container_layout_${Date.now()}`;
+				// 	let str = ` <div class="box m-3 p-3 data_preparation_box">
+				// 					<div class="is-flex is-align-items-center">
+				// 						<h1 class="subtitle is-2 m-0 p-0">LAYOUT&nbsp;</h1>
+				// 						<div class="field has-addons">
+				// 							<p class="control">
+				// 								<button class="button prev-box">
+				// 									<span class="icon is-small">
+				// 										<li class="fa-solid fa-angle-up"></li>
+				// 									</span>
+				// 								</button>
+				// 							</p>
+				// 							<p class="control">
+				// 								<button class="button next-box">
+				// 									<span class="icon is-small">
+				// 										<li class="fa-solid fa-angle-down"></li>
+				// 									</span>
+				// 								</button>
+				// 							</p>
+				// 						</div> 
+				// 					</div>
+				// 					<hr>
+				// 					<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+				// 						${this.Form.Initialize.FormCard('New_LAYOUT___' + num, this.Forms[0], 0, 1, 100, container_id)}
+				// 					</div>
+				// 				</div>`;
+
+				// 	document.querySelector('#app_data_preparation_area').innerHTML += str;
+
+				// 	// Calculate WIDTH
+				// 	let maxcount = 0;
+				// 	let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+				// 	childContainers.forEach((container) => {
+				// 		if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+				// 	});
+
+				// 	// Set the new width
+				// 	document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
+
+				// 	this.SnapScroll = false;
+				// 	setTimeout(() => {
+				// 		document.querySelector('#app_root_container').scrollTo({
+				// 			left: document.querySelector('#app_root_container').scrollWidth,
+				// 			behavior: 'smooth'
+				// 		});
+				// 	}, 300);
+				// 	setTimeout(() => {
+				// 		this.SnapScroll = true;
+				// 	}, 500);
+				// 	setTimeout(() => {
+				// 		let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+				// 		if (selectedBox) {
+				// 			// Get the scrollable container
+				// 			let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+				// 			// Get the offset of the selected box relative to the container
+				// 			let offsetLeft = selectedBox.offsetLeft;
+							
+				// 			// Scroll to that position with smooth behavior
+				// 			scrollContainer.scrollTo({
+				// 				left: offsetLeft,
+				// 				behavior: 'smooth'
+				// 			});
+				// 		}
+				// 	}, 300);
+				// });
+
+				// // NOTE - ADD SCHEMA BUTTON
+				// document.querySelector('#graph_addschema_button').addEventListener('click', () => {
+				// 	console.log('add Schema clicked');
+				// 	if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
+
+				// 	let num = Date.now();
+				// 	let container_id = `container_schema_${Date.now()}`;
+				// 	let str = ` <div class="box m-3 p-3 data_preparation_box">
+				// 					<div class="is-flex is-align-items-center">
+				// 						<h1 class="subtitle is-2 m-0 p-0">SCHEMA&nbsp;</h1>
+				// 						<div class="field has-addons">
+				// 							<p class="control">
+				// 								<button class="button prev-box">
+				// 									<span class="icon is-small">
+				// 										<li class="fa-solid fa-angle-up"></li>
+				// 									</span>
+				// 								</button>
+				// 							</p>
+				// 							<p class="control">
+				// 								<button class="button next-box">
+				// 									<span class="icon is-small">
+				// 										<li class="fa-solid fa-angle-down"></li>
+				// 									</span>
+				// 								</button>
+				// 							</p>
+				// 						</div> 
+				// 					</div>
+				// 					<hr>
+				// 					<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+				// 						${this.Form.Initialize.FormCard('New_SCHEMA___' + num, this.Forms[0], 0, 1, 100, container_id)}
+				// 					</div>
+				// 				</div>`;
+
+				// 	document.querySelector('#app_data_preparation_area').innerHTML += str;
+
+				// 	// Calculate WIDTH
+				// 	let maxcount = 0;
+				// 	let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+				// 	childContainers.forEach((container) => {
+				// 		if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+				// 	});
+
+				// 	// Set the new width
+				// 	document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
+
+				// 	this.SnapScroll = false;
+				// 	setTimeout(() => {
+				// 		document.querySelector('#app_root_container').scrollTo({
+				// 			left: document.querySelector('#app_root_container').scrollWidth,
+				// 			behavior: 'smooth'
+				// 		});
+				// 	}, 300);
+				// 	setTimeout(() => {
+				// 		this.SnapScroll = true;
+				// 	}, 500);
+				// 	setTimeout(() => {
+				// 		let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+				// 		if (selectedBox) {
+				// 			// Get the scrollable container
+				// 			let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+				// 			// Get the offset of the selected box relative to the container
+				// 			let offsetLeft = selectedBox.offsetLeft;
+							
+				// 			// Scroll to that position with smooth behavior
+				// 			scrollContainer.scrollTo({
+				// 				left: offsetLeft,
+				// 				behavior: 'smooth'
+				// 			});
+				// 		}
+				// 	}, 300);
+					
+				// });
+
+				// // NOTE - ADD FORM BUTTON
+				// document.querySelector('#graph_addform_button').addEventListener('click', () => {
+				// 	console.log('add Form clicked');
+				// 	if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
+
+				// 	let num = Date.now();
+				// 	let container_id = `container_node_${Date.now()}`;
+				// 	let str = ` <div class="box m-3 p-3 data_preparation_box">
+				// 					<div class="is-flex is-align-items-center">
+				// 						<h1 class="subtitle is-2 m-0 p-0">FORM&nbsp;</h1>
+				// 						<div class="field has-addons">
+				// 							<p class="control">
+				// 								<button class="button prev-box">
+				// 									<span class="icon is-small">
+				// 										<li class="fa-solid fa-angle-up"></li>
+				// 									</span>
+				// 								</button>
+				// 							</p>
+				// 							<p class="control">
+				// 								<button class="button next-box">
+				// 									<span class="icon is-small">
+				// 										<li class="fa-solid fa-angle-down"></li>
+				// 									</span>
+				// 								</button>
+				// 							</p>
+				// 						</div> 
+				// 					</div>
+				// 					<hr>
+				// 					<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
+				// 						${this.Form.Initialize.FormCard('New_FORM___' + num, this.Forms[0], 0, 1, 100, container_id)}
+				// 					</div>
+				// 				</div>`;
+
+				// 	document.querySelector('#app_data_preparation_area').innerHTML += str;
+
+				// 	// Calculate WIDTH
+				// 	let maxcount = 0;
+				// 	let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+				// 	childContainers.forEach((container) => {
+				// 		if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+				// 	});
+
+				// 	// Set the new width
+				// 	document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
+
+				// 	this.SnapScroll = false;
+				// 	setTimeout(() => {
+				// 		document.querySelector('#app_root_container').scrollTo({
+				// 			left: document.querySelector('#app_root_container').scrollWidth,
+				// 			behavior: 'smooth'
+				// 		});
+				// 	}, 300);
+				// 	setTimeout(() => {
+				// 		this.SnapScroll = true;
+				// 	}, 500);
+				// 	setTimeout(() => {
+				// 		let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+				// 		if (selectedBox) {
+				// 			// Get the scrollable container
+				// 			let scrollContainer = document.querySelector('#app_data_preparation_area');
+							
+				// 			// Get the offset of the selected box relative to the container
+				// 			let offsetLeft = selectedBox.offsetLeft;
+							
+				// 			// Scroll to that position with smooth behavior
+				// 			scrollContainer.scrollTo({
+				// 				left: offsetLeft,
+				// 				behavior: 'smooth'
+				// 			});
+				// 		}
+				// 	}, 300);
+				// });
+				//NOTE - addGlobalEveentListener CLICK
 				this.Form.Events.addGlobalEventListener('click', [
 					{
 						selector: '.datastore-status-indicator',
@@ -1005,11 +1029,20 @@ export class Flow {
 						}
 					},
 					{
-						selector: '.in-tail-button',
+						selector: '.form-input-types',
 						callback: (e) => {
+							//ADD ROUNDED BOX
+							e.target.closest('.data_preparation_box').querySelectorAll('.form-input-types').forEach((item) => {
+								console.log('item', item);
+								item.style = '';
+								item.classList.remove('box', 'focused', 'm-2');
+							 });
+							e.target.closest('.form-input-types').style = 'width: 100%;';
+							e.target.closest('.form-input-types').classList.add('box', 'focused', 'mx-0');
+							
 							let num = Date.now();
 							//ADD FORM COLUMN HERE
-							// console.log(e.target.dataset);
+							
 							let form_container = e.target.closest(`.${e.target.dataset.form_container}`);
 							// console.log('form_container >>>>', form_container);
 							let newCol = this.Form.Initialize.FormCard('form_components___' + num, this.Forms[1], 1, 1, 100);
@@ -1081,18 +1114,24 @@ export class Flow {
 								// Check child elements count to handle visibility
 								if (document.querySelector('#app_data_preparation_area').childElementCount == 0) {
 									document.querySelector('#app_data_preparation_area').classList.remove('show');
+									document.querySelector('#app_data_preparation_area').style.flexBasis = '0rem';
 								}
 
 								// Calculate WIDTH
-								console.log('new calc width');
-								let maxcount = 0;
 								let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+								let arrayChilds = [];
 								childContainers.forEach((container) => {
-									if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+									arrayChilds.push(container);
 								});
 
 								// Set the new width
-								document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
+								//NOTE - THIS
+								let eleWidth = 0;
+								arrayChilds.forEach((container) => {
+									if (eleWidth < container.offsetWidth) eleWidth = container.offsetWidth;
+								});
+								
+								document.querySelector('#app_data_preparation_area').style.flexBasis = 28 + eleWidth + 'px';
 
 								this.SnapScroll = false;
 								setTimeout(() => {
@@ -1105,7 +1144,7 @@ export class Flow {
 									this.SnapScroll = true;
 								}, 500);
 								setTimeout(() => {
-									let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
+									let selectedBox = parentEl;
 									if (selectedBox) {
 										// Get the scrollable container
 										let scrollContainer = document.querySelector('#app_data_preparation_area');
@@ -1170,77 +1209,10 @@ export class Flow {
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
-				this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers');
-				this.Form.Events.setupTabSwitcher('.tab-object-collections', '.object-collections-containers');
-				// document.querySelectorAll('.tab-graph-selector').forEach((tab, index, tabs) => {
-				// 	tab.addEventListener('click', () => {
-				// 		// Remove 'is-active' class from all tabs
-				// 		tabs.forEach((t) => t.parentElement.classList.remove('is-active'));
-				
-				// 		// Add 'is-active' to the clicked tab
-				// 		tab.parentElement.classList.add('is-active');
-				
-				// 		// Remove 'show' from all main content containers
-				// 		document.querySelectorAll('.app_configurator_containers').forEach((container) => {
-				// 			container.classList.remove('show');
-				// 			container.style.transform = '';  // Reset transform
-				// 		});
-				
-				// 		// Also remove 'show' from all control containers
-				// 		document.querySelectorAll('.app_graph_controls_containers > div').forEach((controlContainer) => {
-				// 			controlContainer.classList.remove('show');
-				// 		});
-				
-				// 		// Determine the selected main container and control container based on tab type
-				// 		const selectedContainerId = {
-				// 			'Graph': '#app_graph_container',
-				// 			'Programming': '#app_programming_container',
-				// 			'Datastore': '#app_datastore_container',
-				// 			'Datasource': '#app_datasource_container',
-				// 			'PageLayout': '#app_page_layout_container',
-				// 			'Forms': '#app_form_container',
-				// 			'Schema': '#app_schema_container'
-				// 		}[tab.dataset.tabtype];
-				
-				// 		const selectedContainer = document.querySelector(selectedContainerId);
-				
-				// 		// Slide out all other containers to the left or right except the selected one
-				// 		document.querySelectorAll('.app_configurator_containers').forEach((container, containerIndex) => {
-				// 			if (container !== selectedContainer) {
-				// 				container.style.transform = containerIndex < index ? 'translateX(-100%)' : 'translateX(100%)';
-				// 			}
-				// 		});
-				
-				// 		// Show and slide in the selected main container
-				// 		selectedContainer.classList.add('show');
-				// 		selectedContainer.style.transform = 'translateX(0)';
-				
-				// 		// Show the appropriate control container based on the selected tab
-				// 		switch (tab.dataset.tabtype) {
-				// 			case 'Graph':
-				// 				document.querySelector('.graph-control-container').classList.add('show');
-				// 				break;
-				// 			case 'Programming':
-				// 				document.querySelector('.programming-control-container').classList.add('show');
-				// 				break;
-				// 			case 'Datastore':
-				// 				document.querySelector('.datastore-control-container').classList.add('show');
-				// 				break;
-				// 			case 'Datasource':
-				// 				document.querySelector('.datasource-control-container').classList.add('show');
-				// 				break;
-				// 			case 'PageLayout':
-				// 				document.querySelector('.layout-control-container').classList.add('show');
-				// 				break;
-				// 			case 'Forms':
-				// 				document.querySelector('.form-control-container').classList.add('show');
-				// 				break;
-				// 			case 'Schema':
-				// 				document.querySelector('.schema-control-container').classList.add('show');
-				// 				break;
-				// 		}
-				// 	});
-				// });
+				this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers, .addremove-control-container');
+				document.querySelector('.tab-graph-selector[data-tabtype="Graph"]').click();
+				this.Form.Events.setupTabSwitcher('.tab-object-collections', '.object-collections-containers', 'is-active', 'show');
+				document.querySelector('.tab-object-collections[data-tabtype="Collection"]').click();
 				
 				// NOTE - Dark/Light Mode
 				document.querySelector('#dark_light_selector').addEventListener('click', (e) => {
@@ -1278,7 +1250,7 @@ export class Flow {
 					}
 				});
 
-				console.log('Set default theme to SYSETM');
+				console.log('Set default theme to SYSTEM');
 				const root = document.documentElement;
 			
 				root.dataset.theme = 'system'; // Default theme
@@ -1300,34 +1272,8 @@ export class Flow {
 							document.documentElement.setAttribute('data-theme', 'light');
 						}
 					}
-				});
-	
+				});	
 				// NOTE - Dark/Light Mode
-				
-				// document.querySelector('#dark_light_selector').addEventListener('click', (e) => {
-				// 	let root = document.documentElement;
-				// 	let isCurrentThemeDark = this.Utility.DOMElements.detectLightDarkMode();
-				// 	console.log('isCurrentThemeDark.matches', isCurrentThemeDark.matches);
-				// 	// if (root.dataset.theme == '') root.dataset.theme = isCurrentThemeDark.matches ? 'dark' : 'light';
-
-				// 	if (root.dataset.theme == 'light') {
-				// 		root.dataset.theme = 'dark'
-				// 		if (e.currentTarget.childNodes[0].classList.contains('fa-sun')) {
-				// 			e.currentTarget.childNodes[0].classList.remove('fa-sun');
-				// 			e.currentTarget.childNodes[0].classList.remove('has-text-warning');
-				// 		}
-				// 		e.currentTarget.childNodes[0].classList.add('fa-moon');
-				// 		e.currentTarget.childNodes[0].classList.add('has-text-link');
-				// 	} else if (root.dataset.theme == 'dark') {
-				// 		root.dataset.theme = 'light';
-				// 		if (e.currentTarget.childNodes[0].classList.contains('fa-moon')) {
-				// 			e.currentTarget.childNodes[0].classList.remove('fa-moon');
-				// 			e.currentTarget.childNodes[0].classList.remove('has-text-link');
-				// 		}
-				// 		e.currentTarget.childNodes[0].classList.add('fa-sun');
-				// 		e.currentTarget.childNodes[0].classList.add('has-text-warning');
-				// 	}
-				// });
 				document.querySelector('#app_content').innerHTML = `
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
@@ -1478,10 +1424,10 @@ export class Flow {
 					let inputField = {};
 					switch (type) {
 						case 'action':
-							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, class: `button form-action-button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button form-action-button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
 							break;
 						case 'button':
-							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, class: `button paradigm-form-element in-form-button is-fullwidth ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button paradigm-form-element in-form-button is-fullwidth ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
 							break;
 						case 'separator':
 							inputField = { comment: "HR", tag: "hr" };
@@ -1490,35 +1436,34 @@ export class Flow {
 							inputField = {
 								comment: "label", tag: "label", class: "checkbox", content: [
 									{
-										comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, class: `paradigm-form-element ${d_class}`, value: value, readonly: readonly, type: 'checkbox', content: [
+										comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `paradigm-form-element ${d_class}`, value: value, readonly: readonly, type: 'checkbox', content: [
 											{tag:"label", class:"m-1" } //innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))
 									] }
 								]
 							};
 							break;
 						case 'number':
-							inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, class: `input paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `input paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
 							break;
 						case 'textarea':
-							inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, class: `textarea paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `textarea paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
 							break;
 						case 'select':
 							inputField = {
 								comment: "Select container", tag: "div", class: "select is-link is-fullwidth ", content: [
-									{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, class: `select_input paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+									{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `select_input paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
 								]
 							};
 							break;
 						case 'text_select':
-							inputField = { comment: "Searchable textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input paradigm-form-element text_select is-link ${d_class} `, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value } };
+							inputField = { comment: "Searchable textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, data: {form_container: form_container}, class: `input paradigm-form-element text_select is-link ${d_class} `, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container } };
 							break;
 						default:
-							inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value }};
+							inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container }};
 							break;
 					}
 					// Handle $head and $tail cases
 					if (!head && !tail) {
-					
 						return { comment: "Container inputbox", tag: "div", class:`control ${field.type == 'action' ? '' : 'is-expanded'}   ${type == 'boolean' ? 'mt-2' : ''}`, content: [inputField] };
 					}
 
@@ -1685,10 +1630,11 @@ export class Flow {
 				let tfield = {};
 				let Util = $util;
 				$schema.forEach((field, index) => {
-					const { id, label = '', form } = field;
+					const { id, label = '', form, field_class } = field;
+		
 					if (form === 1) {
 						if (label || field.type !== 'separator') {
-							tfield = {comment: "Field", tag: "div", class: `field ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
+							tfield = {comment: "Field", tag: "div", class: `field ${field_class} ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
 
 							let tlabel = field.label || (field.type === 'action' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
 							if (is_horizontal) {
@@ -2041,7 +1987,7 @@ export class Flow {
 					header: form.label,
 					content: [this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal, form_container)]
 				});
-				let column = { comment: "Column", tag: "div", class: `column is-flex collapsible`, style: "max-width:27rem;min-width:22rem;", order: 0, content: [testcard] }
+				let column = { comment: "Column", tag: "div", class: `column is-flex collapsible`, style: "max-width:25.5rem;min-width:25.5rem;", order: 0, content: [testcard] }
 				return isHTML ? this.Form.Render.traverseDOMProxyOBJ(column) : column;
 			},
 		},

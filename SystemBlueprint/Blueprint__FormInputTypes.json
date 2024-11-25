@@ -26,74 +26,26 @@
 				"id": "textbox",
 				"label": "Text Box",
 				"type": "text",
-				"form": 1,
 				"value": "",
-				"head": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "label",
-					"value": "Currency",
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				},
-				"tail": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "button", 
-					"value": "Select",
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				}
+				"readonly": 1,
+				"field_class": "form-input-types",
+				"class":"",
+				"form": 1
 			},
 			{
 				"id": "searchable_textbox",
 				"label": "Searchable Text Box",
 				"type": "text_select",
-				"form": 1,
+				"readonly": 1,
 				"value": [
-					"Nostrum",
-					"earum",
-					"quis",
-					"repudiandae",
-					"optio",
-					"qui",
-					"fuga.",
-					"Quos",
-					"optio",
-					"ab.",
-					"Ipsam",
-					"aperiam",
-					"sed",
-					"facilis.",
-					"Aut",
-					"eos",
-					"eaque",
-					"inventore",
-					"ipsam",
-					"aut",
-					"voluptatem",
-					"non."
+					"Value example",
+					"Jakarta",
+					"Magelang",
+					"Malaysia",
+					"Singapura"
 				],
-				"head": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "input",
-					"value": "Currency",
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				},
-				"tail": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "button",
-					"value": "Select",
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				}
+				"field_class":"form-input-types",
+				"form": 1
 			},
 			{
 				"id": "dropdownbox",
@@ -106,97 +58,48 @@
 					"Malaysia",
 					"Singapura"
 				],
-				"form": 1,
-				"head": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "select",
-					"value": ["IDR", "SGD", "USD", "AUD", "MYR"],
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				},
-				"tail": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "button",
-					"value": "Select",
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				}
+				"field_class":"form-input-types",
+				"form": 1
+
 			},
 			{
 				"id": "textarea",
 				"label": "Text Area",
 				"type": "textarea",
-				"form": 1,
-				"tail": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "button", 
-					"value": "Select",
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				}
+				"field_class":"form-input-types",
+				"form": 1
 			},
 			{
 				"id": "boolean",
 				"label": "Checkbox",
 				"type": "checkbox",
-				"form": 1,
-				"tail": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "button",
-					"value": "Select",
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				}
+				"field_class":"form-input-types",
+				"form": 1
+
 			},
 			{
 				"id": "button",
 				"label": "Button",
 				"type": "button",
+				"field_class": "form-input-types",
 				"class": "is-default",
-				"form": 1,
-				"tail": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "button", 
-					"value": "Select",
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": ""
-				}
+				"form": 1
+
 			},
 			{
 				"id": "button",
 				"label": "Main Action",
 				"type": "button",
+				"field_class": "form-input-types",
 				"class": "is-default",
-				"form": 1,
-				"tail": {
-					"typeSelection": ["input","select","label","button"],
-					"valueSelection":["string","array"],
-					"type": "select",
-					"value": [
-						"",
-						"Action 1",
-						"Action 2",
-						"Action 3"
-					],
-					"append_to_value": 1,
-					"readonly": 0,
-					"width": "short"
-				}
+				"form": 1
+
 			},
 			{
 				"id": "add",
 				"label": "",
 				"type": "action",
+				"field_class": "form-input-types",
 				"class": "is-link",
 				"form": 1
 			}
