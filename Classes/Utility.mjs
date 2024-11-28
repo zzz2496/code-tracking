@@ -255,13 +255,11 @@ export class Utility {
 				console.error("Input must be an array.");
 				return 0;
 			}
-		
 			// Ensure array has at least one number; return early if empty
 			if (numbers.length === 0) {
 				console.warn("Input array is empty. Returning 0.");
 				return 0;
 			}
-		
 			// Initialize result based on operation
 			let result;
 			switch (sign) {
@@ -276,7 +274,6 @@ export class Utility {
 						}
 					}
 					break;
-		
 				case '-':
 					result = numbers[0];
 					for (let i = 1; i < numbers.length; i++) {
@@ -288,19 +285,18 @@ export class Utility {
 						}
 					}
 					break;
-		
 				case '*':
 					result = 1;
 					for (let i = 0; i < numbers.length; i++) {
 						const num = numbers[i];
 						if (typeof num === "number" && isFinite(num)) {
 							result *= num;
+							
 						} else {
 							console.warn(`Invalid number at index ${i}: ${num} - ignored in multiplication.`);
 						}
 					}
 					break;
-		
 				case '/':
 					result = numbers[0];
 					for (let i = 1; i < numbers.length; i++) {
@@ -311,17 +307,18 @@ export class Utility {
 								continue;
 							}
 							result /= num;
+							console.log('result', result);
 						} else {
 							console.warn(`Invalid number at index ${i}: ${num} - ignored in division.`);
 						}
 					}
 					break;
-		
 				default:
 					console.error(`Invalid operation sign: ${sign}. Use +, -, *, or /.`);
 					return 0;
 			}
-		
+			console.log('Input', numbers);
+			console.log('result', result);
 			return result;
 		}).bind(this),
 			

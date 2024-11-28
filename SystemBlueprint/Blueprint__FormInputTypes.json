@@ -28,8 +28,8 @@
 				"type": "text",
 				"value": "",
 				"readonly": 1,
-				"field_class": "form-input-types",
-				"class":"",
+				"field_class": "form-input-types is-selectable-box",
+				"class":"is-selectable",
 				"form": 1
 			},
 			{
@@ -44,7 +44,8 @@
 					"Malaysia",
 					"Singapura"
 				],
-				"field_class":"form-input-types",
+				"field_class":"form-input-types is-selectable-box",
+				"class":"is-selectable",
 				"form": 1
 			},
 			{
@@ -58,7 +59,7 @@
 					"Malaysia",
 					"Singapura"
 				],
-				"field_class":"form-input-types",
+				"field_class":"form-input-types is-selectable-box",
 				"form": 1
 
 			},
@@ -66,14 +67,16 @@
 				"id": "textarea",
 				"label": "Text Area",
 				"type": "textarea",
-				"field_class":"form-input-types",
+				"field_class":"form-input-types is-selectable-box",
+				"class":"is-selectable",
 				"form": 1
 			},
 			{
 				"id": "boolean",
 				"label": "Checkbox",
 				"type": "checkbox",
-				"field_class":"form-input-types",
+				"field_class":"form-input-types is-selectable-box",
+				"class":"is-selectable",
 				"form": 1
 
 			},
@@ -81,8 +84,8 @@
 				"id": "button",
 				"label": "Button",
 				"type": "button",
-				"field_class": "form-input-types",
-				"class": "is-default",
+				"field_class": "form-input-types is-selectable-box",
+				"class": "is-default is-selectable",
 				"form": 1
 
 			},
@@ -90,8 +93,8 @@
 				"id": "button",
 				"label": "Main Action",
 				"type": "button",
-				"field_class": "form-input-types",
-				"class": "is-default",
+				"field_class": "form-input-types is-selectable-box",
+				"class": "is-default is-selectable",
 				"form": 1
 
 			},
@@ -99,8 +102,8 @@
 				"id": "add",
 				"label": "",
 				"type": "action",
-				"field_class": "form-input-types",
-				"class": "is-link",
+				"field_class": "form-input-types is-selectable-box",
+				"class": "is-link is-selectable",
 				"form": 1
 			}
 		]

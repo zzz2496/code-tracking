@@ -3,57 +3,15 @@ if (cr) console.log('>>> >>> >>> >>> ParadigmREVOLUTION');
 
 document.addEventListener('UtilitiesLoaded', () => {
 	console.log('>>>>>> check for UtilitiesLoaded in paradigm_revolution.js');
-	(() => {
-		let chain = [
-			{
-				"id": "P1",
-				"input": {
-					"a": [1, 2, 3],
-				},
-				"process": "add",
-				"output": null,
-				"next_process": "P2"
-			},
-			{
-				"id": "P2",
-				"input": {
-					"a": ["P1.output", 3],
-				},
-				"process": "subtract",
-				"output": null,
-				"next_process": "P3"
-			},
-			{
-				"id": "P3",
-				"input": {
-					"a": ["P2.output", 5],  // Dynamic reference as a string for later evaluation
-				},
-				"process": "multiply",
-				"output": null,
-				"next_process": "P4"
-			},
-			{
-				"id": "P4",
-				"input": {
-					"a": "P3.output"
-				},
-				"process": "store",
-				"output": null,
-				"next_process": null
-			}
-		];
-		window.chain = chain;
-
-		// let flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(ParadigmREVOLUTION.Utility.BasicMath, chain);
-		// window.flow = flow;
-		// console.log(flow);
-		// flow.Form.Run.executeChain();
-	})();
 });
 document.addEventListener('BlueprintsLoaded', () => {
 	console.log('>>>>>> check for BlueprintsLoaded  in paradigm_revolution.js');
 });
 document.addEventListener('SurrealDBEnginesLoaded', () => {
+
+
+
+
 	let OK = true;
 	Object.keys(ParadigmREVOLUTION.SystemCore.CoreStatus).forEach((key) => {
 		if (ParadigmREVOLUTION.SystemCore.CoreStatus[key].Status == 'FAILED TO LOAD') OK = false;
@@ -76,7 +34,47 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// NOTE - Initialize Main Form (App_menu, App_Container, App_Helper, App_console)
 	CurrentDocument.Dataset.Layout = template__MainAppLayout;
 
-	let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(document.querySelector('#ParadigmREVOLUTION'), ParadigmREVOLUTION.Utility);
+	let chain = [
+		{
+			"id": "P1",
+			"input": {
+				"a": [1, 2, 3],
+			},
+			"process": "add",
+			"output": null,
+			"next_process": "P2"
+		},
+		{
+			"id": "P2",
+			"input": {
+				"a": ["P1.output", 3],
+			},
+			"process": "subtract",
+			"output": null,
+			"next_process": "P3"
+		},
+		{
+			"id": "P3",
+			"input": {
+				"a": ["P2.output", 5],  // Dynamic reference as a string for later evaluation
+			},
+			"process": "multiply",
+			"output": null,
+			"next_process": "P4"
+		},
+		{
+			"id": "P4",
+			"input": {
+				"a": "P3.output"
+			},
+			"process": "store",
+			"output": null,
+			"next_process": null
+		}
+	];
+	window.chain = chain;
+
+	let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(document.querySelector('#ParadigmREVOLUTION'), ParadigmREVOLUTION.Utility, ParadigmREVOLUTION.Utility.BasicMath, chain);
 	// NOTE - Render Main Form, get something on the screen
 	Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
 
@@ -106,4 +104,6 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	window.ram_db = ram_db;
 	window.local_db = local_db;
 	window.test_db = test_db;
+
+	Flow.Form.Run.executeChain();
 });
