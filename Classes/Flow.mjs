@@ -732,12 +732,13 @@ export class Flow {
 				this.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);
 
 				document.querySelector('#object_collections_button').addEventListener('click', () => {
-					document.querySelector('#object_collections').classList.toggle('open');
+					document.querySelector('#object_collections').classList.toggle('show');
 				});
 
 				document.querySelector('#app_graph_button').addEventListener('click', () => {
 					document.querySelector('#app_configurator_container').classList.toggle('show');
 					document.querySelector('#app_graph_tabs_container').classList.toggle('show');
+					document.querySelector('#app_menu_container').classList.toggle('show');
 				});
 
 				document.querySelector('#app_data_preparation_area_button').addEventListener('click', () => {
