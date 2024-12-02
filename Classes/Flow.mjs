@@ -522,6 +522,7 @@ export class Flow {
 				);
 			},
 			setupTabSwitcher: ((tabSelector, contentContainerSelector, activeClass = 'is-active', showClass = 'show', callback) => {
+				console.log('setupTabSwitcher click!');
 				document.querySelectorAll(tabSelector).forEach((tab, index, tabs) => {
 					tab.addEventListener('click', () => {
 						const tabType = tab.dataset.tabtype;
@@ -656,32 +657,7 @@ export class Flow {
 					}],
 					innerHTML: content
 				});
-				// let str = `
-				// 	<div class="box m-3 data_preparation_box is-selectable-box is-selectable is-selectable-parent" id="${id}">
-				// 		<div class="is-flex is-align-items-center">
-				// 			<h1 class="subtitle is-2 m-0 p-0">${componentType.toUpperCase()}&nbsp;</h1>
-				// 			<div class="field has-addons">
-				// 				<p class="control">
-				// 					<button class="button prev-box">
-				// 						<span class="icon is-small">
-				// 							<li class="fa-solid fa-angle-up"></li>
-				// 						</span>
-				// 					</button>
-				// 				</p>
-				// 				<p class="control">
-				// 					<button class="button next-box">
-				// 						<span class="icon is-small">
-				// 							<li class="fa-solid fa-angle-down"></li>
-				// 						</span>
-				// 					</button>
-				// 				</p>
-				// 			</div> 
-				// 		</div>
-				// 		<hr>
-				// 		<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
-				// 			${content}
-				// 		</div>
-				// 	</div>`;
+				
 				let str = this.Form.Render.traverseDOMProxyOBJ(testCard);
 				appArea.innerHTML += str;
 
@@ -754,52 +730,52 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 				});
-				document.querySelector('#graph_addnode_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
-						let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
-						return this.Form.Render.traverseDOMProxyOBJ(compcanvas);
-					});
-				});
+				// document.querySelector('#graph_addnode_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
+				// 		let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
+				// 		return this.Form.Render.traverseDOMProxyOBJ(compcanvas);
+				// 	});
+				// });
 				
-				document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
-						return this.Form.Initialize.FormCard(`New_PROGRAMMING___${num}`, this.Forms[0], 0, 1, 100, container_id);
-					});
-				});
+				// document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
+				// 		return this.Form.Initialize.FormCard(`New_PROGRAMMING___${num}`, this.Forms[0], 0, 1, 100, container_id);
+				// 	});
+				// });
 
-				document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
-						return this.Form.Initialize.FormCard(`New_DATASTORE___${num}`, this.Forms[0], 0, 1, 100, container_id);
-					});
-				});
+				// document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
+				// 		return this.Form.Initialize.FormCard(`New_DATASTORE___${num}`, this.Forms[0], 0, 1, 100, container_id);
+				// 	});
+				// });
 
-				document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
-						return this.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, this.Forms[0], 0, 1, 100, container_id);
-					});
-				});
+				// document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
+				// 		return this.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, this.Forms[0], 0, 1, 100, container_id);
+				// 	});
+				// });
 
-				document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
-						return this.Form.Initialize.FormCard(`New_LAYOUT___${num}`, this.Forms[0], 0, 1, 100, container_id);
-					});
-				});
+				// document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
+				// 		return this.Form.Initialize.FormCard(`New_LAYOUT___${num}`, this.Forms[0], 0, 1, 100, container_id);
+				// 	});
+				// });
 				
-				document.querySelector('#graph_addschema_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
-						return this.Form.Initialize.FormCard(`New_SCHEMA___${num}`, this.Forms[0], 0, 1, 100, container_id);
-					});
-				});
+				// document.querySelector('#graph_addschema_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
+				// 		return this.Form.Initialize.FormCard(`New_SCHEMA___${num}`, this.Forms[0], 0, 1, 100, container_id);
+				// 	});
+				// });
 				
-				document.querySelector('#graph_addform_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
-						return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
-					});
-				});
+				// document.querySelector('#graph_addform_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
+				// 		return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
+				// 	});
+				// });
 				 
 				//NOTE - addGlobalEveentListener CLICK
 				this.Form.Events.addGlobalEventListener('click', [{
-						selector: '.datastore-status-indicator',
+					selector: '.datastore-status-indicator',
 						callback: async (e) => {
 							let Tokens = {};
 							
@@ -859,21 +835,24 @@ export class Flow {
 							});
 						}
 					}, {
-						selector: '.is-selectable',
+					selector: '.is-selectable',
 						callback: (e) => {
+							console.log('is-selectable CLICK');
 							const selectableParent = e.target.closest('.is-selectable-parent');
 							const selectableBox = e.target.closest('.is-selectable-box');
 				
 							if (!selectableParent || !selectableBox) return; // Guard clause
 				
+							console.log('selectable box or selectable parent exists!');
 							selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
-								item.style = '';
+								item.style.removeProperty('width');
 								item.classList.remove('box', 'focused', 'm-2');
+								item.classList.remove('m-2');
 							});
 							if (selectableBox.classList.contains('field')) {
-								selectableBox.style = 'width: 100%;';
+								selectableBox.style.width = '100%;';
 							} else {
-								selectableBox.style = 'width: fit-content;';
+								selectableBox.style.width = 'fit-content;';
 							}
 							selectableBox.classList.add('box', 'focused', 'mx-0');
 						}
@@ -1029,24 +1008,25 @@ export class Flow {
 								
 							}
 						}
-					}, {
-						selector: '.is-selectable-box',
-						callback: (e) => {
-							console.log('click within the box', e.target.classList);
-							const allBoxes = Array.from(document.querySelectorAll('.is-selectable-box'));
-							if (allBoxes.length == 0) return;
-							allBoxes.forEach((box) => {
-								box.classList.remove('focused');
-							});
-							const currentBox = e.target.closest('.data_preparation_box');
-							if (currentBox) if (!currentBox.classList.contains('focused')) currentBox.classList.add('focused');
-						}
+					// }, {
+					// 	selector: '.is-selectable-box',
+					// 	callback: (e) => {
+					// 		console.log('click within the box', e.target.classList);
+					// 		const allBoxes = Array.from(document.querySelectorAll('.is-selectable-box'));
+					// 		if (allBoxes.length == 0) return;
+					// 		allBoxes.forEach((box) => {
+					// 			box.classList.remove('focused');
+					// 		});
+					// 		const currentBox = e.target.closest('.data_preparation_box');
+					// 		if (currentBox) if (!currentBox.classList.contains('focused')) currentBox.classList.add('focused');
+					// 	}
 					}
 				]);
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
-				this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers, .addremove-control-container');
+				// this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers, .addremove-control-container');
+				this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers');
 				document.querySelector('.tab-graph-selector[data-tabtype="Graph"]').click();
 				this.Form.Events.setupTabSwitcher('.tab-object-collections', '.object-collections-containers', 'is-active', 'show');
 				document.querySelector('.tab-object-collections[data-tabtype="Collection"]').click();
@@ -1171,85 +1151,6 @@ export class Flow {
 				// console.log('Elements with vertical scrollbars:', scrollableElements.vertical);
 				// console.log('Elements with horizontal scrollbars:', scrollableElements.horizontal);
 				// console.log('Elements with both scrollbars:', scrollableElements.both);
-				document.querySelector('#document_properties_button').addEventListener('click', (e) => {
-					console.log('document_definition_button CLICK!');
-					let DocPID = JSON.parse(JSON.stringify(node__datasets[0]));
-					console.log('DocPID :>> ', DocPID);
-					let DocPROP = JSON.parse(JSON.stringify(node__datasets[1]));
-					console.log('DocPROP :>> ', DocPROP);
-
-					if (!document.querySelector('#app_data_preparation_area').classList.contains('show')) document.querySelector('#app_data_preparation_area').classList.add('show');
-
-					let num = Date.now();
-					let container_id = `container_node_pid_${Date.now()}`;
-					let str = ` <div class="box m-3 p-3 data_preparation_box is-selectable-box is-selectable is-selectable-parent">
-									<div class="is-flex is-align-items-center">
-										<h1 class="subtitle is-2 m-0 p-0">NODE Properties</h1>
-										<div class="field has-addons">
-											<p class="control">
-												<button class="button prev-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-up"></li>
-													</span>
-												</button>
-											</p>
-											<p class="control">
-												<button class="button next-box">
-													<span class="icon is-small">
-														<li class="fa-solid fa-angle-down"></li>
-													</span>
-												</button>
-											</p>
-										</div> 
-									</div>
-									<hr>
-									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
-										${this.Form.Initialize.FormCard('NodePID___' + num,         DocPID, 0, 1, 100, container_id)}
-									</div>
-									<div class="columns is-gapless is-mobile data_preparation_area_container ${container_id}">
-										${this.Form.Initialize.FormCard('NodeProperties___' + num, DocPROP, 0, 1, 100, container_id)}
-									</div>
-								</div>`;
-
-					document.querySelector('#app_data_preparation_area').innerHTML += str;
-
-					// Calculate WIDTH
-					let maxcount = 0;
-					let childContainers = document.querySelectorAll('.data_preparation_area_container ');
-					childContainers.forEach((container) => {
-						if (maxcount < container.childElementCount) maxcount = container.childElementCount;
-					});
-
-					// Set the new width
-					document.querySelector('#app_data_preparation_area.show').style.flexBasis = (maxcount * 22)+4 + 'rem';
-
-					this.SnapScroll = false;
-					setTimeout(() => {
-						document.querySelector('#app_root_container').scrollTo({
-							left: document.querySelector('#app_root_container').scrollWidth,
-							behavior: 'smooth'
-						});
-					}, 300);
-					setTimeout(() => {
-						this.SnapScroll = true;
-					}, 500);
-					setTimeout(() => {
-						let selectedBox = document.querySelector('.' + container_id).querySelector('.box');
-						if (selectedBox) {
-							// Get the scrollable container
-							let scrollContainer = document.querySelector('#app_data_preparation_area');
-							
-							// Get the offset of the selected box relative to the container
-							let offsetLeft = selectedBox.offsetLeft;
-							
-							// Scroll to that position with smooth behavior
-							scrollContainer.scrollTo({
-								left: offsetLeft,
-								behavior: 'smooth'
-							});
-						}
-					}, 300);
-				});
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
 				// console.log('generateFormToParadigmJSON', form_container);

@@ -111,54 +111,83 @@
 							]},
 							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "column p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
 								{"tag":"div", "class":"document-saveload-container show", "content":[
+									{ "comment": "Document Properties button", "tag": "button", "class": "button mr-1 document-saveload mr-1 is-small is-default", "id": "document_properties_button", "title": "Node Properties", "innerHTML": "<i class=\"fa-regular fa-rectangle-list\"></i>" },
 									{ "comment": "Document Refresh Render button", "tag": "button", "class": "button mr-1 document-saveload mr-1 is-small is-default", "id": "document_refreshrender_button", "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
 									{ "comment": "Load Document button", "tag": "button", "class": "button mr-1 document-saveload is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" },
 									{ "comment": "Save Document button", "tag": "button", "class": "button mr-1 document-saveload is-outlined is-danger", "id": "graph_remove_data_button", "title": "Save Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-up\"></i>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container show", "data":{"tabtype":"Graph"}, "content":[
+									{ "comment": "Remove Graph Nodes", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removenodes_button", "title": "Remove Graph Node(s)", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Graph Node", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addnode_button", "title": "Add Graph Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Programming"}, "content":[
+									{ "comment": "Remove Programming Node(s)","tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removeprogramming_button", "title": "Remove Programming Node(s)", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Programming Node","tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addprogramming_button", "title": "Add Programming Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datasource"}, "content":[
+									{ "comment": "Remove Datasource", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatasource_button", "title": "Remove Datasource", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Datasource", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatasource_button", "title": "Add Datasource", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datastore"}, "content":[
+									{ "comment": "Remove Datastore", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatastore_button", "title": "Remove Datastore", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Datastore", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatastore_button", "title": "Add Datastore", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"PageLayout"}, "content":[
+									{ "comment": "Remove Layout", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removelayout_button", "title": "Remove Layout", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Layout", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addlayout_button", "title": "Add Layout", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Schema"}, "content":[
+									{ "comment": "Remove Schema", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeschema_button", "title": "Remove Schema", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Schema", "tag": "button",    "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-link", "id": "graph_addschema_button", "title": "Add Schema", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Forms"}, "content":[
+									{ "comment": "Remove Form", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeform_button", "title": "Remove Form", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Form", "tag": "button",    "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-link", "id": "graph_addform_button", "title": "Add Form", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
 								]}
 							]}
 						] },
-						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "is-selectable-parent show app_configurator_groups", "innerHTML": "", "content": [
+						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show app_configurator_groups", "innerHTML": "", "content": [
 							{
-								"comment": "App Graph Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
+								"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
 									{
-										"tag": "div", "id": "graph_scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "<span>App Graph Content</span>", "class": "columns is-gapless is-mobile grid2020-background is-selectable p-3", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }
+										"tag": "div", "id": "graph_scroll_content", "style": "width:calc(100vw);height:calc(80vh);overflow:scroll;", "content": [
+											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "<span>App Graph Content</span>", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }
 										]
 									}
 								]
 							},
 							{
-								"comment": "App Programming Container", "tag": "div", "class": "is-selectable-box m-0 p-0 show app_configurator_containers", "data":{"tabtype":"Programming"}, "id": "app_programming_container", "content": [
+								"comment": "App Programming Container", "tag": "div", "class": "m-0 p-0 show app_configurator_containers", "data":{"tabtype":"Programming"}, "id": "app_programming_container", "content": [
 									{
-										"tag": "div", "id": "programming_scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Programming Content", "tag": "div", "innerHTML": "<span>App Programming Content</span>", "class": "columns is-gapless is-mobile grid2020-background is-selectable p-3", "style": "width:20000px; height:20000px;", "id": "app_programming_content", "content": [] }
+										"tag": "div", "id": "programming_scroll_content", "style": "width:calc(100vw);height:calc(80vh);overflow:scroll;", "content": [
+											{ "comment": "App Programming Content", "tag": "div", "innerHTML": "<span>App Programming Content</span>", "class": "columns is-gapless is-mobile grid2020-background", "style": "width:20000px; height:20000px;", "id": "app_programming_content", "content": [] }
 										]
 									}
 								]
 							},
 							{
-								"comment": "App Datastore Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datastore"}, "id": "app_datastore_container", "content": [
-									{ "comment": "App Datastore Content", "tag": "div", "innerHTML": "App Datastore Content", "class": "columns is-gapless is-mobile is-selectable p-3", "style":"width:100%; height:100%;", "id": "app_datastore_content", "content": [] }
+								"comment": "App Datastore Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datastore"}, "id": "app_datastore_container", "content": [
+									{ "comment": "App Datastore Content", "tag": "div", "innerHTML": "App Datastore Content", "class": "columns is-gapless is-mobile",  "id": "app_datastore_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Datasource Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datasource"}, "id": "app_datasource_container", "content": [
-									{ "comment": "App Datasource Content", "tag": "div", "innerHTML": "App Datasource Content", "class": "columns is-gapless is-mobile is-selectable p-3",  "id": "app_datasource_content", "style":"width:100%; height:100%;", "content": [] }
+								"comment": "App Datasource Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datasource"}, "id": "app_datasource_container", "content": [
+									{ "comment": "App Datasource Content", "tag": "div", "innerHTML": "App Datasource Content", "class": "columns is-gapless is-mobile",  "id": "app_datasource_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Page Layout Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"PageLayout"}, "id": "app_page_layout_container", "content": [
-									{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile is-selectable p-3",  "id": "app_page_layout_content", "style":"width:100%; height:100%;", "content": [] }
+								"comment": "App Page Layout Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"PageLayout"}, "id": "app_page_layout_container", "content": [
+									{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile",  "id": "app_page_layout_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Schema Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Schema"}, "id": "app_schema_container", "content": [
-									{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile is-selectable p-3", "style":"width:100%; height:100%;", "id": "app_schema_content", "content": [] }
+								"comment": "App Schema Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"Schema"}, "id": "app_schema_container", "content": [
+									{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile", "id": "app_schema_content", "content": [] }									
 								]
 							},
 							{
-								"comment": "App Form Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Forms"}, "id": "app_form_container", "content": [
-									{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile is-selectable p-3", "style":"width:100%; height:100%;", "id": "app_form_content", "content": [] }
+								"comment": "App Form Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers", "data":{"tabtype":"Forms"}, "id": "app_form_container", "content": [
+									{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile", "id": "app_form_content", "content": [] }
 								]
 							}
 						] },
