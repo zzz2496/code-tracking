@@ -119,11 +119,11 @@ let ParadigmREVOLUTION = {
 				"Template__Node__DataStatus": { "URL": "./SystemBlueprint/Blueprint__Template__Node__DataStatus.json" },
 				"Edge": { "URL": "./SystemBlueprint/Blueprint__Edge.json" },
 				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" },
-				"MainAppLayout": { "URL": "./SystemBlueprint/Blueprint__MainAppLayout.json" },
-				"FormInputTypes": { "URL": "./SystemBlueprint/Blueprint__FormInputTypes.json" },
-				"FormInputTypeDefinition": { "URL": "./SystemBlueprint/Blueprint__FormInputTypeDefinition.json" },
-				"ComponentCanvas": { "URL": "./SystemBlueprint/Blueprint__ComponentCanvas.json" },
-				"Node__Datasets": { "URL": "./SystemBlueprint/Blueprint__Node__Datasets.json" }
+				"MainAppLayout": { "URL": "./SystemBlueprint/ParadigmJSON__MainAppLayout.json" },
+				"FormInputTypes": { "URL": "./SystemBlueprint/Schema__FormInputTypes.json" },
+				"FormInputTypeDefinition": { "URL": "./SystemBlueprint/Schema__FormInputTypeDefinition.json" },
+				"ComponentCanvas": { "URL": "./SystemBlueprint/ParadigmJSON__ComponentCanvas.json" },
+				"Node__Datasets": { "URL": "./SystemBlueprint/Schema__Node__Datasets.json" }
 			},
 			"Data": {}
 		},

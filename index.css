@@ -297,13 +297,14 @@
 
 .app_configurator_containers.show {
     position: relative;
-    z-index: 1;
+    z-index: auto;
     /* transform: translateX(0); */
 	opacity: 1;
 }
 
 .app_graph_controls_containers{
 	height: auto;
+	width: fit-content;
 }
 #app_graph_tabs_container {
 	height: 0px;
@@ -324,6 +325,7 @@
 #graph_scroll_content, #programming_scroll_content{
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+	border-radius: 10px;
 }
 @media screen and (max-width: 800px) {
 	#object_collections.show {
@@ -466,6 +468,7 @@
     align-items: center;         /* Center buttons vertically */
     gap: 0.01rem;                 /* Add space between buttons */
 	margin-right: 0.6rem;
+	margin-bottom: 0.7rem;
 }
 
 /* Base styles for the other control containers (with animation) */
@@ -477,6 +480,7 @@
     display: flex;                  /* Keeps buttons in a row */
     align-items: center;            /* Center-aligns buttons vertically */
     gap: 0.01rem;                    /* Adds spacing between buttons */
+	margin-bottom: 0.7rem;
 }
 
 /* Expanded states with target widths */
@@ -546,11 +550,11 @@
 }
 .box {
 	display: inline-block; /* Makes the box size based on its content */
-	width: auto; /* Ensures the box's width adjusts to fit its content */
+	width: 100%;/* Ensures the box's width adjusts to fit its content */
 	max-width: none; /* Removes any max-width constraints */
 	white-space: nowrap; /* Prevents content from wrapping if it's inline text */
 }
-.box.focused {
+.is-selectable-box.focused {
 	border: 2px solid var(--bulma-primary);
 }
 #app_graph_tabs{
@@ -559,3 +563,38 @@
 #app_graph_tabs .hidden {
 	display: none;
 }
+
+/* Tab container animations */
+/* .tab-content {
+    transition: transform 5s ease, opacity 5s ease;
+    opacity: 0.2;
+    transform: translateY(100%);
+}
+
+.tab-content.show {
+    opacity: 1;
+    transform: translateY(0);
+} */
+/* Base state for tabs */
+.tabs li {
+    transition: transform var(--transition-time) ease-out, opacity var(--transition-time) ease-out, width var(--transition-time) ease;
+    opacity: 0;
+    transform: translateY(100%); /* Move downward initially */
+    visibility: hidden; /* Prevent interaction when hidden */
+	width: 0;
+}
+
+/* Visible state for tabs */
+.tabs li.show {
+    opacity: 1;
+    transform: translateY(0); /* Move to original position */
+    visibility: visible; /* Allow interaction when shown */
+	width: fit-content;
+}
+.tabs li.hiding {
+    opacity: 0;
+    transform: translateY(100%); /* Move to original position */
+    visibility: hidden; /* Allow interaction when shown */
+	width: 0;
+}
+

@@ -1,0 +1,78 @@
+{
+	"id": "graph_container_properties",
+	"label": "Graph Container Properties",
+	"type": "record",
+	"typeSelection": ["record","array"],
+	"icon": "<i class=\"fa-regular fa-rectangle-list\"></i>",
+	"order": 100,
+	"Dataset": {
+		"Layout": {
+			"Form": {},
+			"Properties": {
+				"FormEntry": {
+					"Show": 1,
+					"Label": "Graph Container Properties",
+					"ShowLabel": 1
+				},
+				"Preview": {
+					"Show": 1,
+					"Label": "Graph Container Properties",
+					"ShowLabel": 1
+				}
+			}
+		},
+		"Schema": [{
+			"id": "id",
+			"label": "ID",
+			"type": "text",
+			"form": 1,
+			"value": ""
+		},
+		{
+			"id": "name",
+			"label": "Nama",
+			"type": "text",
+			"form": 1
+		},
+		{
+			"id": "label",
+			"label": "Label",
+			"type": "text",
+			"form": 1
+		},
+		{
+			"id": "type",
+			"label": "Type",
+			"type": "text",
+			"form": 1,
+			"readonly": 1,
+			"value": "text"
+		},
+		{
+			"id": "form",
+			"label": "Form",
+			"type": "checkbox",
+			"form": 1,
+			"value": 1
+		},
+		{
+			"id": "readonly",
+			"label": "Readonly",
+			"type": "checkbox",
+			"form": 1
+		},
+		{
+			"id": "value",
+			"label": "Value",
+			"type": "text",
+			"form": 1
+		},
+		{
+			"id": "add",
+			"label": "",
+			"type": "button",
+			"class": "is-link",
+			"form": 1
+		}]
+	}
+}

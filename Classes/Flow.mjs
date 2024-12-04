@@ -529,7 +529,7 @@ export class Flow {
 			
 						// Remove 'is-active' class from all tabs
 						tabs.forEach((t) => t.parentElement.classList.remove(activeClass));
-			
+						
 						// Add 'is-active' to the clicked tab
 						tab.parentElement.classList.add(activeClass);
 			
@@ -556,6 +556,7 @@ export class Flow {
 							if (selectedContainer) {
 								selectedContainer.classList.add(showClass);
 								selectedContainer.style.transform = 'translateX(0)';
+								selectedContainer.style.opacity = '1'; // Fade in
 							}
 						});
 								
@@ -618,13 +619,20 @@ export class Flow {
 					className: `box m-2 p-0 data_preparation_box is-selectable-box is-selectable is-selectable-parent`,
 					classContent: `data_preparation_area_container ${container_id}`,
 					order: 100,
-					style: "width: fit-content;",
-					headerContent: [{ //NOTE - testCardHeader
-						comment: "card-header-title",
-						tag: "p",
-						class: "card-header-title title mb-1",
-						innerHTML: componentType.toUpperCase()
-					}, {
+					style: "width: fit-content;",//NOTE - testCardHeader
+					headerContent: [{
+						comment: "card-header-icon",
+						tag: "button",
+						class: "card-header-icon form-close-button",
+						data: { formid: id },
+						aria: {},
+						content: [{
+							tag: "span",
+							class: "icon form-close-button",
+							innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
+						}]
+					},
+					{
 						comment: "card-header-icon",
 						tag: "div",
 						class: "card-header-icon field has-addons m-0 p-0",
@@ -643,18 +651,13 @@ export class Flow {
 								content: []
 							}]
 						}]
-					}, {
-						comment: "card-header-icon",
-						tag: "button",
-						class: "card-header-icon form-close-button",
-						data: { formid: id },
-						aria: {},
-						content: [{
-							tag: "span",
-							class: "icon form-close-button",
-							innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
-						}]
-					}],
+					},{ 
+						comment: "card-header-title",
+						tag: "p",
+						class: "card-header-title title mb-1",
+						innerHTML: componentType.toUpperCase()
+					}
+					],
 					innerHTML: content
 				});
 				
@@ -730,12 +733,12 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 				});
-				// document.querySelector('#graph_addnode_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
-				// 		let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
-				// 		return this.Form.Render.traverseDOMProxyOBJ(compcanvas);
-				// 	});
-				// });
+				document.querySelector('#graph_addnode_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
+						let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
+						return this.Form.Render.traverseDOMProxyOBJ(compcanvas);
+					});
+				});
 				
 				// document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
 				// 	this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
@@ -743,35 +746,35 @@ export class Flow {
 				// 	});
 				// });
 
-				// document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
-				// 		return this.Form.Initialize.FormCard(`New_DATASTORE___${num}`, this.Forms[0], 0, 1, 100, container_id);
-				// 	});
-				// });
+				document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_DATASTORE___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
+				});
 
-				// document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
-				// 		return this.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, this.Forms[0], 0, 1, 100, container_id);
-				// 	});
-				// });
+				document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
+				});
 
-				// document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
-				// 		return this.Form.Initialize.FormCard(`New_LAYOUT___${num}`, this.Forms[0], 0, 1, 100, container_id);
-				// 	});
-				// });
+				document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_LAYOUT___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
+				});
 				
-				// document.querySelector('#graph_addschema_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
-				// 		return this.Form.Initialize.FormCard(`New_SCHEMA___${num}`, this.Forms[0], 0, 1, 100, container_id);
-				// 	});
-				// });
+				document.querySelector('#graph_addschema_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_SCHEMA___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
+				});
 				
-				// document.querySelector('#graph_addform_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
-				// 		return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
-				// 	});
-				// });
+				document.querySelector('#graph_addform_button').addEventListener('click', () => {
+					this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
+				});
 				 
 				//NOTE - addGlobalEveentListener CLICK
 				this.Form.Events.addGlobalEventListener('click', [{
@@ -840,6 +843,8 @@ export class Flow {
 							console.log('is-selectable CLICK');
 							const selectableParent = e.target.closest('.is-selectable-parent');
 							const selectableBox = e.target.closest('.is-selectable-box');
+							const dataset = e.currentTarget.dataset;
+							console.log('dataset :>> ', dataset);
 				
 							if (!selectableParent || !selectableBox) return; // Guard clause
 				
@@ -919,9 +924,15 @@ export class Flow {
 						selector: '.form-close-button',
 						callback: (e) => {
 							let formid = e.target.dataset.formid;
-							const formElement = document.querySelector(`#${formid}`).parentElement;
+							let isdataprepbox = false;
+							// const formElement = document.querySelector(`#${formid}`).parentElement;
+							let formElement = e.target.closest('.form-input-column-container');
 							
-							if (!formElement) return; // Guard clause
+							if (!formElement) { 
+								formElement = e.target.closest('.data_preparation_box');
+								isdataprepbox = true;
+							}
+							if (!formElement) return; //Guard clause
 
 							// Step 1: Add collapsing class to trigger CSS transition
 							formElement.classList.add('collapsing');
@@ -932,8 +943,9 @@ export class Flow {
 								const parentEl = formElement.parentElement;
 								formElement.remove(); 
 								
-								if (parentEl.childElementCount == 0) {
-									parentEl.closest('.box').remove();
+								if (!isdataprepbox) if (parentEl.childElementCount == 0) {
+									const box = parentEl.closest('.box')
+									if (!box) box.remove();
 								}
 
 								// Check child elements count to handle visibility
@@ -950,6 +962,7 @@ export class Flow {
 									if (eleWidth < container.offsetWidth) eleWidth = container.offsetWidth;
 								});
 
+								console.log('eleWidth :>> ', eleWidth);
 								document.querySelector('#app_data_preparation_area').style.flexBasis = 28 + eleWidth + 'px';
 
 								this.SnapScroll = false;
@@ -1025,8 +1038,8 @@ export class Flow {
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
-				// this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers, .addremove-control-container');
-				this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers');
+				this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers, .addremove-control-container');
+				// this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers');
 				document.querySelector('.tab-graph-selector[data-tabtype="Graph"]').click();
 				this.Form.Events.setupTabSwitcher('.tab-object-collections', '.object-collections-containers', 'is-active', 'show');
 				document.querySelector('.tab-object-collections[data-tabtype="Collection"]').click();
@@ -1151,6 +1164,22 @@ export class Flow {
 				// console.log('Elements with vertical scrollbars:', scrollableElements.vertical);
 				// console.log('Elements with horizontal scrollbars:', scrollableElements.horizontal);
 				// console.log('Elements with both scrollbars:', scrollableElements.both);
+
+				document.querySelector('#enable_programming_sections_button').addEventListener('click', () => {
+					document.querySelectorAll('.tabs-extended-functions').forEach((tab) => {
+						if (tab.classList.contains('show')) {
+							tab.classList.remove('show');
+							
+							// Force a reflow to apply the transition
+							void tab.offsetWidth; 
+					
+							tab.classList.add('hiding'); // Add hiding class to trigger the animation
+						} else {
+							tab.classList.add('show');
+							tab.classList.remove('hiding'); // Remove hiding class for the opposite animation
+						}
+					});
+				});
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
 				// console.log('generateFormToParadigmJSON', form_container);
@@ -1724,7 +1753,7 @@ export class Flow {
 					headerControls: null,
 					content: [this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal, form_container)]
 				});
-				let column = { comment: "Column", tag: "div", class: `column is-flex collapsible m-0 p-0`, style: "max-width:25.5rem;min-width:25.5rem;", order: 0, content: [testcard] }
+				let column = { comment: "Column", tag: "div", class: `column is-flex collapsible m-0 p-0 form-input-column-container`, style: "max-width:25.5rem;min-width:25.5rem;", order: 0, content: [testcard] }
 				return isHTML ? this.Form.Render.traverseDOMProxyOBJ(column) : column;
 			},
 		},

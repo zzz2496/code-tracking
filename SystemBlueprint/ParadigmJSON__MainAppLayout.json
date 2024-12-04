@@ -63,26 +63,23 @@
 								{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
 									{ "tag": "div", "class": "tabs", "content": [
 										{ "tag": "ul", "class":"", "content": [
-											{ "tag": "li", "class": "is-active ", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Graph"}, "innerHTML": "Graph" }
+											{ "tag": "li", "class": "is-active show ", "content": [
+												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Graph"}, "innerHTML": "Graph" }
 											] },
-											{ "tag": "li", "class": "", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Programming"}, "innerHTML": "Programming" }
+											{ "tag": "li", "class":"tabs-extended-functions", "content": [
+												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Datastore"}, "innerHTML": "Datastore" }
 											] },
-											{ "tag": "li", "class":"", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Datastore"}, "innerHTML": "Datastore" }
+											{ "tag": "li", "class":"tabs-extended-functions", "content": [
+												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Datasource"}, "innerHTML": "Datasource" }
 											] },
-											{ "tag": "li", "class":"", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Datasource"}, "innerHTML": "Datasource" }
+											{ "tag": "li", "class":"tabs-extended-functions", "content": [
+												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"PageLayout"}, "innerHTML": "Page Layout" }
 											] },
-											{ "tag": "li", "class":"", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"PageLayout"}, "innerHTML": "Page Layout" }
+											{ "tag": "li", "class":"tabs-extended-functions", "content": [
+												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
 											] },
-											{ "tag": "li", "class":"", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
-											] },
-											{ "tag": "li", "class":"", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
+											{ "tag": "li", "class":"tabs-extended-functions", "content": [
+												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
 											] }
 										] }
 									]}
@@ -111,9 +108,38 @@
 							]},
 							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "column p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
 								{"tag":"div", "class":"document-saveload-container show", "content":[
+									{ "comment": "Enable Programming sections",    "tag": "button", "class": "button mr-1 document-saveload mr-1 is-small is-default", "id": "enable_programming_sections_button", "title": "Enable Programming Sections", "innerHTML": "<i class=\"fa fa-tv\"></i>" },
 									{ "comment": "Document Refresh Render button", "tag": "button", "class": "button mr-1 document-saveload mr-1 is-small is-default", "id": "document_refreshrender_button", "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
-									{ "comment": "Load Document button", "tag": "button", "class": "button mr-1 document-saveload is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" },
-									{ "comment": "Save Document button", "tag": "button", "class": "button mr-1 document-saveload is-outlined is-danger", "id": "graph_remove_data_button", "title": "Save Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-up\"></i>" }
+									{ "comment": "Load Document button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" },
+									{ "comment": "Save Document button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-danger", "id": "graph_remove_data_button", "title": "Save Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-up\"></i>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container show", "data":{"tabtype":"Graph"}, "content":[
+									{ "comment": "Remove Graph Nodes", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removenodes_button", "title": "Remove Graph Node(s)", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Graph Node", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addnode_button", "title": "Add Graph Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Programming"}, "content":[
+									{ "comment": "Remove Programming Node(s)","tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removeprogramming_button", "title": "Remove Programming Node(s)", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Programming Node","tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addprogramming_button", "title": "Add Programming Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datasource"}, "content":[
+									{ "comment": "Remove Datasource", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatasource_button", "title": "Remove Datasource", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Datasource", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatasource_button", "title": "Add Datasource", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datastore"}, "content":[
+									{ "comment": "Remove Datastore", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatastore_button", "title": "Remove Datastore", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Datastore", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatastore_button", "title": "Add Datastore", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"PageLayout"}, "content":[
+									{ "comment": "Remove Layout", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removelayout_button", "title": "Remove Layout", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Layout", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addlayout_button", "title": "Add Layout", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Schema"}, "content":[
+									{ "comment": "Remove Schema", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeschema_button", "title": "Remove Schema", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Schema", "tag": "button",    "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-link", "id": "graph_addschema_button", "title": "Add Schema", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+								]},
+								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Forms"}, "content":[
+									{ "comment": "Remove Form", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeform_button", "title": "Remove Form", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+									{ "comment": "Add Form", "tag": "button",    "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-link", "id": "graph_addform_button", "title": "Add Form", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
 								]}
 							]}
 						] },
