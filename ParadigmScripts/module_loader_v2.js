@@ -119,11 +119,22 @@ let ParadigmREVOLUTION = {
 				"Template__Node__DataStatus": { "URL": "./SystemBlueprint/Blueprint__Template__Node__DataStatus.json" },
 				"Edge": { "URL": "./SystemBlueprint/Blueprint__Edge.json" },
 				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" },
-				"MainAppLayout": { "URL": "./SystemBlueprint/ParadigmJSON__MainAppLayout.json" },
+			},
+			"Data": {}
+		},
+		"Schema": {
+			"URL": {
 				"FormInputTypes": { "URL": "./SystemBlueprint/Schema__FormInputTypes.json" },
 				"FormInputTypeDefinition": { "URL": "./SystemBlueprint/Schema__FormInputTypeDefinition.json" },
-				"ComponentCanvas": { "URL": "./SystemBlueprint/ParadigmJSON__ComponentCanvas.json" },
 				"Node__Datasets": { "URL": "./SystemBlueprint/Schema__Node__Datasets.json" }
+			},
+			"Data": {}
+		},
+		"Template": {
+			"URL": {
+				"MainAppLayout": { "URL": "./SystemBlueprint/Template__MainAppLayout.json" },
+				"ComponentCanvas": { "URL": "./SystemBlueprint/Template__ComponentCanvas.json" },
+				
 			},
 			"Data": {}
 		},
@@ -210,14 +221,6 @@ if (typeof finder !== 'undefined') {
 					window.template__Node__Datastatus = template__Node__Datastatus;
 					let template__Edge = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
 					window.template__Edge = template__Edge;
-					let template__MainAppLayout = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.MainAppLayout));
-					window.template__MainAppLayout = template__MainAppLayout;
-					let template__FormInputTypes = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.FormInputTypes));
-					window.template__FormInputTypes = template__FormInputTypes;
-					let template__FormInputTypeDefinition = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.FormInputTypeDefinition));
-					window.template__FormInputTypeDefinition = template__FormInputTypeDefinition;
-					let template__ComponentCanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.ComponentCanvas));
-					window.template__ComponentCanvas = template__ComponentCanvas;
 
 					let node__datasets = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node__Datasets));
 					window.node__datasets = node__datasets;
@@ -229,6 +232,43 @@ if (typeof finder !== 'undefined') {
 				});
 			}
 			initBlueprints();
+			let initSchema = function () {
+				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Schema.URL, function (results) {
+					window.ParadigmREVOLUTION.SystemCore.Schema.Data = results;
+					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Schema = "LOADED";
+					console.log('window.ParadigmREVOLUTION.SystemCore.Schema.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Schema.Data);
+
+					let template__FormInputTypes = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypes));
+					window.template__FormInputTypes = template__FormInputTypes;
+					let template__FormInputTypeDefinition = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypeDefinition));
+					window.template__FormInputTypeDefinition = template__FormInputTypeDefinition;
+					let template__ComponentCanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data.ComponentCanvas));
+					window.template__ComponentCanvas = template__ComponentCanvas;
+
+					document.dispatchEvent(new Event('SchemaLoaded'));
+					if (cr) console.log('>>> ||| Schema Loader | SUCCESS');
+				}, function (key, url, status) {
+					if (cr) console.log('>>> ||| progress :>> ', status, key, url);
+				});
+			}
+			initSchema();
+			let initTemplate = function () {
+				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Template.URL, function (results) {
+					window.ParadigmREVOLUTION.SystemCore.Template.Data = results;
+					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Template = "LOADED";
+					console.log('window.ParadigmREVOLUTION.SystemCore.Template.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Template.Data);
+
+					let template__MainAppLayout = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.MainAppLayout));
+					window.template__MainAppLayout = template__MainAppLayout;
+
+
+					document.dispatchEvent(new Event('SchemaLoaded'));
+					if (cr) console.log('>>> ||| Template Loader | SUCCESS');
+				}, function (key, url, status) {
+					if (cr) console.log('>>> ||| progress :>> ', status, key, url);
+				});
+			}
+			initTemplate();
 		}
 		if (cr) console.log('<<< Blueprint Loader');
 	} catch (error) {

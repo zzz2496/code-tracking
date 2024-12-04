@@ -303,8 +303,10 @@
 }
 
 .app_graph_controls_containers{
-	height: auto;
+	height: fit-content;
 	width: fit-content;
+	scrollbar-width: none;
+	-ms-overflow-style: none
 }
 #app_graph_tabs_container {
 	height: 0px;
@@ -468,7 +470,7 @@
     align-items: center;         /* Center buttons vertically */
     gap: 0.01rem;                 /* Add space between buttons */
 	margin-right: 0.6rem;
-	margin-bottom: 0.7rem;
+	margin-top: 0.2rem;
 }
 
 /* Base styles for the other control containers (with animation) */
@@ -480,7 +482,7 @@
     display: flex;                  /* Keeps buttons in a row */
     align-items: center;            /* Center-aligns buttons vertically */
     gap: 0.01rem;                    /* Adds spacing between buttons */
-	margin-bottom: 0.7rem;
+	/* margin-bottom: 0.7rem; */
 }
 
 /* Expanded states with target widths */

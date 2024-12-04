@@ -612,7 +612,6 @@ export class Flow {
 				let num = Date.now();
 				let container_id = `container_${componentType.toLowerCase()}_${num}`;
 				let content = generateContent(num, container_id);
-				console.log('content >>>>>>>>>>>> ', content);
 				const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
 				let testCard = this.Form.Components.BulmaCSS.Components.CardSlim({ //NOTE - testCard
 					id: id,
@@ -631,8 +630,7 @@ export class Flow {
 							class: "icon form-close-button",
 							innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
 						}]
-					},
-					{
+					}, {
 						comment: "card-header-icon",
 						tag: "div",
 						class: "card-header-icon field has-addons m-0 p-0",
@@ -641,23 +639,32 @@ export class Flow {
 							class: "control",
 							content: [{
 								tag: "button",
+								class: "button move-up-box",
+								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-arrows-up-to-line"></i></span>`,
+								content: []
+							},{
+								tag: "button",
 								class: "button prev-box",
 								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-angle-up"></i></span>`,
 								content: []
-							}, {
+							},{
+								comment: "card-header-title",
+								tag: "p",
+								class: "card-header-title title mb-1",
+								innerHTML: componentType.toUpperCase()
+							},{
 								tag: "button",
 								class: "button next-box",
 								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-angle-down"></i></span>`,
 								content: []
+							}, {
+								tag: "button",
+								class: "button move-down-box",
+								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-arrows-down-to-line"></i></span>`,
+								content: []
 							}]
 						}]
-					},{ 
-						comment: "card-header-title",
-						tag: "p",
-						class: "card-header-title title mb-1",
-						innerHTML: componentType.toUpperCase()
-					}
-					],
+					}],
 					innerHTML: content
 				});
 				
@@ -779,117 +786,196 @@ export class Flow {
 				//NOTE - addGlobalEveentListener CLICK
 				this.Form.Events.addGlobalEventListener('click', [{
 					selector: '.datastore-status-indicator',
-						callback: async (e) => {
-							let Tokens = {};
+					callback: async (e) => {
+						let Tokens = {};
 							
-							let initConfigs = ParadigmREVOLUTION.Datastores.Parameters;
-							window.SurrealDB = SurrealDB;
-							window.ParadigmREVOLUTION.Datastores = {
-								Tokens: Tokens,
-								Parameters: ParadigmREVOLUTION.Datastores.Parameters,
-								SurrealDB: ParadigmREVOLUTION.Datastores.SurrealDB,
-							};
+						let initConfigs = ParadigmREVOLUTION.Datastores.Parameters;
+						window.SurrealDB = SurrealDB;
+						window.ParadigmREVOLUTION.Datastores = {
+							Tokens: Tokens,
+							Parameters: ParadigmREVOLUTION.Datastores.Parameters,
+							SurrealDB: ParadigmREVOLUTION.Datastores.SurrealDB,
+						};
 
-							const promises = initConfigs.map(config =>
-								ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
-							);
+						const promises = initConfigs.map(config =>
+							ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
+						);
 
-							const results = await Promise.all(promises);
+						const results = await Promise.all(promises);
 
-							initConfigs.forEach((config, index) => {
-								Tokens[config.name] = results[index];
-							});
-							window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
+						initConfigs.forEach((config, index) => {
+							Tokens[config.name] = results[index];
+						});
+						window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
 
-							async function getDatastoreStatus() {
-								let datastore_status = '';
-								for (const [idx, entry] of Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB)) {
-									// Check if Instance is false
-									if (!entry.Instance) {
-										datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
-									} else {
-										try {
-											// Await the promise for connection status
-											if (entry.Instance == false) {
-												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
-											} else if (entry.Instance.connection == undefined) {
-												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
+						async function getDatastoreStatus() {
+							let datastore_status = '';
+							for (const [idx, entry] of Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB)) {
+								// Check if Instance is false
+								if (!entry.Instance) {
+									datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
+								} else {
+									try {
+										// Await the promise for connection status
+										if (entry.Instance == false) {
+											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
+										} else if (entry.Instance.connection == undefined) {
+											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
+										} else {
+											const status = await entry.Instance.connection.status;
+											// Check connection status
+											if (status === "connected") {
+												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
+											} else if (status === "disconnected") {
+												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
 											} else {
-												const status = await entry.Instance.connection.status;
-												// Check connection status
-												if (status === "connected") {
-													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
-												} else if (status === "disconnected") {
-													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
-												} else {
-													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
-												}
+												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
 											}
-										} catch (error) {
-											console.error(`Error fetching status for ${idx}:`, error);
-											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} ERROR">${entry.Metadata.ShortLabel}</button>`;
 										}
+									} catch (error) {
+										console.error(`Error fetching status for ${idx}:`, error);
+										datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} ERROR">${entry.Metadata.ShortLabel}</button>`;
 									}
 								}
-								return datastore_status;
-							};
-							getDatastoreStatus().then(datastore_status => {
-								document.querySelector('#datastore_status').innerHTML = datastore_status;
-							});
-						}
-					}, {
-					selector: '.is-selectable',
-						callback: (e) => {
-							console.log('is-selectable CLICK');
-							const selectableParent = e.target.closest('.is-selectable-parent');
-							const selectableBox = e.target.closest('.is-selectable-box');
-							const dataset = e.currentTarget.dataset;
-							console.log('dataset :>> ', dataset);
-				
-							if (!selectableParent || !selectableBox) return; // Guard clause
-				
-							console.log('selectable box or selectable parent exists!');
-							selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
-								item.style.removeProperty('width');
-								item.classList.remove('box', 'focused', 'm-2');
-								item.classList.remove('m-2');
-							});
-							if (selectableBox.classList.contains('field')) {
-								selectableBox.style.width = '100%;';
-							} else {
-								selectableBox.style.width = 'fit-content;';
 							}
-							selectableBox.classList.add('box', 'focused', 'mx-0');
+							return datastore_status;
+						};
+						getDatastoreStatus().then(datastore_status => {
+							document.querySelector('#datastore_status').innerHTML = datastore_status;
+						});
+					}
+				}, {
+					selector: '.is-selectable',
+					callback: (e) => {
+						console.log('is-selectable CLICK');
+						const selectableParent = e.target.closest('.is-selectable-parent');
+						const selectableBox = e.target.closest('.is-selectable-box');
+				
+						if (!selectableParent || !selectableBox) return; // Guard clause
+				
+						const dataset = e.target.dataset;
+						console.log('dataset :>> ', dataset);
+						console.log('selectable box or selectable parent exists!');
+						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
+							item.style.removeProperty('width');
+							item.classList.remove('box', 'focused', 'm-2');
+							item.classList.remove('m-2');
+						});
+						if (selectableBox.classList.contains('field')) {
+							selectableBox.style.width = '100%;';
+						} else {
+							selectableBox.style.width = 'fit-content;';
 						}
-					}, {
-						selector: '.form-input-types',
-						callback: (e) => {
-							console.log('form-input-types CLICK');
+						selectableBox.classList.add('box', 'focused', 'mx-0');
+					}
+				}, {
+					selector: '.form-input-types',
+					callback: (e) => {
+						console.log('form-input-types CLICK');
 
-							let num = Date.now();
-							//ADD FORM COLUMN HERE
+						let num = Date.now();
+						//ADD FORM COLUMN HERE
 							
-							let form_container = e.target.closest(`.${e.target.dataset.form_container}`); //NOTE - NOW
-							console.log('form_container >>>>>> ', form_container);
-							console.log('e.target', e.target);
-							console.log('e.target.dataset.form_container', e.target.dataset.form_container);
-							// console.log('form_container >>>>', form_container);
-							console.log('this.Forms[1]', this.Forms[1]);
-							let newCol = this.Form.Initialize.FormCard('form_components___' + num, this.Forms[1], 1, 1, 100);
-							// console.log('newCol :>> ', newCol);
-							form_container.innerHTML += newCol;;
+						let form_container = e.target.closest(`.${e.target.dataset.form_container}`); //NOTE - NOW
+						console.log('form_container >>>>>> ', form_container);
+						console.log('e.target', e.target);
+						console.log('e.target.dataset.form_container', e.target.dataset.form_container);
+						// console.log('form_container >>>>', form_container);
+						console.log('this.Forms[1]', this.Forms[1]);
+						let newCol = this.Form.Initialize.FormCard('form_components___' + num, this.Forms[1], 1, 1, 100);
+						// console.log('newCol :>> ', newCol);
+						form_container.innerHTML += newCol;;
+
+						// Calculate WIDTH
+						let maxcount = 0;
+						let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+						childContainers.forEach((container) => {
+							if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+							container.parentElement.classList.remove('box');
+							container.parentElement.classList.add('box');
+						});
+
+						// Set the new width
+						document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22 + 1) + 'rem';
+
+						this.SnapScroll = false;
+						setTimeout(() => {
+							document.querySelector('#app_root_container').scrollTo({
+								left: document.querySelector('#app_root_container').scrollWidth,
+								behavior: 'smooth'
+							});
+						}, 300);
+						setTimeout(() => {
+							this.SnapScroll = true;
+						}, 500);
+						setTimeout(() => {
+							let selectedBox = document.querySelector(`.${e.target.dataset.form_container}`);
+							if (selectedBox) {
+								console.log('ada selected box');
+								// Get the scrollable container
+								let scrollContainer = document.querySelector('#app_data_preparation_area');
+									
+								// Get the offset of the selected box relative to the container
+								let offsetLeft = selectedBox.offsetLeft;
+								console.log('offsetLeft :>> ', offsetLeft);
+									
+								// Scroll to that position with smooth behavior
+								scrollContainer.scrollTo({
+									left: offsetLeft,
+									behavior: 'smooth'
+								});
+							}
+						}, 300);
+					}
+				}, {
+					selector: '.form-close-button',
+					callback: (e) => {
+						let formid = e.target.dataset.formid;
+						let isdataprepbox = false;
+						// const formElement = document.querySelector(`#${formid}`).parentElement;
+						let formElement = e.target.closest('.form-input-column-container');
+						let dataPreparationBox = e.target.closest('.data_preparation_box');
+						const dataPreparationBoxChildCount = e.target.closest('.data_preparation_box').querySelectorAll('.column').length;
+							
+						if (!formElement) {
+							formElement = e.target.closest('.data_preparation_box');
+							isdataprepbox = true;
+						}
+						if (!formElement) return; //Guard clause
+
+						// Step 1: Add collapsing class to trigger CSS transition
+						formElement.classList.add('collapsing');
+
+						// Step 2: Use a timeout slightly longer than the CSS transition duration
+						setTimeout(() => {
+							// Remove the element from DOM after the transition
+							const parentEl = formElement.parentElement;
+							formElement.remove();
+								
+							if (!isdataprepbox) if (parentEl.childElementCount == 0) {
+								const box = parentEl.closest('.box')
+								if (!box) box.remove();
+							}
+							// console.log('dataPreparationBoxChildCount :>> ', dataPreparationBoxChildCount);
+							if (dataPreparationBoxChildCount == 1) {
+								dataPreparationBox.remove();
+							}
+
+							// Check child elements count to handle visibility
+							if (document.querySelector('#app_data_preparation_area').childElementCount === 0) {
+								const prepArea = document.querySelector('#app_data_preparation_area');
+								prepArea.classList.remove('show');
+								prepArea.style.flexBasis = '0rem';
+							}
 
 							// Calculate WIDTH
-							let maxcount = 0;
-							let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+							let eleWidth = 0;
+							const childContainers = document.querySelectorAll('.data_preparation_area_container');
 							childContainers.forEach((container) => {
-								if (maxcount < container.childElementCount) maxcount = container.childElementCount;
-								container.parentElement.classList.remove('box');
-								container.parentElement.classList.add('box');
+								if (eleWidth < container.offsetWidth) eleWidth = container.offsetWidth;
 							});
 
-							// Set the new width
-							document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22+1) + 'rem';
+							document.querySelector('#app_data_preparation_area').style.flexBasis = 28 + eleWidth + 'px';
 
 							this.SnapScroll = false;
 							setTimeout(() => {
@@ -901,127 +987,100 @@ export class Flow {
 							setTimeout(() => {
 								this.SnapScroll = true;
 							}, 500);
+						}, 350); // Timeout slightly longer than the CSS transition (0.3s)
+					}
+				}, {
+					selector: ' .prev-box, .next-box', //NOTE - prev-box next-box
+					callback: (e) => {
+						console.log('prev-box, next-box');
+						// Find the current .box container
+						const currentBox = e.target.closest('.data_preparation_box');
+						console.log('currentBox :>> ', currentBox);
+
+						// Determine the direction (up or down)
+						const isPrev = e.target.closest('.prev-box') !== null;
+						console.log('isPrev :>> ', isPrev);
+						const isUp = isPrev || e.target.classList.contains('fa-angle-up');
+
+						// Find all boxes
+						// const allBoxes = Array.from(document.querySelectorAll('.box.m-3'));
+						const allBoxes = Array.from(e.target.closest('.data_preparation_box').parentElement.querySelectorAll('.data_preparation_box'));
+						console.log('allBoxes :>> ', allBoxes);
+						if (allBoxes.length == 0) return;
+						console.log('allBox is not 0');
+
+						allBoxes.forEach((box) => {
+							console.log('box', box);
+							box.classList.remove('focused');
+						});
+						// Get the current index of the active box
+						const currentIndex = allBoxes.indexOf(currentBox);
+						// Calculate the target index
+						let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
+						// Ensure the target index is within bounds
+						if (targetIndex >= 0 && targetIndex < allBoxes.length) {
+							// Get the target box
+							const targetBox = allBoxes[targetIndex];
+							// Move focus to the target box
+							targetBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+							console.log('targetBox', targetBox);
+								
+							// Optionally add a focus effect (e.g., add a CSS class)
+							// currentBox.classList.remove('focused');
 							setTimeout(() => {
-								let selectedBox = document.querySelector(`.${e.target.dataset.form_container}`);
-								if (selectedBox) {
-									console.log('ada selected box');
-									// Get the scrollable container
-									let scrollContainer = document.querySelector('#app_data_preparation_area');
-									
-									// Get the offset of the selected box relative to the container
-									let offsetLeft = selectedBox.offsetLeft;
-									console.log('offsetLeft :>> ', offsetLeft);
-									
-									// Scroll to that position with smooth behavior
-									scrollContainer.scrollTo({
-										left: offsetLeft,
-										behavior: 'smooth'
-									});
-								}
-									}, 300);
+								targetBox.click();
+							}, 300);
 						}
-					}, {
-						selector: '.form-close-button',
-						callback: (e) => {
-							let formid = e.target.dataset.formid;
-							let isdataprepbox = false;
-							// const formElement = document.querySelector(`#${formid}`).parentElement;
-							let formElement = e.target.closest('.form-input-column-container');
-							
-							if (!formElement) { 
-								formElement = e.target.closest('.data_preparation_box');
-								isdataprepbox = true;
+					}
+				}, {
+					selector: '.move-up-box, .move-down-box', //NOTE - move-up-box -box
+					callback: (e) => {
+						console.log('move-up-box, move-down-box');
+						// Find the current .box container
+						const currentBox = e.target.closest('.data_preparation_box');
+						console.log('currentBox :>> ', currentBox);
+				
+						// Determine the direction (up or down)
+						const isPrev = e.target.closest('.move-up-box') !== null;
+						console.log('isPrev :>> ', isPrev);
+						const isUp = isPrev || e.target.classList.contains('fa-arrows-up-to-line');
+				
+						// Find all sibling boxes in the parent container
+						const allBoxes = Array.from(e.target.closest('.data_preparation_box').parentElement.querySelectorAll('.data_preparation_box'));
+						console.log('allBoxes :>> ', allBoxes);
+						if (allBoxes.length == 0) return;
+						console.log('allBoxes is not 0');
+				
+						// Get the current index of the active box
+						const currentIndex = allBoxes.indexOf(currentBox);
+						console.log('currentIndex :>> ', currentIndex);
+				
+						// Calculate the target index
+						let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
+				
+						// Ensure the target index is within bounds
+						if (targetIndex >= 0 && targetIndex < allBoxes.length) {
+							// Get the target box
+							const targetBox = allBoxes[targetIndex];
+							console.log('targetBox :>> ', targetBox);
+				
+							// Reorder the boxes
+							if (isUp) {
+								// Move currentBox before targetBox
+								targetBox.parentElement.insertBefore(currentBox, targetBox);
+							} else {
+								// Move currentBox after targetBox
+								targetBox.parentElement.insertBefore(currentBox, targetBox.nextSibling);
 							}
-							if (!formElement) return; //Guard clause
-
-							// Step 1: Add collapsing class to trigger CSS transition
-							formElement.classList.add('collapsing');
-
-							// Step 2: Use a timeout slightly longer than the CSS transition duration
-							setTimeout(() => {
-								// Remove the element from DOM after the transition
-								const parentEl = formElement.parentElement;
-								formElement.remove(); 
-								
-								if (!isdataprepbox) if (parentEl.childElementCount == 0) {
-									const box = parentEl.closest('.box')
-									if (!box) box.remove();
-								}
-
-								// Check child elements count to handle visibility
-								if (document.querySelector('#app_data_preparation_area').childElementCount === 0) {
-									const prepArea = document.querySelector('#app_data_preparation_area');
-									prepArea.classList.remove('show');
-									prepArea.style.flexBasis = '0rem';
-								}
-
-								// Calculate WIDTH
-								let eleWidth = 0;
-								const childContainers = document.querySelectorAll('.data_preparation_area_container');
-								childContainers.forEach((container) => {
-									if (eleWidth < container.offsetWidth) eleWidth = container.offsetWidth;
-								});
-
-								console.log('eleWidth :>> ', eleWidth);
-								document.querySelector('#app_data_preparation_area').style.flexBasis = 28 + eleWidth + 'px';
-
-								this.SnapScroll = false;
-								setTimeout(() => {
-									document.querySelector('#app_root_container').scrollTo({
-										left: document.querySelector('#app_root_container').scrollWidth,
-										behavior: 'smooth'
-									});
-								}, 300);
-								setTimeout(() => {
-									this.SnapScroll = true;
-								}, 500);
-							}, 350); // Timeout slightly longer than the CSS transition (0.3s)
+				
+							console.log('Boxes reordered');
 						}
-					}, {
-						selector: ' .prev-box, .next-box', //NOTE - prev-box next-box
-						callback: (e) => {
-							console.log('prev-box, next-box');
-							// Find the current .box container
-							const currentBox = e.target.closest('.data_preparation_box');
-							console.log('currentBox :>> ', currentBox);
+					}
+				}
+				
 
-							// Determine the direction (up or down)
-							const isPrev = e.target.closest('.prev-box') !== null;
-							console.log('isPrev :>> ', isPrev);
-							const isUp = isPrev || e.target.classList.contains('fa-angle-up');
-
-							// Find all boxes
-							// const allBoxes = Array.from(document.querySelectorAll('.box.m-3'));
-							const allBoxes = Array.from(e.target.closest('.data_preparation_box').parentElement.querySelectorAll('.data_preparation_box'));
-							console.log('allBoxes :>> ', allBoxes);
-							if (allBoxes.length == 0) return;
-							console.log('allBox is not 0');
-
-							allBoxes.forEach((box) => {
-								console.log('box', box);
-								box.classList.remove('focused');
-							});
-							// Get the current index of the active box
-							const currentIndex = allBoxes.indexOf(currentBox);
-							// Calculate the target index
-							let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
-							// Ensure the target index is within bounds
-							if (targetIndex >= 0 && targetIndex < allBoxes.length) {
-								// Get the target box
-								const targetBox = allBoxes[targetIndex];
-								// Move focus to the target box
-								targetBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-								console.log('targetBox', targetBox);
-								
-								// Optionally add a focus effect (e.g., add a CSS class)
-								// currentBox.classList.remove('focused');
-								setTimeout(() => {
-									targetBox.click();	
-								}, 300);
-								
-							}
-						}
-					// }, {
+					
+					//{
 					// 	selector: '.is-selectable-box',
 					// 	callback: (e) => {
 					// 		console.log('click within the box', e.target.classList);
@@ -1033,7 +1092,7 @@ export class Flow {
 					// 		const currentBox = e.target.closest('.data_preparation_box');
 					// 		if (currentBox) if (!currentBox.classList.contains('focused')) currentBox.classList.add('focused');
 					// 	}
-					}
+					// }
 				]);
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
