@@ -1,4 +1,35 @@
-{"comment": "Component Canvas Container", "tag": "div", "id": "component_canvas_container", "style": "width:80vw;", "content": [
-	{"tag":"div", "class":"box", "id":"", "content":[]}
-
+{"comment": "Graph Canvas Container", "tag": "div", "id": "component_canvas_container", "class":"is-flex is-flex-direction-column", "style": "min-width:30rem;", "content": [
+	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-align-items-center is-flex-wrap-wrap", "id":"", "innerHTML":"", "content":[
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"}
+	]},
+	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-align-items-center is-flex-wrap-wrap", "id":"", "innerHTML":"", "content":[
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"}
+	]},
+	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-align-items-center is-flex-wrap-wrap", "id":"", "innerHTML":"", "content":[
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"}
+	]}
 ]}

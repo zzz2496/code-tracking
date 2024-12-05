@@ -400,7 +400,7 @@ export class Flow {
 						card.content.push({
 							comment: "card-header",
 							tag: "header",
-							class: "card-header",
+							class: "is-flex m-0 p-0",
 							content: tHeaderContent
 						});
 
@@ -631,40 +631,45 @@ export class Flow {
 							innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
 						}]
 					}, {
-						comment: "card-header-icon",
-						tag: "div",
-						class: "card-header-icon field has-addons m-0 p-0",
-						content: [{
-							tag: "p",
-							class: "control",
-							content: [{
-								tag: "button",
-								class: "button move-up-box",
-								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-arrows-up-to-line"></i></span>`,
-								content: []
-							},{
-								tag: "button",
-								class: "button prev-box",
-								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-angle-up"></i></span>`,
-								content: []
-							},{
-								comment: "card-header-icon",
+						tag: "div", style:"width:100%;transform:translateX(-0.7rem);",  class:"label-container is-flex is-justify-content-center", content: [
+							{
+								comment: "card-header-title",
 								tag: "div",
-								class: "card-header-title title mb-1",
-								innerHTML: componentType.toUpperCase()
-							},{
-								tag: "button",
-								class: "button next-box",
-								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-angle-down"></i></span>`,
-								content: []
-							}, {
-								tag: "button",
-								class: "button move-down-box",
-								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-arrows-down-to-line"></i></span>`,
-								content: []
-							}]
-						}]
-					}],
+								
+								class: "card-header-icon field has-addons m-0 p-0",
+								content: [{
+									tag: "p",
+									class: "control",
+									content: [{
+										tag: "button",
+										class: "button move-up-box",
+										innerHTML: `<span class="icon is-small"><i class="fa-solid fa-arrows-up-to-line"></i></span>`,
+										content: []
+									},{
+										tag: "button",
+										class: "button prev-box",
+										innerHTML: `<span class="icon is-small"><i class="fa-solid fa-angle-up"></i></span>`,
+										content: []
+									},{
+										comment: "card-header-icon",
+										tag: "div",
+										class: "card-header-title title mb-1 is-justify-content-center",
+										style: "min-width: 11rem;",
+										innerHTML: componentType.toUpperCase()
+									},{
+										tag: "button",
+										class: "button next-box",
+										innerHTML: `<span class="icon is-small"><i class="fa-solid fa-angle-down"></i></span>`,
+										content: []
+									}, {
+										tag: "button",
+										class: "button move-down-box",
+										innerHTML: `<span class="icon is-small"><i class="fa-solid fa-arrows-down-to-line"></i></span>`,
+										content: []
+									}]
+								}]
+							}
+					]}],
 					innerHTML: content
 				});
 				
@@ -738,44 +743,44 @@ export class Flow {
 					}, 500);
 				});
 				document.querySelector('#graph_addnode_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
-						let compcanvas = JSON.parse(JSON.stringify(window.template__ComponentCanvas));
-						return this.Form.Render.traverseDOMProxyOBJ(compcanvas);
+			this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
+						let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
+						return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
 					});
 				});
 				
-				// document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
-				// 		return this.Form.Initialize.FormCard(`New_PROGRAMMING___${num}`, this.Forms[0], 0, 1, 100, container_id);
-				// 	});
-				// });
+				document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
+			this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
+						return this.Form.Initialize.FormCard(`New_PROGRAMMING___${num}`, this.Forms[0], 0, 1, 100, container_id);
+					});
+				});
 
 				document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
+			this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_DATASTORE___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 
 				document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
+			this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 
 				document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
+			this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_LAYOUT___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 				
 				document.querySelector('#graph_addschema_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
+			this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_SCHEMA___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 				
 				document.querySelector('#graph_addform_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
+			this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
@@ -857,6 +862,20 @@ export class Flow {
 							console.log('dataset is not empty');
 							console.log('dataset :>> ', dataset);
 							console.log(dataset.template);
+
+							if (dataset.template) {
+								this.Form.Events.addDataPreparationComponent('graphnode_container_'+Date.now(), 'Graph', (num, container_id) => {
+									let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
+									return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+								});
+							}
+							if (dataset.schema) {
+								this.Form.Events.addDataPreparationComponent('graphnode_container_'+Date.now(), 'Graph', (num, container_id) => {
+									let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
+									return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+								});
+							}
+							
 						}
 						console.log('selectable box or selectable parent exists!');
 						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {

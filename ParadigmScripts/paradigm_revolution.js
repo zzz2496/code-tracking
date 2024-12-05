@@ -22,7 +22,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	document.querySelector('#Loader_container').remove();
 	console.log('>>> >>> >>> >>> ||| STARTING YGGDRASIL INITIALIZATION');
 
-	let CurrentDocument = JSON.parse(JSON.stringify(template__Node));
+	let CurrentDocument = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 	// form.Dataset.Schema = {
 	// 	informasi_faktur: JSON.parse(JSON.stringify(template__node)),
 	// 	identitas_pemilik: JSON.parse(JSON.stringify(template__node)),
@@ -32,7 +32,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	// };
 	window.CurrentDocument = CurrentDocument;
 	// NOTE - Initialize Main Form (App_menu, App_Container, App_Helper, App_console)
-	CurrentDocument.Dataset.Layout = template__MainAppLayout;
+	CurrentDocument.Dataset.Layout = ParadigmREVOLUTION.SystemCore.Template.Data.MainAppLayout;
 
 	let chain = [
 		{
@@ -80,7 +80,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status in paradigm_revolution.js');
 	let datastore_status = '';
-	Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
+	Object.entries(ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
  		datastore_status += `<button class="datastore-status-indicator button is-small p-2 m-0 mr-1" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
 	});
 	document.querySelector('#datastore_status').innerHTML = datastore_status;
@@ -91,7 +91,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	Flow.FormContainer.classList.remove('hide');
 	Flow.FormContainer.classList.add('show');
 
-	CurrentDocument.Dataset.Forms = [template__FormInputTypes, template__FormInputTypeDefinition];
+	CurrentDocument.Dataset.Forms = [ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypes, ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypeDefinition];
 	Flow.Forms = CurrentDocument.Dataset.Forms;
 
 	Flow.Form.Events.InitializeFormControls();
