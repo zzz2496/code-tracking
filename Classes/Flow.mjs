@@ -633,7 +633,7 @@ export class Flow {
 					}, {
 						comment: "card-header-icon",
 						tag: "div",
-						class: "card-header-title field has-addons m-0 p-0",
+						class: "card-header-icon field has-addons m-0 p-0",
 						content: [{
 							tag: "p",
 							class: "control",
@@ -650,7 +650,7 @@ export class Flow {
 							},{
 								comment: "card-header-icon",
 								tag: "div",
-								class: "card-header-title title mb-1 is-justify-content-center",
+								class: "card-header-title title mb-1",
 								innerHTML: componentType.toUpperCase()
 							},{
 								tag: "button",
@@ -671,42 +671,6 @@ export class Flow {
 				let str = this.Form.Render.traverseDOMProxyOBJ(testCard);
 				appArea.innerHTML += str;
 
-				// Calculate WIDTH
-				// let maxcount = 0;
-				// document.querySelectorAll('.data_preparation_area_container').forEach(container => {
-				// 	if (maxcount < container.childElementCount) maxcount = container.childElementCount;
-				// });
-
-				// // let eleWidth = document.querySelector(`#${id}`).offsetWidth;
-				// let element = document.querySelector(`#${id}`);
-				// const eleWidth = element.offsetWidth;
-				
-				// if (((appArea.style.flexBasis.replace('px', ''))*1) < eleWidth) appArea.style.flexBasis = 28 + eleWidth + 'px';
-			
-				// // Handle scrolling
-				// this.SnapScroll = false;
-				// setTimeout(() => {
-				// 	document.querySelector('#app_root_container').scrollTo({
-				// 		left: document.querySelector('#app_root_container').scrollWidth,
-				// 		behavior: 'smooth'
-				// 	});
-				// }, 500);
-				// setTimeout(() => { this.SnapScroll = true; }, 1000);
-				// setTimeout(() => {
-				// 	let selectedBox = document.querySelector(`.${container_id}`)
-				// 	console.log('container_id :>> ', container_id);
-				// 	if (selectedBox) {
-				// 		let scrollContainer = document.querySelector('#app_data_preparation_area');
-				// 		let offsetLeft = selectedBox.offsetLeft + 24 + 'px';
-				// 		console.log('offsetLeft :>> ', offsetLeft);
-				// 		scrollContainer.scrollTo({
-				// 			left: offsetLeft,
-				// 			behavior: 'smooth'
-				// 		});
-				// 	} else { 
-				// 		console.error('SelectedBox not found! class:', container_id);
-				// 	}
-				// }, 500);
 				//NOTE - CALCULATE WIDTH
 				let maxwidth = 0;
 				document.querySelectorAll('.data_preparation_box').forEach(box => {
@@ -887,7 +851,13 @@ export class Flow {
 						if (!selectableParent || !selectableBox) return; // Guard clause
 				
 						const dataset = e.target.dataset;
-						console.log('dataset :>> ', dataset);
+						const datasetEntries = Object.entries(dataset);
+						
+						if (datasetEntries.length > 0) {
+							console.log('dataset is not empty');
+							console.log('dataset :>> ', dataset);
+							console.log(dataset.template);
+						}
 						console.log('selectable box or selectable parent exists!');
 						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
 							item.style.removeProperty('width');
@@ -918,17 +888,6 @@ export class Flow {
 						let newCol = this.Form.Initialize.FormCard('form_components___' + num, this.Forms[1], 1, 1, 100);
 						// console.log('newCol :>> ', newCol);
 						form_container.innerHTML += newCol;;
-
-						// // Calculate WIDTH
-						// let maxcount = 0;
-						// let childContainers = document.querySelectorAll('.data_preparation_area_container ');
-						// childContainers.forEach((container) => {
-						// 	if (maxcount < container.childElementCount) maxcount = container.childElementCount;
-						// 	container.parentElement.classList.remove('box');
-						// 	container.parentElement.classList.add('box');
-						// });
-						// // Set the new width
-						// document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22 + 1) + 'rem';
 	
 						let maxwidth = 0;
 						document.querySelectorAll('.data_preparation_box').forEach(box => {

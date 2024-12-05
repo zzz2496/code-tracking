@@ -222,9 +222,6 @@ if (typeof finder !== 'undefined') {
 					let template__Edge = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
 					window.template__Edge = template__Edge;
 
-					let node__datasets = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node__Datasets));
-					window.node__datasets = node__datasets;
-
 					document.dispatchEvent(new Event('BlueprintsLoaded'));
 					if (cr) console.log('>>> ||| Blueprint Loader | SUCCESS');
 				}, function (key, url, status) {
@@ -242,8 +239,9 @@ if (typeof finder !== 'undefined') {
 					window.template__FormInputTypes = template__FormInputTypes;
 					let template__FormInputTypeDefinition = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypeDefinition));
 					window.template__FormInputTypeDefinition = template__FormInputTypeDefinition;
-					let template__ComponentCanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data.ComponentCanvas));
-					window.template__ComponentCanvas = template__ComponentCanvas;
+
+					let node__datasets = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data.Node__Datasets));
+					window.node__datasets = node__datasets;
 
 					document.dispatchEvent(new Event('SchemaLoaded'));
 					if (cr) console.log('>>> ||| Schema Loader | SUCCESS');
@@ -258,9 +256,12 @@ if (typeof finder !== 'undefined') {
 					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Template = "LOADED";
 					console.log('window.ParadigmREVOLUTION.SystemCore.Template.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Template.Data);
 
+					let template__ComponentCanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.ComponentCanvas));
+					window.template__ComponentCanvas = template__ComponentCanvas;
+
+
 					let template__MainAppLayout = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.MainAppLayout));
 					window.template__MainAppLayout = template__MainAppLayout;
-
 
 					document.dispatchEvent(new Event('SchemaLoaded'));
 					if (cr) console.log('>>> ||| Template Loader | SUCCESS');
