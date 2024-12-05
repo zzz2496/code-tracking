@@ -12,7 +12,9 @@
 	--object-collections-controls: 2.5rem;
 	--object-collections-tabs: 2.6rem;
 	--object-collections-content: calc(100vh - var(--object-collections-controls) - var(--object-collections-tabs));
-	--transition-time: 0.5s;
+	--transition-time: 0.6s;
+	--swoop:   cubic-bezier(.28,.2,0,1);
+	--swoopv1: cubic-bezier(0,0,0,1.03);
 }
 
 * {
@@ -134,7 +136,7 @@
 	/* border: 1px solid green; */
 	overflow: auto;
 	height: 100vh;
-	transition: flex-basis var(--transition-time) ease;
+	transition: flex-basis var(--transition-time) var(--swoop);
 	scrollbar-width: none; 
 	-ms-overflow-style: none; 
 }
@@ -169,7 +171,7 @@
 	overflow: scroll;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
-	transition: height var(--transition-time) ease;
+	transition: height var(--transition-time) var(--swoop);
 }
 #app_menu_container.show{
 	height: calc(100vh - 44px);
@@ -183,7 +185,7 @@
     /* border: solid green 1px; */
     scrollbar-width: none;
     -ms-overflow-style: none;
-    transition: height var(--transition-time) ease;
+    transition: height var(--transition-time) var(--swoop);
 }
 
 #object-collections-container::-webkit-scrollbar {
@@ -194,7 +196,7 @@
 .object-collections-containers {
     width: 100%;                /* Full width so only one shows at a time */
     height: 100%;               /* Ensure content spans full height */
-    transition: transform 0.6s ease, opacity 0.3s ease; 
+    transition: transform 0.6s var(--swoop), opacity 0.3s var(--swoop); 
     position: absolute;         /* Stack them on top of each other */
     top: 0;
     left: 0;
@@ -271,7 +273,7 @@
 	/* border: solid green 1px;  */
 	scrollbar-width: none; 
 	-ms-overflow-style: none;
-	transition: height var(--transition-time) ease;
+	transition: height var(--transition-time) var(--swoop);
 }
 #app_configurator_container.show {
 	height: calc(80vh);
@@ -287,7 +289,7 @@
 
 .app_configurator_containers {
     min-width: 100%;
-    transition: transform 0.6s ease, opacity 0.3s ease;
+    transition: transform 0.6s var(--swoop), opacity 0.3s var(--swoop);
     position: absolute;
     top: 0;
     left: 0;
@@ -313,7 +315,7 @@
 	width: 100%;
 	overflow: hidden;
 	/* opacity: 0; */
-	transition: opacity var(--transition-time) ease, height var(--transition-time) ease;
+	transition: opacity var(--transition-time) var(--swoop), height var(--transition-time) var(--swoop);
 }
 #app_graph_tabs_container.show{
 	width: 100%;
@@ -389,7 +391,7 @@
 	width: 1;
 	max-width: 0;
 	opacity: 0;
-	transition: flex-basis var(--transition-time) ease, width var(--transition-time) ease, max-width var(--transition-time) ease, opacity var(--transition-time) ease;
+	transition: flex-basis var(--transition-time) var(--swoop), width var(--transition-time) var(--swoop), max-width var(--transition-time) var(--swoop), opacity var(--transition-time) var(--swoop);
 	overflow: hidden;
 	/* padding-right: 1rem;
 	padding-bottom: 1rem; */
@@ -411,7 +413,7 @@
 
 /* Initial state for the divs */
 #app_data_preparation_area .collapsible {
-    transition: opacity var(--transition-time) ease;
+    transition: opacity var(--transition-time) var(--swoop);
     opacity: 1;
     overflow: hidden; /* Prevents content overflow during transition */
 }
@@ -438,7 +440,7 @@
 	box-shadow: 0 0 10px #00000033;
 	background-color: var(--bulma-background);
 	overflow: auto;
-	transition: transform var(--transition-time) ease;
+	transition: transform var(--transition-time) var(--swoop);
 	transform: translateY(0%);
 	resize: both;
 	z-index: 9999;
@@ -477,7 +479,7 @@
 .addremove-control-container{
     width: 0;                       /* Start collapsed */
     overflow: hidden;               /* Hide overflowing content */
-    transition: width 0.5s ease, opacity 0.5s ease; /* Animate width and opacity */
+    transition: width 0.5s var(--swoop), opacity 0.5s var(--swoop); /* Animate width and opacity */
     opacity: 0;                     /* Hidden by default */
     display: flex;                  /* Keeps buttons in a row */
     align-items: center;            /* Center-aligns buttons vertically */
@@ -504,7 +506,7 @@
 	height: 100vh;
 	font-family: Arial, sans-serif;
 	opacity: 1;
-	transition: opacity var(--transition-time) ease;
+	transition: opacity var(--transition-time) var(--swoop);
 	overflow: hidden;
 }
 #Loader_container.show{
@@ -545,7 +547,7 @@
 
 #ParadigmREVOLUTION {
 	opacity: 0;
-	transition: opacity var(--transition-time) ease;
+	transition: opacity var(--transition-time) var(--swoop);
 }
 #ParadigmREVOLUTION.show {
 	opacity: 1;
@@ -568,7 +570,7 @@
 
 /* Tab container animations */
 /* .tab-content {
-    transition: transform 5s ease, opacity 5s ease;
+    transition: transform 5s var(--swoop), opacity 5s var(--swoop);
     opacity: 0.2;
     transform: translateY(100%);
 }
@@ -579,7 +581,7 @@
 } */
 /* Base state for tabs */
 .tabs li {
-    transition: transform var(--transition-time) ease-out, opacity var(--transition-time) ease-out, width var(--transition-time) ease;
+    transition: transform var(--transition-time) var(--swoop), opacity var(--transition-time) var(--swoop), width var(--transition-time) var(--swoop);
     opacity: 0;
     transform: translateY(100%); /* Move downward initially */
     visibility: hidden; /* Prevent interaction when hidden */
@@ -592,11 +594,9 @@
     transform: translateY(0); /* Move to original position */
     visibility: visible; /* Allow interaction when shown */
 	width: fit-content;
+    transition: transform var(--transition-time) var(--swoop), opacity var(--transition-time) var(--swoop), width var(--transition-time) var(--swoop);
 }
-.tabs li.hiding {
-    opacity: 0;
-    transform: translateY(100%); /* Move to original position */
-    visibility: hidden; /* Allow interaction when shown */
-	width: 0;
+.data_preparation_box{
+	transition: transform var(--transition-time) var(--swoop);
+    position: relative;
 }
-

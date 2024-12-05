@@ -66,6 +66,9 @@
 											{ "tag": "li", "class": "is-active show ", "content": [
 												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Graph"}, "innerHTML": "Graph" }
 											] },
+											{ "tag": "li", "class": "tabs-extended-functions", "content": [
+												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Programming"}, "innerHTML": "Programming" }
+											] },
 											{ "tag": "li", "class":"tabs-extended-functions", "content": [
 												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Datastore"}, "innerHTML": "Datastore" }
 											] },

@@ -134,7 +134,7 @@ let ParadigmREVOLUTION = {
 			"URL": {
 				"MainAppLayout": { "URL": "./SystemBlueprint/Template__MainAppLayout.json" },
 				"ComponentCanvas": { "URL": "./SystemBlueprint/Template__ComponentCanvas.json" },
-				
+				"GraphCanvas": { "URL": "./SystemBlueprint/Template__GraphCanvas.json" },
 			},
 			"Data": {}
 		},

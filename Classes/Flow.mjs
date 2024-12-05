@@ -633,7 +633,7 @@ export class Flow {
 					}, {
 						comment: "card-header-icon",
 						tag: "div",
-						class: "card-header-icon field has-addons m-0 p-0",
+						class: "card-header-title field has-addons m-0 p-0",
 						content: [{
 							tag: "p",
 							class: "control",
@@ -648,9 +648,9 @@ export class Flow {
 								innerHTML: `<span class="icon is-small"><i class="fa-solid fa-angle-up"></i></span>`,
 								content: []
 							},{
-								comment: "card-header-title",
-								tag: "p",
-								class: "card-header-title title mb-1",
+								comment: "card-header-icon",
+								tag: "div",
+								class: "card-header-title title mb-1 is-justify-content-center",
 								innerHTML: componentType.toUpperCase()
 							},{
 								tag: "button",
@@ -672,16 +672,48 @@ export class Flow {
 				appArea.innerHTML += str;
 
 				// Calculate WIDTH
-				let maxcount = 0;
-				document.querySelectorAll('.data_preparation_area_container').forEach(container => {
-					if (maxcount < container.childElementCount) maxcount = container.childElementCount;
-				});
+				// let maxcount = 0;
+				// document.querySelectorAll('.data_preparation_area_container').forEach(container => {
+				// 	if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+				// });
 
-				// let eleWidth = document.querySelector(`#${id}`).offsetWidth;
-				let element = document.querySelector(`#${id}`);
-				const eleWidth = element.offsetWidth;
+				// // let eleWidth = document.querySelector(`#${id}`).offsetWidth;
+				// let element = document.querySelector(`#${id}`);
+				// const eleWidth = element.offsetWidth;
 				
-				if (((appArea.style.flexBasis.replace('px', ''))*1) < eleWidth) appArea.style.flexBasis = 28 + eleWidth + 'px';
+				// if (((appArea.style.flexBasis.replace('px', ''))*1) < eleWidth) appArea.style.flexBasis = 28 + eleWidth + 'px';
+			
+				// // Handle scrolling
+				// this.SnapScroll = false;
+				// setTimeout(() => {
+				// 	document.querySelector('#app_root_container').scrollTo({
+				// 		left: document.querySelector('#app_root_container').scrollWidth,
+				// 		behavior: 'smooth'
+				// 	});
+				// }, 500);
+				// setTimeout(() => { this.SnapScroll = true; }, 1000);
+				// setTimeout(() => {
+				// 	let selectedBox = document.querySelector(`.${container_id}`)
+				// 	console.log('container_id :>> ', container_id);
+				// 	if (selectedBox) {
+				// 		let scrollContainer = document.querySelector('#app_data_preparation_area');
+				// 		let offsetLeft = selectedBox.offsetLeft + 24 + 'px';
+				// 		console.log('offsetLeft :>> ', offsetLeft);
+				// 		scrollContainer.scrollTo({
+				// 			left: offsetLeft,
+				// 			behavior: 'smooth'
+				// 		});
+				// 	} else { 
+				// 		console.error('SelectedBox not found! class:', container_id);
+				// 	}
+				// }, 500);
+				//NOTE - CALCULATE WIDTH
+				let maxwidth = 0;
+				document.querySelectorAll('.data_preparation_box').forEach(box => {
+					maxwidth = box.offsetWidth > maxwidth ? box.offsetWidth : maxwidth;
+				});
+				
+				if (((appArea.style.flexBasis.replace('px', ''))*1) < maxwidth) appArea.style.flexBasis = 28 + maxwidth + 'px';
 			
 				// Handle scrolling
 				this.SnapScroll = false;
@@ -690,7 +722,7 @@ export class Flow {
 						left: document.querySelector('#app_root_container').scrollWidth,
 						behavior: 'smooth'
 					});
-				}, 500);
+				}, 600);
 				setTimeout(() => { this.SnapScroll = true; }, 1000);
 				setTimeout(() => {
 					let selectedBox = document.querySelector(`.${container_id}`)
@@ -706,7 +738,8 @@ export class Flow {
 					} else { 
 						console.error('SelectedBox not found! class:', container_id);
 					}
-				}, 500);
+				}, 600);
+
 			},
 			InitializeFormControls: () => {
 				this.SnapScroll = true; // Flag to enable/disable snapping
@@ -886,17 +919,23 @@ export class Flow {
 						// console.log('newCol :>> ', newCol);
 						form_container.innerHTML += newCol;;
 
-						// Calculate WIDTH
-						let maxcount = 0;
-						let childContainers = document.querySelectorAll('.data_preparation_area_container ');
-						childContainers.forEach((container) => {
-							if (maxcount < container.childElementCount) maxcount = container.childElementCount;
-							container.parentElement.classList.remove('box');
-							container.parentElement.classList.add('box');
+						// // Calculate WIDTH
+						// let maxcount = 0;
+						// let childContainers = document.querySelectorAll('.data_preparation_area_container ');
+						// childContainers.forEach((container) => {
+						// 	if (maxcount < container.childElementCount) maxcount = container.childElementCount;
+						// 	container.parentElement.classList.remove('box');
+						// 	container.parentElement.classList.add('box');
+						// });
+						// // Set the new width
+						// document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22 + 1) + 'rem';
+	
+						let maxwidth = 0;
+						document.querySelectorAll('.data_preparation_box').forEach(box => {
+							maxwidth = box.offsetWidth > maxwidth ? box.offsetWidth : maxwidth;
 						});
-
-						// Set the new width
-						document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxcount * (22 + 1) + 'rem';
+						
+						document.querySelector('#app_data_preparation_area.show').style.flexBasis = maxwidth + 32 + 'px';
 
 						this.SnapScroll = false;
 						setTimeout(() => {
@@ -904,10 +943,10 @@ export class Flow {
 								left: document.querySelector('#app_root_container').scrollWidth,
 								behavior: 'smooth'
 							});
-						}, 300);
+						}, 600);
 						setTimeout(() => {
 							this.SnapScroll = true;
-						}, 500);
+						}, 610);
 						setTimeout(() => {
 							let selectedBox = document.querySelector(`.${e.target.dataset.form_container}`);
 							if (selectedBox) {
@@ -1039,60 +1078,71 @@ export class Flow {
 						// Find the current .box container
 						const currentBox = e.target.closest('.data_preparation_box');
 						console.log('currentBox :>> ', currentBox);
-				
+					
 						// Determine the direction (up or down)
 						const isPrev = e.target.closest('.move-up-box') !== null;
 						console.log('isPrev :>> ', isPrev);
 						const isUp = isPrev || e.target.classList.contains('fa-arrows-up-to-line');
-				
+					
 						// Find all sibling boxes in the parent container
 						const allBoxes = Array.from(e.target.closest('.data_preparation_box').parentElement.querySelectorAll('.data_preparation_box'));
 						console.log('allBoxes :>> ', allBoxes);
 						if (allBoxes.length == 0) return;
 						console.log('allBoxes is not 0');
-				
+					
 						// Get the current index of the active box
 						const currentIndex = allBoxes.indexOf(currentBox);
 						console.log('currentIndex :>> ', currentIndex);
-				
+					
 						// Calculate the target index
 						let targetIndex = isUp ? currentIndex - 1 : currentIndex + 1;
-				
+					
 						// Ensure the target index is within bounds
 						if (targetIndex >= 0 && targetIndex < allBoxes.length) {
 							// Get the target box
 							const targetBox = allBoxes[targetIndex];
 							console.log('targetBox :>> ', targetBox);
-				
-							// Reorder the boxes
-							if (isUp) {
-								// Move currentBox before targetBox
-								targetBox.parentElement.insertBefore(currentBox, targetBox);
-							} else {
-								// Move currentBox after targetBox
-								targetBox.parentElement.insertBefore(currentBox, targetBox.nextSibling);
-							}
-				
-							console.log('Boxes reordered');
-						}
-					}
-				}
-				
-
 					
-					//{
-					// 	selector: '.is-selectable-box',
-					// 	callback: (e) => {
-					// 		console.log('click within the box', e.target.classList);
-					// 		const allBoxes = Array.from(document.querySelectorAll('.is-selectable-box'));
-					// 		if (allBoxes.length == 0) return;
-					// 		allBoxes.forEach((box) => {
-					// 			box.classList.remove('focused');
-					// 		});
-					// 		const currentBox = e.target.closest('.data_preparation_box');
-					// 		if (currentBox) if (!currentBox.classList.contains('focused')) currentBox.classList.add('focused');
-					// 	}
-					// }
+							// Temporarily set transform properties for animation
+							const currentBoxRect = currentBox.getBoundingClientRect();
+							const targetBoxRect = targetBox.getBoundingClientRect();
+					
+							// Calculate the translation distances
+							const deltaY = targetBoxRect.top - currentBoxRect.top;
+					
+							// Apply transform to animate the movement
+							currentBox.style.transform = `translateY(${deltaY}px)`;
+							targetBox.style.transform = `translateY(${-deltaY}px)`;
+					
+							// Wait for the animation to complete
+							setTimeout(() => {
+								// Reset the transform immediately before DOM manipulation
+								currentBox.style.transition = 'none';
+								targetBox.style.transition = 'none';
+								currentBox.style.transform = '';
+								targetBox.style.transform = '';
+					
+								// Force reflow to apply the changes before resetting transition
+								currentBox.offsetHeight; // This forces a reflow
+								targetBox.offsetHeight; // This forces a reflow
+					
+								// Reorder the boxes in the DOM
+								if (isUp) {
+									targetBox.parentElement.insertBefore(currentBox, targetBox);
+								} else {
+									targetBox.parentElement.insertBefore(currentBox, targetBox.nextSibling);
+								}
+					
+								// Restore transition after DOM manipulation
+								setTimeout(() => {
+									currentBox.style.transition = '';
+									targetBox.style.transition = '';
+								}, 0);
+					
+								console.log('Boxes reordered');
+							}, 300); // Match this duration to the CSS transition time
+						}
+					}}
 				]);
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
@@ -1227,15 +1277,15 @@ export class Flow {
 				document.querySelector('#enable_programming_sections_button').addEventListener('click', () => {
 					document.querySelectorAll('.tabs-extended-functions').forEach((tab) => {
 						if (tab.classList.contains('show')) {
-							tab.classList.remove('show');
-							
-							// Force a reflow to apply the transition
-							void tab.offsetWidth; 
-					
-							tab.classList.add('hiding'); // Add hiding class to trigger the animation
+							tab.style.transform = 'translateY(100%)';
+							tab.style.opacity = 0;
+							setTimeout(() => { 
+								tab.classList.remove('show');
+							}, 500);
 						} else {
+							tab.style.transform = 'translateY(0)';
+							tab.style.opacity = 1;
 							tab.classList.add('show');
-							tab.classList.remove('hiding'); // Remove hiding class for the opposite animation
 						}
 					});
 				});
