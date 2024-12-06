@@ -262,6 +262,22 @@ export class Flow {
 						// Add header if provided
 						if (header || headerIcon) {
 							const headerContent = [
+								(headerControls == null || headerControls === "") ? {
+									comment: "card-header-icon",
+									tag: "button",
+									class: "card-header-icon form-close-button",
+									data: {
+										formid: id	
+									},
+									aria: {},
+									content: [
+										{
+											tag: "span",
+											class: "icon form-close-button",
+											innerHTML: `<i class="fa-solid fa-xmark form-close-button has-text-danger" data-formid="${id}"></i>`
+										}
+									]
+								} : headerIcon,
 								headerIcon ? {
 									comment: "card-header-icon",
 									tag: "button",
@@ -280,22 +296,7 @@ export class Flow {
 									tag: "p",
 									class: "card-header-title title-2 mb-1",
 									innerHTML: this.sanitizeHTML(header)
-								}, (headerControls == null || headerControls === "") ? {
-									comment: "card-header-icon",
-									tag: "button",
-									class: "card-header-icon form-close-button",
-									data: {
-										formid: id	
-									},
-									aria: {},
-									content: [
-										{
-											tag: "span",
-											class: "icon form-close-button",
-											innerHTML: `<i class="fa-solid fa-xmark form-close-button has-text-danger" data-formid="${id}"></i>`
-										}
-									]
-								} : headerIcon
+								}
 							].filter(Boolean); // Remove null if headerIcon is empty
 
 							card.content.push({
@@ -743,45 +744,45 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 				});
-				document.querySelector('#graph_addnode_button').addEventListener('click', () => {
-			this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
-						let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
-						return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
-					});
-				});
+				// document.querySelector('#graph_addnode_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
+				// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
+				// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+				// 	});
+				// });
 				
-				document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
-			this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
-						return this.Form.Initialize.FormCard(`New_PROGRAMMING___${num}`, this.Forms[0], 0, 1, 100, container_id);
-					});
-				});
+				// document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
+				// 	this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
+				// 		return this.Form.Initialize.FormCard(`New_PROGRAMMING___${num}`, this.Forms[0], 0, 1, 100, container_id);
+				// 	});
+				// });
 
 				document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
-			this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_DATASTORE___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 
 				document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
-			this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 
 				document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
-			this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_LAYOUT___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 				
 				document.querySelector('#graph_addschema_button').addEventListener('click', () => {
-			this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_SCHEMA___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 				
 				document.querySelector('#graph_addform_button').addEventListener('click', () => {
-			this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
@@ -1121,7 +1122,28 @@ export class Flow {
 								console.log('Boxes reordered');
 							}, 300); // Match this duration to the CSS transition time
 						}
-					}}
+					}
+				}, {
+					selector: '#graph_addnode_button', //NOTE - addnode-button
+					callback: (e) => {
+						//NOTE - Create new node!
+						console.log('Create node! graph_addnode_button click!');
+						console.log('e.target.parentElement :>> ', e.target.parentElement.parentElement, e.target.parentElement.parentElement.querySelector('.graph_addnode_select'));
+						const nodeType = e.target.parentElement.parentElement.querySelector('.graph_addnode_select').value;
+						console.log('nodeType :>> ', nodeType);
+						const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
+						console.log('newNode :>> ', newNode);
+
+						
+					}
+				}, {
+					selector: '#graph_removenodes_button', //NOTE - addnode-button
+					callback: (e) => {
+						//NOTE - Remove nodes!
+						console.log('Remove nodes! graph_removenodes_button click!');
+						
+					}
+				}
 				]);
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');

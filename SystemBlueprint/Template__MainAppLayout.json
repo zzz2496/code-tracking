@@ -97,14 +97,6 @@
 									{ "comment": "Load Document button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" },
 									{ "comment": "Save Document button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-danger", "id": "graph_remove_data_button", "title": "Save Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-up\"></i>" }
 								]},
-								{"tag":"div", "class":"addremove-control-container show", "data":{"tabtype":"Graph"}, "content":[
-									{ "comment": "Remove Graph Nodes", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removenodes_button", "title": "Remove Graph Node(s)", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
-									{ "comment": "Add Graph Node", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addnode_button", "title": "Add Graph Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
-								]},
-								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Programming"}, "content":[
-									{ "comment": "Remove Programming Node(s)","tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removeprogramming_button", "title": "Remove Programming Node(s)", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
-									{ "comment": "Add Programming Node","tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addprogramming_button", "title": "Add Programming Node", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
-								]},
 								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datasource"}, "content":[
 									{ "comment": "Remove Datasource", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatasource_button", "title": "Remove Datasource", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
 									{ "comment": "Add Datasource", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatasource_button", "title": "Add Datasource", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }

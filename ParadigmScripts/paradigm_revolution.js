@@ -8,10 +8,6 @@ document.addEventListener('BlueprintsLoaded', () => {
 	console.log('>>>>>> check for BlueprintsLoaded  in paradigm_revolution.js');
 });
 document.addEventListener('SurrealDBEnginesLoaded', () => {
-
-
-
-
 	let OK = true;
 	Object.keys(ParadigmREVOLUTION.SystemCore.CoreStatus).forEach((key) => {
 		if (ParadigmREVOLUTION.SystemCore.CoreStatus[key].Status == 'FAILED TO LOAD') OK = false;
@@ -23,13 +19,6 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	console.log('>>> >>> >>> >>> ||| STARTING YGGDRASIL INITIALIZATION');
 
 	let CurrentDocument = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
-	// form.Dataset.Schema = {
-	// 	informasi_faktur: JSON.parse(JSON.stringify(template__node)),
-	// 	identitas_pemilik: JSON.parse(JSON.stringify(template__node)),
-	// 	identitas_kendaraan: JSON.parse(JSON.stringify(template__node)),
-	// 	data_pendukung: JSON.parse(JSON.stringify(template__node)),
-	// 	keterangan: JSON.parse(JSON.stringify(template__node))
-	// };
 	window.CurrentDocument = CurrentDocument;
 	// NOTE - Initialize Main Form (App_menu, App_Container, App_Helper, App_console)
 	CurrentDocument.Dataset.Layout = ParadigmREVOLUTION.SystemCore.Template.Data.MainAppLayout;
@@ -56,7 +45,7 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 		{
 			"id": "P3",
 			"input": {
-				"a": ["P2.output", 5],  // Dynamic reference as a string for later evaluation
+				"a": ["P2.output", 5],
 			},
 			"process": "multiply",
 			"output": null,
@@ -85,8 +74,6 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	});
 	document.querySelector('#datastore_status').innerHTML = datastore_status;
 	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status in paradigm_revolution.js');
-	// console.log('datastore_status', datastore_status, document.querySelector('#datastore_status'));
-
 
 	Flow.FormContainer.classList.remove('hide');
 	Flow.FormContainer.classList.add('show');

@@ -140,7 +140,11 @@ let ParadigmREVOLUTION = {
 		},
 	},
 	"Utility": null,
-	"Form": null,
+	"Application": {
+		"State": [],
+		"Graph": [],
+		"Collections":[]
+	},
 	"Datastores": {},
 	"Initialization_Status": 0
 };

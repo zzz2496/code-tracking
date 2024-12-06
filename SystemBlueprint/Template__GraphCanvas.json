@@ -1,4 +1,4 @@
-{"comment": "Graph Canvas Container", "tag": "div", "id": "component_canvas_container", "class":"is-flex is-flex-direction-column", "style": "min-width:23rem;", "content": [
+{"comment": "Graph Canvas Container", "tag": "div", "id": "component_canvas_container", "class":"is-flex is-flex-direction-column p-3", "style": "min-width:26rem;", "content": [
 	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-flex-direction-column is-align-items-center p-3 m-2", "id":"", "innerHTML":"", "content":[
 		{"tag":"span", "class":"subtitle mb-3 p-0", "innerHTML":"Runtime Controls"},
 		{"tag":"div", "class":"is-flex is-justify-content-center my-1", "content":[
@@ -14,14 +14,27 @@
 	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-flex-direction-column is-align-items-center p-3 m-2", "id":"", "innerHTML":"", "content":[
 		{"tag":"span", "class":"subtitle mb-3 p-0", "innerHTML":"Add/Remove Nodes"},
 		{"tag":"div", "class":"is-flex is-justify-content-center my-1", "content":[
-			{"tag":"button", "class":"button mx-1 is-medium is-danger", "style":"", "innerHTML":"<li class='fa-solid fa-minus'></li>"},
-			{"tag":"div", "class":"select is-medium", "style":"", "content":[
-				{"tag":"select", "content":[
-					{"tag":"option", "value":"GraphNode", "innerHTML":"GraphNode"},
-					{"tag":"option", "value":"ProgrammingNode", "innerHTML":"ProgrammingNode"}
+			{"tag":"div", "class":"field has-addons", "style":"", "content":[
+				{"tag":"div", "class":"control", "style":"", "content":[
+					{"tag":"button", "class":"button mx-1 is-large is-danger graph_removenodes_button", "id":"graph_removenodes_button", "style":"", "innerHTML":"<li class='fa-solid fa-minus'></li>"}
+				]},
+				{"tag":"div", "class":"control", "style":"", "content":[
+					{"tag":"div", "class":"select is-medium", "style":"", "content":[
+						{"tag":"select", "id":"graph_addnode_select", "class":"graph_addnode_select", "content":[
+							{"tag":"option", "value":"GraphNode", "innerHTML":"Graph Node"},
+							{"tag":"option", "value":"ProgrammingNode", "innerHTML":"Programming Node"},
+							{"tag":"option", "value":"Datastore", "innerHTML":"Datastore"},
+							{"tag":"option", "value":"Datasource", "innerHTML":"Datasource"},
+							{"tag":"option", "value":"PageLayout", "innerHTML":"Page Layout"},
+							{"tag":"option", "value":"Schema", "innerHTML":"Schema"},
+							{"tag":"option", "value":"Forms", "innerHTML":"Forms"}
+						]}
+					]}
+				]},
+				{"tag":"div", "class":"control", "style":"", "content":[
+					{"tag":"button", "class":"button mx-1 is-large is-success graph_addnode_button", "id":"graph_addnode_button", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
 				]}
-			]},
-			{"tag":"button", "class":"button mx-1 is-medium is-success", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
+			]}
 		]}
 	]},
 	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-flex-direction-column is-align-items-center p-3 m-2", "id":"", "innerHTML":"", "content":[
