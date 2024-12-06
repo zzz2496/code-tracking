@@ -337,7 +337,25 @@
 	}
 	
 	
-	
+	/* Center all columns on small screens */
+   .app_graph_controls_containers {
+		justify-content: center !important; /* Center align content */
+		text-align: center; /* Optional: Center text inside */
+		backdrop-filter: blur(2px);
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+	#app_graph_tabs_container.show{
+		width: 100%;
+		height: 8.5rem;
+		justify-content: center !important; /* Center align content */
+		/* opacity: 1; */
+	}
+	#app_configurator_container.show {
+		height: calc(70vh);
+	}
+}
+@media screen and (min-width: 801px) and (max-width: 1000px) {
 	/* Center all columns on small screens */
    .app_graph_controls_containers {
 	   justify-content: center !important; /* Center align content */
@@ -346,24 +364,8 @@
    }
    #app_graph_tabs_container.show{
 	   width: 100%;
-	   height: 8.5rem;
-	   /* opacity: 1; */
-   }
-   #app_configurator_container.show {
-	   height: calc(70vh);
-   }
-   
-}
-@media screen and (min-width: 801px) and (max-width: 1000px) {
-	/* Center all columns on small screens */
-   .app_graph_controls_containers {
-	   justify-content: end !important; /* Center align content */
-	   text-align: end; /* Optional: Center text inside */
-	   backdrop-filter: blur(2px);
-   }
-   #app_graph_tabs_container.show{
-	   width: 100%;
 	   height: 5.8rem;
+	   justify-content: center !important; /* Center align content */
 	   /* opacity: 1; */
    }
    #app_configurator_container.show {

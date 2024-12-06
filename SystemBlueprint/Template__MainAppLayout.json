@@ -58,7 +58,7 @@
 								}
 							]
 						},
-						{ "comment": "App Graph Tabs and Controls", "tag": "div", "id": "app_graph_tabs_container", "innerHTML": "", "class": "is-flex is-gapless m-0 is-multiline show app_configurator_groups", "content": [
+						{ "comment": "App Graph Tabs and Controls", "tag": "div", "id": "app_graph_tabs_container", "innerHTML": "", "class": "is-flex is-gapless m-0 show app_configurator_groups is-flex-wrap-wrap", "content": [
 							{ "comment": "Left Container", "tag": "div", "id": "app_graph_tabs_container_left", "innerHTML": "", "class": "mt-1 p-0 is-flex is-justify-content-left app_graph_controls_containers", "content": [
 								{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
 									{ "tag": "div", "class": "tabs", "content": [
@@ -89,25 +89,6 @@
 								] }
 							] },
 							{"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "m-1 p-0 app_graph_controls_containers column is-flex is-justify-content-center", "content": [
-								{"tag":"div", "class":"field has-addons mx-2 my-0 ", "style":"min-width:5.4rem;", "content":[
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "Rewind Fast button",  "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Reset back to start",                      "class": "button runtime-controls             is-small is-default", "id": "graph_rewindfast_button",  "innerHTML": "<li class=\"fa fa-backward-fast\"></li>" },
-										{ "comment": "Rewind button",       "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Set mode to Step and do One Step back",    "class": "button runtime-controls             is-small is-default", "id": "graph_rewind_button",      "innerHTML": "<li class=\"fa fa-backward\"></li>" }
-									]}
-								]},
-								{"tag":"div", "class":"field has-addons mx-2 my-0", "style":"min-width:8rem;", "content":[
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "Stop button",         "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Reset the form and Reload everything",     "class": "button runtime-controls is-outlined is-small is-danger",  "id": "graph_stop_button",        "innerHTML": "<li class=\"fa fa-stop\"></li>" },
-										{ "comment": "Play button",         "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Set mode to RUN and Play the form",        "class": "button runtime-controls is-outlined is-small is-success", "id": "graph_play_button",        "innerHTML": "<li class=\"fa fa-play\"></li>" },
-										{ "comment": "Pause button",        "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Pause runtime and set mode to Step",       "class": "button runtime-controls is-outlined is-small is-warning", "id": "graph_pause_button",       "innerHTML": "<li class=\"fa fa-pause\"></li>" }
-										]}
-								]},
-								{"tag":"div", "class":"field has-addons mx-2 my-0", "style":"min-width:5.4rem;", "content":[
-									{"tag":"p", "class":"control", "content":[
-										{ "comment": "Forward button",      "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Set mode to Step and do One Step forward", "class": "button runtime-controls             is-small is-default", "id": "graph_forward_button",     "innerHTML": "<li class=\"fa fa-forward\"></li>" },
-										{ "comment": "Forward Fast button", "tag": "button", "style":"margin-left: 0.07rem; margin-right:0.07rem;", "title":"Jump forward to the end",                  "class": "button runtime-controls             is-small is-default", "id": "graph_forwardfast_button", "innerHTML": "<li class=\"fa fa-forward-fast\"></li>" }
-									]}
-								]}
 							]},
 							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
 								{"tag":"div", "class":"document-saveload-container show", "content":[

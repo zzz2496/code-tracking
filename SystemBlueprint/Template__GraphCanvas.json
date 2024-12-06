@@ -1,35 +1,45 @@
-{"comment": "Graph Canvas Container", "tag": "div", "id": "component_canvas_container", "class":"is-flex is-flex-direction-column", "style": "min-width:30rem;", "content": [
-	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-align-items-center is-flex-wrap-wrap", "id":"", "innerHTML":"", "content":[
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-play'></li>"}
+{"comment": "Graph Canvas Container", "tag": "div", "id": "component_canvas_container", "class":"is-flex is-flex-direction-column", "style": "min-width:23rem;", "content": [
+	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-flex-direction-column is-align-items-center p-3 m-2", "id":"", "innerHTML":"", "content":[
+		{"tag":"span", "class":"subtitle mb-3 p-0", "innerHTML":"Runtime Controls"},
+		{"tag":"div", "class":"is-flex is-justify-content-center my-1", "content":[
+			{"tag":"button", "title":"Restart Runtime", "class":"button mx-1 is-normal ", "style":"min-width:45px;min-height:45px;", "innerHTML":"<li class='fa-solid fa-backward-fast'></li>"},
+			{"tag":"button", "title":"Step Backward", "class":"button mx-1 is-normal ", "style":"min-width:45px;min-height:45px;", "innerHTML":"<li class='fa-solid fa-backward'></li>"},
+			{"tag":"button", "title":"Reset Runtime", "class":"button mx-1 is-normal is-danger ", "style":"min-width:45px;min-height:45px;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
+			{"tag":"button", "title":"Run", "class":"button mx-1 is-normal is-success", "style":"min-width:45px;min-height:45px;", "innerHTML":"<li class='fa-solid fa-play'></li>"},
+			{"tag":"button", "title":"Pause", "class":"button mx-1 is-normal is-link", "style":"min-width:45px;min-height:45px;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
+			{"tag":"button", "title":"Step Forward", "class":"button mx-1 is-normal ", "style":"min-width:45px;min-height:45px;", "innerHTML":"<li class='fa-solid fa-forward'></li>"},
+			{"tag":"button", "title":"Finish Runtime", "class":"button mx-1 is-normal ", "style":"min-width:45px;min-height:45px;", "innerHTML":"<li class='fa-solid fa-forward-fast'></li>"}
+		]}
 	]},
-	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-align-items-center is-flex-wrap-wrap", "id":"", "innerHTML":"", "content":[
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-pause'></li>"}
+	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-flex-direction-column is-align-items-center p-3 m-2", "id":"", "innerHTML":"", "content":[
+		{"tag":"span", "class":"subtitle mb-3 p-0", "innerHTML":"Add/Remove Nodes"},
+		{"tag":"div", "class":"is-flex is-justify-content-center my-1", "content":[
+			{"tag":"button", "class":"button mx-1 is-medium is-danger", "style":"", "innerHTML":"<li class='fa-solid fa-minus'></li>"},
+			{"tag":"div", "class":"select is-medium", "style":"", "content":[
+				{"tag":"select", "content":[
+					{"tag":"option", "value":"GraphNode", "innerHTML":"GraphNode"},
+					{"tag":"option", "value":"ProgrammingNode", "innerHTML":"ProgrammingNode"}
+				]}
+			]},
+			{"tag":"button", "class":"button mx-1 is-medium is-success", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
+		]}
 	]},
-	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-align-items-center is-flex-wrap-wrap", "id":"", "innerHTML":"", "content":[
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"},
-		{"tag":"button", "class":"button", "style":"width:8rem;height:4rem;background:silver;", "innerHTML":"<li class='fa-solid fa-stop'></li>"}
+	{"tag":"div", "class":"box is-flex flex is-justify-content-center is-flex-direction-column is-align-items-center p-3 m-2", "id":"", "innerHTML":"", "content":[
+		{"tag":"span", "class":"subtitle mb-3 p-0", "innerHTML":"Arrange/Align"},
+		{"tag":"div", "class":"is-flex is-justify-content-center my-1", "content":[
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-caret-up' style='transform:rotate(-45deg);'></li>"},
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-caret-up'></li>"},
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-caret-up' style='transform:rotate(45deg);'></li>"}
+		]},
+		{"tag":"div", "class":"is-flex is-justify-content-center my-1", "content":[
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-caret-left'></li>"},
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-arrows-to-dot'></li>"},
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-caret-right'></li>"}
+		]},
+		{"tag":"div", "class":"is-flex is-justify-content-center my-1", "content":[
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-caret-down' style='transform:rotate(45deg);'></li>"},
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-caret-down'></li>"},
+			{"tag":"button", "class":"button mx-1 is-medium ", "style":"min-width:60px;min-height:60px;", "innerHTML":"<li class='fa-solid fa-caret-down' style='transform:rotate(-45deg);'></li>"}
+		]}
 	]}
 ]}

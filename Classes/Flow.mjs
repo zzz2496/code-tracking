@@ -292,7 +292,7 @@ export class Flow {
 										{
 											tag: "span",
 											class: "icon form-close-button",
-											innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
+											innerHTML: `<i class="fa-solid fa-xmark form-close-button has-text-danger" data-formid="${id}"></i>`
 										}
 									]
 								} : headerIcon
@@ -387,7 +387,7 @@ export class Flow {
 								{
 									tag: "span",
 									class: "icon form-close-button",
-									innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
+									innerHTML: `<i class="fa-solid fa-xmark form-close-button has-text-danger" data-formid="${id}"></i>`
 								}
 							]
 						}];
@@ -622,16 +622,17 @@ export class Flow {
 					headerContent: [{
 						comment: "card-header-icon",
 						tag: "button",
-						class: "card-header-icon form-close-button",
+						class: "card-header-icon form-close-button m-0 p-2",
+						style:"position:absolute; top:0; left:0; margin:0.5rem; z-index:10;",
 						data: { formid: id },
 						aria: {},
 						content: [{
 							tag: "span",
 							class: "icon form-close-button",
-							innerHTML: `<i class="fa-solid fa-xmark form-close-button" data-formid="${id}"></i>`
+							innerHTML: `<i class="fa-solid fa-xmark form-close-button has-text-danger" style="cursor:pointer;" data-formid="${id}"></i>`
 						}]
 					}, {
-						tag: "div", style:"width:100%;transform:translateX(-0.7rem);",  class:"label-container is-flex is-justify-content-center", content: [
+						tag: "div", style:"width:100%;",  class:"mt-4 p-0 label-container is-flex is-justify-content-center", content: [
 							{
 								comment: "card-header-title",
 								tag: "div",
