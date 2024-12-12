@@ -7,7 +7,7 @@ const OperatorTemplate = {
 };
 
 export class Flow {
-	constructor(container = null, utility = null, funcObject = null, chain = []) {
+	constructor(container = null, utility = null, funcObject = null, chain = [], storage = null) {
 		this.cursor = null; // Track the current process
 		this.chain = chain;
 		this.run_mode = ["run", "stop", "pause", "step", "debug"];
@@ -21,6 +21,7 @@ export class Flow {
 			"Interaction": [],
 			"Flow":[]
 		};
+		this.storage = storage;
 	}
 	checkType = function (variable) {
 		if (variable instanceof Date) {
@@ -758,31 +759,31 @@ export class Flow {
 				// });
 
 				document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('datastore_container_'+Date.now(), 'Datastore', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('datastore_container_' + Date.now(), 'Datastore', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_DATASTORE___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 
 				document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('datasource_container_'+Date.now(), 'Datasource', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('datasource_container_' + Date.now(), 'Datasource', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 
 				document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('layout_container_'+Date.now(), 'Layout', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('layout_container_' + Date.now(), 'Layout', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_LAYOUT___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 				
 				document.querySelector('#graph_addschema_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('schema_container_'+Date.now(), 'Schema', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('schema_container_' + Date.now(), 'Schema', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_SCHEMA___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
 				
 				document.querySelector('#graph_addform_button').addEventListener('click', () => {
-					this.Form.Events.addDataPreparationComponent('form_container_'+Date.now(), 'Form', (num, container_id) => {
+					this.Form.Events.addDataPreparationComponent('form_container_' + Date.now(), 'Form', (num, container_id) => {
 						return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
@@ -866,13 +867,13 @@ export class Flow {
 							console.log(dataset.template);
 
 							if (dataset.template) {
-								this.Form.Events.addDataPreparationComponent('graphnode_container_'+Date.now(), 'Graph', (num, container_id) => {
+								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
 									let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
 									return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
 								});
 							}
 							if (dataset.schema) {
-								this.Form.Events.addDataPreparationComponent('graphnode_container_'+Date.now(), 'Graph', (num, container_id) => {
+								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
 									let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
 									return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
 								});
@@ -1128,13 +1129,21 @@ export class Flow {
 					callback: (e) => {
 						//NOTE - Create new node!
 						console.log('Create node! graph_addnode_button click!');
-						console.log('e.target.parentElement :>> ', e.target.parentElement.parentElement, e.target.parentElement.parentElement.querySelector('.graph_addnode_select'));
-						const nodeType = e.target.parentElement.parentElement.querySelector('.graph_addnode_select').value;
+						console.log('document.querySelector("#graph_addnode_select").value', document.querySelector('#graph_addnode_select').value);
+						const nodeType = document.querySelector('#graph_addnode_select').value;
 						console.log('nodeType :>> ', nodeType);
 						const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
+						newNode.Chain.Type = nodeType;
 						console.log('newNode :>> ', newNode);
-
-						
+						ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
+						if (!this.storage) {
+							console.error('No storage found.');
+							return;
+						}
+						// NOTE - SurrealDB create/insert/upsert
+						let qstr = `upsert test_table content ${JSON.stringify(newNode)};`;
+						console.log('qstr :>> ', qstr);
+						this.storage.local_db.Instance.query(qstr);
 					}
 				}, {
 					selector: '#graph_removenodes_button', //NOTE - addnode-button
@@ -1188,6 +1197,13 @@ export class Flow {
 						icon.classList.add('fa-circle-half-stroke', 'fa-solid');
 					}
 				});
+				
+				document.querySelector('#document_refreshrender_button').addEventListener('click', (e) => {
+					this.Form.Render.renderNodes(() => { 
+						console.log('Nodes rendered, callback called');
+					});
+				});
+					
 
 				console.log('Set default theme to SYSTEM');
 				const root = document.documentElement;
@@ -1197,7 +1213,7 @@ export class Flow {
 				icon.classList.remove('fa-moon', 'fa-sun', 'fa-circle-half-stroke', 'has-text-link', 'has-text-warning', 'fa-regular', 'fa-solid');
 				icon.classList.add('fa-circle-half-stroke', 'fa-solid');
 	
-				// Listen for changes in system theme only if in system mode
+				// NOTE - Listen for changes in system theme only if in system mode
 				window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
 					const currentTheme = document.querySelector('.dark_light_indicator');
 					if (currentTheme.classList.contains('fa-circle-half-stroke')) {						
@@ -1897,7 +1913,6 @@ export class Flow {
 				if (element.innerHTML) html += element.innerHTML;
 				if (element.content && Array.isArray(element.content)) {
 					for (let child of element.content) {
-					
 						html += this.Form.Render.traverseDOMProxyOBJ(child); // Recursively generate HTML for child elements
 					}
 				}
@@ -1905,6 +1920,12 @@ export class Flow {
 				html += `</${element.tag}>`;
 
 				if (callback) callback();
+				return html;
+			}),
+			renderNodes: ((callback, cr = 0) => {
+				console.log('start Render Nodes');
+				let html = "";
+				if (callback) callback();3
 				return html;
 			}),
 		},

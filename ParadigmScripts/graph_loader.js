@@ -91,7 +91,7 @@ if (cr) console.log('>>> >>> >>> >>> Graph Loader');
 // 	ParadigmREVOLUTION.Utility.DOMElements.enableDragAndDropGroup('.group-container');
 // 	if (cr) console.log('>>> >>> >>> >>> >>> Done Blurprints Loaded')
 // });
-document.addEventListener('SurrealDBLoaded', () => {
+document.addEventListener('SurrealDBLoaded', async () => {
 	if (cr) console.log('>>> >>> >>> >>> >>> SurrealDB Loaded');
 	if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Core Status');
 
@@ -111,9 +111,7 @@ document.addEventListener('SurrealDBLoaded', () => {
 				break;
 		}
 	});
-	// console.log('corestatus_str :>> ', corestatus_str);
 	document.querySelector('#core_status').innerHTML = corestatus_str;
-	// ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#core_status').innerHTML = corestatus_str;
 	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Core Status');
 
 	if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status');
@@ -134,18 +132,9 @@ document.addEventListener('SurrealDBLoaded', () => {
 	document.querySelector('#datastore_status').innerHTML = datastore_status;
 	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status');
 
-	// ParadigmREVOLUTION.Utility.DOMElements.hide(ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status'), function () { 
-	// 	ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = datastore_status;
-	// 	ParadigmREVOLUTION.Utility.DOMElements.show(ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status'), function () { 
-	// 		ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelectorAll('#datastore_status .datastore-status-light').forEach(element => {
-	// 			element.addEventListener('click', function () { 
-	// 				// console.log(this.value);
-	// 				// ParadigmREVOLUTION.
-	// 				// ParadigmREVOLUTION.Utility.DataStor.SurrealDB.initSurrealDB(this.value, entity.Metadata.Label, entity.Metadata.ShortLabel, entity.Metadata.Connect, entity.Metadata.Instance, window.ParadigmREVOLUTION.Blueprints.Data)
-	// 			});
-	// 		});	
-	// 	});
-	// });
+	// NOTE - Load Graph Nodes
+	ParadigmREVOLUTION.Application.GraphNodes = await local_db.Instance.query('select * from test_table');
+
 	document.dispatchEvent(new Event('SurrealDBMonitorLoaded'));
 });
 if (cr) console.log('<<< <<< <<< <<< Graph Loader');

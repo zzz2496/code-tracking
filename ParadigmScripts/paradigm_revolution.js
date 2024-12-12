@@ -7,7 +7,7 @@ document.addEventListener('UtilitiesLoaded', () => {
 document.addEventListener('BlueprintsLoaded', () => {
 	console.log('>>>>>> check for BlueprintsLoaded  in paradigm_revolution.js');
 });
-document.addEventListener('SurrealDBEnginesLoaded', () => {
+document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	let OK = true;
 	Object.keys(ParadigmREVOLUTION.SystemCore.CoreStatus).forEach((key) => {
 		if (ParadigmREVOLUTION.SystemCore.CoreStatus[key].Status == 'FAILED TO LOAD') OK = false;
@@ -63,7 +63,29 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 	];
 	window.chain = chain;
 
-	let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(document.querySelector('#ParadigmREVOLUTION'), ParadigmREVOLUTION.Utility, ParadigmREVOLUTION.Utility.BasicMath, chain);
+
+	
+	let ram_db = ParadigmREVOLUTION.Datastores.SurrealDB.Memory;
+	let local_db = ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB;
+	let test_db = ParadigmREVOLUTION.Datastores.SurrealDB.TestServer;
+
+	window.ram_db = ram_db;
+	window.local_db = local_db;
+	window.test_db = test_db;
+
+	let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(
+		document.querySelector('#ParadigmREVOLUTION'),
+		ParadigmREVOLUTION.Utility,
+		ParadigmREVOLUTION.Utility.BasicMath,
+		chain,
+		{
+			ram_db: ParadigmREVOLUTION.Datastores.SurrealDB.Memory,
+			local_db: ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB,
+			test_db: ParadigmREVOLUTION.Datastores.SurrealDB.TestServer
+		}
+	);
+	console.log('local_db :>> ',ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB);
+
 	// NOTE - Render Main Form, get something on the screen
 	Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
 
@@ -83,14 +105,6 @@ document.addEventListener('SurrealDBEnginesLoaded', () => {
 
 	Flow.Form.Events.InitializeFormControls();
 	window.Flow = Flow;
-
-	let ram_db = ParadigmREVOLUTION.Datastores.SurrealDB.Memory;
-	let local_db = ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB;
-	let test_db = ParadigmREVOLUTION.Datastores.SurrealDB.TestServer;
-
-	window.ram_db = ram_db;
-	window.local_db = local_db;
-	window.test_db = test_db;
 
 	Flow.Form.Run.executeChain();
 });

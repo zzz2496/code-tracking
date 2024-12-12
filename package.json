@@ -9,13 +9,13 @@
   "author": "Damir Handoyo",
   "license": "ISC",
   "dependencies": {
+    "@surrealdb/wasm": "^1.1.0",
     "blockly": "^11.1.1",
     "bulma": "^1.0.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "finderjs": "^1.3.0",
     "mqtt": "^5.10.1",
-    "surrealdb": "^1.0.6",
-    "surrealdb.wasm": "^1.0.0-beta.15"
+    "surrealdb": "^1.1.0"
   }
 }

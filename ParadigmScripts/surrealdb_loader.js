@@ -57,23 +57,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		SurrealDB: SurrealDB
 	};	
 
-	// window.ParadigmREVOLUTION.GraphSurface.GraphElement.controlPalette.querySelector('#datastore_status').innerHTML = 'Loading...';
-
-	// function detectDatastoreStatus() { 
-	// 	let datastore_status = '';
-	// 	Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
-	// 		if (entry.Instance == false) { 
-	// 			datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
-	// 		} else if (typeof entry.Instance.connection != "undefined") {
-	// 			datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>` ;
-	// 		} else {
-	// 			datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>` ;
-	// 		}
-	// 	});
-	// 	return datastore_status;
-	// }
-
-    const promises = initConfigs.map(config => 
+	const promises = initConfigs.map(config => 
 		ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(
 			config.name,
 			config.label,
@@ -86,15 +70,15 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			(error_message) => { },
 			cr
 		)
-    );
+	);
 
-    const results = await Promise.all(promises);
+	const results = await Promise.all(promises);
 
-    initConfigs.forEach((config, index) => {
-        Tokens[config.name] = results[index];
-    });
+	initConfigs.forEach((config, index) => {
+		Tokens[config.name] = results[index];
+	});
 	window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
-    document.dispatchEvent(new Event('SurrealDBLoaded'));
-    if (cr) console.log('Done SurrealDB Initialization!');
+	document.dispatchEvent(new Event('SurrealDBLoaded'));
+	if (cr) console.log('Done SurrealDB Initialization!');
 });
 if (cr) console.log('<<< <<< SurrealDB Loader');

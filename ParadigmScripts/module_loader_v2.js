@@ -142,7 +142,8 @@ let ParadigmREVOLUTION = {
 	"Utility": null,
 	"Application": {
 		"State": [],
-		"Graph": [],
+		"GraphNodes": [],
+		"GraphEdges": [],
 		"Collections":[]
 	},
 	"Datastores": {},
@@ -373,7 +374,8 @@ if (typeof finder !== 'undefined') {
 				document.querySelector('#surreal_status').innerHTML = "<li class='fa fa-check'></li>";
 				document.dispatchEvent(new Event('SurrealJSLoaded'));
 				try {
-					const surrealdbWasmEnginesModule = await import('../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js');
+					// const surrealdbWasmEnginesModule = await import('../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js');
+					const surrealdbWasmEnginesModule = await import('../../node_modules/@surrealdb/wasm/dist/surreal/index.bundled.js');
 					const { surrealdbWasmEngines } = surrealdbWasmEnginesModule;
 					if (cr) console.log(">>> ||| surrealdbWasmEngines imported successfully.");
 					ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "LOADED";
