@@ -1,12 +1,15 @@
 {
 	"Order": 0,
 	"PinDescriptions": "Blueprint__NodeDesciptions.json",
-	"PID":{
+	"id":{
 		"DocumentID":"",
 		"DocumentType":"",
 		"DocumentStatus":"",
-		"Version":"",
-		"Timestamp":""
+		"Timestamp":"",
+		"Version":{
+			"VersionID":"",
+			"Timestamp":""
+		}
 	},
 	"Properties": {
 		"Name": "",
@@ -24,7 +27,7 @@
 		"ID": "",
 		"Segment":"",
 		"SegmentOrder":null,
-		"Type": ""		
+		"Type": ""
 	},
 	"Presentation": {
 		"Perspectives": {

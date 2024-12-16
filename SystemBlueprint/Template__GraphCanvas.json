@@ -21,13 +21,13 @@
 				{"tag":"div", "class":"control", "style":"", "content":[
 					{"tag":"div", "class":"select is-medium", "style":"", "content":[
 						{"tag":"select", "id":"graph_addnode_select", "class":"graph_addnode_select", "content":[
-							{"tag":"option", "value":"GraphNode", "innerHTML":"Graph Node"},
-							{"tag":"option", "value":"ProgrammingNode", "innerHTML":"Programming Node"},
-							{"tag":"option", "value":"Datastore", "innerHTML":"Datastore"},
-							{"tag":"option", "value":"Datasource", "innerHTML":"Datasource"},
-							{"tag":"option", "value":"PageLayout", "innerHTML":"Page Layout"},
-							{"tag":"option", "value":"Schema", "innerHTML":"Schema"},
-							{"tag":"option", "value":"Forms", "innerHTML":"Forms"}
+							{"tag":"option", "value":"ContainerNode", "innerHTML":"Container Node", "data-nodetype":"ContainerNode"},
+							{"tag":"option", "value":"AlgorithmNode", "innerHTML":"Algorithm Node", "data-nodetype":"AlgorithmNode" },
+							{"tag":"option", "value":"DatastoreNode", "innerHTML":"Datastore Node", "data-nodetype":"DatastoreNode"},
+							{"tag":"option", "value":"DocumentNode",  "innerHTML":"Document Node",  "data-nodetype":"DocumentNode"},
+							{"tag":"option", "value":"CommentNode",   "innerHTML":"Comment Node",   "data-nodetype":"CommentNode"},
+							{"tag":"option", "value":"MetadataNode",  "innerHTML":"Metadata Node",  "data-nodetype":"MetadataNode"},
+							{"tag":"option", "value":"GenericNode",   "innerHTML":"Generic Node",   "data-nodetype":"GenericNode"}
 						]}
 					]}
 				]},

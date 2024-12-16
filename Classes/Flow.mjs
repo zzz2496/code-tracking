@@ -1130,10 +1130,8 @@ export class Flow {
 						//NOTE - Create new node!
 						console.log('Create node! graph_addnode_button click!');
 						console.log('document.querySelector("#graph_addnode_select").value', document.querySelector('#graph_addnode_select').value);
-						const nodeType = document.querySelector('#graph_addnode_select').value;
-						console.log('nodeType :>> ', nodeType);
 						const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
-						newNode.Chain.Type = nodeType;
+						newNode.Chain.Type = document.querySelector('#graph_addnode_select').value;
 						console.log('newNode :>> ', newNode);
 						ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
 						if (!this.storage) {
