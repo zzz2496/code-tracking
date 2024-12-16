@@ -6,7 +6,15 @@
 		"DocumentType":"",
 		"DocumentStatus":"",
 		"Timestamp":"",
+		"Link": {
+			"Head": false,
+			"ID": "",
+			"Segment":"",
+			"SegmentOrder":null,
+			"Type": ""
+		},
 		"Version":{
+			"VersionNumber":"",
 			"VersionID":"",
 			"Timestamp":""
 		}
@@ -21,13 +29,6 @@
 		"isChanged": false,
 		"isReadonly": false,
 		"Executable": true
-	},
-	"Chain": {
-		"Head": false,
-		"ID": "",
-		"Segment":"",
-		"SegmentOrder":null,
-		"Type": ""
 	},
 	"Presentation": {
 		"Perspectives": {

@@ -1131,7 +1131,36 @@ export class Flow {
 						console.log('Create node! graph_addnode_button click!');
 						console.log('document.querySelector("#graph_addnode_select").value', document.querySelector('#graph_addnode_select').value);
 						const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
-						newNode.Chain.Type = document.querySelector('#graph_addnode_select').value;
+						/*!SECTION
+							"id":{
+								"DocumentID":"",
+								"DocumentType":"",
+								"DocumentStatus":"",
+								"Timestamp":"",
+								"Version":{
+									"VersionID":"",
+									"Timestamp":""
+								},
+								"Chain": {
+									"Head": false,
+									"ID": "",
+									"Segment":"",
+									"SegmentOrder":null,
+									"Type": ""
+								}
+							},
+						*/
+						newNode.id.DocumentID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
+						newNode.id.DocumentType = "Yggdrasil Node";
+						newNode.id.DocumentStatus = "Active";
+						newNode.id.Timestamp = Date.now();
+						newNode.id.Version.VersionNumber = 1;
+						newNode.id.Version.VersionID = newNode.id.DocumentID;
+						newNode.id.Version.Timestamp = newNode.id.Timestamp;
+						newNode.id.Link.Head = false;
+						newNode.id.Link.ID = 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID();
+						newNode.id.Link.Segment = "";
+						newNode.id.Link.Type = document.querySelector('#graph_addnode_select').value;
 						console.log('newNode :>> ', newNode);
 						ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
 						if (!this.storage) {

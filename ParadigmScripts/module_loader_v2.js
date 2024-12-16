@@ -10,7 +10,7 @@ if (cr) console.log('>>> Module Loader');
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 // import { Flow } from "../Classes/Flow.mjs";
 
-let Utility, GraphSurface, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, mqtt;
+let Utility, uuid, ulid, GraphSurface, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, mqtt;
 // let Utility, GraphSurface, Connection, WorkerThread, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
@@ -21,6 +21,18 @@ let ParadigmREVOLUTION = {
 				"Icon": "tv",
 				"Label": "UI",
 				"ShortLabel": "UI"
+			},
+			"UUID": {
+				"Status": "NOT LOADED",
+				"Icon": "id-card",
+				"Label": "UUID",
+				"ShortLabel": "UUID"
+			},
+			"ULID": {
+				"Status": "NOT LOADED",
+				"Icon": "id-card",
+				"Label": "ULID",
+				"ShortLabel": "ULID"
 			},
 			"FormGenerator": {
 				"Status": "NOT LOADED",
@@ -97,6 +109,8 @@ let ParadigmREVOLUTION = {
 		},
 		"Modules": {
 			"Utility": Utility,
+			"UUID": uuid,
+			"ULID": ulid,
 			"GraphSurface": GraphSurface,
 			"Connection": Connection,
 			"WorkerThread": WorkerThread,
@@ -196,6 +210,36 @@ if (typeof finder !== 'undefined') {
 		document.querySelector('#ui_status').innerHTML = "<li class='fa fa-xmark'></li>";
 		ParadigmREVOLUTION.SystemCore.CoreStatus.UI.Status = "FAILED TO LOAD";
 		console.error("Failed to import UI.");
+	}
+})();
+(async () => {
+	try {
+		const UIResult = await import("../node_modules/ulid/dist/index.esm.js");
+		const { ulid } = UIResult;
+		ParadigmREVOLUTION.SystemCore.CoreStatus.ULID.Status = "LOADED";
+		ParadigmREVOLUTION.SystemCore.Modules.ULID = ulid;
+		document.querySelector('#ulid').classList.add('has-text-success');
+		document.querySelector('#ulid_status').innerHTML = "<li class='fa fa-check'></li>";
+	} catch (error) {
+		document.querySelector('#ulid').classList.add('has-text-danger');
+		document.querySelector('#ulid_status').innerHTML = "<li class='fa fa-xmark'></li>";
+		ParadigmREVOLUTION.SystemCore.CoreStatus.ULID.Status = "FAILED TO LOAD";
+		console.error("Failed to import ULID.");
+	}
+})();
+(async () => {
+	try {
+		const UIResult = await import("../node_modules/uuid/dist/esm-browser/index.js");
+		const { uuid } = UIResult;
+		ParadigmREVOLUTION.SystemCore.CoreStatus.UUID.Status = "LOADED";
+		ParadigmREVOLUTION.SystemCore.Modules.UUID = uuid;
+		document.querySelector('#uuid').classList.add('has-text-success');
+		document.querySelector('#uuid_status').innerHTML = "<li class='fa fa-check'></li>";
+	} catch (error) {
+		document.querySelector('#uuid').classList.add('has-text-danger');
+		document.querySelector('#uuid_status').innerHTML = "<li class='fa fa-xmark'></li>";
+		ParadigmREVOLUTION.SystemCore.CoreStatus.UUID.Status = "FAILED TO LOAD";
+		console.error("Failed to import UUID.");
 	}
 })();
 (async () => {
