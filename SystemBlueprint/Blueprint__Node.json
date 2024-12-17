@@ -8,19 +8,18 @@
 		"Status":"",
 		"Timestamp":"",
 		"Link": {
-			"Head": false,
-			"ID": "",
-			"Segment":"",
-			"SegmentOrder":null,
-			"Type": ""
+			"ChainID":"",
+			"ObjectSegment":"",
+			"ObjectSegmentOrder":null,
+			"LinkType": ""
 		},
 		"Version":{
+			"Current":true,
 			"Number":"",
 			"VersionID":"",
 			"ULID":"",
 			"Timestamp":""
 		}
-	
 	},
 	"Properties": {
 		"Name": "",

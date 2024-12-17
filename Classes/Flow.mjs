@@ -864,21 +864,20 @@ export class Flow {
 						if (datasetEntries.length > 0) {
 							console.log('dataset is not empty');
 							console.log('dataset :>> ', dataset);
-							console.log(dataset.template);
 
 							if (dataset.template) {
+								console.log('template: ', dataset.template);
 								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-									let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
+									let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
 									return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
 								});
-							}
-							if (dataset.schema) {
+							} else if (dataset.schema) {
+								console.log('schema: ', dataset.schema);
 								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-									let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
-									return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+									let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
+									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
 								});
 							}
-							
 						}
 						console.log('selectable box or selectable parent exists!');
 						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
@@ -1228,9 +1227,14 @@ export class Flow {
 				});
 				
 				document.querySelector('#document_refreshrender_button').addEventListener('click', (e) => {
-					this.Form.Render.renderNodes(() => { 
-						console.log('Nodes rendered, callback called');
-					});
+					console.log('Refresh render button clicked!');
+					(async () => { 
+						const nodes = await ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query('select * from test_table;');
+						console.log('nodes :>> ', nodes);
+						this.Form.Render.renderNodes(nodes[0], () => { 
+							console.log('Nodes rendered, callback called');
+						});
+					})();
 				});
 					
 
@@ -1951,10 +1955,55 @@ export class Flow {
 				if (callback) callback();
 				return html;
 			}),
-			renderNodes: ((callback, cr = 0) => {
+			renderNodes: ((nodes, callback, cr= 0) => {
 				console.log('start Render Nodes');
 				let html = "";
-				if (callback) callback();3
+
+				// newNode.DocumentID = newNode.UID;
+				// newNode.DocumentName = self.DocumentName;
+				// newNode.DocumentLabel = self.DocumentLabel;
+				// newNode.DocumentHeader = self.DocumentHeader;
+				// newNode.DocumentFooter = self.DocumentFooter;
+				// newNode.DocumentType = self.DocumentType; //REALM, World, Data Node, Processing Node
+				// newNode.DocumentWorld = self.DocumentWorld; //KnowledgeBase, BusinessLogic, ApplicationUserInterface, Data
+				// newNode.DocumentUniverse = self.DocumentUniverse; //KnowledgeBase, BusinessLogic, ApplicationUserInterface, Data
+				// newNode.Timestamp = self.Utility.Time.getNowDateTimeString('YMD');
+				// console.log('self.Utility.Time.initDate()', self.Utility.Time.getNowDateTimeString('YMD'));
+				// console.log('newNode >>>', newNode);
+
+				let temp;
+				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
+				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
+					node.Presentation.Perspectives.GraphNode.Position = { x: 30 + (nodeIndex * 300), y: 110};
+					
+					console.log(`${nodeIndex}. node >>>`, node.id.id.ID, node);
+
+					temp = ParadigmREVOLUTION.Utility.DOMElements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
+					console.log('temp :>>', temp);
+
+					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
+				});
+				// let n = 20;
+				// newNode.Presentation.Perspectives.GraphNode.Position = { x: 350 + (n * self.nodes.length - 1), y: 300 + (n * self.nodes.length - 1) };
+				// let temp = self.Utility.DOMElements.MakeDraggableNode(newNode.UID, 'graph-node fade-in', 'Node TEST ' + newNode.UID + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', newNode.Presentation.Perspectives.GraphNode.Position.x, newNode.Presentation.Perspectives.GraphNode.Position.y, self.nodes.length);
+				// self.nodes.push({ id: newNode.UID, node: newNode, element: temp });
+				// self.DOMElements.renderGraph(self);
+				// // self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
+				// // self.Utility.DataStore.SurrealDB.Put(self, 'Local');
+
+				// let storeNodes = [];
+				// self.nodes.forEach((d, i) => {
+				// 	storeNodes.push(d.node);
+				// });
+				// console.log('storeNodes >> ', storeNodes);
+
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
+				
+				
+				
+				if (callback) callback();
 				return html;
 			}),
 		},

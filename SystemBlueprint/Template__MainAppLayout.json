@@ -124,7 +124,12 @@
 								"comment": "App Graph Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
 									{
 										"tag": "div", "id": "graph_scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "<span>App Graph Content</span>", "class": "columns is-gapless is-mobile grid2020-background is-selectable p-3", "data":{"template":"ParadigmJSON__GraphProperties.json"}, "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [] }
+											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "width:20000px; height:20000px;", "id": "app_graph_content", "content": [
+												{"tag":"div", "class":"graph_node_surface is-selectable ", "innerHTML":"<span>App Graph Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
+												{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"App Graph Content", "content":[
+													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#2f344cd2\"/></marker>"}
+												]}
+											] }
 										]
 									}
 								]
@@ -133,7 +138,12 @@
 								"comment": "App Programming Container", "tag": "div", "class": "is-selectable-box m-0 p-0 show app_configurator_containers", "data":{"tabtype":"Programming"}, "id": "app_programming_container", "content": [
 									{
 										"tag": "div", "id": "programming_scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Programming Content", "tag": "div", "innerHTML": "<span>App Programming Content</span>", "class": "columns is-gapless is-mobile grid2020-background is-selectable p-3", "style": "width:20000px; height:20000px;", "id": "app_programming_content", "content": [] }
+											{ "comment": "App Programming Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "width:20000px; height:20000px;", "id": "app_programming_content", "content": [
+												{"tag":"div", "class":"graph_node_surface is-selectable ", "innerHTML":"<span>App Programming Content</span>"},
+												{"tag":"svg", "class":"graph_connection_surface", "content":[
+													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#2f344cd2\"/></marker>"}
+												]}
+											] }
 										]
 									}
 								]

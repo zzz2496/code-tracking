@@ -3986,57 +3986,80 @@ export class Utility {
 			newElement.querySelector(`#${id}-content`).appendChild(content);
 			return newElement;
 		},
-		// "MakeDraggableNode": function (id, objclass, label, content, x, y, zIndex = 'auto') {
-		// 	let newElement = document.createElement('div');
-		// 	newElement.id = id;
-		// 	newElement.className = objclass;
-		// 	newElement.style.top = `${y}px`;
-		// 	newElement.style.left = `${x}px`;
-		// 	newElement.style.zIndex = zIndex;
-		// 	newElement.tabIndex = 0;
-		// 	newElement.innerHTML = `
-		// 		<div class="container text-center" style="margin:0px; padding: 0px;">
-		// 			<div class="row g-0 top-row" style="margin:0; padding:0;">
-		// 				<div class="container-fluid text-center connection-container" style="overflow:hidden; max-width: 40vh;margin:0; padding: 0;">
-		// 					<i class="remove-connection fa-solid fa-minus text-danger-emphasis" style="--bs-text-opacity: .8; data--connection-direction="v" data-click-event-initialized="false"></i>
-		// 					<span class="top-input"></span>
-		// 					<i class="add-connection fa-solid fa-plus text-danger-emphasis" style="--bs-text-opacity: .8; data--connection-direction="v" data-click-event-initialized="false"></i>
-		// 				</div>
-		// 			</div>
-		// 			<div class="d-flex mid-row">
-		// 				<div class="flex d-flex align-items-center left-column" style="overflow:hidden; margin:0; padding: 0;">
-		// 					<div class="container text-start connection-container" style="width:1vx;overflow:hidden; margin:0; padding: 0;">
-		// 						<i class="add-connection fa-solid fa-plus text-warning-emphasis" style="--bs-text-opacity: .8;" data--connection-direction="h" data-click-event-initialized="false"></i><br>
-		// 						<span class="left-input connection-column" style="flex-direction: column;align-items: center;"></span>
-		// 						<i class="remove-connection fa-solid fa-minus text-warning-emphasis" style="--bs-text-opacity: .8; data--connection-direction="h" data-click-event-initialized="false"></i>
-		// 					</div>
-		// 				</div>
-		// 				<div class="flex-fill mid-column" style="margin:0vh; padding: 0;">
-		// 					<div id="${id}-header" class="raised-element container-fluid graph-node-titlebar" >${label}</div>
-		// 					<div id="${id}-content" style="margin-top: 1rem;">${content}</div>
-		// 				</div>
-		// 				<div class="flex d-flex align-items-center right-column" style="overflow:hidden; margin:0; padding: 0;">
-		// 					<div class="container text-end connection-container" style="margin:0; padding:0;">
-		// 						<i class="add-connection fa-solid fa-plus text-success-emphasis" style="--bs-text-opacity: .8;" data--connection-direction="h" data-click-event-initialized="false"></i><br>
-		// 						<span class="right-output connection-column" style="flex-direction: column;align-items: center;"></span>
-		// 						<i class="remove-connection fa-solid fa-minus text-success-emphasis" style="--bs-text-opacity: .8; data--connection-direction="h" data-click-event-initialized="false"></i><br>
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 			<div class="row g-0 bottom-row" style="height:1vx;margin:0; padding: 0;">
-		// 				<div class="container-fluid connection-container" style="overflow:hidden; max-width: 40vh;margin:0; padding: 0;">
-		// 					<i class="remove-connection fa-solid fa-minus text-success-emphasis" style="--bs-text-opacity: .8; data--connection-direction="v" data-click-event-initialized="false"></i>
-		// 					<span class="bottom-output"></span>
-		// 					<i class="add-connection fa-solid fa-plus text-success-emphasis" style="--bs-text-opacity: .8; data--connection-direction="v" data-click-event-initialized="false"></i>
-		// 				</div>
-		// 			</div>
-		// 		</div>
-		// 	`;
-		// 	newElement.addEventListener('animationend', function () {
-		// 		this.classList.remove('fade-in');
-		// 	});
-		// 	return newElement;
-		// },
+		"MakeDraggableNode": function (id, objclass, label, content, x, y, zIndex = 'auto') {
+			let newElement = document.createElement('div');
+			newElement.id = id;
+			newElement.className = objclass;
+			newElement.style.top = `${y}px`;
+			newElement.style.left = `${x}px`;
+			newElement.style.zIndex = zIndex;
+			newElement.style.position = `absolute`;
+
+			newElement.tabIndex = 0;
+			newElement.innerHTML = `
+				<div class="card" style="margin:0px; padding: 0px; width: 240px; height: 200px;">
+					<div id="${id}-header" class="card-header" >
+						<div class="card-header-title">${label}</div>
+					</div>
+					<div id="${id}-content" class="card-content" style="margin-top: 1rem;">${content}</div>
+				</div>
+			`;
+			newElement.addEventListener('animationend', function () {
+				this.classList.remove('fade-in');
+			});
+			return newElement;
+		},
+		"MakeDraggableNodeV1": function (id, objclass, label, content, x, y, zIndex = 'auto') {
+			let newElement = document.createElement('div');
+			newElement.id = id;
+			newElement.className = objclass;
+			newElement.style.top = `${y}px`;
+			newElement.style.left = `${x}px`;
+			newElement.style.zIndex = zIndex;
+			newElement.tabIndex = 0;
+			newElement.innerHTML = `
+				<div class="container text-center" style="margin:0px; padding: 0px;">
+					<div class="row g-0 top-row" style="margin:0; padding:0;">
+						<div class="container-fluid text-center connection-container" style="overflow:hidden; max-width: 40vh;margin:0; padding: 0;">
+							<i class="remove-connection fa-solid fa-minus text-danger-emphasis" style="--bs-text-opacity: .8; data--connection-direction="v" data-click-event-initialized="false"></i>
+							<span class="top-input"></span>
+							<i class="add-connection fa-solid fa-plus text-danger-emphasis" style="--bs-text-opacity: .8; data--connection-direction="v" data-click-event-initialized="false"></i>
+						</div>
+					</div>
+					<div class="d-flex mid-row">
+						<div class="flex d-flex align-items-center left-column" style="overflow:hidden; margin:0; padding: 0;">
+							<div class="container text-start connection-container" style="width:1vx;overflow:hidden; margin:0; padding: 0;">
+								<i class="add-connection fa-solid fa-plus text-warning-emphasis" style="--bs-text-opacity: .8;" data--connection-direction="h" data-click-event-initialized="false"></i><br>
+								<span class="left-input connection-column" style="flex-direction: column;align-items: center;"></span>
+								<i class="remove-connection fa-solid fa-minus text-warning-emphasis" style="--bs-text-opacity: .8; data--connection-direction="h" data-click-event-initialized="false"></i>
+							</div>
+						</div>
+						<div class="flex-fill mid-column" style="margin:0vh; padding: 0;">
+							<div id="${id}-header" class="raised-element container-fluid graph-node-titlebar" >${label}</div>
+							<div id="${id}-content" style="margin-top: 1rem;">${content}</div>
+						</div>
+						<div class="flex d-flex align-items-center right-column" style="overflow:hidden; margin:0; padding: 0;">
+							<div class="container text-end connection-container" style="margin:0; padding:0;">
+								<i class="add-connection fa-solid fa-plus text-success-emphasis" style="--bs-text-opacity: .8;" data--connection-direction="h" data-click-event-initialized="false"></i><br>
+								<span class="right-output connection-column" style="flex-direction: column;align-items: center;"></span>
+								<i class="remove-connection fa-solid fa-minus text-success-emphasis" style="--bs-text-opacity: .8; data--connection-direction="h" data-click-event-initialized="false"></i><br>
+							</div>
+						</div>
+					</div>
+					<div class="row g-0 bottom-row" style="height:1vx;margin:0; padding: 0;">
+						<div class="container-fluid connection-container" style="overflow:hidden; max-width: 40vh;margin:0; padding: 0;">
+							<i class="remove-connection fa-solid fa-minus text-success-emphasis" style="--bs-text-opacity: .8; data--connection-direction="v" data-click-event-initialized="false"></i>
+							<span class="bottom-output"></span>
+							<i class="add-connection fa-solid fa-plus text-success-emphasis" style="--bs-text-opacity: .8; data--connection-direction="v" data-click-event-initialized="false"></i>
+						</div>
+					</div>
+				</div>
+			`;
+			newElement.addEventListener('animationend', function () {
+				this.classList.remove('fade-in');
+			});
+			return newElement;
+		},
 		"FindPosition": (function (elmnt, parentContainer = false) {
 			let element = elmnt;
 			let ptop = 0, pleft = 0;
