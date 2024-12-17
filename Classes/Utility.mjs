@@ -2891,7 +2891,20 @@ export class Utility {
 			inYears: (function (d1, d2) {
 				return d2.getFullYear() - d1.getFullYear();
 			}).bind(this)
-		}
+		},
+		"TStoYMDHISMS": (function (timestamp) {
+			const date = new Date(timestamp);
+			
+			const YYYY = date.getFullYear();
+			const MM = String(date.getMonth() + 1).padStart(2, '0');
+			const DD = String(date.getDate()).padStart(2, '0');
+			const HH = String(date.getHours()).padStart(2, '0');
+			const II = String(date.getMinutes()).padStart(2, '0');
+			const SS = String(date.getSeconds()).padStart(2, '0');
+			const MS = String(date.getMilliseconds()).padStart(3, '0');
+
+			return `${YYYY}${MM}${DD}-${HH}${II}${SS}-${MS}`;
+		}).bind(this),
 	};
 	// NOTE - Window related methods
 	Window = {

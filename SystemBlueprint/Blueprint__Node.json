@@ -2,9 +2,10 @@
 	"Order": 0,
 	"PinDescriptions": "Blueprint__NodeDesciptions.json",
 	"id":{
-		"DocumentID":"",
-		"DocumentType":"",
-		"DocumentStatus":"",
+		"ID":"",
+		"ULID":"",
+		"Type":"",
+		"Status":"",
 		"Timestamp":"",
 		"Link": {
 			"Head": false,
@@ -14,10 +15,12 @@
 			"Type": ""
 		},
 		"Version":{
-			"VersionNumber":"",
+			"Number":"",
 			"VersionID":"",
+			"ULID":"",
 			"Timestamp":""
 		}
+	
 	},
 	"Properties": {
 		"Name": "",

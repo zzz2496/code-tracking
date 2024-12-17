@@ -1150,12 +1150,14 @@ export class Flow {
 								}
 							},
 						*/
-						newNode.id.DocumentID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
-						newNode.id.DocumentType = "Yggdrasil Node";
-						newNode.id.DocumentStatus = "Active";
+						newNode.id.ID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
+						newNode.id.ULID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
+						newNode.id.Type = "Yggdrasil Node";
+						newNode.id.Status = "Active";
 						newNode.id.Timestamp = Date.now();
-						newNode.id.Version.VersionNumber = 1;
-						newNode.id.Version.VersionID = newNode.id.DocumentID;
+						newNode.id.Version.Number = 1;
+						newNode.id.Version.VersionID = newNode.id.ID;
+						newNode.id.Version.ULID = newNode.id.ULID;
 						newNode.id.Version.Timestamp = newNode.id.Timestamp;
 						newNode.id.Link.Head = false;
 						newNode.id.Link.ID = 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID();
