@@ -510,15 +510,15 @@ export class Flow {
 				parent.addEventListener(
 					type,
 					(e) => {
-					for (const { selector, callback } of selectors) {
-						const targetElement = e.target.closest(selector);
-				
-						if (targetElement && parent.contains(targetElement)) {
-						// Trigger callback for the matched selector
-						callback(e);
-						// break; // Stop checking other selectors once matched
+						for (const { selector, callback } of selectors) {
+							const targetElement = e.target.closest(selector);
+					
+							if (targetElement && parent.contains(targetElement)) {
+							// Trigger callback for the matched selector
+							callback(e);
+							// break; // Stop checking other selectors once matched
+							}
 						}
-					}
 					},
 					true // Capture phase
 				);
@@ -861,24 +861,25 @@ export class Flow {
 						const dataset = e.target.dataset;
 						const datasetEntries = Object.entries(dataset);
 						
-						if (datasetEntries.length > 0) {
-							console.log('dataset is not empty');
-							console.log('dataset :>> ', dataset);
+						// if (datasetEntries.length > 0) {
+						// 	console.log('dataset is not empty');
+						// 	console.log('dataset :>> ', dataset);
 
-							if (dataset.template) {
-								console.log('template: ', dataset.template);
-								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-									let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
-									return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
-								});
-							} else if (dataset.schema) {
-								console.log('schema: ', dataset.schema);
-								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-									let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
-									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
-								});
-							}
-						}
+						// 	if (dataset.template) {
+						// 		console.log('template: ', dataset.template);
+						// 		this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+						// 			let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
+						// 			return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+						// 		});
+						// 	} else if (dataset.schema) {
+						// 		console.log('schema: ', dataset.schema);
+						// 		this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+						// 			let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
+						// 			return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
+						// 		});
+						// 	}
+						// }
+
 						console.log('selectable box or selectable parent exists!');
 						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
 							item.style.removeProperty('width');
@@ -1957,20 +1958,72 @@ export class Flow {
 			}),
 			renderNodes: ((nodes, callback, cr= 0) => {
 				console.log('start Render Nodes');
-				let html = "";
+				let self = this;
+				// Functionality to make elements draggable
+				function makeDraggable(draggableSelector, parentSelector = document.body) {
+					let isDragging = false;
+					let offsetX, offsetY, draggedElement;
+				
+					const parent = document.querySelector(parentSelector);
+					const parentRect = parent.getBoundingClientRect(); // Get parent container's position
+				
+					// Round to the nearest 20px function
+					const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
+				
+					// Start dragging on mousedown
+					self.Form.Events.addGlobalEventListener("mousedown", [{
+						selector: draggableSelector,
+						callback: (e) => {
+							isDragging = true;
+							draggedElement = e.target.closest(draggableSelector);
 
-				// newNode.DocumentID = newNode.UID;
-				// newNode.DocumentName = self.DocumentName;
-				// newNode.DocumentLabel = self.DocumentLabel;
-				// newNode.DocumentHeader = self.DocumentHeader;
-				// newNode.DocumentFooter = self.DocumentFooter;
-				// newNode.DocumentType = self.DocumentType; //REALM, World, Data Node, Processing Node
-				// newNode.DocumentWorld = self.DocumentWorld; //KnowledgeBase, BusinessLogic, ApplicationUserInterface, Data
-				// newNode.DocumentUniverse = self.DocumentUniverse; //KnowledgeBase, BusinessLogic, ApplicationUserInterface, Data
-				// newNode.Timestamp = self.Utility.Time.getNowDateTimeString('YMD');
-				// console.log('self.Utility.Time.initDate()', self.Utility.Time.getNowDateTimeString('YMD'));
-				// console.log('newNode >>>', newNode);
+							const parentScrollLeft = parent.scrollLeft;
+							const parentScrollTop = parent.scrollTop;
 
+							// Calculate the offset relative to the mouse position inside the parent
+							const rect = draggedElement.getBoundingClientRect();
+							offsetX = e.clientX - rect.left + parentScrollLeft;
+							offsetY = e.clientY - rect.top + parentScrollTop;
+			
+							// Set position to absolute if not already set
+							draggedElement.style.position = "absolute";
+							draggedElement.style.zIndex = 1000; // Bring to front
+						}
+					}]);
+				
+					// Update position on mousemove
+					document.addEventListener("mousemove", (e) => {
+						if (!isDragging || !draggedElement) return;
+				
+						const parentScrollLeft = parent.scrollLeft;
+						const parentScrollTop = parent.scrollTop;
+
+						console.log('scroll', parentScrollLeft, parentScrollTop);
+
+						// Calculate new position relative to the parent container
+						let x = e.clientX - offsetX - parentRect.left + parentScrollLeft;
+						let y = e.clientY - offsetY - parentRect.top + parentScrollTop;
+				
+						// Snap to the nearest 20px grid
+						x = snapToGrid(x, 10);
+						y = snapToGrid(y, 10);
+						console.log(x, y);
+				
+						// Apply the new snapped position
+						draggedElement.style.left = `${x}px`;
+						draggedElement.style.top = `${y}px`;
+					});
+				
+					// Stop dragging on mouseup
+					document.addEventListener("mouseup", () => {
+						if (isDragging) {
+							isDragging = false;
+							draggedElement.style.zIndex = ""; // Reset z-index
+							draggedElement = null;
+						}
+					});
+				}
+				
 				let temp;
 				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
@@ -1983,29 +2036,12 @@ export class Flow {
 
 					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
 				});
-				// let n = 20;
-				// newNode.Presentation.Perspectives.GraphNode.Position = { x: 350 + (n * self.nodes.length - 1), y: 300 + (n * self.nodes.length - 1) };
-				// let temp = self.Utility.DOMElements.MakeDraggableNode(newNode.UID, 'graph-node fade-in', 'Node TEST ' + newNode.UID + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', newNode.Presentation.Perspectives.GraphNode.Position.x, newNode.Presentation.Perspectives.GraphNode.Position.y, self.nodes.length);
-				// self.nodes.push({ id: newNode.UID, node: newNode, element: temp });
-				// self.DOMElements.renderGraph(self);
-				// // self.Utility.DataStore.LocalStore.saveGraphToLocalStore(self, 'graph_data', 'Graph-Nodes');
-				// // self.Utility.DataStore.SurrealDB.Put(self, 'Local');
 
-				// let storeNodes = [];
-				// self.nodes.forEach((d, i) => {
-				// 	storeNodes.push(d.node);
-				// });
-				// console.log('storeNodes >> ', storeNodes);
+				makeDraggable(".graph-node", "#graph_scroll_content");
 
-				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-				// self.Utility.DataStore.SurrealDB.Put(self, 'Local', 'Yggdrasil', storeNodes);
-				
-				
-				
 				if (callback) callback();
-				return html;
-			}),
+				
+			}).bind(this),
 		},
 		Run: {
 			setRunMode: (mode) => {

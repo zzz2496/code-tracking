@@ -3992,21 +3992,21 @@ export class Utility {
 			newElement.className = objclass;
 			newElement.style.top = `${y}px`;
 			newElement.style.left = `${x}px`;
-			newElement.style.zIndex = zIndex;
+			// newElement.style.zIndex = zIndex;
 			newElement.style.position = `absolute`;
 
 			newElement.tabIndex = 0;
 			newElement.innerHTML = `
 				<div class="card" style="margin:0px; padding: 0px; width: 240px; height: 200px;">
-					<div id="${id}-header" class="card-header" >
+					<div id="${id}-header" class="card-header" style="cursor:pointer;" >
 						<div class="card-header-title">${label}</div>
 					</div>
 					<div id="${id}-content" class="card-content" style="margin-top: 1rem;">${content}</div>
 				</div>
 			`;
-			newElement.addEventListener('animationend', function () {
-				this.classList.remove('fade-in');
-			});
+			// newElement.addEventListener('animationend', function () {
+			// 	this.classList.remove('fade-in');
+			// });
 			return newElement;
 		},
 		"MakeDraggableNodeV1": function (id, objclass, label, content, x, y, zIndex = 'auto') {
