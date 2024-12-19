@@ -247,8 +247,7 @@ export class Flow {
 							x: fx,
 							y: fy
 						};
-						let qstr = `select * from test_table where id.ID = '${id}';`;
-						// let qstr = `select * from test_table;`;
+						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = '${id}';`;
 						console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
 							node = node[0][0];							
@@ -258,37 +257,13 @@ export class Flow {
 							if (node.id.id) node.id = node.id.id;
 							// console.log('node after update coord :>> ', node);
 
-							// qstr = `upsert test_table content ${JSON.stringify(node)};`;
-							qstr = `update test_table:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
 							// console.log('qstr :>> ', qstr);
 							
 							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
 						}).catch(error => {
 							console.error('Coordinate update failed', error);
 						});
-
-						// (async () => {
-						// 	// let qstr = `select * from test_table:{ID:'${id}'}.. limit 1;`;
-						// 	let qstr = `select * from test_table where id.ID = '${id}';`;
-						// 	// let qstr = `select * from test_table;`;
-						// 	console.log('qstr :>> ', qstr);
-						// 	let node = await ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-						// 	// let node = await ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
-						// 	node = node[0];
-						// 	console.log('node[0] :>> ', node[0]);
-							
-						// 	node[0].id = node[0].id;
-						// 	node[0].Presentation.Perspectives.GraphNode.Position = coord;
-						// 	node[0].id = node[0].id.id;
-						// 	console.log('node[0] after update coord :>> ', node[0]);
-						// 	window.debugNode = node[0];
-
-						// 	qstr = `upsert test_table content ${JSON.stringify(node[0])};`;
-						// 	console.log('qstr :>> ', qstr);
-							
-						// 	ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-						// 	// ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
-						// })();
 					}
 				});
 			},
@@ -306,6 +281,63 @@ export class Flow {
 				if (callback) callback();
 				
 			}).bind(this),
+			enableMiddleClickScroll: (containerId) => {
+				const scrollContent = document.querySelector(containerId);
+			
+				if (!scrollContent) {
+					console.error(`Element with query selector '${containerId}' not found.`);
+					return;
+				}
+			
+				let isMiddleClicking = false;
+				let startX = 0;
+				let startY = 0;
+				let scrollLeft = 0;
+				let scrollTop = 0;
+			
+				scrollContent.addEventListener('mousedown', (e) => {
+					if (e.button === 1) { // Middle mouse button
+						e.preventDefault();
+			
+						isMiddleClicking = true;
+						startX = e.clientX;
+						startY = e.clientY;
+						scrollLeft = scrollContent.scrollLeft;
+						scrollTop = scrollContent.scrollTop;
+			
+						scrollContent.style.cursor = 'grabbing';
+					}
+				});
+			
+				scrollContent.addEventListener('mousemove', (e) => {
+					if (!isMiddleClicking) return;
+			
+					const deltaX = e.clientX - startX;
+					const deltaY = e.clientY - startY;
+			
+					scrollContent.scrollLeft = scrollLeft - deltaX;
+					scrollContent.scrollTop = scrollTop - deltaY;
+				});
+			
+				const stopMiddleClick = () => {
+					if (isMiddleClicking) {
+						isMiddleClicking = false;
+						scrollContent.style.cursor = 'default';
+					}
+				};
+			
+				scrollContent.addEventListener('mouseup', (e) => {
+					if (e.button === 1) stopMiddleClick();
+				});
+			
+				document.addEventListener('mouseup', (e) => {
+					if (e.button === 1) stopMiddleClick();
+				});
+			
+				scrollContent.addEventListener('contextmenu', (e) => {
+					if (isMiddleClicking) e.preventDefault();
+				});
+			}
 		}
 	};
 	Form = {
@@ -1348,7 +1380,7 @@ export class Flow {
 							return;
 						}
 						// NOTE - SurrealDB create/insert/upsert
-						let qstr = `upsert test_table content ${JSON.stringify(newNode)};`;
+						let qstr = `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(newNode)};`;
 						console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
 
@@ -1360,17 +1392,19 @@ export class Flow {
 					callback: (e) => {
 						console.log('Remove nodes! graph_removenodes_button click!');
 						//NOTE - Remove nodes!
+						if (ParadigmREVOLUTION.Application.Cursor == null) return;
+						if (!confirm('Apakah anda ingin menghapus dokumen dengan ID ' + ParadigmREVOLUTION.Application.Cursor + '?')) return;
 						let id = ParadigmREVOLUTION.Application.Cursor;
-						let qstr = `SELECT id FROM ONLY test_table:{ID:"${id}"}.. limit 1 ;`;
+						let qstr = `SELECT id FROM ONLY ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:{ID:"${id}"}.. limit 1 ;`;
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
 							console.log('result :>> ', result[0]);
 							if (result[0].id.id) result[0].id = result[0].id.id;
 							console.log('result :>> ', result[0]);
-							qstr = `DELETE FROM test_table where id.ID = "${result[0].id.ID}";`;
+							qstr = `DELETE FROM ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = "${result[0].id.ID}";`;
 							console.log('qstr :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result =>{
 								console.log(`Node ID ${id} removal SUCCESS!`);
-								
+								ParadigmREVOLUTION.Application.Cursor = null;
 								// Refresh render
 								document.querySelector('#document_refreshrender_button').click();
 							}).catch(error => {
@@ -1379,7 +1413,6 @@ export class Flow {
 						}).catch(error => {
 							console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
 						});
-						
 					}
 				}
 				]);
@@ -1429,7 +1462,7 @@ export class Flow {
 				
 				document.querySelector('#document_refreshrender_button').addEventListener('click', (e) => {
 					console.log('Refresh render button clicked!');
-					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query('select * from test_table;').then(nodes => {
+					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(nodes => {
 						this.Graph.Events.renderNodes(nodes[0], () => { 
 							console.log('Nodes rendered, callback called');
 						});
@@ -1553,12 +1586,12 @@ export class Flow {
 				});
 				document.querySelector('#graph_load_data_button').addEventListener('click', (e) => {
 					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari SERVER ke CLIENT. Apakah anda yakin?'))
-					ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query('select * from test_table').then(result => {
+					ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(result => {
 						ParadigmREVOLUTION.Application.GraphNodes = result[0];
 						let qstr = "";
 						ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
 							node.id = node.id.id;
-							qstr += `upsert test_table content ${JSON.stringify(node)};`;
+							qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(node)};`;
 						});
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
 
@@ -1573,12 +1606,12 @@ export class Flow {
 				});
 				document.querySelector('#graph_save_data_button').addEventListener('click', (e) => {
 					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke SERVER. Apakah anda yakin?'))
-					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query('select * from test_table').then(result => {
+					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(result => {
 						ParadigmREVOLUTION.Application.GraphNodes = result[0];
 						let qstr = "";
 						ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
 							node.id = node.id.id;
-							qstr += `upsert test_table content ${JSON.stringify(node)};`;
+							qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(node)};`;
 						});
 						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
 						console.log('Success fetching data from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
@@ -1588,8 +1621,8 @@ export class Flow {
 				});
 				document.querySelector('#graph_clear_data_button').addEventListener('click', (e) => {
 					if (confirm('Anda akan melakukan penghapusan GRAPH DATA di CLIENT. Apakah anda yakin?'))
-					if (confirm('DATA YANG DIHAPUS TIDAK BISA DIKEMBALIKAN. Apakah anda yakin?'))
-					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query('delete from test_table').then(result => {
+					if (prompt('DATA YANG DIHAPUS TIDAK BISA DIKEMBALIKAN. Apakah anda yakin? Ketik DELETE untuk melanjutkan') == 'DELETE')
+					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}`).then(result => {
 						ParadigmREVOLUTION.Application.GraphNodes = [];
 						
 						// Refresh render
@@ -1600,6 +1633,9 @@ export class Flow {
 						console.error('Error deletinging data from LocalDB', error);
 					});
 				});
+				this.Graph.Events.enableMiddleClickScroll('#app_root_container');
+				this.Graph.Events.enableMiddleClickScroll('#graph_scroll_content');
+				this.Graph.Events.enableMiddleClickScroll('#app_data_preparation_area');
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
 				// console.log('generateFormToParadigmJSON', form_container);
