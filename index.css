@@ -619,3 +619,29 @@
 .graph_surfaces{
 	display: relative;
 }
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+.fade-out {
+    animation: fadeOut 0.3s ease-in-out;
+}

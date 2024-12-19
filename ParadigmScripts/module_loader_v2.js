@@ -155,6 +155,7 @@ let ParadigmREVOLUTION = {
 	},
 	"Utility": null,
 	"Application": {
+		"Cursor": null,
 		"State": [],
 		"GraphNodes": [],
 		"GraphEdges": [],

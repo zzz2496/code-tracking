@@ -17,11 +17,47 @@ export class Flow {
 		this.FormContainer = container;
 		this.SnapScroll = null;
 		this.Utility = utility;
+		this.Areas = {
+			app_data_preparation_area: {
+				width: 0
+			},
+			object_collections: {
+				width: 0
+			},
+			app_graph_tabs_container: {
+				width: 0,
+				height: 0
+			},
+			app_configurator_container: {
+				width: 0,
+				height: 0
+			}
+		};
+		this.ScrollPosition = {
+			app_root_container: {
+				top: 0,
+				left: 0
+			},
+			object_collections: {
+				top: 0,
+				left: 0
+			},
+			app_container: {
+				top: 0,
+				left: 0
+			},
+			app_data_preparation_area: {
+				top: 0,
+				left: 0
+			},
+		};
 		this.State = {
 			"Interaction": [],
 			"Flow":[]
 		};
 		this.storage = storage;
+
+		window.debugflow = this;
 	}
 	checkType = function (variable) {
 		if (variable instanceof Date) {
@@ -114,6 +150,163 @@ export class Flow {
 	isSafeHref = (href) => {
 		// Only allow safe links; adjust regex based on what "safe" means in context
 		return /^https?:\/\/|^\/\//i.test(href);
+	};
+	Graph = {
+		Elements: {
+			MakeDraggableNode: function (id, objclass, label, content, x, y, zIndex = 'auto') {
+				let newElement = document.createElement('div');
+				newElement.id = id;
+				newElement.className = objclass;
+				newElement.style.top = `${y}px`;
+				newElement.style.left = `${x}px`;
+				
+				newElement.style.position = `absolute`;
+	
+				newElement.tabIndex = 0;
+				newElement.innerHTML = `
+					<div class="card is-selectable-box" style="margin:0px; padding: 0px; width: fit-content; height: 200px;">
+						<div id="${id}-header" class="card-header is-selectable" style="cursor:pointer;" >
+							<div class="card-header-icon" data-id="${id}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+							<div class="card-header-title pl-0" data-id="${id}">${label}</div>
+						</div>
+						<div id="${id}-content" class="card-content" style="margin-top: 1rem;">${content}</div>
+					</div>
+				`;
+				newElement.addEventListener('animationend', function () {
+					this.classList.remove('fade-in');
+				});
+				return newElement;
+			},
+		},
+		Events: {
+			makeNodeDraggable: (draggableSelector, parentSelector = document.body) => {
+				let isDragging = false;
+				let offsetX, offsetY, draggedElement;
+			
+				const parent = document.querySelector(parentSelector);
+				const parentRect = parent.getBoundingClientRect();
+			
+				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
+				let fx, fy = 0;
+				this.Form.Events.addGlobalEventListener("mousedown", [{
+					selector: draggableSelector,
+					callback: (e) => {
+						// Check if the clicked element is the .card-header
+						if (!e.target.closest('.card-header')) return;
+
+						isDragging = true;
+						draggedElement = e.target.closest(draggableSelector);
+			
+						const parentScrollLeft = parent.scrollLeft;
+						const parentScrollTop = parent.scrollTop;
+			
+						// Access the live ScrollPosition dynamically
+						const { app_root_container, app_container } = this.ScrollPosition;
+			
+						const rect = draggedElement.getBoundingClientRect();
+						offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
+						offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
+			
+						draggedElement.style.position = "absolute";
+						draggedElement.style.zIndex = 1000; // Bring to front
+					}
+				}]);
+			
+				document.addEventListener("mousemove", (e) => {
+					if (!isDragging || !draggedElement) return;
+			
+					const parentScrollLeft = parent.scrollLeft;
+					const parentScrollTop = parent.scrollTop;
+			
+					// Access the live ScrollPosition dynamically
+					const { app_root_container, app_container } = this.ScrollPosition;
+			
+					let x = e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2) ;
+					let y = e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2);
+					// console.log('x :>> ', e.clientX, offsetX, parentRect.left, parentScrollLeft, app_root_container.left);
+					// console.log('coord :>> ', x, y);
+
+					x = snapToGrid(x, 10);
+					y = snapToGrid(y, 10);
+			
+					draggedElement.style.left = `${x}px`;
+					draggedElement.style.top = `${y}px`;
+					fx = x;
+					fy = y;
+				});
+			
+				document.addEventListener("mouseup", (e) => {
+					if (isDragging) {
+						isDragging = false;
+						draggedElement.style.zIndex = ""; // Reset z-index
+						draggedElement = null;
+						const id = e.target.dataset.id;
+						console.log('id :>> ', id);
+
+						const coord = {
+							x: fx,
+							y: fy
+						};
+						let qstr = `select * from test_table where id.ID = '${id}';`;
+						// let qstr = `select * from test_table;`;
+						console.log('qstr :>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
+							node = node[0][0];							
+							node.Presentation.Perspectives.GraphNode.Position = coord;
+							// console.log('node.id after update coord :>>', node.id);
+
+							if (node.id.id) node.id = node.id.id;
+							// console.log('node after update coord :>> ', node);
+
+							// qstr = `upsert test_table content ${JSON.stringify(node)};`;
+							qstr = `update test_table:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+							// console.log('qstr :>> ', qstr);
+							
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+						}).catch(error => {
+							console.error('Coordinate update failed', error);
+						});
+
+						// (async () => {
+						// 	// let qstr = `select * from test_table:{ID:'${id}'}.. limit 1;`;
+						// 	let qstr = `select * from test_table where id.ID = '${id}';`;
+						// 	// let qstr = `select * from test_table;`;
+						// 	console.log('qstr :>> ', qstr);
+						// 	let node = await ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+						// 	// let node = await ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
+						// 	node = node[0];
+						// 	console.log('node[0] :>> ', node[0]);
+							
+						// 	node[0].id = node[0].id;
+						// 	node[0].Presentation.Perspectives.GraphNode.Position = coord;
+						// 	node[0].id = node[0].id.id;
+						// 	console.log('node[0] after update coord :>> ', node[0]);
+						// 	window.debugNode = node[0];
+
+						// 	qstr = `upsert test_table content ${JSON.stringify(node[0])};`;
+						// 	console.log('qstr :>> ', qstr);
+							
+						// 	ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+						// 	// ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
+						// })();
+					}
+				});
+			},
+			renderNodes: ((nodes, callback, cr= 0) => {
+				console.log('start Render Nodes');				
+				let temp;
+				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
+				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
+					temp = this.Graph.Elements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID + ' DIV', node.id.id.Node.Type, node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
+					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
+				});
+
+				this.Graph.Events.makeNodeDraggable(".graph-node", "#graph_scroll_content");
+
+				if (callback) callback();
+				
+			}).bind(this),
+		}
 	};
 	Form = {
 		Components: {
@@ -357,7 +550,7 @@ export class Flow {
 						footer = ""
 					}) => {
 						// Basic card structure
-						console.log('Components: Card', className);
+						// console.log('Components: Card', className);
 						const card = {
 							comment: "Card",
 							tag: "div",
@@ -393,12 +586,12 @@ export class Flow {
 								}
 							]
 						}];
-						console.log('headerContent', headerContent);
+						// console.log('headerContent', headerContent);
 						if (headerContent) {
-							console.log('headerContent is NOT null');
+							// console.log('headerContent is NOT null');
 							tHeaderContent = headerContent;
 						}
-						console.log('tHeaderContent', tHeaderContent);
+						// console.log('tHeaderContent', tHeaderContent);
 						card.content.push({
 							comment: "card-header",
 							tag: "header",
@@ -583,7 +776,7 @@ export class Flow {
 				scrollContainer.addEventListener('scroll', (event) => {
 					if (!this.SnapScroll) return; // Exit if snapping is temporarily disabled
 
-					const snapPosition = document.querySelector('#object_collections').clientWidth;
+					const snapPosition = document.querySelector('#object_collections').offsetWidth;
 					const scrollLeft = scrollContainer.scrollLeft;
 					const currentTime = Date.now();
 
@@ -685,7 +878,7 @@ export class Flow {
 					maxwidth = box.offsetWidth > maxwidth ? box.offsetWidth : maxwidth;
 				});
 				
-				if (((appArea.style.flexBasis.replace('px', ''))*1) < maxwidth) appArea.style.flexBasis = 28 + maxwidth + 'px';
+				if (((appArea.style.flexBasis.replace('px', '')) * 1) < maxwidth) appArea.style.flexBasis = 28 + maxwidth + 'px';
 			
 				// Handle scrolling
 				this.SnapScroll = false;
@@ -695,7 +888,10 @@ export class Flow {
 						behavior: 'smooth'
 					});
 				}, 600);
-				setTimeout(() => { this.SnapScroll = true; }, 1000);
+				setTimeout(() => {
+					this.SnapScroll = true;
+					this.Areas.app_data_preparation_area.width = appArea.offsetWidth;
+				}, 1000);
 				setTimeout(() => {
 					let selectedBox = document.querySelector(`.${container_id}`)
 					console.log('container_id :>> ', container_id);
@@ -724,6 +920,9 @@ export class Flow {
 
 				document.querySelector('#object_collections_button').addEventListener('click', () => {
 					document.querySelector('#object_collections').classList.toggle('show');
+					setTimeout(()=> {
+						this.Areas.object_collections.width = document.querySelector('#object_collections').offsetWidth;
+					}, 650);
 				});
 
 				document.querySelector('#app_graph_button').addEventListener('click', () => {
@@ -745,18 +944,6 @@ export class Flow {
 						this.SnapScroll = true;
 					}, 500);
 				});
-				// document.querySelector('#graph_addnode_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('node_container_'+Date.now(), 'Node', (num, container_id) => {
-				// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data.GraphCanvas));
-				// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
-				// 	});
-				// });
-				
-				// document.querySelector('#graph_addprogramming_button').addEventListener('click', () => {
-				// 	this.Form.Events.addDataPreparationComponent('programming_container_'+Date.now(), 'Programming', (num, container_id) => {
-				// 		return this.Form.Initialize.FormCard(`New_PROGRAMMING___${num}`, this.Forms[0], 0, 1, 100, container_id);
-				// 	});
-				// });
 
 				document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
 					this.Form.Events.addDataPreparationComponent('datastore_container_' + Date.now(), 'Datastore', (num, container_id) => {
@@ -853,6 +1040,8 @@ export class Flow {
 					selector: '.is-selectable',
 					callback: (e) => {
 						console.log('is-selectable CLICK');
+						// console.log('e target', e.target);
+						// console.log('e currentTarget', e.currentTarget);
 						const selectableParent = e.target.closest('.is-selectable-parent');
 						const selectableBox = e.target.closest('.is-selectable-box');
 				
@@ -860,25 +1049,29 @@ export class Flow {
 				
 						const dataset = e.target.dataset;
 						const datasetEntries = Object.entries(dataset);
-						
-						// if (datasetEntries.length > 0) {
-						// 	console.log('dataset is not empty');
-						// 	console.log('dataset :>> ', dataset);
 
-						// 	if (dataset.template) {
-						// 		console.log('template: ', dataset.template);
-						// 		this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-						// 			let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
-						// 			return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
-						// 		});
-						// 	} else if (dataset.schema) {
-						// 		console.log('schema: ', dataset.schema);
-						// 		this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-						// 			let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
-						// 			return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
-						// 		});
-						// 	}
-						// }
+						if (datasetEntries.length > 0) {
+							// console.log('dataset is not empty');
+							// console.log('dataset :>> ', dataset);
+
+							if (dataset.template) {
+								console.log('template: ', dataset.template);
+								// if (e.target.classList.contains('graph_node_surface')) { 
+								// 	this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+								// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
+								// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+								// 	});
+								// }
+							} else if (dataset.schema) {
+								console.log('schema: ', dataset.schema);
+								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+									let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
+									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
+								});
+							}
+
+							if (dataset.id) ParadigmREVOLUTION.Application.Cursor = dataset.id;
+						}
 
 						console.log('selectable box or selectable parent exists!');
 						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
@@ -1006,6 +1199,7 @@ export class Flow {
 							}, 300);
 							setTimeout(() => {
 								this.SnapScroll = true;
+								this.Areas.app_data_preparation_area.width = document.querySelector('#app_data_preparation_area').offsetWidth;
 							}, 500);
 						}, 350); // Timeout slightly longer than the CSS transition (0.3s)
 					}
@@ -1129,27 +1323,7 @@ export class Flow {
 					callback: (e) => {
 						//NOTE - Create new node!
 						console.log('Create node! graph_addnode_button click!');
-						console.log('document.querySelector("#graph_addnode_select").value', document.querySelector('#graph_addnode_select').value);
 						const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
-						/*!SECTION
-							"id":{
-								"DocumentID":"",
-								"DocumentType":"",
-								"DocumentStatus":"",
-								"Timestamp":"",
-								"Version":{
-									"VersionID":"",
-									"Timestamp":""
-								},
-								"Chain": {
-									"Head": false,
-									"ID": "",
-									"Segment":"",
-									"SegmentOrder":null,
-									"Type": ""
-								}
-							},
-						*/
 						newNode.id.ID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
 						newNode.id.ULID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
 						newNode.id.Type = "Yggdrasil Node";
@@ -1162,7 +1336,11 @@ export class Flow {
 						newNode.id.Link.Head = false;
 						newNode.id.Link.ID = 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID();
 						newNode.id.Link.Segment = "";
-						newNode.id.Link.Type = document.querySelector('#graph_addnode_select').value;
+						newNode.id.Node.Type = document.querySelector('#graph_addnode_select').value;
+
+						const GraphNodeLength = ParadigmREVOLUTION.Application.GraphNodes.length;
+						newNode.Presentation.Perspectives.GraphNode.Position = { x: 30 + (GraphNodeLength * 30), y: 30 + (GraphNodeLength * 30)};
+
 						console.log('newNode :>> ', newNode);
 						ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
 						if (!this.storage) {
@@ -1172,13 +1350,35 @@ export class Flow {
 						// NOTE - SurrealDB create/insert/upsert
 						let qstr = `upsert test_table content ${JSON.stringify(newNode)};`;
 						console.log('qstr :>> ', qstr);
-						this.storage.local_db.Instance.query(qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+
+						// Refresh render
+						document.querySelector('#document_refreshrender_button').click();
 					}
 				}, {
-					selector: '#graph_removenodes_button', //NOTE - addnode-button
+					selector: '#graph_removenodes_button', //NOTE - removenodes-button
 					callback: (e) => {
-						//NOTE - Remove nodes!
 						console.log('Remove nodes! graph_removenodes_button click!');
+						//NOTE - Remove nodes!
+						let id = ParadigmREVOLUTION.Application.Cursor;
+						let qstr = `SELECT id FROM ONLY test_table:{ID:"${id}"}.. limit 1 ;`;
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+							console.log('result :>> ', result[0]);
+							if (result[0].id.id) result[0].id = result[0].id.id;
+							console.log('result :>> ', result[0]);
+							qstr = `DELETE FROM test_table where id.ID = "${result[0].id.ID}";`;
+							console.log('qstr :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result =>{
+								console.log(`Node ID ${id} removal SUCCESS!`);
+								
+								// Refresh render
+								document.querySelector('#document_refreshrender_button').click();
+							}).catch(error => {
+								console.error(`Node ID ${id} removal ERROR!`, error);
+							});
+						}).catch(error => {
+							console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
+						});
 						
 					}
 				}
@@ -1229,13 +1429,13 @@ export class Flow {
 				
 				document.querySelector('#document_refreshrender_button').addEventListener('click', (e) => {
 					console.log('Refresh render button clicked!');
-					(async () => { 
-						const nodes = await ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query('select * from test_table;');
-						console.log('nodes :>> ', nodes);
-						this.Form.Render.renderNodes(nodes[0], () => { 
+					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query('select * from test_table;').then(nodes => {
+						this.Graph.Events.renderNodes(nodes[0], () => { 
 							console.log('Nodes rendered, callback called');
 						});
-					})();
+					}).catch(err => {
+						console.error('Document refresh render error: ', err);
+					});		
 				});
 					
 
@@ -1338,6 +1538,66 @@ export class Flow {
 							tab.style.opacity = 1;
 							tab.classList.add('show');
 						}
+					});
+				});
+				document.querySelector('#app_root_container').addEventListener('scroll', (e) => {
+					const container = e.target;
+					const scrollTop = container.scrollTop; // Vertical scroll position
+					const scrollLeft = container.scrollLeft; // Horizontal scroll position
+
+					// console.log('this', this.ScrollPosition.app_root_container);
+					this.ScrollPosition.app_root_container.top = scrollTop;
+					this.ScrollPosition.app_root_container.left = scrollLeft;
+
+					// console.log('this.ScrollPosition.app_root_container :>> ', this.ScrollPosition.app_root_container);
+				});
+				document.querySelector('#graph_load_data_button').addEventListener('click', (e) => {
+					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari SERVER ke CLIENT. Apakah anda yakin?'))
+					ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query('select * from test_table').then(result => {
+						ParadigmREVOLUTION.Application.GraphNodes = result[0];
+						let qstr = "";
+						ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
+							node.id = node.id.id;
+							qstr += `upsert test_table content ${JSON.stringify(node)};`;
+						});
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+
+						// Refresh render
+						document.querySelector('#document_refreshrender_button').click();
+
+						console.log('Success fetching data from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
+
+					}).catch(error => {
+						console.error('Error fetching data from TestServer', error);
+					});
+				});
+				document.querySelector('#graph_save_data_button').addEventListener('click', (e) => {
+					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke SERVER. Apakah anda yakin?'))
+					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query('select * from test_table').then(result => {
+						ParadigmREVOLUTION.Application.GraphNodes = result[0];
+						let qstr = "";
+						ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
+							node.id = node.id.id;
+							qstr += `upsert test_table content ${JSON.stringify(node)};`;
+						});
+						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
+						console.log('Success fetching data from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
+					}).catch(error => {
+						console.error('Error fetching data from LocalDB', error);
+					});
+				});
+				document.querySelector('#graph_clear_data_button').addEventListener('click', (e) => {
+					if (confirm('Anda akan melakukan penghapusan GRAPH DATA di CLIENT. Apakah anda yakin?'))
+					if (confirm('DATA YANG DIHAPUS TIDAK BISA DIKEMBALIKAN. Apakah anda yakin?'))
+					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query('delete from test_table').then(result => {
+						ParadigmREVOLUTION.Application.GraphNodes = [];
+						
+						// Refresh render
+						document.querySelector('#document_refreshrender_button').click();
+						
+						console.log('Success deleting data from LocalDB');
+					}).catch(error => {
+						console.error('Error deletinging data from LocalDB', error);
 					});
 				});
 			},
@@ -1956,92 +2216,6 @@ export class Flow {
 				if (callback) callback();
 				return html;
 			}),
-			renderNodes: ((nodes, callback, cr= 0) => {
-				console.log('start Render Nodes');
-				let self = this;
-				// Functionality to make elements draggable
-				function makeDraggable(draggableSelector, parentSelector = document.body) {
-					let isDragging = false;
-					let offsetX, offsetY, draggedElement;
-				
-					const parent = document.querySelector(parentSelector);
-					const parentRect = parent.getBoundingClientRect(); // Get parent container's position
-				
-					// Round to the nearest 20px function
-					const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
-				
-					// Start dragging on mousedown
-					self.Form.Events.addGlobalEventListener("mousedown", [{
-						selector: draggableSelector,
-						callback: (e) => {
-							isDragging = true;
-							draggedElement = e.target.closest(draggableSelector);
-
-							const parentScrollLeft = parent.scrollLeft;
-							const parentScrollTop = parent.scrollTop;
-
-							// Calculate the offset relative to the mouse position inside the parent
-							const rect = draggedElement.getBoundingClientRect();
-							offsetX = e.clientX - rect.left + parentScrollLeft;
-							offsetY = e.clientY - rect.top + parentScrollTop;
-			
-							// Set position to absolute if not already set
-							draggedElement.style.position = "absolute";
-							draggedElement.style.zIndex = 1000; // Bring to front
-						}
-					}]);
-				
-					// Update position on mousemove
-					document.addEventListener("mousemove", (e) => {
-						if (!isDragging || !draggedElement) return;
-				
-						const parentScrollLeft = parent.scrollLeft;
-						const parentScrollTop = parent.scrollTop;
-
-						console.log('scroll', parentScrollLeft, parentScrollTop);
-
-						// Calculate new position relative to the parent container
-						let x = e.clientX - offsetX - parentRect.left + parentScrollLeft;
-						let y = e.clientY - offsetY - parentRect.top + parentScrollTop;
-				
-						// Snap to the nearest 20px grid
-						x = snapToGrid(x, 10);
-						y = snapToGrid(y, 10);
-						console.log(x, y);
-				
-						// Apply the new snapped position
-						draggedElement.style.left = `${x}px`;
-						draggedElement.style.top = `${y}px`;
-					});
-				
-					// Stop dragging on mouseup
-					document.addEventListener("mouseup", () => {
-						if (isDragging) {
-							isDragging = false;
-							draggedElement.style.zIndex = ""; // Reset z-index
-							draggedElement = null;
-						}
-					});
-				}
-				
-				let temp;
-				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
-				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
-					node.Presentation.Perspectives.GraphNode.Position = { x: 30 + (nodeIndex * 300), y: 110};
-					
-					console.log(`${nodeIndex}. node >>>`, node.id.id.ID, node);
-
-					temp = ParadigmREVOLUTION.Utility.DOMElements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID + ' DIV', '<p>Make</p><p>this</p><p>MOVE</p>', node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
-					console.log('temp :>>', temp);
-
-					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
-				});
-
-				makeDraggable(".graph-node", "#graph_scroll_content");
-
-				if (callback) callback();
-				
-			}).bind(this),
 		},
 		Run: {
 			setRunMode: (mode) => {

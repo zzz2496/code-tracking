@@ -16,9 +16,6 @@
 		{"tag":"div", "class":"is-flex is-justify-content-center my-1", "content":[
 			{"tag":"div", "class":"field has-addons", "style":"", "content":[
 				{"tag":"div", "class":"control", "style":"", "content":[
-					{"tag":"button", "class":"button mx-1 is-large is-danger graph_removenodes_button", "id":"graph_removenodes_button", "style":"", "innerHTML":"<li class='fa-solid fa-minus'></li>"}
-				]},
-				{"tag":"div", "class":"control", "style":"", "content":[
 					{"tag":"div", "class":"select is-medium", "style":"", "content":[
 						{"tag":"select", "id":"graph_addnode_select", "class":"graph_addnode_select", "content":[
 							{"tag":"option", "value":"ContainerNode", "innerHTML":"Container Node", "data-nodetype":"ContainerNode"},

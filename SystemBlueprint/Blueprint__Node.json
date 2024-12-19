@@ -7,11 +7,14 @@
 		"Type":"",
 		"Status":"",
 		"Timestamp":"",
+		"Node":{
+			"Type":"GraphNode"
+		},
 		"Link": {
 			"ChainID":"",
 			"ObjectSegment":"",
 			"ObjectSegmentOrder":null,
-			"LinkType": ""
+			"Type": ""
 		},
 		"Version":{
 			"Current":true,

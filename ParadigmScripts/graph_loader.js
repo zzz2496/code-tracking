@@ -134,6 +134,7 @@ document.addEventListener('SurrealDBLoaded', async () => {
 
 	// NOTE - Load Graph Nodes
 	ParadigmREVOLUTION.Application.GraphNodes = await local_db.Instance.query('select * from test_table');
+	// ParadigmREVOLUTION.Application.GraphNodes = await test_db.Instance.query('select * from test_table');
 
 	document.dispatchEvent(new Event('SurrealDBMonitorLoaded'));
 });

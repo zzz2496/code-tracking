@@ -6,6 +6,7 @@
 	"TestServer": "http://localhost:8080",
 	"ProductionServer": "http://localhost:8080",
 	"BackupServer": "http://localhost:8080",
+	"PrimaryServer": "TestServer",
 	"Namespaces": {
 		"ParadigmREVOLUTION":{
 			"Name": "ParadigmREVOLUTION",
