@@ -61,7 +61,7 @@
 						{ "comment": "App Graph Tabs and Controls", "tag": "div", "id": "app_graph_tabs_container", "innerHTML": "", "class": "is-flex is-gapless m-0 show app_configurator_groups is-flex-wrap-wrap", "content": [
 							{ "comment": "Left Container", "tag": "div", "id": "app_graph_tabs_container_left", "innerHTML": "", "class": "mt-1 p-0 is-flex is-justify-content-left app_graph_controls_containers", "content": [
 								{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
-									{ "tag": "div", "class": "tabs", "content": [
+									{ "tag": "div", "class": "tabs", "style":"scrollbar-width: none;-ms-overflow-style: none", "content": [
 										{ "tag": "ul", "class":"", "content": [
 											{ "tag": "li", "class": "is-active show ", "content": [
 												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Graph"}, "innerHTML": "Graph" }
@@ -141,15 +141,15 @@
 								]}
 							]}
 						] },
-						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "is-selectable-parent show app_configurator_groups", "innerHTML": "", "content": [
+						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show app_configurator_groups", "innerHTML": "", "content": [
 							{
-								"comment": "App Graph Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
+								"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
 									{
 										"tag": "div", "id": "graph_scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_graph_content", "content": [
-												{"tag":"div", "class":"graph_node_surface is-selectable ", "innerHTML":"<span>App Graph Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
-												{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"App Graph Content", "content":[
-													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#2f344cd2\"/></marker>"}
+											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-selectable-parent is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_graph_content", "content": [
+												{"tag":"div", "class":"graph_node_surface ", "innerHTML":"<span>App Graph Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
+												{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
+													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
 												]}
 											] }
 										]
@@ -157,13 +157,13 @@
 								]
 							},
 							{
-								"comment": "App Programming Container", "tag": "div", "class": "is-selectable-box m-0 p-0 show app_configurator_containers", "data":{"tabtype":"Programming"}, "id": "app_programming_container", "content": [
+								"comment": "App Programming Container", "tag": "div", "class": "m-0 p-0 show app_configurator_containers", "data":{"tabtype":"Programming"}, "id": "app_programming_container", "content": [
 									{
 										"tag": "div", "id": "programming_scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
 											{ "comment": "App Programming Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_programming_content", "content": [
-												{"tag":"div", "class":"graph_node_surface is-selectable ", "innerHTML":"<span>App Programming Content</span>"},
+												{"tag":"div", "class":"graph_node_surface  ", "innerHTML":"<span>App Programming Content</span>"},
 												{"tag":"svg", "class":"graph_connection_surface", "content":[
-													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#2f344cd2\"/></marker>"}
+													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
 												]}
 											] }
 										]
@@ -171,33 +171,54 @@
 								]
 							},
 							{
-								"comment": "App Datastore Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datastore"}, "id": "app_datastore_container", "content": [
-									{ "comment": "App Datastore Content", "tag": "div", "innerHTML": "App Datastore Content", "class": "columns is-gapless is-mobile is-selectable p-3", "style":"width:100%; height:100%;", "id": "app_datastore_content", "content": [] }
+								"comment": "App Datastore Container", "tag": "div", "class": " m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datastore"}, "id": "app_datastore_container", "content": [
+									{ "comment": "App Datastore Content", "tag": "div", "innerHTML": "App Datastore Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_datastore_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Datasource Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datasource"}, "id": "app_datasource_container", "content": [
-									{ "comment": "App Datasource Content", "tag": "div", "innerHTML": "App Datasource Content", "class": "columns is-gapless is-mobile is-selectable p-3",  "id": "app_datasource_content", "style":"width:100%; height:100%;", "content": [] }
+								"comment": "App Datasource Container", "tag": "div", "class": "-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Datasource"}, "id": "app_datasource_container", "content": [
+									{ "comment": "App Datasource Content", "tag": "div", "innerHTML": "App Datasource Content", "class": "columns is-gapless is-mobile  p-3",  "id": "app_datasource_content", "style":"width:100%; height:100%;", "content": [] }
 								]
 							},
 							{
-								"comment": "App Page Layout Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"PageLayout"}, "id": "app_page_layout_container", "content": [
-									{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile is-selectable p-3",  "id": "app_page_layout_content", "style":"width:100%; height:100%;", "content": [] }
+								"comment": "App Page Layout Container", "tag": "div", "class": "-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"PageLayout"}, "id": "app_page_layout_container", "content": [
+									{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile  p-3",  "id": "app_page_layout_content", "style":"width:100%; height:100%;", "content": [] }
 								]
 							},
 							{
-								"comment": "App Schema Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Schema"}, "id": "app_schema_container", "content": [
-									{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile is-selectable p-3", "style":"width:100%; height:100%;", "id": "app_schema_content", "content": [] }
+								"comment": "App Schema Container", "tag": "div", "class": "-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Schema"}, "id": "app_schema_container", "content": [
+									{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_schema_content", "content": [] }
 								]
 							},
 							{
-								"comment": "App Form Container", "tag": "div", "class": "is-selectable-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Forms"}, "id": "app_form_container", "content": [
-									{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile is-selectable p-3", "style":"width:100%; height:100%;", "id": "app_form_content", "content": [] }
+								"comment": "App Form Container", "tag": "div", "class": "-box m-0 p-0 app_configurator_containers", "data":{"tabtype":"Forms"}, "id": "app_form_container", "content": [
+									{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_form_content", "content": [] }
 								]
 							}
 						] },
 						
-						{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [] }
+						{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [
+							{ "comment": "Add Node button", "tag":"div", "class":"field has-addons", "style":"", "content":[
+								{"tag":"div", "class":"control", "style":"", "content":[
+									{"tag":"div", "class":"select", "style":"", "content":[
+										{"tag":"select", "id":"", "class":"", "content":[
+											{"tag":"option", "value":"ContainerNode", "innerHTML":"Container Node", "data-nodetype":"ContainerNode"},
+											{"tag":"option", "value":"AlgorithmNode", "innerHTML":"Algorithm Node", "data-nodetype":"AlgorithmNode" },
+											{"tag":"option", "value":"DatastoreNode", "innerHTML":"Datastore Node", "data-nodetype":"DatastoreNode"},
+											{"tag":"option", "value":"DocumentNode",  "innerHTML":"Document Node",  "data-nodetype":"DocumentNode"},
+											{"tag":"option", "value":"CommentNode",   "innerHTML":"Comment Node",   "data-nodetype":"CommentNode"},
+											{"tag":"option", "value":"MetadataNode",  "innerHTML":"Metadata Node",  "data-nodetype":"MetadataNode"},
+											{"tag":"option", "value":"GenericNode",   "innerHTML":"Generic Node",   "data-nodetype":"GenericNode"}
+										]}
+									]}
+								]},
+								{"tag":"div", "class":"control", "style":"", "content":[
+									{"tag":"button", "class":"button mx-1 is-medium is-success graph_addnode_button", "id":"graph_addnode_button", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
+								]}
+							]}
+
+
+						] }
 					]
 				},
 				{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "is-flex is-flex-direction-column", "innerHTML": "", "content": [] },

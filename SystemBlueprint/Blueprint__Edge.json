@@ -15,39 +15,37 @@
 	},
 	"PinType":"Blueprints__EdgePinType.json",
 	"PinTypeSelected":"VersionPin",
-	"Presentation":{
-		"InputPin":{
-			"Position":["Top", "TopRight", "Right", "BottomRight", "Bottom", "BottomLeft", "Left", "TopLeft"],
-			"PositionSelected": 0,
-			"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
-			"ColorModeSelected":0,
-			"Color":"#000000",
-			"Coordinate":{
-				"x":0,
-				"y":0
-			}
-		},
-		"OutputPin":{
-			"Position":["Top", "TopRight", "Right", "BottomRight", "Bottom", "BottomLeft", "Left", "TopLeft"],
-			"PositionSelected": 0,
-			"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
-			"ColorModeSelected":0,
-			"Color":"#000000",
-			"Coordinate":{
-				"x":0,
-				"y":0
-			}
-		},
-		"Path":{
-			"PathMode":["Internal", "External"],
-			"PathModeSelected": 0,
-			"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
-			"ColorModeSelected":0,
-			"Color":"#000000",
-			"PathDecoration":["Dashed", "Normal", "Dotted", "Custom"],
-			"PathDecorationSelected":0,
-			"PathDashArray":20,
-			"PathThickness":2
+	"OutputPin":{
+		"nodeID":"",
+		"pinID":"",
+		"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+		"ColorModeSelected":0,
+		"Color":"#000000",
+		"Coordinate":{
+			"x":0,
+			"y":0
 		}
+	},
+	"InputPin":{
+		"nodeID":"",
+		"pinID":"",
+		"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+		"ColorModeSelected":0,
+		"Color":"#000000",
+		"Coordinate":{
+			"x":0,
+			"y":0
+		}
+	},
+	"Path":{
+		"PathMode":["Internal", "External"],
+		"PathModeSelected": 0,
+		"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
+		"ColorModeSelected":0,
+		"Color":"#000000",
+		"PathDecoration":["Dashed", "Normal", "Dotted", "Custom"],
+		"PathDecorationSelected":0,
+		"PathDashArray":20,
+		"PathThickness":2
 	}
 }

@@ -319,8 +319,8 @@
 }
 #app_graph_tabs_container.show{
 	width: 100%;
+	/* height: 10rem; */
 	height: 2.9rem;
-	/* height: 2.9rem; */
 	/* opacity: 1; */
 }
 .system-status-indicator{
@@ -569,7 +569,10 @@
 #app_graph_tabs .hidden {
 	display: none;
 }
-
+.focused {
+	border: 2px solid var(--bulma-primary);
+	border-radius: 10px;
+}
 /* Tab container animations */
 /* .tab-content {
     transition: transform 5s var(--swoop), opacity 5s var(--swoop);
@@ -602,23 +605,47 @@
 	transition: transform var(--transition-time) var(--swoop);
     position: relative;
 }
-.graph_node_surface{
+/* .graph_node_surface{
 	width: 100%;
 	height: 100%;
-	display: absolute;
+	display: relative;
 	top: 0;
 	left: 0;
 }
 .graph_connection_surface{
 	width: 100%;
 	height: 100%;
-	display: absolute;
+	display: relative;
 	top: 0;
 	left: 0;
+	z-index:999;
 }
 .graph_surfaces{
 	display: relative;
-}
+} */
+.graph_node_surface {
+	position: absolute; /* Use absolute to stack within the parent container */
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1; /* Set lower z-index to render below the connection surface */
+  }
+  
+  .graph_connection_surface {
+	position: absolute; /* Stacks in the same coordinate space as graph_node_surface */
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+  }
+  
+  .graph_surfaces {
+	position: relative; /* Establishes stacking context for child elements */
+	width: 100%;
+	height: 100%;
+  }
+  
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -644,4 +671,7 @@
 }
 .fade-out {
     animation: fadeOut 0.3s ease-in-out;
+}
+.graph-node .card-header-title{
+	user-select: none;
 }

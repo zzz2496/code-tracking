@@ -17,6 +17,10 @@ export class Flow {
 		this.FormContainer = container;
 		this.SnapScroll = null;
 		this.Utility = utility;
+		this.selectedNodesToConnect = {
+			Start: null,
+			End: null
+		};
 		this.Areas = {
 			app_data_preparation_area: {
 				width: 0
@@ -163,13 +167,36 @@ export class Flow {
 				newElement.style.position = `absolute`;
 	
 				newElement.tabIndex = 0;
+				// newElement.innerHTML = `
+				// 	<div class="card is-selectable-box" style="margin:0px; padding: 0px; width: fit-content; height: 200px;">
+				// 		<div id="${id}-header" class="card-header is-selectable" style="cursor:pointer;" >
+				// 			<div class="card-header-icon" data-id="${id}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+				// 			<div class="card-header-title pl-0" data-id="${id}">${label}</div>
+				// 		</div>
+				// 		<div id="${id}-content" class="card-content" style="margin-top: 1rem;">${content}</div>
+				// 	</div>
+				// `;
+				// NOTE - gutter-dot example: <div class="gutter-dot" style="width: 10px; height: 10px; background-color: silver; border-radius: 50%;"></div>
+
 				newElement.innerHTML = `
-					<div class="card is-selectable-box" style="margin:0px; padding: 0px; width: fit-content; height: 200px;">
-						<div id="${id}-header" class="card-header is-selectable" style="cursor:pointer;" >
-							<div class="card-header-icon" data-id="${id}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
-							<div class="card-header-title pl-0" data-id="${id}">${label}</div>
+					<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px;">
+						<div class="top-gutter" style="display: flex; justify-content: space-evenly; width: fit-content; width:100%;">
 						</div>
-						<div id="${id}-content" class="card-content" style="margin-top: 1rem;">${content}</div>
+						<div style="display: flex;">
+							<div class="left-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
+							</div>
+							<div class="card is-selectable-box" style="margin: 5px; padding: 0px; width: fit-content; height: 200px;">
+								<div id="${id}-header" class="card-header is-selectable" style="cursor:pointer;">
+									<div class="card-header-icon" data-id="${id}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+									<div class="card-header-title pl-0" data-id="${id}">${label}</div>
+								</div>
+								<div id="${id}-content" class="card-content" style="margin-top: 1rem;">${content}</div>
+							</div>
+							<div class="right-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
+							</div>
+						</div>
+						<div class="bottom-gutter" style="display: flex; justify-content: space-evenly; width: 100%; width:100%;">
+						</div>
 					</div>
 				`;
 				newElement.addEventListener('animationend', function () {
@@ -178,8 +205,8 @@ export class Flow {
 				return newElement;
 			},
 		},
-		Events: {
-			makeNodeDraggable: (draggableSelector, parentSelector = document.body) => {
+		Events: { //SECTION - Events
+			makeNodeDraggable: (draggableSelector, parentSelector = document.body) => { //SECTION - makeNodeDraggable
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
 			
@@ -188,11 +215,11 @@ export class Flow {
 			
 				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
 				let fx, fy = 0;
-				this.Form.Events.addGlobalEventListener("mousedown", [{
+				this.Form.Events.addGlobalEventListener("mousedown", [{ //NOTE - makeNodeDraggable mousedown
 					selector: draggableSelector,
 					callback: (e) => {
 						// Check if the clicked element is the .card-header
-						if (!e.target.closest('.card-header')) return;
+						if (!e.target.closest('.card-header-icon')) return;
 
 						isDragging = true;
 						draggedElement = e.target.closest(draggableSelector);
@@ -212,7 +239,7 @@ export class Flow {
 					}
 				}]);
 			
-				document.addEventListener("mousemove", (e) => {
+				document.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
 					if (!isDragging || !draggedElement) return;
 			
 					const parentScrollLeft = parent.scrollLeft;
@@ -235,7 +262,7 @@ export class Flow {
 					fy = y;
 				});
 			
-				document.addEventListener("mouseup", (e) => {
+				document.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
 					if (isDragging) {
 						isDragging = false;
 						draggedElement.style.zIndex = ""; // Reset z-index
@@ -267,21 +294,32 @@ export class Flow {
 					}
 				});
 			},
-			renderNodes: ((nodes, callback, cr= 0) => {
-				console.log('start Render Nodes');				
+			renderNodes: ((nodes, edges, callback, cr= 0) => { //SECTION - renderNodes
+				console.log('Start Render Nodes');
 				let temp;
 				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
+				document.querySelector('#app_graph_content>.graph_connection_surface').innerHTML = "";
+
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
-					temp = this.Graph.Elements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID + ' DIV', node.id.id.Node.Type, node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
+					temp = this.Graph.Elements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID, node.id.id.Node.Type, node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
 					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
 				});
 
 				this.Graph.Events.makeNodeDraggable(".graph-node", "#graph_scroll_content");
 
+				console.log('Done Render Nodes');
+				// ------------------------------------------------
+				console.log('Start Render Edges');
+
+				if (edges) if (Array.isArray(edges)) edges.forEach((edge, edgeIndex) => {
+					console.log('edge :>> ', edge);
+					this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+				});
+
 				if (callback) callback();
-				
+				console.log('Done Render Edges');
 			}).bind(this),
-			enableMiddleClickScroll: (containerId) => {
+			enableMiddleClickScroll: (containerId) => { //SECTION - enableMiddleClickScroll
 				const scrollContent = document.querySelector(containerId);
 			
 				if (!scrollContent) {
@@ -295,7 +333,7 @@ export class Flow {
 				let scrollLeft = 0;
 				let scrollTop = 0;
 			
-				scrollContent.addEventListener('mousedown', (e) => {
+				scrollContent.addEventListener('mousedown', (e) => { // NOTE - enableMiddleClickScroll mousedown
 					if (e.button === 1) { // Middle mouse button
 						e.preventDefault();
 			
@@ -309,7 +347,7 @@ export class Flow {
 					}
 				});
 			
-				scrollContent.addEventListener('mousemove', (e) => {
+				scrollContent.addEventListener('mousemove', (e) => { // NOTE - enableMiddleClickScroll mousemove
 					if (!isMiddleClicking) return;
 			
 					const deltaX = e.clientX - startX;
@@ -319,7 +357,7 @@ export class Flow {
 					scrollContent.scrollTop = scrollTop - deltaY;
 				});
 			
-				const stopMiddleClick = () => {
+				const stopMiddleClick = () => { // NOTE - enableMiddleClickScroll stopMiddleClick
 					if (isMiddleClicking) {
 						isMiddleClicking = false;
 						scrollContent.style.cursor = 'default';
@@ -337,7 +375,348 @@ export class Flow {
 				scrollContent.addEventListener('contextmenu', (e) => {
 					if (isMiddleClicking) e.preventDefault();
 				});
+			},
+			connectNodes: (edge, svgcontainerselector, parentselector) => {
+				// Get the elements by their selector
+				console.log('start connect nodes');
+				if (!edge) return;
+
+				// Get the SVG container
+				const svgContainer = document.querySelector(svgcontainerselector);
+				const existingPath = svgContainer.querySelector(`path[id="${edge.id}"]`);
+				console.log('existingPath :>> ', existingPath);
+
+				console.log('edge not empty! NICE!', edge);
+
+				if (!existingPath) { 
+					this.Graph.Events.createGutterDotsAndConnect(
+						document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+						document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+						edge
+					);
+				}
+				
+				const node1selector = edge.OutputPin.pinID;
+				const node2selector = edge.InputPin.pinID;
+
+				console.log('nodeSelectors :>> ', node1selector, node2selector);
+
+				const node1 = document.querySelector(
+					node1selector.startsWith("#")
+					  ? `div[id="${node1selector.slice(1)}"]`
+					  : node1selector.startsWith(".")
+					  ? `div[class="${node1selector.slice(1)}"]`
+					  : `div${node1selector}`
+				  );
+				  
+				  const node2 = document.querySelector(
+					node2selector.startsWith("#")
+					  ? `div[id="${node2selector.slice(1)}"]`
+					  : node2selector.startsWith(".")
+					  ? `div[class="${node2selector.slice(1)}"]`
+					  : `div${node2selector}`
+				  );
+			
+				if (!node1 || !node2) {
+					console.error("One or both nodes not found.");
+					return;
+				}
+
+				const parent = document.querySelector(parentselector); // NOTE - NOW
+				const parentRect = parent.getBoundingClientRect();
+
+				const parentScrollLeft = parent.scrollLeft;
+				const parentScrollTop = parent.scrollTop;
+				const parentLeft = parentRect.left;
+				const parentTop = parentRect.top;
+
+				console.log(parentRect, parentLeft, parentTop, parentScrollLeft, parentScrollTop);
+
+			
+				// Get bounding rectangles of the nodes
+				const rect1 = node1.getBoundingClientRect();
+				const rect2 = node2.getBoundingClientRect();
+			
+				let arrowwidth = 10;
+				if (rect1.left > rect2.left) arrowwidth = -arrowwidth;
+				// Calculate the center of each node
+				const x1 = rect1.left - parentLeft + parentScrollLeft + (rect1.width / 2);
+				const y1 = rect1.top - parentTop + parentScrollTop + (rect1.height / 2);
+				const x2 = rect2.left - arrowwidth - parentLeft + parentScrollLeft + (rect2.width / 2);
+				const y2 = rect2.top - parentTop + parentScrollTop + (rect2.height / 2);
+						
+				if (!svgContainer) {
+					console.error("SVG container not found.");
+					return;
+				}
+			
+				// Calculate control points for the curve
+				const controlX1 = x1 + (x2 - x1) / 1.2;
+				const controlY1 = y1;
+				const controlX2 = x2 - (x2 - x1) / 1.2;
+				const controlY2 = y2;
+			
+				if (!existingPath) {
+					// Create an SVG path
+					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
+					path.setAttribute("id", edge.id);
+					path.setAttribute("d", d);
+					path.setAttribute("stroke", "#FFF");
+					path.setAttribute("stroke-width", "2");
+					path.setAttribute("fill", "none");
+					path.setAttribute("marker-end", "url(#arrowhead)");
+				
+					// Append the path to the SVG container
+					svgContainer.appendChild(path);				
+				} else {
+					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
+					existingPath.setAttribute("d", d);
+				}
+			},
+			connectNodesV1: (node1selector, node2selector, svgcontainerselector, parentselector) => {
+				// Get the elements by their selector
+				const node1 = document.querySelector(
+					node1selector.startsWith("#")
+					  ? `div[id="${node1selector.slice(1)}"]`
+					  : node1selector.startsWith(".")
+					  ? `div[class="${node1selector.slice(1)}"]`
+					  : `div${node1selector}`
+				  );
+				  
+				  const node2 = document.querySelector(
+					node2selector.startsWith("#")
+					  ? `div[id="${node2selector.slice(1)}"]`
+					  : node2selector.startsWith(".")
+					  ? `div[class="${node2selector.slice(1)}"]`
+					  : `div${node2selector}`
+				  );
+			
+				if (!node1 || !node2) {
+					console.error("One or both nodes not found.");
+					return;
+				}
+
+				const parent = document.querySelector(parentselector); // NOTE - NOW
+				const parentRect = parent.getBoundingClientRect();
+
+				const parentScrollLeft = parent.scrollLeft;
+				const parentScrollTop = parent.scrollTop;
+				const parentLeft = parentRect.left;
+				const parentTop = parentRect.top;
+
+				console.log(parentRect, parentLeft, parentTop, parentScrollLeft, parentScrollTop);
+
+			
+				// Get bounding rectangles of the nodes
+				const rect1 = node1.getBoundingClientRect();
+				const rect2 = node2.getBoundingClientRect();
+			
+				let arrowwidth = 10;
+				if (rect1.left > rect2.left) arrowwidth = -arrowwidth;
+				// Calculate the center of each node
+				const x1 = rect1.left - parentLeft + parentScrollLeft + (rect1.width / 2);
+				const y1 = rect1.top + parentTop + parentScrollTop + (rect1.height / 2);
+				const x2 = rect2.left - arrowwidth - parentLeft + parentScrollLeft + (rect2.width / 2);
+				const y2 = rect2.top + parentTop + parentScrollTop + (rect2.height / 2);
+			
+				// Get the SVG container
+				const svgContainer = document.querySelector(svgcontainerselector);
+			
+				if (!svgContainer) {
+					console.error("SVG container not found.");
+					return;
+				}
+			
+				// Calculate control points for the curve
+				const controlX1 = x1 + (x2 - x1) / 1.2;
+				const controlY1 = y1;
+				const controlX2 = x2 - (x2 - x1) / 1.2;
+				const controlY2 = y2;
+			
+				// Create an SVG path
+				const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+				const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
+				path.setAttribute("d", d);
+				path.setAttribute("stroke", "#FFF");
+				path.setAttribute("stroke-width", "2");
+				path.setAttribute("fill", "none");
+				path.setAttribute("marker-end", "url(#arrowhead)");
+			
+				// Append the path to the SVG container
+				svgContainer.appendChild(path);
+			},
+			createGutterDotsAndConnect: (node1, node2, edge) => {
+				const gutterDot1 = document.createElement('div');
+				gutterDot1.className = 'gutter-dot';
+				gutterDot1.style.width = '10px';
+				gutterDot1.style.height = '10px';
+				gutterDot1.style.backgroundColor = 'silver';
+				gutterDot1.style.borderRadius = '50%';
+
+				if (edge.OutputPin.pinID == "") {
+					gutterDot1.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
+					edge.OutputPin.pinID = '#' + gutterDot1.id;
+				} else {
+					gutterDot1.id = edge.OutputPin.pinID.replace('#', '');
+				}
+				
+				const gutterDot2 = gutterDot1.cloneNode(true);
+
+				if (edge.InputPin.pinID == "") {
+					gutterDot2.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
+					edge.InputPin.pinID = '#' + gutterDot2.id;
+				} else {
+					gutterDot2.id = edge.InputPin.pinID.replace('#', '');;
+				}
+
+				const rect1 = node1.getBoundingClientRect();
+				const rect2 = node2.getBoundingClientRect();
+			
+				if ((rect1.left - (rect1.width/2))< (rect2.left - (rect2.width/2))) {
+					// node1 is to the left of node2
+					if (node1.querySelector('.right-gutter')) {
+						node1.querySelector('.right-gutter').appendChild(gutterDot1);
+					} else if (node1.querySelector('.left-gutter')) {
+						node1.querySelector('.left-gutter').appendChild(gutterDot1);
+					}
+			
+					if (node2.querySelector('.left-gutter')) {
+						node2.querySelector('.left-gutter').appendChild(gutterDot2);
+					} else if (node2.querySelector('.right-gutter')) {
+						node2.querySelector('.right-gutter').appendChild(gutterDot2);
+					}
+				} else {
+					// node1 is to the right of node2
+					if (node1.querySelector('.left-gutter')) {
+						node1.querySelector('.left-gutter').appendChild(gutterDot1);
+					} else if (node1.querySelector('.right-gutter')) {
+						node1.querySelector('.right-gutter').appendChild(gutterDot1);
+					}
+			
+					if (node2.querySelector('.right-gutter')) {
+						node2.querySelector('.right-gutter').appendChild(gutterDot2);
+					} else if (node2.querySelector('.left-gutter')) {
+						node2.querySelector('.left-gutter').appendChild(gutterDot2);
+					}
+				}
+				return edge;				
+			},
+			enableDragSelect: (selector) => {
+				const container = document.querySelector(selector);
+				let isDragging = false;
+				let startX, startY;
+			
+				const selectedElements = new Set(); // Using Set to prevent duplicates
+				let highlightBox = null;
+			
+				// Function to create a highlight box
+				function createHighlightBox() {
+					highlightBox = document.createElement('div');
+					highlightBox.style.position = 'absolute';
+					highlightBox.style.backgroundColor = 'rgba(0, 123, 255, 0.3)';
+					highlightBox.style.border = '1px dashed #007bff';
+					highlightBox.style.borderRadius = '10px';
+					highlightBox.style.pointerEvents = 'none'; // Prevent interference with mouse events
+					highlightBox.style.zIndex = '1000';
+					container.appendChild(highlightBox);
+				}
+			
+				// Function to update the position and size of the highlight box
+				function updateHighlightBox(x1, y1, x2, y2) {
+					const rect = container.getBoundingClientRect();
+					const left = Math.min(x1, x2) - rect.left;
+					const top = Math.min(y1, y2) - rect.top;
+					const width = Math.abs(x2 - x1);
+					const height = Math.abs(y2 - y1);
+			
+					highlightBox.style.left = `${left}px`;
+					highlightBox.style.top = `${top}px`;
+					highlightBox.style.width = `${width}px`;
+					highlightBox.style.height = `${height}px`;
+				}
+			
+				// Function to handle mouse down event
+				function onMouseDown(e) {
+					if (e.button !== 0) return;
+					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
+						isDragging = true;
+						startX = e.clientX;
+						startY = e.clientY;
+			
+						selectedElements.clear(); // Reset selected elements
+			
+						if (!highlightBox) createHighlightBox();
+						updateHighlightBox(startX, startY, startX, startY);
+					}
+				}
+			
+				// Function to handle mouse move event
+				function onMouseMove(e) {
+					if (!isDragging) return;
+			
+					const currentX = e.clientX;
+					const currentY = e.clientY;
+			
+					updateHighlightBox(startX, startY, currentX, currentY);
+			
+					const rect = container.getBoundingClientRect();
+					const dragArea = {
+						x1: Math.min(startX, currentX) - rect.left,
+						y1: Math.min(startY, currentY) - rect.top,
+						x2: Math.max(startX, currentX) - rect.left,
+						y2: Math.max(startY, currentY) - rect.top
+					};
+			
+					// Highlight elements within the drag area
+					container.querySelectorAll('.graph-node, svg path').forEach(element => {
+						const elementRect = element.getBoundingClientRect();
+						const isInside = 
+							elementRect.left >= dragArea.x1 + rect.left &&
+							elementRect.top >= dragArea.y1 + rect.top &&
+							elementRect.right <= dragArea.x2 + rect.left &&
+							elementRect.bottom <= dragArea.y2 + rect.top;
+			
+						if (isInside) {
+							if (!selectedElements.has(element)) {
+								element.querySelector('.is-selectable-box').classList.add('focused');
+								selectedElements.add(element);
+							}
+						} else if (selectedElements.has(element)) {
+							if (element.querySelector('.is-selectable-box').classList.contains('focused')) element.querySelector('.is-selectable-box').classList.remove('focused');
+							selectedElements.delete(element);
+						}
+					});
+				}
+			
+				// Function to handle mouse up event
+				function onMouseUp() {
+					if (isDragging) {
+						isDragging = false;
+			
+						if (highlightBox) {
+							container.removeChild(highlightBox);
+							highlightBox = null;
+						}
+			
+						// Update global variable
+						ParadigmREVOLUTION.Application.Cursor.length = 0;
+			
+						for (const element of selectedElements) {
+							ParadigmREVOLUTION.Application.Cursor.push(element.id);
+						}
+			
+						console.log("ParadigmREVOLUTION.Application.Cursor", ParadigmREVOLUTION.Application.Cursor);
+					}
+				}
+			
+				// Attach event listeners to the container
+				container.addEventListener('mousedown', onMouseDown);
+				container.addEventListener('mousemove', onMouseMove);
+				container.addEventListener('mouseup', onMouseUp);
+				container.addEventListener('mouseleave', onMouseUp); // Ensure cleanup if mouse leaves the container
 			}
+			
 		}
 	};
 	Form = {
@@ -735,6 +1114,7 @@ export class Flow {
 				parent.addEventListener(
 					type,
 					(e) => {
+						// e.preventDefault();
 						for (const { selector, callback } of selectors) {
 							const targetElement = e.target.closest(selector);
 					
@@ -1076,6 +1456,7 @@ export class Flow {
 						// console.log('e currentTarget', e.currentTarget);
 						const selectableParent = e.target.closest('.is-selectable-parent');
 						const selectableBox = e.target.closest('.is-selectable-box');
+						// ParadigmREVOLUTION.Application.Cursor = [];
 				
 						if (!selectableParent || !selectableBox) return; // Guard clause
 				
@@ -1101,22 +1482,21 @@ export class Flow {
 									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
 								});
 							}
-
-							if (dataset.id) ParadigmREVOLUTION.Application.Cursor = dataset.id;
+							// if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push(dataset.id);
 						}
 
-						console.log('selectable box or selectable parent exists!');
-						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
-							item.style.removeProperty('width');
-							item.classList.remove('box', 'focused', 'm-2');
-							item.classList.remove('m-2');
-						});
-						if (selectableBox.classList.contains('field')) {
-							selectableBox.style.width = '100%;';
-						} else {
-							selectableBox.style.width = 'fit-content;';
-						}
-						selectableBox.classList.add('box', 'focused', 'mx-0');
+						// console.log('selectable box or selectable parent exists!');
+						// selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
+						// 	item.style.removeProperty('width');
+						// 	item.classList.remove('box', 'focused', 'm-2');
+						// 	item.classList.remove('m-2');
+						// });
+						// if (selectableBox.classList.contains('field')) {
+						// 	selectableBox.style.width = '100%;';
+						// } else {
+						// 	selectableBox.style.width = 'fit-content;';
+						// }
+						// selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
 					}
 				}, {
 					selector: '.form-input-types',
@@ -1126,7 +1506,7 @@ export class Flow {
 						let num = Date.now();
 						//ADD FORM COLUMN HERE
 							
-						let form_container = e.target.closest(`.${e.target.dataset.form_container}`); //NOTE - NOW
+						let form_container = e.target.closest(`.${e.target.dataset.form_container}`);
 						console.log('form_container >>>>>> ', form_container);
 						console.log('e.target', e.target);
 						console.log('e.target.dataset.form_container', e.target.dataset.form_container);
@@ -1392,27 +1772,33 @@ export class Flow {
 					callback: (e) => {
 						console.log('Remove nodes! graph_removenodes_button click!');
 						//NOTE - Remove nodes!
-						if (ParadigmREVOLUTION.Application.Cursor == null) return;
-						if (!confirm('Apakah anda ingin menghapus dokumen dengan ID ' + ParadigmREVOLUTION.Application.Cursor + '?')) return;
-						let id = ParadigmREVOLUTION.Application.Cursor;
-						let qstr = `SELECT id FROM ONLY ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:{ID:"${id}"}.. limit 1 ;`;
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
-							console.log('result :>> ', result[0]);
-							if (result[0].id.id) result[0].id = result[0].id.id;
-							console.log('result :>> ', result[0]);
-							qstr = `DELETE FROM ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = "${result[0].id.ID}";`;
-							console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result =>{
-								console.log(`Node ID ${id} removal SUCCESS!`);
-								ParadigmREVOLUTION.Application.Cursor = null;
-								// Refresh render
-								document.querySelector('#document_refreshrender_button').click();
+						if (ParadigmREVOLUTION.Application.Cursor.length == 0) return;
+						console.log('ParadigmREVOLUTION.Application.Cursor :>> ', ParadigmREVOLUTION.Application.Cursor);
+						ParadigmREVOLUTION.Application.Cursor.forEach(znode => {
+							if (!confirm('Apakah anda ingin menghapus dokumen dengan ID ' + znode + '?')) return;
+							let id = znode;
+							let qstr = `SELECT id FROM ONLY ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:{ID:"${id}"}.. limit 1 ;`;
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+								console.log('result :>> ', result[0]);
+								if (result[0].id.id) result[0].id = result[0].id.id;
+								console.log('result :>> ', result[0]);
+								qstr = `DELETE FROM ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = "${result[0].id.ID}";`;
+								console.log('qstr :>> ', qstr);
+								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result =>{
+									console.log(`Node ID ${id} removal SUCCESS!`);
+									znode = null;
+									// ParadigmREVOLUTION.Application.Cursor.splice(ParadigmREVOLUTION.Application.Cursor.indexOf(znode), 1);
+
+									// Refresh render
+									document.querySelector('#document_refreshrender_button').click();
+								}).catch(error => {
+									console.error(`Node ID ${id} removal ERROR!`, error);
+								});
 							}).catch(error => {
-								console.error(`Node ID ${id} removal ERROR!`, error);
+								console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
 							});
-						}).catch(error => {
-							console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
 						});
+						ParadigmREVOLUTION.Application.Cursor = [];
 					}
 				}
 				]);
@@ -1463,14 +1849,19 @@ export class Flow {
 				document.querySelector('#document_refreshrender_button').addEventListener('click', (e) => {
 					console.log('Refresh render button clicked!');
 					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(nodes => {
-						this.Graph.Events.renderNodes(nodes[0], () => { 
-							console.log('Nodes rendered, callback called');
+						console.log('nodes :>> ', nodes);
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from next_process;`).then(edges => {
+							console.log('edges :>> ', edges);
+							this.Graph.Events.renderNodes(nodes[0], edges[0], () => {
+								console.log('Nodes and Edges rendered, callback called');
+							});
+						}).catch(err => {
+							console.error('Document refresh render error: Edges retreival error ', err);
 						});
 					}).catch(err => {
-						console.error('Document refresh render error: ', err);
-					});		
+						console.error('Document refresh render error: Nodes retreival error ', err);
+					});
 				});
-					
 
 				console.log('Set default theme to SYSTEM');
 				const root = document.documentElement;
@@ -1495,7 +1886,11 @@ export class Flow {
 						}
 					}
 				});	
-				document.querySelector('#app_content').innerHTML = `
+				
+				let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data['GraphCanvas']));
+				document.querySelector('#app_content').innerHTML += this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+			
+				document.querySelector('#app_content').innerHTML += `
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
@@ -1636,6 +2031,95 @@ export class Flow {
 				this.Graph.Events.enableMiddleClickScroll('#app_root_container');
 				this.Graph.Events.enableMiddleClickScroll('#graph_scroll_content');
 				this.Graph.Events.enableMiddleClickScroll('#app_data_preparation_area');
+
+				// NOTE - CONNECT NODES!
+				this.Form.Events.addGlobalEventListener('mousedown', [
+					{
+						selector: '.graph-node .card-header-title', // Select .card-content within .graph-node
+						callback: (e) => {
+							console.log('e.button', e.button);
+							if (e.button === 0) { // Left mouse button
+								console.log('Mouse down on .card-content inside .graph-node');
+				
+								// Ensure you are in the correct .graph-node
+								const graphNode = e.target.closest('.graph-node');
+								if (graphNode) {
+									// Disable text selection for the graph surface
+									const graphSurface = graphNode.closest('.graph_surfaces');
+									if (graphSurface) {
+										graphSurface.style.userSelect = 'none';
+									}
+
+									// Set the starting node
+									this.selectedNodesToConnect.Start = graphNode;
+									console.log('this.selectedNodesToConnect.Start :>> ', this.selectedNodesToConnect.Start);
+								}
+							}
+						}
+					}
+				]);
+				
+				this.Form.Events.addGlobalEventListener('mouseup', [
+					{
+						selector: '.graph-node .card-header-title', // Mouse up can be on any .graph-node
+						callback: (e) => {
+							if (e.button === 0 && this.selectedNodesToConnect.Start) { // Left mouse button
+								console.log('Mouse up on .graph-node');
+				
+								// Re-enable text selection
+								const graphSurface = e.target.closest('.graph_surfaces');
+								if (graphSurface) {
+									graphSurface.style.userSelect = '';
+								}
+				
+								// Set the ending node
+								this.selectedNodesToConnect.End = e.target.closest('.graph-node');
+								console.log('this.selectedNodesToConnect.End :>> ', this.selectedNodesToConnect.End);
+				
+								if (this.selectedNodesToConnect.Start !== this.selectedNodesToConnect.End) {
+									console.log('A PAIR OF NODES SELECTED');
+
+									// NOTE - Create new Graph edge
+									let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));;
+									newEdge.OutputPin.nodeID = this.selectedNodesToConnect.Start.id;
+									newEdge.InputPin.nodeID = this.selectedNodesToConnect.End.id;
+									console.log('newEdge :>> ', newEdge);
+
+									let edge = this.Graph.Events.createGutterDotsAndConnect(
+										this.selectedNodesToConnect.Start,
+										this.selectedNodesToConnect.End,
+										newEdge
+									);
+
+									let qstr = `select id from SystemDB where id.ID = '${edge.OutputPin.nodeID}'`;
+									// console.log(qstr);
+									ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+										let outid = result[0][0].id.id;
+										qstr = `select id from SystemDB where id.ID = '${edge.InputPin.nodeID}'`;
+										ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+											let inid = result[0][0].id.id;
+											qstr = `relate SystemDB:${JSON.stringify(outid)}-> next_process -> SystemDB:${JSON.stringify(inid)} content ${JSON.stringify(edge)}`;	
+											console.log(qstr);
+											ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
+												const newEdge = result[0][0];
+												this.Graph.Events.connectNodes(newEdge, '.graph_connection_surface', '#graph_scroll_content');
+											}).catch(err => console.error('Edge creation FAIL, ', err));
+										}).catch(err => console.error('Input nodePin not found', err));	
+									}).catch(err => console.error('Output nodePin not found', err));	
+					
+								}
+				
+								// Reset the selected nodes
+								this.selectedNodesToConnect.Start = null;
+								this.selectedNodesToConnect.End = null;
+							}
+						}
+					}
+				]);
+				
+				this.Graph.Events.enableDragSelect('.graph_node_surface');
+
+				//NOTE - end of InitializeFormControls
 			},
 			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
 				// console.log('generateFormToParadigmJSON', form_container);
