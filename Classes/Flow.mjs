@@ -215,6 +215,8 @@ export class Flow {
 			
 				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
 				let fx, fy = 0;
+				let nodeID = "";
+				let dbedges = [];
 				this.Form.Events.addGlobalEventListener("mousedown", [{ //NOTE - makeNodeDraggable mousedown
 					selector: draggableSelector,
 					callback: (e) => {
@@ -223,6 +225,14 @@ export class Flow {
 
 						isDragging = true;
 						draggedElement = e.target.closest(draggableSelector);
+						nodeID = draggedElement.id;
+
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from next_process where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`).then((edges) => {
+							dbedges = edges[0];
+							if (edges) if (Array.isArray(edges)) edges[0].forEach((edge, edgeIndex) => {
+								this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+							});
+						});
 			
 						const parentScrollLeft = parent.scrollLeft;
 						const parentScrollTop = parent.scrollTop;
@@ -250,9 +260,7 @@ export class Flow {
 			
 					let x = e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2) ;
 					let y = e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2);
-					// console.log('x :>> ', e.clientX, offsetX, parentRect.left, parentScrollLeft, app_root_container.left);
-					// console.log('coord :>> ', x, y);
-
+					
 					x = snapToGrid(x, 10);
 					y = snapToGrid(y, 10);
 			
@@ -260,6 +268,10 @@ export class Flow {
 					draggedElement.style.top = `${y}px`;
 					fx = x;
 					fy = y;
+
+					dbedges.forEach((edge, edgeIndex) => {
+						this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+					});
 				});
 			
 				document.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
@@ -291,6 +303,9 @@ export class Flow {
 						}).catch(error => {
 							console.error('Coordinate update failed', error);
 						});
+						dbedges.forEach((edge, edgeIndex) => {
+							this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+						});
 					}
 				});
 			},
@@ -312,7 +327,6 @@ export class Flow {
 				console.log('Start Render Edges');
 
 				if (edges) if (Array.isArray(edges)) edges.forEach((edge, edgeIndex) => {
-					console.log('edge :>> ', edge);
 					this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
 				});
 
@@ -396,8 +410,8 @@ export class Flow {
 					);
 				}
 				
-				const node1selector = edge.OutputPin.pinID;
-				const node2selector = edge.InputPin.pinID;
+				const node1selector = '#'+edge.OutputPin.pinID;
+				const node2selector = '#'+edge.InputPin.pinID;
 
 				console.log('nodeSelectors :>> ', node1selector, node2selector);
 
@@ -556,18 +570,18 @@ export class Flow {
 
 				if (edge.OutputPin.pinID == "") {
 					gutterDot1.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
-					edge.OutputPin.pinID = '#' + gutterDot1.id;
+					edge.OutputPin.pinID = gutterDot1.id;
 				} else {
-					gutterDot1.id = edge.OutputPin.pinID.replace('#', '');
+					gutterDot1.id = edge.OutputPin.pinID;
 				}
 				
 				const gutterDot2 = gutterDot1.cloneNode(true);
 
 				if (edge.InputPin.pinID == "") {
 					gutterDot2.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
-					edge.InputPin.pinID = '#' + gutterDot2.id;
+					edge.InputPin.pinID = gutterDot2.id;
 				} else {
-					gutterDot2.id = edge.InputPin.pinID.replace('#', '');;
+					gutterDot2.id = edge.InputPin.pinID;
 				}
 
 				const rect1 = node1.getBoundingClientRect();
@@ -600,7 +614,7 @@ export class Flow {
 						node2.querySelector('.left-gutter').appendChild(gutterDot2);
 					}
 				}
-				return edge;				
+				return edge;
 			},
 			enableDragSelect: (selector) => {
 				const container = document.querySelector(selector);
@@ -2091,14 +2105,14 @@ export class Flow {
 										newEdge
 									);
 
-									let qstr = `select id from SystemDB where id.ID = '${edge.OutputPin.nodeID}'`;
+									let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
 									// console.log(qstr);
 									ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
 										let outid = result[0][0].id.id;
-										qstr = `select id from SystemDB where id.ID = '${edge.InputPin.nodeID}'`;
+										qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = '${edge.InputPin.nodeID}'`;
 										ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
 											let inid = result[0][0].id.id;
-											qstr = `relate SystemDB:${JSON.stringify(outid)}-> next_process -> SystemDB:${JSON.stringify(inid)} content ${JSON.stringify(edge)}`;	
+											qstr = `relate ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(outid)}-> next_process -> ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(inid)} content ${JSON.stringify(edge)}`;	
 											console.log(qstr);
 											ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
 												const newEdge = result[0][0];
