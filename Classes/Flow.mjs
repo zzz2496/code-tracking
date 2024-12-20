@@ -323,7 +323,6 @@ export class Flow {
 				this.Graph.Events.makeNodeDraggable(".graph-node", "#graph_scroll_content");
 
 				console.log('Done Render Nodes');
-				// ------------------------------------------------
 				console.log('Start Render Edges');
 
 				if (edges) if (Array.isArray(edges)) edges.forEach((edge, edgeIndex) => {
@@ -1864,6 +1863,7 @@ export class Flow {
 					console.log('Refresh render button clicked!');
 					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(nodes => {
 						console.log('nodes :>> ', nodes);
+
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from next_process;`).then(edges => {
 							console.log('edges :>> ', edges);
 							this.Graph.Events.renderNodes(nodes[0], edges[0], () => {
@@ -1994,45 +1994,76 @@ export class Flow {
 					// console.log('this.ScrollPosition.app_root_container :>> ', this.ScrollPosition.app_root_container);
 				});
 				document.querySelector('#graph_load_data_button').addEventListener('click', (e) => {
-					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari SERVER ke CLIENT. Apakah anda yakin?'))
-					ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(result => {
-						ParadigmREVOLUTION.Application.GraphNodes = result[0];
-						let qstr = "";
-						ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
-							node.id = node.id.id;
-							qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(node)};`;
+					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari SERVER ke CLIENT. Apakah anda yakin?')) { 
+						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(result => {
+							ParadigmREVOLUTION.Application.GraphNodes = result[0];
+							let qstr = "";
+							ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
+								node.id = node.id.id;
+								qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(node)};`;
+							});
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+		
+							console.log('Success fetching data from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
+	
+						}).catch(error => {
+							console.error('Error fetching data from TestServer', error);
 						});
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from next_process;`).then(result => {
+							console.log('Success fetching edges from TestServer >>>>>>>>', result[0]);
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from next_process;`).then(() => {
+								let qstr = "";
+								result[0].forEach(edge => {
+									if (edge.id.id) edge.id = edge.id.id;
+									qstr += `create next_process content ${JSON.stringify(edge)};`;
+								});
+								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+								console.log('Success fetching edges from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
 
-						// Refresh render
-						document.querySelector('#document_refreshrender_button').click();
+								// Refresh render
+								document.querySelector('#document_refreshrender_button').click();
 
-						console.log('Success fetching data from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
-
-					}).catch(error => {
-						console.error('Error fetching data from TestServer', error);
-					});
+							}).catch(error => {
+								console.error('Error deleting edges from TestServer', error);
+							});
+						}).catch(error => {
+							console.error('Error fetching edges from LocalDB', error);
+						});
+					}
 				});
 				document.querySelector('#graph_save_data_button').addEventListener('click', (e) => {
-					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke SERVER. Apakah anda yakin?'))
-					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(result => {
-						ParadigmREVOLUTION.Application.GraphNodes = result[0];
-						let qstr = "";
-						ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
-							node.id = node.id.id;
-							qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(node)};`;
+					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke SERVER. Apakah anda yakin?')) { 
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(result => {
+							ParadigmREVOLUTION.Application.GraphNodes = result[0];
+							let qstr = "";
+							ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
+								node.id = node.id.id;
+								qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(node)};`;
+							});
+							ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
+							console.log('Success fetching nodes from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
+						}).catch(error => {
+							console.error('Error fetching nodes from LocalDB', error);
 						});
-						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
-						console.log('Success fetching data from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
-					}).catch(error => {
-						console.error('Error fetching data from LocalDB', error);
-					});
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from next_process;`).then(result => {
+							let qstr = "";
+							result[0].forEach(edge => {
+								if (edge.id.id) edge.id = edge.id.id;
+								qstr += `upsert next_process content ${JSON.stringify(edge)};`;
+							});
+							ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
+							console.log('Success fetching edges from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
+						}).catch(error => {
+							console.error('Error fetching edges from LocalDB', error);
+						});
+					}
 				});
 				document.querySelector('#graph_clear_data_button').addEventListener('click', (e) => {
 					if (confirm('Anda akan melakukan penghapusan GRAPH DATA di CLIENT. Apakah anda yakin?'))
 					if (prompt('DATA YANG DIHAPUS TIDAK BISA DIKEMBALIKAN. Apakah anda yakin? Ketik DELETE untuk melanjutkan') == 'DELETE')
 					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}`).then(result => {
 						ParadigmREVOLUTION.Application.GraphNodes = [];
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from next_process;`);
 						
 						// Refresh render
 						document.querySelector('#document_refreshrender_button').click();
