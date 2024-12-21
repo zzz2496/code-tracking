@@ -10,7 +10,7 @@ if (cr) console.log('>>> Module Loader');
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 // import { Flow } from "../Classes/Flow.mjs";
 
-let Utility, uuid, ulid, GraphSurface, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, mqtt;
+let Utility, uuid, ulid, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, mqtt;
 // let Utility, GraphSurface, Connection, WorkerThread, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
@@ -45,12 +45,6 @@ let ParadigmREVOLUTION = {
 				"Icon": "screwdriver-wrench",
 				"Label": "Utility",
 				"ShortLabel": "UTL"
-			},
-			"GraphSurface": {
-				"Status": "NOT LOADED",
-				"Icon": "rectangle-xmark",
-				"Label": "GraphSurface",
-				"ShortLabel": "GFX"
 			},
 			"Connection": {
 				"Status": "NOT LOADED",
@@ -111,7 +105,6 @@ let ParadigmREVOLUTION = {
 			"Utility": Utility,
 			"UUID": uuid,
 			"ULID": ulid,
-			"GraphSurface": GraphSurface,
 			"Connection": Connection,
 			"WorkerThread": WorkerThread,
 			"Flow": Flow,
@@ -308,25 +301,6 @@ if (typeof finder !== 'undefined') {
 })();
 (async () => {
 	const moduleHandlers = [
-		{
-			importPromise: import("../Classes/GraphSurface.mjs"),
-			onSuccess: (module) => {
-				const { GraphSurface } = module;
-				if (cr) console.log(">>> ||| GraphSurface imported successfully.");
-				ParadigmREVOLUTION.SystemCore.CoreStatus.GraphSurface.Status = "LOADED";
-				ParadigmREVOLUTION.SystemCore.Modules.GraphSurface = GraphSurface;
-				loader.value++;
-				document.querySelector('#graphsurface').classList.add('has-text-success');
-				document.querySelector('#graphsurface_status').innerHTML = "<li class='fa fa-check'></li>";
-				document.dispatchEvent(new Event('GraphSurfaceLoaded'));
-			},
-			onFailure: () => {
-				document.querySelector('#graphsurface').classList.add('has-text-danger');
-				Document.querySelector('#graphsurface_status').innerHTML = "<li class='fa fa-xmark'></li>";
-				ParadigmREVOLUTION.SystemCore.CoreStatus.GraphSurface.Status = "FAILED TO LOAD";
-				console.error("Failed to import GraphSurface.");
-			}
-		},
 		{
 			importPromise: import("../Classes/GraphConnection.mjs"),
 			onSuccess: (module) => {

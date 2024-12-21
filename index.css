@@ -629,41 +629,61 @@
 	height: 100%;
 	top: 0;
 	left: 0;
-	z-index: 1; /* Set lower z-index to render below the connection surface */
+	z-index: 1;
   }
   
-  .graph_connection_surface {
+.graph_connection_surface {
 	position: absolute; /* Stacks in the same coordinate space as graph_node_surface */
 	width: 100%;
 	height: 100%;
 	top: 0;
 	left: 0;
-  }
+	pointer-events: none; /* Make the entire SVG transparent to pointer events */
+	z-index: 2;
+
+}
+/* .graph_connection_surface path {
+	filter: drop-shadow(0 0 20px silver);
+	pointer-events: auto;
+} */
+.graph_connection_surface path {
+	pointer-events: stroke;      /* Ensure pointer events are detected on the stroke */
+	filter: drop-shadow(0 0 5px #007bff); /* Add the glow effect */
+	transition: stroke-width 0.3s; /* Smoothly change the stroke width */
+}
   
-  .graph_surfaces {
+.graph_connection_surface path:hover {
+	stroke-width: 12px;          /* Set the clickable area width */
+}
+.graph_connection_surface path.focused {
+	stroke: var(--bulma-primary);
+	stroke-width: 12px;          /* Set the clickable area width */
+}
+  
+.graph_surfaces {
 	position: relative; /* Establishes stacking context for child elements */
 	width: 100%;
 	height: 100%;
-  }
+}
   
 @keyframes fadeIn {
     0% {
         opacity: 0;
-        transform: scale(1.1);
+        /* transform: scale(1.1); */
     }
     100% {
         opacity: 1;
-        transform: scale(1);
+        /* transform: scale(1); */
     }
 }
 @keyframes fadeOut {
     0% {
         opacity: 1;
-        transform: scale(1);
+        /* transform: scale(1); */
     }
     100% {
         opacity: 0;
-        transform: scale(0.8);
+        /* transform: scale(0.8); */
     }
 }
 .fade-in {

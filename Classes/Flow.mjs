@@ -289,7 +289,8 @@ export class Flow {
 						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = '${id}';`;
 						console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
-							node = node[0][0];							
+							if (node[0].length == 0) return;
+							node = node[0][0];
 							node.Presentation.Perspectives.GraphNode.Position = coord;
 							// console.log('node.id after update coord :>>', node.id);
 
@@ -313,8 +314,7 @@ export class Flow {
 				console.log('Start Render Nodes');
 				let temp;
 				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
-				document.querySelector('#app_graph_content>.graph_connection_surface').innerHTML = "";
-
+				
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
 					temp = this.Graph.Elements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID, node.id.id.Node.Type, node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
 					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
@@ -325,6 +325,18 @@ export class Flow {
 				console.log('Done Render Nodes');
 				console.log('Start Render Edges');
 
+				// document.querySelector('#app_graph_content>.graph_connection_surface').innerHTML = "";
+				const container = document.querySelector('#app_graph_content > .graph_connection_surface');
+				if (container) {
+					Array.from(container.children).forEach(child => {
+						if (child.tagName.toLowerCase() !== 'defs') {
+						container.removeChild(child);
+						}
+					});
+				}
+				if (edges) if (Array.isArray(edges)) edges.forEach((edge, edgeIndex) => {
+					this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+				});
 				if (edges) if (Array.isArray(edges)) edges.forEach((edge, edgeIndex) => {
 					this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
 				});
@@ -396,12 +408,12 @@ export class Flow {
 
 				// Get the SVG container
 				const svgContainer = document.querySelector(svgcontainerselector);
-				const existingPath = svgContainer.querySelector(`path[id="${edge.id}"]`);
+				const existingPath = svgContainer.querySelector(`path[id="${edge.id.id.ID}"]`);
 				console.log('existingPath :>> ', existingPath);
 
 				console.log('edge not empty! NICE!', edge);
 
-				if (!existingPath) { 
+				if (!existingPath) {
 					this.Graph.Events.createGutterDotsAndConnect(
 						document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
 						document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
@@ -445,7 +457,6 @@ export class Flow {
 
 				console.log(parentRect, parentLeft, parentTop, parentScrollLeft, parentScrollTop);
 
-			
 				// Get bounding rectangles of the nodes
 				const rect1 = node1.getBoundingClientRect();
 				const rect2 = node2.getBoundingClientRect();
@@ -473,10 +484,13 @@ export class Flow {
 					// Create an SVG path
 					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
-					path.setAttribute("id", edge.id);
+					console.log('edge.id.id.ID mau set attribute', edge.id.id.ID);
+					path.setAttribute("id", edge.id.id.ID);
+					path.setAttribute("class", "graph-edge");
 					path.setAttribute("d", d);
 					path.setAttribute("stroke", "#FFF");
-					path.setAttribute("stroke-width", "2");
+					path.setAttribute("stroke-width", "4px");
+					path.setAttribute("stroke-linecap", "round");
 					path.setAttribute("fill", "none");
 					path.setAttribute("marker-end", "url(#arrowhead)");
 				
@@ -651,6 +665,8 @@ export class Flow {
 			
 				// Function to handle mouse down event
 				function onMouseDown(e) {
+					console.log('enableDragSelect mousedown');
+					console.log('e.target :>> ', e.target);
 					if (e.button !== 0) return;
 					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
 						isDragging = true;
@@ -716,7 +732,7 @@ export class Flow {
 						ParadigmREVOLUTION.Application.Cursor.length = 0;
 			
 						for (const element of selectedElements) {
-							ParadigmREVOLUTION.Application.Cursor.push(element.id);
+							ParadigmREVOLUTION.Application.Cursor.push({table:ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name, id:element.id});
 						}
 			
 						console.log("ParadigmREVOLUTION.Application.Cursor", ParadigmREVOLUTION.Application.Cursor);
@@ -729,7 +745,6 @@ export class Flow {
 				container.addEventListener('mouseup', onMouseUp);
 				container.addEventListener('mouseleave', onMouseUp); // Ensure cleanup if mouse leaves the container
 			}
-			
 		}
 	};
 	Form = {
@@ -1511,6 +1526,15 @@ export class Flow {
 						// }
 						// selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
 					}
+				}, {}, {
+					selector: '.graph-edge',
+					callback: (e) => {
+						console.log('graph-edge CLICK');
+						console.log('e target', e.target);
+						const edge = e.target.id;
+						ParadigmREVOLUTION.Application.Cursor.push({table:"next_process", id:edge});
+						e.target.classList.add('focused');
+					}
 				}, {
 					selector: '.form-input-types',
 					callback: (e) => {
@@ -1788,15 +1812,17 @@ export class Flow {
 						if (ParadigmREVOLUTION.Application.Cursor.length == 0) return;
 						console.log('ParadigmREVOLUTION.Application.Cursor :>> ', ParadigmREVOLUTION.Application.Cursor);
 						ParadigmREVOLUTION.Application.Cursor.forEach(znode => {
-							if (!confirm('Apakah anda ingin menghapus dokumen dengan ID ' + znode + '?')) return;
-							let id = znode;
-							let qstr = `SELECT id FROM ONLY ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:{ID:"${id}"}.. limit 1 ;`;
+							if (!confirm(`Apakah anda ingin menghapus dokumen ${znode.table}:${znode.id}?`)) return;
+							let table = znode.table;
+							let id = znode.id;
+							console.log('table, id >>>>>>', table, id);
+							let qstr = `SELECT id FROM ONLY ${table} where id:{ID:"${id}"}.. limit 1 ;`;
 							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
 								console.log('result :>> ', result[0]);
 								if (result[0].id.id) result[0].id = result[0].id.id;
 								console.log('result :>> ', result[0]);
-								qstr = `DELETE FROM ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = "${result[0].id.ID}";`;
-								console.log('qstr :>> ', qstr);
+								qstr = `DELETE FROM ${table} where id.ID = "${id}";`;
+								console.log('DELETE qstr :>> ', qstr);
 								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result =>{
 									console.log(`Node ID ${id} removal SUCCESS!`);
 									znode = null;
@@ -2126,6 +2152,9 @@ export class Flow {
 
 									// NOTE - Create new Graph edge
 									let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));;
+									newEdge.id = {
+										ID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+									}
 									newEdge.OutputPin.nodeID = this.selectedNodesToConnect.Start.id;
 									newEdge.InputPin.nodeID = this.selectedNodesToConnect.End.id;
 									console.log('newEdge :>> ', newEdge);
@@ -2143,7 +2172,8 @@ export class Flow {
 										qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = '${edge.InputPin.nodeID}'`;
 										ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
 											let inid = result[0][0].id.id;
-											qstr = `relate ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(outid)}-> next_process -> ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(inid)} content ${JSON.stringify(edge)}`;	
+											console.log('edge sebelum insert:>> ', edge);
+											qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(outid)}\n-> next_process -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
 											console.log(qstr);
 											ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
 												const newEdge = result[0][0];

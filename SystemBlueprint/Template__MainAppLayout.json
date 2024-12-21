@@ -149,7 +149,7 @@
 											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-selectable-parent is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_graph_content", "content": [
 												{"tag":"div", "class":"graph_node_surface ", "innerHTML":"<span>App Graph Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
 												{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
-													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
+													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"12\" markerHeight=\"12\" orient=\"auto-start-reverse\" markerUnits=\"userSpaceOnUse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
 												]}
 											] }
 										]
@@ -163,7 +163,7 @@
 											{ "comment": "App Programming Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_programming_content", "content": [
 												{"tag":"div", "class":"graph_node_surface  ", "innerHTML":"<span>App Programming Content</span>"},
 												{"tag":"svg", "class":"graph_connection_surface", "content":[
-													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
+													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"12\" markerHeight=\"12\" orient=\"auto-start-reverse\" markerUnits=\"userSpaceOnUse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
 												]}
 											] }
 										]
