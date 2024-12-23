@@ -8,7 +8,7 @@ const OperatorTemplate = {
 
 export class Flow {
 	constructor(container = null, utility = null, funcObject = null, chain = [], storage = null) {
-		this.cursor = null; // Track the current process
+		this.flow = this
 		this.chain = chain;
 		this.run_mode = ["run", "stop", "pause", "step", "debug"];
 		this.run_mode_selected = "run"; // Default to "run"
@@ -17,9 +17,12 @@ export class Flow {
 		this.FormContainer = container;
 		this.SnapScroll = null;
 		this.Utility = utility;
+		this.DragSelect = false;
 		this.selectedNodesToConnect = {
 			Start: null,
-			End: null
+			End: null,
+			StartParam: {id:"", class:""},
+			EndParam: {id:"", class:""}
 		};
 		this.Areas = {
 			app_data_preparation_area: {
@@ -227,7 +230,7 @@ export class Flow {
 						draggedElement = e.target.closest(draggableSelector);
 						nodeID = draggedElement.id;
 
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from next_process where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`).then((edges) => {
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`).then((edges) => {
 							dbedges = edges[0];
 							if (edges) if (Array.isArray(edges)) edges[0].forEach((edge, edgeIndex) => {
 								this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
@@ -286,7 +289,7 @@ export class Flow {
 							x: fx,
 							y: fy
 						};
-						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = '${id}';`;
+						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
 						console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
 							if (node[0].length == 0) return;
@@ -297,7 +300,7 @@ export class Flow {
 							if (node.id.id) node.id = node.id.id;
 							// console.log('node after update coord :>> ', node);
 
-							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
 							// console.log('qstr :>> ', qstr);
 							
 							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
@@ -401,17 +404,124 @@ export class Flow {
 					if (isMiddleClicking) e.preventDefault();
 				});
 			},
+			// Function to show a modal, handle user selection, and clean up afterwards
+			showDropdownModal: (modal_title, label, options, selectedNodes, FlowGraph, callback) => {
+				// Create modal HTML as a string with animation classes
+				const modalHTML = `
+					<div id="connectionModal" class="modal is-active fade-in">
+						<div class="modal-background"></div>
+						<div class="modal-card">
+							<header class="modal-card-head">
+								<p class="modal-card-title">${modal_title}</p>
+								<button class="delete" aria-label="close" id="cancelButton"></button>
+							</header>
+							<section class="modal-card-body">
+								<div class="field">
+									<label class="label">${label}</label>
+									<div class="control">
+										<div class="select is-fullwidth">
+											<select id="connectionTypeDropdown">
+												${options.map(option => `<option value="${option.Type}" data-color="${option.Color}">${option.Type}</option>`).join('')}
+											</select>
+										</div>
+									</div>
+								</div>
+							</section>
+							<footer class="modal-card-foot" style="justify-content: center; gap: 20px;">
+								<button class="button" id="cancelButtonFooter" style="margin-right: auto;">Cancel</button>
+								<button class="button is-success" id="confirmButton" style="margin-left: auto;">Confirm</button>
+							</footer>
+						</div>
+					</div>
+				`;
+			
+				// Insert modal HTML into the document body
+				const modalContainer = document.createElement('div');
+				modalContainer.innerHTML = modalHTML;
+				document.body.appendChild(modalContainer);
+			
+				// Get references to modal elements
+				const modal = modalContainer.querySelector('#connectionModal');
+				const dropdown = modalContainer.querySelector('#connectionTypeDropdown');
+				const confirmButton = modalContainer.querySelector('#confirmButton');
+				const cancelButton = modalContainer.querySelector('#cancelButton');
+				const cancelButtonFooter = modalContainer.querySelector('#cancelButtonFooter');
+			
+				// Add CSS for animations
+				const style = document.createElement('style');
+				style.innerHTML = `
+					.fade-in {
+						animation: fadeIn 0.3s ease-in-out;
+					}
+
+					.fade-out {
+						animation: fadeOut 0.3s ease-in-out;
+					}
+
+					@keyframes fadeIn {
+						from {
+							opacity: 0;
+							filter: blur(5px);
+						}
+						to {
+							opacity: 1;
+							filter: blur(0);
+						}
+					}
+
+					@keyframes fadeOut {
+						from {
+							opacity: 1;
+							filter: blur(0);
+						}
+						to {
+							opacity: 0;
+							filter: blur(10px);
+						}
+					}
+				`;
+				document.head.appendChild(style);
+			
+				// Function to clean up modal
+				function cleanUp() {
+					modal.classList.remove('fade-in');
+					modal.classList.add('fade-out');
+					setTimeout(() => {
+						modalContainer.remove(); // Remove the modal
+						style.remove(); // Remove the style tag
+					}, 300); // Matches the animation duration
+				}
+			
+				// Handle confirm button click
+				confirmButton.onclick = () => {
+					const selectedOption = dropdown.options[dropdown.selectedIndex];
+					const selectedType = selectedOption.value; // Value of the selected option
+			
+					// Extract custom data attributes from the selected option
+					const customData = {
+						color: selectedOption.dataset.color
+					};
+			
+					cleanUp(); // Clean up modal
+					callback(selectedType, customData, selectedNodes, FlowGraph); // Execute the callback with the selected type
+				};
+			
+				// Handle cancel button clicks
+				cancelButton.onclick = cleanUp;
+				cancelButtonFooter.onclick = cleanUp;
+			},
+			
 			connectNodes: (edge, svgcontainerselector, parentselector) => {
 				// Get the elements by their selector
-				console.log('start connect nodes');
+				// console.log('start connect nodes');
 				if (!edge) return;
 
 				// Get the SVG container
 				const svgContainer = document.querySelector(svgcontainerselector);
 				const existingPath = svgContainer.querySelector(`path[id="${edge.id.id.ID}"]`);
-				console.log('existingPath :>> ', existingPath);
+				// console.log('existingPath :>> ', existingPath);
 
-				console.log('edge not empty! NICE!', edge);
+				// console.log('edge not empty! NICE!', edge);
 
 				if (!existingPath) {
 					this.Graph.Events.createGutterDotsAndConnect(
@@ -424,7 +534,7 @@ export class Flow {
 				const node1selector = '#'+edge.OutputPin.pinID;
 				const node2selector = '#'+edge.InputPin.pinID;
 
-				console.log('nodeSelectors :>> ', node1selector, node2selector);
+				// console.log('nodeSelectors :>> ', node1selector, node2selector);
 
 				const node1 = document.querySelector(
 					node1selector.startsWith("#")
@@ -455,123 +565,116 @@ export class Flow {
 				const parentLeft = parentRect.left;
 				const parentTop = parentRect.top;
 
-				console.log(parentRect, parentLeft, parentTop, parentScrollLeft, parentScrollTop);
+				// console.log(parentRect, parentLeft, parentTop, parentScrollLeft, parentScrollTop);
 
 				// Get bounding rectangles of the nodes
 				const rect1 = node1.getBoundingClientRect();
 				const rect2 = node2.getBoundingClientRect();
-			
-				let arrowwidth = 10;
-				if (rect1.left > rect2.left) arrowwidth = -arrowwidth;
+							
 				// Calculate the center of each node
 				const x1 = rect1.left - parentLeft + parentScrollLeft + (rect1.width / 2);
-				const y1 = rect1.top - parentTop + parentScrollTop + (rect1.height / 2);
-				const x2 = rect2.left - arrowwidth - parentLeft + parentScrollLeft + (rect2.width / 2);
-				const y2 = rect2.top - parentTop + parentScrollTop + (rect2.height / 2);
+				const y1 = rect1.top  - parentTop  + parentScrollTop  + (rect1.height / 2);
+				const x2 = rect2.left - parentLeft + parentScrollLeft + (rect2.width / 2);
+				const y2 = rect2.top  - parentTop  + parentScrollTop  + (rect2.height / 2);
 						
 				if (!svgContainer) {
 					console.error("SVG container not found.");
 					return;
 				}
 			
+				// Calculate the angle between node1 and node2
+				const dx = x2 - x1;
+				const dy = y2 - y1;
+				let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+				// Normalize the angle to 0 - 360 degrees
+				if (angle < 0) {
+					angle += 360;
+				}
+				// console.log("angle >>>>>>>>>", angle);
+
 				// Calculate control points for the curve
-				const controlX1 = x1 + (x2 - x1) / 1.2;
-				const controlY1 = y1;
-				const controlX2 = x2 - (x2 - x1) / 1.2;
-				const controlY2 = y2;
+				let controlX1;
+				let controlY1;
+				let controlX2;
+				let controlY2;
+
+				// Determine gutter usage based on angle
+				if ((angle >= 330 && angle <= 360) || (angle >= 0 && angle < 30)) {	
+					// console.log('left');
+					controlX1 = x1 + (x2 - x1) / 1.5;
+					controlY1 = y1;
+					controlX2 = x2 - (x2 - x1) / 1.5;
+					controlY2 = y2;
+				} else if (angle >= 30 && angle < 60) {
+					// console.log('left top');
+					controlX1 = x1 + ((x2 - x1) / 100);
+					controlY1 = y1 + ((y2 - y1) / 1.3);
+					controlX2 = x2 - ((x2 - x1) / 1.3);
+					controlY2 = y2 - ((y2 - y1) / 100);
+				} else if (angle >= 60 && angle < 120) {
+					// console.log('top');
+					controlX1 = x1;
+					controlY1 = y1 + (y2 - y1) / 1.5;
+					controlX2 = x2;
+					controlY2 = y2 - (y2 - y1) / 1.5;
+				} else if (angle >= 120 && angle < 150) {
+					// console.log('right top');
+					controlX1 = x1 + ((x2 - x1) / 100);
+					controlY1 = y1 + ((y2 - y1) / 1.3);
+					controlX2 = x2 - ((x2 - x1) / 1.3);
+					controlY2 = y2 - ((y2 - y1) / 100);
+				} else if (angle >= 150 && angle < 210) {
+					// console.log('right');
+					controlX1 = x1 + (x2 - x1) / 1.5;
+					controlY1 = y1;
+					controlX2 = x2 - (x2 - x1) / 1.5;
+					controlY2 = y2;
+				} else if (angle >= 210 && angle < 240) {
+					// console.log('right bottom');
+					controlX1 = x1 + ((x2 - x1) / 100);
+					controlY1 = y1 + ((y2 - y1) / 1.3);
+					controlX2 = x2 - ((x2 - x1) / 1.3);
+					controlY2 = y2 - ((y2 - y1) / 100);
+				} else if (angle >= 240 && angle < 300) {
+					// console.log('bottom');
+					controlX1 = x1;
+					controlY1 = y1 + (y2 - y1) / 1.5;
+					controlX2 = x2;
+					controlY2 = y2 - (y2 - y1) / 1.5;
+				} else if (angle >= 300 && angle < 330) {
+					// console.log('left bottom');
+					controlX1 = x1 + ((x2 - x1) / 100);
+					controlY1 = y1 + ((y2 - y1) / 1.3);
+					controlX2 = x2 - ((x2 - x1) / 1.3);
+					controlY2 = y2 - ((y2 - y1) / 100);
+				}
+
 			
 				if (!existingPath) {
 					// Create an SVG path
 					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
-					console.log('edge.id.id.ID mau set attribute', edge.id.id.ID);
+					// console.log('path.d', d);
+					// console.log('edge.id.id.ID mau set attribute', edge.id.id.ID);
 					path.setAttribute("id", edge.id.id.ID);
 					path.setAttribute("class", "graph-edge");
 					path.setAttribute("d", d);
-					path.setAttribute("stroke", "#FFF");
-					path.setAttribute("stroke-width", "4px");
+					path.setAttribute("stroke", edge.Path.Color);
+					path.style.setProperty("pointer-events", "stroke");
+					path.style.setProperty("filter", `drop-shadow(0 0 8px ${edge.Path.Color}`); /* Add the glow effect */
+					path.setAttribute("stroke-width", edge.Path.PathThickness+"px");
 					path.setAttribute("stroke-linecap", "round");
 					path.setAttribute("fill", "none");
 					path.setAttribute("marker-end", "url(#arrowhead)");
 				
 					// Append the path to the SVG container
-					svgContainer.appendChild(path);				
+					svgContainer.appendChild(path);
 				} else {
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
+					// console.log('path.d', d);
 					existingPath.setAttribute("d", d);
 				}
-			},
-			connectNodesV1: (node1selector, node2selector, svgcontainerselector, parentselector) => {
-				// Get the elements by their selector
-				const node1 = document.querySelector(
-					node1selector.startsWith("#")
-					  ? `div[id="${node1selector.slice(1)}"]`
-					  : node1selector.startsWith(".")
-					  ? `div[class="${node1selector.slice(1)}"]`
-					  : `div${node1selector}`
-				  );
-				  
-				  const node2 = document.querySelector(
-					node2selector.startsWith("#")
-					  ? `div[id="${node2selector.slice(1)}"]`
-					  : node2selector.startsWith(".")
-					  ? `div[class="${node2selector.slice(1)}"]`
-					  : `div${node2selector}`
-				  );
-			
-				if (!node1 || !node2) {
-					console.error("One or both nodes not found.");
-					return;
-				}
-
-				const parent = document.querySelector(parentselector); // NOTE - NOW
-				const parentRect = parent.getBoundingClientRect();
-
-				const parentScrollLeft = parent.scrollLeft;
-				const parentScrollTop = parent.scrollTop;
-				const parentLeft = parentRect.left;
-				const parentTop = parentRect.top;
-
-				console.log(parentRect, parentLeft, parentTop, parentScrollLeft, parentScrollTop);
-
-			
-				// Get bounding rectangles of the nodes
-				const rect1 = node1.getBoundingClientRect();
-				const rect2 = node2.getBoundingClientRect();
-			
-				let arrowwidth = 10;
-				if (rect1.left > rect2.left) arrowwidth = -arrowwidth;
-				// Calculate the center of each node
-				const x1 = rect1.left - parentLeft + parentScrollLeft + (rect1.width / 2);
-				const y1 = rect1.top + parentTop + parentScrollTop + (rect1.height / 2);
-				const x2 = rect2.left - arrowwidth - parentLeft + parentScrollLeft + (rect2.width / 2);
-				const y2 = rect2.top + parentTop + parentScrollTop + (rect2.height / 2);
-			
-				// Get the SVG container
-				const svgContainer = document.querySelector(svgcontainerselector);
-			
-				if (!svgContainer) {
-					console.error("SVG container not found.");
-					return;
-				}
-			
-				// Calculate control points for the curve
-				const controlX1 = x1 + (x2 - x1) / 1.2;
-				const controlY1 = y1;
-				const controlX2 = x2 - (x2 - x1) / 1.2;
-				const controlY2 = y2;
-			
-				// Create an SVG path
-				const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-				const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
-				path.setAttribute("d", d);
-				path.setAttribute("stroke", "#FFF");
-				path.setAttribute("stroke-width", "2");
-				path.setAttribute("fill", "none");
-				path.setAttribute("marker-end", "url(#arrowhead)");
-			
-				// Append the path to the SVG container
-				svgContainer.appendChild(path);
 			},
 			createGutterDotsAndConnect: (node1, node2, edge) => {
 				const gutterDot1 = document.createElement('div');
@@ -580,57 +683,108 @@ export class Flow {
 				gutterDot1.style.height = '10px';
 				gutterDot1.style.backgroundColor = 'silver';
 				gutterDot1.style.borderRadius = '50%';
-
-				if (edge.OutputPin.pinID == "") {
+			
+				if (edge.OutputPin.pinID === "") {
 					gutterDot1.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
 					edge.OutputPin.pinID = gutterDot1.id;
 				} else {
 					gutterDot1.id = edge.OutputPin.pinID;
 				}
-				
+			
 				const gutterDot2 = gutterDot1.cloneNode(true);
-
-				if (edge.InputPin.pinID == "") {
+				gutterDot2.style.backgroundColor = 'transparent';
+			
+				if (edge.InputPin.pinID === "") {
 					gutterDot2.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
 					edge.InputPin.pinID = gutterDot2.id;
 				} else {
 					gutterDot2.id = edge.InputPin.pinID;
 				}
-
+			
 				const rect1 = node1.getBoundingClientRect();
 				const rect2 = node2.getBoundingClientRect();
+							
+				// Calculate the angle between node1 and node2
+				const dx = rect2.left + rect2.width / 2 - (rect1.left + rect1.width / 2);
+				const dy = rect2.top + rect2.height / 2 - (rect1.top + rect1.height / 2);
+				let angle = Math.atan2(dy, dx) * (180 / Math.PI);
 			
-				if ((rect1.left - (rect1.width/2))< (rect2.left - (rect2.width/2))) {
-					// node1 is to the left of node2
+				// Normalize the angle to 0 - 360 degrees
+				if (angle < 0) {
+					angle += 360;
+				}
+			
+				// Determine gutter usage based on angle
+				if ((angle >= 330 && angle <= 360) || (angle >= 0 && angle < 30)) {	
+					// console.log('left');
 					if (node1.querySelector('.right-gutter')) {
 						node1.querySelector('.right-gutter').appendChild(gutterDot1);
-					} else if (node1.querySelector('.left-gutter')) {
-						node1.querySelector('.left-gutter').appendChild(gutterDot1);
 					}
-			
 					if (node2.querySelector('.left-gutter')) {
 						node2.querySelector('.left-gutter').appendChild(gutterDot2);
-					} else if (node2.querySelector('.right-gutter')) {
-						node2.querySelector('.right-gutter').appendChild(gutterDot2);
 					}
-				} else {
-					// node1 is to the right of node2
-					if (node1.querySelector('.left-gutter')) {
-						node1.querySelector('.left-gutter').appendChild(gutterDot1);
-					} else if (node1.querySelector('.right-gutter')) {
-						node1.querySelector('.right-gutter').appendChild(gutterDot1);
+				} else if (angle >= 30 && angle < 60) {
+					// console.log('left top');
+					if (node1.querySelector('.bottom-gutter')) {
+						node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
 					}
-			
+					if (node2.querySelector('.left-gutter')) {
+						node2.querySelector('.left-gutter').appendChild(gutterDot2);
+					}
+				} else if (angle >= 60 && angle < 120) {
+					// console.log('top');
+					if (node1.querySelector('.bottom-gutter')) {
+						node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+					}
+					if (node2.querySelector('.top-gutter')) {
+						node2.querySelector('.top-gutter').appendChild(gutterDot2);
+					}
+				} else if (angle >= 120 && angle < 150) {
+					// console.log('right top');
+					if (node1.querySelector('.bottom-gutter')) {
+						node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+					}
 					if (node2.querySelector('.right-gutter')) {
 						node2.querySelector('.right-gutter').appendChild(gutterDot2);
-					} else if (node2.querySelector('.left-gutter')) {
+					}
+				} else if (angle >= 150 && angle < 210) {
+					// console.log('right');
+					if (node1.querySelector('.left-gutter')) {
+						node1.querySelector('.left-gutter').appendChild(gutterDot1);
+					}
+					if (node2.querySelector('.right-gutter')) {
+						node2.querySelector('.right-gutter').appendChild(gutterDot2);
+					}
+				} else if (angle >= 210 && angle < 240) {
+					// console.log('right bottom');
+					if (node1.querySelector('.top-gutter')) {
+						node1.querySelector('.top-gutter').appendChild(gutterDot1);
+					}
+					if (node2.querySelector('.right-gutter')) {
+						node2.querySelector('.right-gutter').appendChild(gutterDot2);
+					}
+				} else if (angle >= 240 && angle < 300) {
+					// console.log('bottom');
+					if (node1.querySelector('.top-gutter')) {
+						node1.querySelector('.top-gutter').appendChild(gutterDot1);
+					}
+					if (node2.querySelector('.bottom-gutter')) {
+						node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+					}
+				} else if (angle >= 300 && angle < 330) {
+					// console.log('left bottom');
+					if (node1.querySelector('.top-gutter')) {
+						node1.querySelector('.top-gutter').appendChild(gutterDot1);
+					}
+					if (node2.querySelector('.left-gutter')) {
 						node2.querySelector('.left-gutter').appendChild(gutterDot2);
 					}
 				}
 				return edge;
 			},
-			enableDragSelect: (selector) => {
+			enableDragSelect: ((selector) => {
 				const container = document.querySelector(selector);
+				let self = this;
 				let isDragging = false;
 				let startX, startY;
 			
@@ -665,7 +819,6 @@ export class Flow {
 			
 				// Function to handle mouse down event
 				function onMouseDown(e) {
-					console.log('enableDragSelect mousedown');
 					console.log('e.target :>> ', e.target);
 					if (e.button !== 0) return;
 					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
@@ -683,6 +836,9 @@ export class Flow {
 				// Function to handle mouse move event
 				function onMouseMove(e) {
 					if (!isDragging) return;
+
+					// console.log('enableDragSelect mousedown');
+					self.DragSelect = true;
 			
 					const currentX = e.clientX;
 					const currentY = e.clientY;
@@ -699,21 +855,40 @@ export class Flow {
 			
 					// Highlight elements within the drag area
 					container.querySelectorAll('.graph-node, svg path').forEach(element => {
+						// console.log('in mousemove element :>> ', element);
 						const elementRect = element.getBoundingClientRect();
 						const isInside = 
 							elementRect.left >= dragArea.x1 + rect.left &&
 							elementRect.top >= dragArea.y1 + rect.top &&
 							elementRect.right <= dragArea.x2 + rect.left &&
 							elementRect.bottom <= dragArea.y2 + rect.top;
-			
+
 						if (isInside) {
 							if (!selectedElements.has(element)) {
-								element.querySelector('.is-selectable-box').classList.add('focused');
-								selectedElements.add(element);
+								if (element.tagName == 'path') {
+									element.classList.add('focused');
+									selectedElements.add(element);
+								} else { 
+									const elmnt = element.querySelector('.is-selectable-box');
+									if (elmnt) { 
+										element.querySelector('.is-selectable-box').classList.add('focused');
+										selectedElements.add(element);
+									}
+								}
+								
 							}
 						} else if (selectedElements.has(element)) {
-							if (element.querySelector('.is-selectable-box').classList.contains('focused')) element.querySelector('.is-selectable-box').classList.remove('focused');
-							selectedElements.delete(element);
+							if (element.tagName == 'path') {
+								element.classList.remove('focused');
+								selectedElements.delete(element);
+							} else { 
+								const elmnt = element.querySelector('.is-selectable-box');
+								if (elmnt) {
+									if (element.querySelector('.is-selectable-box').classList.contains('focused')) element.querySelector('.is-selectable-box').classList.remove('focused');
+									selectedElements.delete(element);
+								}
+							}
+
 						}
 					});
 				}
@@ -732,10 +907,19 @@ export class Flow {
 						ParadigmREVOLUTION.Application.Cursor.length = 0;
 			
 						for (const element of selectedElements) {
-							ParadigmREVOLUTION.Application.Cursor.push({table:ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name, id:element.id});
+							if (element.tagName == 'path') {
+								ParadigmREVOLUTION.Application.Cursor.push({table:'next_process', id:element.id});
+							} else { 
+								ParadigmREVOLUTION.Application.Cursor.push({table:ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id:element.id});
+							}
+							
 						}
 			
 						console.log("ParadigmREVOLUTION.Application.Cursor", ParadigmREVOLUTION.Application.Cursor);
+						setTimeout(() => {
+							// console.log('set DragSelect to false');
+							self.DragSelect = false;
+						}, 300);
 					}
 				}
 			
@@ -744,7 +928,7 @@ export class Flow {
 				container.addEventListener('mousemove', onMouseMove);
 				container.addEventListener('mouseup', onMouseUp);
 				container.addEventListener('mouseleave', onMouseUp); // Ensure cleanup if mouse leaves the container
-			}
+			}).bind(this)
 		}
 	};
 	Form = {
@@ -1480,6 +1664,8 @@ export class Flow {
 					selector: '.is-selectable',
 					callback: (e) => {
 						console.log('is-selectable CLICK');
+						
+						this.DragSelect = true;
 						// console.log('e target', e.target);
 						// console.log('e currentTarget', e.currentTarget);
 						const selectableParent = e.target.closest('.is-selectable-parent');
@@ -1510,23 +1696,46 @@ export class Flow {
 									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
 								});
 							}
-							// if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push(dataset.id);
+							if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id: dataset.id });
+							setTimeout(() => { 
+								this.DragSelect = false;
+							}, 300);
 						}
 
-						// console.log('selectable box or selectable parent exists!');
-						// selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
-						// 	item.style.removeProperty('width');
-						// 	item.classList.remove('box', 'focused', 'm-2');
-						// 	item.classList.remove('m-2');
-						// });
-						// if (selectableBox.classList.contains('field')) {
-						// 	selectableBox.style.width = '100%;';
-						// } else {
-						// 	selectableBox.style.width = 'fit-content;';
-						// }
-						// selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
+						console.log('selectable box or selectable parent exists!');
+						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
+							item.style.removeProperty('width');
+							item.classList.remove('box', 'focused', 'm-2');
+							item.classList.remove('m-2');
+						});
+						if (selectableBox.classList.contains('field')) {
+							selectableBox.style.width = '100%;';
+						} else {
+							selectableBox.style.width = 'fit-content;';
+						}
+						selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
 					}
-				}, {}, {
+				}, {
+					selector: '.is-selectable-parent',
+					callback: (e) => {
+						console.log('is-selectable-parent CLICK');
+						if (e.target.classList.contains('is-selectable')) return;
+						console.log('this.DragSelect', this.DragSelect);
+						if (this.DragSelect) return;
+						console.log('is-selectable-parent GOOOO');
+						const selectableParent = e.target.closest('.is-selectable-parent');
+						selectableParent.querySelectorAll('.focused').forEach((item) => {
+							console.log('item', item);
+							if (item.tagName == 'path') {
+								item.classList.remove('focused');
+							} else { 
+								item.style.removeProperty('width');
+								item.classList.remove('box', 'focused', 'm-2');
+								item.classList.remove('m-2');
+							}
+						})
+					}
+				}, {
 					selector: '.graph-edge',
 					callback: (e) => {
 						console.log('graph-edge CLICK');
@@ -1797,7 +2006,7 @@ export class Flow {
 							return;
 						}
 						// NOTE - SurrealDB create/insert/upsert
-						let qstr = `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(newNode)};`;
+						let qstr = `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(newNode)};`;
 						console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
 
@@ -1887,13 +2096,16 @@ export class Flow {
 				
 				document.querySelector('#document_refreshrender_button').addEventListener('click', (e) => {
 					console.log('Refresh render button clicked!');
-					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(nodes => {
-						console.log('nodes :>> ', nodes);
-
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from next_process;`).then(edges => {
-							console.log('edges :>> ', edges);
+					let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`;
+					console.log('qstr :>> ', qstr);
+					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(nodes => {
+						// console.log('nodes :>> ', nodes);
+						qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`;
+						console.log('qstr :>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(edges => {
+							// console.log('edges :>> ', edges);
 							this.Graph.Events.renderNodes(nodes[0], edges[0], () => {
-								console.log('Nodes and Edges rendered, callback called');
+								// console.log('Nodes and Edges rendered, callback called');
 							});
 						}).catch(err => {
 							console.error('Document refresh render error: Edges retreival error ', err);
@@ -2021,12 +2233,12 @@ export class Flow {
 				});
 				document.querySelector('#graph_load_data_button').addEventListener('click', (e) => {
 					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari SERVER ke CLIENT. Apakah anda yakin?')) { 
-						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(result => {
+						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`).then(result => {
 							ParadigmREVOLUTION.Application.GraphNodes = result[0];
 							let qstr = "";
 							ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
 								node.id = node.id.id;
-								qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(node)};`;
+								qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(node)};`;
 							});
 							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
 		
@@ -2035,7 +2247,7 @@ export class Flow {
 						}).catch(error => {
 							console.error('Error fetching data from TestServer', error);
 						});
-						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from next_process;`).then(result => {
+						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
 							console.log('Success fetching edges from TestServer >>>>>>>>', result[0]);
 							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from next_process;`).then(() => {
 								let qstr = "";
@@ -2059,19 +2271,19 @@ export class Flow {
 				});
 				document.querySelector('#graph_save_data_button').addEventListener('click', (e) => {
 					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke SERVER. Apakah anda yakin?')) { 
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name};`).then(result => {
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`).then(result => {
 							ParadigmREVOLUTION.Application.GraphNodes = result[0];
 							let qstr = "";
 							ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
 								node.id = node.id.id;
-								qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} content ${JSON.stringify(node)};`;
+								qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(node)};`;
 							});
 							ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
 							console.log('Success fetching nodes from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
 						}).catch(error => {
 							console.error('Error fetching nodes from LocalDB', error);
 						});
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from next_process;`).then(result => {
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
 							let qstr = "";
 							result[0].forEach(edge => {
 								if (edge.id.id) edge.id = edge.id.id;
@@ -2087,7 +2299,7 @@ export class Flow {
 				document.querySelector('#graph_clear_data_button').addEventListener('click', (e) => {
 					if (confirm('Anda akan melakukan penghapusan GRAPH DATA di CLIENT. Apakah anda yakin?'))
 					if (prompt('DATA YANG DIHAPUS TIDAK BISA DIKEMBALIKAN. Apakah anda yakin? Ketik DELETE untuk melanjutkan') == 'DELETE')
-					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}`).then(result => {
+					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}`).then(result => {
 						ParadigmREVOLUTION.Application.GraphNodes = [];
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from next_process;`);
 						
@@ -2123,7 +2335,15 @@ export class Flow {
 
 									// Set the starting node
 									this.selectedNodesToConnect.Start = graphNode;
+									this.selectedNodesToConnect.StartParam = {id: graphNode.id, class:'graph-node'};
 									console.log('this.selectedNodesToConnect.Start :>> ', this.selectedNodesToConnect.Start);
+
+									// Add breathing to card-header-title
+									document.querySelectorAll('.graph-node .card-header-title').forEach(node => {
+										if (node !== this.selectedNodesToConnect.Start) {
+											node.classList.add('breathing-text');
+										}
+									})
 								}
 							}
 						}
@@ -2132,11 +2352,29 @@ export class Flow {
 				
 				this.Form.Events.addGlobalEventListener('mouseup', [
 					{
+						selector: '.graph_node_surface', 
+						callback: (e) => { 
+							// Reset breathing to card-header-title
+							document.querySelectorAll('.graph-node .card-header-title').forEach(node => {
+								if (node !== this.selectedNodesToConnect.Start) {
+									node.classList.remove('breathing-text');
+								}
+							});
+						}
+					},
+					{
 						selector: '.graph-node .card-header-title', // Mouse up can be on any .graph-node
 						callback: (e) => {
 							if (e.button === 0 && this.selectedNodesToConnect.Start) { // Left mouse button
 								console.log('Mouse up on .graph-node');
 				
+								// Reset breathing to card-header-title
+								document.querySelectorAll('.graph-node .card-header-title').forEach(node => {
+									if (node !== this.selectedNodesToConnect.Start) {
+										node.classList.remove('breathing-text');
+									}
+								});
+	
 								// Re-enable text selection
 								const graphSurface = e.target.closest('.graph_surfaces');
 								if (graphSurface) {
@@ -2145,43 +2383,53 @@ export class Flow {
 				
 								// Set the ending node
 								this.selectedNodesToConnect.End = e.target.closest('.graph-node');
-								console.log('this.selectedNodesToConnect.End :>> ', this.selectedNodesToConnect.End);
-				
+								this.selectedNodesToConnect.EndParam = {id: e.target.closest('.graph-node').id, class:'graph-node'};
+
+								let selectedNodes = this.selectedNodesToConnect;
+
 								if (this.selectedNodesToConnect.Start !== this.selectedNodesToConnect.End) {
 									console.log('A PAIR OF NODES SELECTED');
-
 									// NOTE - Create new Graph edge
-									let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));;
-									newEdge.id = {
-										ID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
-									}
-									newEdge.OutputPin.nodeID = this.selectedNodesToConnect.Start.id;
-									newEdge.InputPin.nodeID = this.selectedNodesToConnect.End.id;
-									console.log('newEdge :>> ', newEdge);
 
-									let edge = this.Graph.Events.createGutterDotsAndConnect(
-										this.selectedNodesToConnect.Start,
-										this.selectedNodesToConnect.End,
-										newEdge
-									);
+									console.log('selectedNodes sebelum di pass:>> ', selectedNodes);
+									this.Graph.Events.showDropdownModal('Connection Type', 'Pilih tipe connection', ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray, selectedNodes, this, (selectedType, color, selectedNodes, FlowGraph) => {
+										let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));;
+										newEdge.id = {
+											ID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+										}
+										newEdge.OutputPin.nodeID = selectedNodes.StartParam.id;
+										newEdge.InputPin.nodeID = selectedNodes.EndParam.id;
+										newEdge.Path.Color = color.color;
+										newEdge.Path.Color = color.color;
+										newEdge.Path.PathThickness = 5;
 
-									let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
-									// console.log(qstr);
-									ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
-										let outid = result[0][0].id.id;
-										qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name} where id.ID = '${edge.InputPin.nodeID}'`;
+										console.log('newEdge :>> ', newEdge);
+										selectedNodes.Start = document.querySelector(`div[id="${selectedNodes.StartParam.id}"][class="${selectedNodes.StartParam.class}"]`);
+										selectedNodes.End = document.querySelector(`div[id="${selectedNodes.EndParam.id}"][class="${selectedNodes.EndParam.class}"]`);
+	
+										let edge = FlowGraph.Graph.Events.createGutterDotsAndConnect(
+											selectedNodes.Start,
+											selectedNodes.End,
+											newEdge
+										);
+	
+										let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
+										// console.log(qstr);
 										ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
-											let inid = result[0][0].id.id;
-											console.log('edge sebelum insert:>> ', edge);
-											qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(outid)}\n-> next_process -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
-											console.log(qstr);
-											ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
-												const newEdge = result[0][0];
-												this.Graph.Events.connectNodes(newEdge, '.graph_connection_surface', '#graph_scroll_content');
-											}).catch(err => console.error('Edge creation FAIL, ', err));
-										}).catch(err => console.error('Input nodePin not found', err));	
-									}).catch(err => console.error('Output nodePin not found', err));	
-					
+											let outid = result[0][0].id.id;
+											qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.InputPin.nodeID}'`;
+											ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+												let inid = result[0][0].id.id;
+												console.log('edge sebelum insert:>> ', edge);
+												qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(outid)}\n-> ${selectedType} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
+												console.log(qstr);
+												ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
+													const newEdge = result[0][0];
+													FlowGraph.Graph.Events.connectNodes(newEdge, '.graph_connection_surface', '#graph_scroll_content');
+												}).catch(err => console.error('Edge creation FAIL, ', err));
+											}).catch(err => console.error('Input nodePin not found', err));	
+										}).catch(err => console.error('Output nodePin not found', err));
+									});					
 								}
 				
 								// Reset the selected nodes
@@ -2192,7 +2440,7 @@ export class Flow {
 					}
 				]);
 				
-				this.Graph.Events.enableDragSelect('.graph_node_surface');
+				this.Graph.Events.enableDragSelect('.graph_surfaces');
 
 				//NOTE - end of InitializeFormControls
 			},

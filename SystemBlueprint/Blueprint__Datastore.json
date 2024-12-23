@@ -19,11 +19,12 @@
 						"Blueprints": {
 							"Name": "Blueprints",
 							"Description": "Contains all the defined blueprints",
-							"Contains":{
-								"Node": "Blueprints__Node.json",
-								"Edge": "Blueprints__Edge.json",
-								"Schema": "Blueprints__SchemaElements.json"
-							}
+							"Contains":[
+								{"Node": "Blueprints__Node.json"},
+								{"NodeMetadata": "Blueprints__Node__Metadata.json"},
+								{"Edge": "Blueprints__Edge.json"},
+								{"Schema": "Blueprints__SchemaElements.json"}
+							]
 						},
 						"Yggdrasil": {
 							"Name": "Yggdrasil",

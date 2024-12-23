@@ -123,6 +123,7 @@ let ParadigmREVOLUTION = {
 				"System": { "URL": "./SystemBlueprint/Blueprint__System.json" },
 				"Datastore": { "URL": "./SystemBlueprint/Blueprint__Datastore.json" },
 				"Node": { "URL": "./SystemBlueprint/Blueprint__Node.json" },
+				"NodeMetadata": { "URL": "./SystemBlueprint/Blueprint__Node__Metadata.json" },
 				"Template__Node__DataStatus": { "URL": "./SystemBlueprint/Blueprint__Template__Node__DataStatus.json" },
 				"Edge": { "URL": "./SystemBlueprint/Blueprint__Edge.json" },
 				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" },

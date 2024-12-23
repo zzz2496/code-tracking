@@ -1,0 +1,19 @@
+{
+	"RealmArray":["Universe", "System", "UserDefined", "Private", "Public"],
+	"KindArray":["Container", "Algorithm", "Datastore", "Document", "Comment", "Metadata", "Generic"],
+	"TypeArray":{
+		"Container":["GraphNode", "DatastoreNode", "DocumentNode", "CommentNode", "MetadataNode", "GenericNode"],
+		"Algorithm":["InputNode", "OutputNode", "FunctionNode", "OperationNode", "IterationNode", "DecisionNode"],
+		"Datastore":["DatabaseNode", "SchemaNode", "TableNode", "ViewNode", "EdgeNode"],
+		"Document":["DocumentNode", "FileNode", "ImageNode", "VideoNode", "AudioNode"],
+		"Comment":["CommentNode"],
+		"Metadata":["MetadataNode"],
+		"Generic":["GenericNode"]
+	},
+	"ConnectionArray":[
+		{"Type":"NextProcess", "Color":"var(--bulma-primary)"},
+		{"Type":"Version", "Color":"var(--bulma-danger)"},
+		{"Type":"Contains", "Color":"var(--bulma-warning)"},
+		{"Type":"NextAlgorithm", "Color":"var(--bulma-info)"}
+	]
+}

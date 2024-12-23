@@ -642,22 +642,16 @@
 	z-index: 2;
 
 }
-/* .graph_connection_surface path {
-	filter: drop-shadow(0 0 20px silver);
-	pointer-events: auto;
-} */
 .graph_connection_surface path {
 	pointer-events: stroke;      /* Ensure pointer events are detected on the stroke */
-	filter: drop-shadow(0 0 5px #007bff); /* Add the glow effect */
-	transition: stroke-width 0.3s; /* Smoothly change the stroke width */
+	transition: stroke-width 0.25s; /* Smoothly change the stroke width */
 }
-  
 .graph_connection_surface path:hover {
 	stroke-width: 12px;          /* Set the clickable area width */
 }
 .graph_connection_surface path.focused {
-	stroke: var(--bulma-primary);
-	stroke-width: 12px;          /* Set the clickable area width */
+	/* stroke: var(--bulma-primary); */
+	stroke-width: 18px;          /* Set the clickable area width */
 }
   
 .graph_surfaces {
@@ -695,3 +689,18 @@
 .graph-node .card-header-title{
 	user-select: none;
 }
+.breathing-text {
+	animation: breathe-color 1.5s infinite;
+  }
+
+  @keyframes breathe-color {
+	0% {
+	  color: var(--bulma-warning);
+	}
+	50% {
+	  color: var(--bulma-text);
+	}
+	100% {
+	  color: var(--bulma-warning);
+	}
+  }
