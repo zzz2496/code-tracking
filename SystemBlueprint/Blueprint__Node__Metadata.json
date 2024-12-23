@@ -1,6 +1,14 @@
 {
 	"RealmArray":["Universe", "System", "UserDefined", "Private", "Public"],
-	"KindArray":["Container", "Algorithm", "Datastore", "Document", "Comment", "Metadata", "Generic"],
+	"KindArray":[
+		{"Kind":"Container", "Icon":"<li class='fa-regular fa-folder-open'></li>"},
+		{"Kind":"Algorithm", "Icon":"<li class='fa-solid fa-chart-diagram'></li>"},
+		{"Kind":"Datastore", "Icon":"<li class='fa-solid fa-database'></li>"},
+		{"Kind":"Document", "Icon":"<li class='fa-regular fa-file-lines'></li>"},
+		{"Kind":"Comment", "Icon":"<li class='fa-regular fa-comment-dots'></li>"},
+		{"Kind":"Metadata", "Icon":"<li class='fa-solid fa-kitchen-set'></li>"},
+		{"Kind":"Generic", "Icon":"<li class='fa-solid fa-recycle'></li>"}
+	],
 	"TypeArray":{
 		"Container":["GraphNode", "DatastoreNode", "DocumentNode", "CommentNode", "MetadataNode", "GenericNode"],
 		"Algorithm":["InputNode", "OutputNode", "FunctionNode", "OperationNode", "IterationNode", "DecisionNode"],
@@ -11,9 +19,10 @@
 		"Generic":["GenericNode"]
 	},
 	"ConnectionArray":[
-		{"Type":"NextProcess", "Color":"var(--bulma-primary)"},
-		{"Type":"Version", "Color":"var(--bulma-danger)"},
+		{"Type":"Process", "Color":"var(--bulma-primary)"},
+		{"Type":"Version", "Color":"var(--bulma-text-weak)"},
 		{"Type":"Contains", "Color":"var(--bulma-warning)"},
-		{"Type":"NextAlgorithm", "Color":"var(--bulma-info)"}
+		{"Type":"Workflow", "Color":"var(--bulma-link)"},
+		{"Type":"DataConnection", "Color":"var(--bulma-danger)"}
 	]
 }

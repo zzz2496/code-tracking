@@ -103,15 +103,7 @@
 									{ "comment": "Add Node button", "tag":"div", "class":"field has-addons", "style":"", "content":[
 										{"tag":"div", "class":"control", "style":"", "content":[
 											{"tag":"div", "class":"select", "style":"", "content":[
-												{"tag":"select", "id":"graph_addnode_select", "class":"graph_addnode_select", "content":[
-													{"tag":"option", "value":"ContainerNode", "innerHTML":"Container Node", "data-nodetype":"ContainerNode"},
-													{"tag":"option", "value":"AlgorithmNode", "innerHTML":"Algorithm Node", "data-nodetype":"AlgorithmNode" },
-													{"tag":"option", "value":"DatastoreNode", "innerHTML":"Datastore Node", "data-nodetype":"DatastoreNode"},
-													{"tag":"option", "value":"DocumentNode",  "innerHTML":"Document Node",  "data-nodetype":"DocumentNode"},
-													{"tag":"option", "value":"CommentNode",   "innerHTML":"Comment Node",   "data-nodetype":"CommentNode"},
-													{"tag":"option", "value":"MetadataNode",  "innerHTML":"Metadata Node",  "data-nodetype":"MetadataNode"},
-													{"tag":"option", "value":"GenericNode",   "innerHTML":"Generic Node",   "data-nodetype":"GenericNode"}
-												]}
+												{"tag":"select", "id":"graph_addnode_select", "class":"graph_addnode_select", "content":[]}
 											]}
 										]},
 										{"tag":"div", "class":"control", "style":"", "content":[
@@ -201,15 +193,7 @@
 							{ "comment": "Add Node button", "tag":"div", "class":"field has-addons", "style":"", "content":[
 								{"tag":"div", "class":"control", "style":"", "content":[
 									{"tag":"div", "class":"select", "style":"", "content":[
-										{"tag":"select", "id":"", "class":"", "content":[
-											{"tag":"option", "value":"ContainerNode", "innerHTML":"Container Node", "data-nodetype":"ContainerNode"},
-											{"tag":"option", "value":"AlgorithmNode", "innerHTML":"Algorithm Node", "data-nodetype":"AlgorithmNode" },
-											{"tag":"option", "value":"DatastoreNode", "innerHTML":"Datastore Node", "data-nodetype":"DatastoreNode"},
-											{"tag":"option", "value":"DocumentNode",  "innerHTML":"Document Node",  "data-nodetype":"DocumentNode"},
-											{"tag":"option", "value":"CommentNode",   "innerHTML":"Comment Node",   "data-nodetype":"CommentNode"},
-											{"tag":"option", "value":"MetadataNode",  "innerHTML":"Metadata Node",  "data-nodetype":"MetadataNode"},
-											{"tag":"option", "value":"GenericNode",   "innerHTML":"Generic Node",   "data-nodetype":"GenericNode"}
-										]}
+										{"tag":"select", "id":"", "class":"", "content":[]}
 									]}
 								]},
 								{"tag":"div", "class":"control", "style":"", "content":[

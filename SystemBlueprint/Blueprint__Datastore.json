@@ -3,7 +3,7 @@
 		"Username": "damir",
 		"Password": "Zenith2001"
 	},
-	"TestServer": "http://localhost:8080",
+	"TestServer": "http://10.26.0.26:8080",
 	"ProductionServer": "http://localhost:8080",
 	"BackupServer": "http://localhost:8080",
 	"PrimaryServer": "TestServer",

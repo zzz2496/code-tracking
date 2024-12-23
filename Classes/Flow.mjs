@@ -160,7 +160,53 @@ export class Flow {
 	};
 	Graph = {
 		Elements: {
-			MakeDraggableNode: function (id, objclass, label, content, x, y, zIndex = 'auto') {
+			MakeDraggableNode: function (nodes, node, objclass) {
+				console.log('node :>> ', node);
+				let newElement = document.createElement('div');
+				newElement.id = node.id.id.ID;
+				newElement.className = objclass;
+				newElement.style.top = `${node.Presentation.Perspectives.GraphNode.Position.y}px`;
+				newElement.style.left = `${node.Presentation.Perspectives.GraphNode.Position.x}px`;
+
+				newElement.style.position = `absolute`;
+	
+				newElement.tabIndex = 0;
+				console.log('node.id.id.Node.Icon :>> ', node.id.id.Node.Icon);
+				newElement.innerHTML = `
+					<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px;">
+						<div class="top-gutter" style="display: flex; justify-content: space-evenly; width: fit-content; width:100%;">
+						</div>
+						<div style="display: flex;">
+							<div class="left-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
+							</div>
+							<div class="card is-selectable-box" style="margin: 5px; padding: 0px; width: fit-content;">
+								<div id="${node.id.id.ID}-header" class="card-header " style="cursor:pointer;">
+									<div class="card-header-icon" data-id="${node.id.id.ID}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+									<div class="card-header-title pl-0 is-selectable" data-id="${node.id.id.ID}">${node.id.id.Node.Kind}</div>
+								</div>
+								<div id="${node.id.id.ID}-content" class="card-content" style="width: 100%; height: 100%;">
+									<div class="is-flex is-flex-direction-column is-align-items-center" style="width:100%; height:100%;">
+										<div class="title is-1" style="width: fit-content">
+											${node.id.id.Node.Icon} 
+										</div>
+										<h class="m-0" style="font-size: 1.5rem; font-weight:600; text-align:center;">${node.id.id.Node.Kind} ID:</h>
+										<h class="m-0" style="font-size: 1rem; text-align:center;">${node.id.id.ID}</h>
+									</div>
+								</div>
+							</div>
+							<div class="right-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
+							</div>
+						</div>
+						<div class="bottom-gutter" style="display: flex; justify-content: space-evenly; width: 100%; width:100%;">
+						</div>
+					</div>
+				`;
+				newElement.addEventListener('animationend', function () {
+					this.classList.remove('fade-in');
+				});
+				return newElement;
+			},
+			MakeDraggableNodeV1: function (id, objclass, label, content, x, y, zIndex = 'auto') {
 				let newElement = document.createElement('div');
 				newElement.id = id;
 				newElement.className = objclass;
@@ -209,10 +255,282 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
+			makeNodeDraggableN: (draggableSelector, parentSelector = document.body) => { 
+				let isDragging = false;
+				let offsetX, offsetY, draggedElement;
+				let relatedElements = []; // To store related divs and their initial offsets
+				const parent = document.querySelector(parentSelector);
+				const parentRect = parent.getBoundingClientRect();
+
+				let parentScrollLeft = parent.scrollLeft;
+				let parentScrollTop = parent.scrollTop;
+				let parentTop = parentRect.top;
+				let parentLeft = parentRect.left;
+
+
+				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
+				let fx, fy = 0;
+				let nodeID = "";
+				let dbedges = [];
+			
+				this.Form.Events.addGlobalEventListener("mousedown", [{ 
+					selector: draggableSelector,
+					callback: (e) => {
+						if (!e.target.closest('.card-header-icon')) return;
+						isDragging = true;
+						draggedElement = e.target.closest(draggableSelector);
+						nodeID = draggedElement.id;
+			
+						// Fetch related elements based on Cursor
+						relatedElements = ParadigmREVOLUTION.Application.Cursor
+							.filter(cursor => cursor.id !== nodeID) // Exclude the currently dragged div
+							.map(cursor => {
+								const elem = document.getElementById(cursor.id);
+								if (!elem) return null;
+								const rect = elem.getBoundingClientRect();
+								return {
+									elem,
+									offsetX: rect.left - draggedElement.getBoundingClientRect().left,
+									offsetY: rect.top - draggedElement.getBoundingClientRect().top
+								};
+							})
+							.filter(item => item); // Remove nulls for non-existent elements
+			
+						const rect = draggedElement.getBoundingClientRect();
+						parentTop = parentRect.top;
+						parentLeft = parentRect.left;
+
+						console.log('parentRect :>> ', parentRect, parentTop, parentLeft);
+						offsetX = e.clientX - rect.left + parentLeft;
+						offsetY = e.clientY - rect.top + parentTop;
+			
+						console.log('onclick parent.scroll :>> ', parent.scrollLeft, parent.scrollTop);
+
+						draggedElement.style.position = "absolute";
+						draggedElement.style.zIndex = 1000; // Bring to front
+					}
+				}]);
+			
+				document.addEventListener("mousemove", (e) => { 
+					if (!isDragging || !draggedElement) return;
+
+					parentTop = parentRect.top;
+					parentLeft = parentRect.left;
+		
+					let x = e.clientX - offsetX + parentLeft;
+					let y = e.clientY - offsetY + parentTop;
+
+					console.log('onmove parent.scroll :>> ', parent.scrollLeft, parent.scrollTop);
+
+					x = snapToGrid(x, 10);
+					y = snapToGrid(y, 10);
+			
+					draggedElement.style.left = `${x}px`;
+					draggedElement.style.top = `${y}px`;
+			
+					// Move related elements
+					relatedElements.forEach(({ elem, offsetX, offsetY }) => {
+						elem.style.left = `${x + offsetX}px`;
+						elem.style.top = `${y + offsetY}px`;
+					});
+			
+					fx = x;
+					fy = y;
+			
+					dbedges.forEach((edge) => {
+						this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+					});
+				});
+			
+				document.addEventListener("mouseup", (e) => { 
+					if (isDragging) {
+						isDragging = false;
+						draggedElement.style.zIndex = ""; // Reset z-index
+						draggedElement = null;
+			
+						const coord = { x: fx, y: fy };
+			
+						// Update database positions for dragged element
+						let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(coord)} where id.ID = '${nodeID}';`
+						console.log('qstr :>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
+							console.error('Coordinate update failed', error);
+						});
+			
+						// Update database positions for related elements
+						relatedElements.forEach(({ elem }) => {
+							const relatedId = elem.id;
+							const relatedCoord = {
+								x: parseInt(elem.style.left, 10),
+								y: parseInt(elem.style.top, 10)
+							};
+							let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
+							console.log('qstr :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
+								console.error('Coordinate update failed for related element', error);
+							});
+						});
+			
+						dbedges.forEach((edge) => {
+							this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+						});
+					}
+				});
+			},
 			makeNodeDraggable: (draggableSelector, parentSelector = document.body) => { //SECTION - makeNodeDraggable
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
+				let relatedElements = []; // To store related divs and their initial offsets
+
+				const parent = document.querySelector(parentSelector);
+				const parentRect = parent.getBoundingClientRect();
 			
+				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
+				let fx, fy = 0;
+				let nodeID = "";
+				let dbedges = [];
+				this.Form.Events.addGlobalEventListener("mousedown", [{ //NOTE - makeNodeDraggable mousedown
+					selector: draggableSelector,
+					callback: (e) => {
+						// Check if the clicked element is the .card-header
+						if (!e.target.closest('.card-header-icon')) return;
+						console.log('MakeNodeDraggable mousedown');
+						isDragging = true;
+
+						draggedElement = e.target.closest(draggableSelector);
+						nodeID = draggedElement.id;
+						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`;
+						console.log('qstr :>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((edges) => {
+							dbedges = edges[0];
+							if (edges) if (Array.isArray(edges)) edges[0].forEach((edge, edgeIndex) => {
+								this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+							});
+						});
+
+						// Fetch related elements based on Cursor
+						relatedElements = ParadigmREVOLUTION.Application.Cursor
+							.filter(cursor => cursor.id !== nodeID) // Exclude the currently dragged div
+							.map(cursor => {
+								const elem = document.getElementById(cursor.id);
+								if (!elem) return null;
+								const rect = elem.getBoundingClientRect();
+								return {
+									elem,
+									offsetX: rect.left - draggedElement.getBoundingClientRect().left,
+									offsetY: rect.top - draggedElement.getBoundingClientRect().top
+								};
+							})
+							.filter(item => item); // Remove nulls for non-existent elements
+
+						console.log('relatedElements :>> ', relatedElements);
+			
+						const parentScrollLeft = parent.scrollLeft;
+						const parentScrollTop = parent.scrollTop;
+			
+						// Access the live ScrollPosition dynamically
+						const { app_root_container, app_container } = this.ScrollPosition;
+			
+						const rect = draggedElement.getBoundingClientRect();
+						offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
+						offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
+			
+						draggedElement.style.position = "absolute";
+						draggedElement.style.zIndex = 1000; // Bring to front
+					}
+				}]);
+			
+				document.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
+					if (!isDragging || !draggedElement) return;
+					console.log('MakeNodeDraggable mousemove');
+			
+					const parentScrollLeft = parent.scrollLeft;
+					const parentScrollTop = parent.scrollTop;
+			
+					// Access the live ScrollPosition dynamically
+					const { app_root_container, app_container } = this.ScrollPosition;
+			
+					let x = e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2) ;
+					let y = e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2);
+					
+					x = snapToGrid(x, 10);
+					y = snapToGrid(y, 10);
+			
+					draggedElement.style.left = `${x}px`;
+					draggedElement.style.top = `${y}px`;
+
+					// Move related elements
+					relatedElements.forEach(({ elem, offsetX, offsetY }) => {
+						elem.style.left = `${x + offsetX}px`;
+						elem.style.top = `${y + offsetY}px`;
+					});
+					
+					fx = x;
+					fy = y;
+
+					dbedges.forEach((edge, edgeIndex) => {
+						console.log('edge :>> ', edge);
+						this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+					});
+				});
+			
+				document.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
+					if (isDragging) {
+						isDragging = false;
+						draggedElement.style.zIndex = ""; // Reset z-index
+						draggedElement = null;
+						const id = e.target.dataset.id;
+						console.log('id :>> ', id);
+
+						const coord = {
+							x: fx,
+							y: fy
+						};
+						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
+						console.log('qstr :>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
+							if (node[0].length == 0) return;
+							node = node[0][0];
+							node.Presentation.Perspectives.GraphNode.Position = coord;
+							// console.log('node.id after update coord :>>', node.id);
+
+							if (node.id.id) node.id = node.id.id;
+							// console.log('node after update coord :>> ', node);
+
+							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+							// console.log('qstr :>> ', qstr);
+							
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+						}).catch(error => {
+							console.error('Coordinate update failed', error);
+						});
+
+						// Update database positions for related elements
+						relatedElements.forEach(({ elem }) => {
+							const relatedId = elem.id;
+							const relatedCoord = {
+								x: parseInt(elem.style.left, 10),
+								y: parseInt(elem.style.top, 10)
+							};
+							let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
+							console.log('qstr :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
+								console.error('Coordinate update failed for related element', error);
+							});
+						});
+						
+
+						dbedges.forEach((edge, edgeIndex) => {
+							this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+						});
+					}
+				});
+			},
+			makeNodeDraggableV1: (draggableSelector, parentSelector = document.body) => { //SECTION - makeNodeDraggable
+				let isDragging = false;
+				let offsetX, offsetY, draggedElement;
+				let relatedElements = []; // To store related divs and their initial offsets
+
 				const parent = document.querySelector(parentSelector);
 				const parentRect = parent.getBoundingClientRect();
 			
@@ -322,7 +640,8 @@ export class Flow {
 				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
 				
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
-					temp = this.Graph.Elements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID, node.id.id.Node.Type, node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
+					// temp = this.Graph.Elements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID, node.id.id.Node.Type, node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
+					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in');
 					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
 				});
 
@@ -513,6 +832,104 @@ export class Flow {
 				cancelButton.onclick = cleanUp;
 				cancelButtonFooter.onclick = cleanUp;
 			},
+			showGeneralModal: (modal_title, schema, callback) => {
+				// Create modal HTML as a string with animation classes
+				let schemastr = "";
+				
+				const modalHTML = `
+					<div id="connectionModal" class="modal is-active fade-in">
+						<div class="modal-background"></div>
+						<div class="modal-card">
+							<header class="modal-card-head">
+								<p class="modal-card-title">${modal_title}</p>
+								<button class="delete" aria-label="close" id="cancelButton"></button>
+							</header>
+							<section class="modal-card-body">
+								${schemastr}
+							</section>
+							<footer class="modal-card-foot" style="justify-content: center; gap: 20px;">
+								<button class="button" id="cancelButtonFooter" style="margin-right: auto;">Cancel</button>
+								<button class="button is-success" id="confirmButton" style="margin-left: auto;">Confirm</button>
+							</footer>
+						</div>
+					</div>
+				`;
+			
+				// Insert modal HTML into the document body
+				const modalContainer = document.createElement('div');
+				modalContainer.innerHTML = modalHTML;
+				document.body.appendChild(modalContainer);
+			
+				// Get references to modal elements
+				const modal = modalContainer.querySelector('#connectionModal');
+				const dropdown = modalContainer.querySelector('#connectionTypeDropdown');
+				const confirmButton = modalContainer.querySelector('#confirmButton');
+				const cancelButton = modalContainer.querySelector('#cancelButton');
+				const cancelButtonFooter = modalContainer.querySelector('#cancelButtonFooter');
+			
+				// Add CSS for animations
+				const style = document.createElement('style');
+				style.innerHTML = `
+					.fade-in {
+						animation: fadeIn 0.3s ease-in-out;
+					}
+
+					.fade-out {
+						animation: fadeOut 0.3s ease-in-out;
+					}
+
+					@keyframes fadeIn {
+						from {
+							opacity: 0;
+							filter: blur(5px);
+						}
+						to {
+							opacity: 1;
+							filter: blur(0);
+						}
+					}
+
+					@keyframes fadeOut {
+						from {
+							opacity: 1;
+							filter: blur(0);
+						}
+						to {
+							opacity: 0;
+							filter: blur(10px);
+						}
+					}
+				`;
+				document.head.appendChild(style);
+			
+				// Function to clean up modal
+				function cleanUp() {
+					modal.classList.remove('fade-in');
+					modal.classList.add('fade-out');
+					setTimeout(() => {
+						modalContainer.remove(); // Remove the modal
+						style.remove(); // Remove the style tag
+					}, 300); // Matches the animation duration
+				}
+			
+				// Handle confirm button click
+				confirmButton.onclick = () => {
+					const selectedOption = dropdown.options[dropdown.selectedIndex];
+					const selectedType = selectedOption.value; // Value of the selected option
+			
+					// Extract custom data attributes from the selected option
+					const customData = {
+						color: selectedOption.dataset.color
+					};
+			
+					cleanUp(); // Clean up modal
+					callback(selectedType, customData, selectedNodes, FlowGraph); // Execute the callback with the selected type
+				};
+			
+				// Handle cancel button clicks
+				cancelButton.onclick = cleanUp;
+				cancelButtonFooter.onclick = cleanUp;
+			},
 			
 			connectNodes: (edge, svgcontainerselector, parentselector) => {
 				// Get the elements by their selector
@@ -558,7 +975,7 @@ export class Flow {
 					return;
 				}
 
-				const parent = document.querySelector(parentselector); // NOTE - NOW
+				const parent = document.querySelector(parentselector);
 				const parentRect = parent.getBoundingClientRect();
 
 				const parentScrollLeft = parent.scrollLeft;
@@ -598,49 +1015,49 @@ export class Flow {
 				let controlY2;
 
 				// Determine gutter usage based on angle
-				if ((angle >= 320 && angle <= 360) || (angle >= 0 && angle < 40)) {	
+				if ((angle >= 315 && angle <= 360) || (angle >= 0 && angle < 45)) {	
 					// console.log('left');
 					controlX1 = x1 + (x2 - x1) / 1.5;
 					controlY1 = y1;
 					controlX2 = x2 - (x2 - x1) / 1.5;
 					controlY2 = y2;
-				} else if (angle >= 40 && angle < 50) {
+				} else if (angle >= 45 && angle < 60) {
 					// console.log('left top');
 					controlX1 = x1 + ((x2 - x1) / 100);
 					controlY1 = y1 + ((y2 - y1) / 1.3);
 					controlX2 = x2 - ((x2 - x1) / 1.3);
 					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 50 && angle < 130) {
+				} else if (angle >= 60 && angle < 120) {
 					// console.log('top');
 					controlX1 = x1;
 					controlY1 = y1 + (y2 - y1) / 1.5;
 					controlX2 = x2;
 					controlY2 = y2 - (y2 - y1) / 1.5;
-				} else if (angle >= 130 && angle < 140) {
+				} else if (angle >= 120 && angle < 155) {
 					// console.log('right top');
 					controlX1 = x1 + ((x2 - x1) / 100);
 					controlY1 = y1 + ((y2 - y1) / 1.3);
 					controlX2 = x2 - ((x2 - x1) / 1.3);
 					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 140 && angle < 220) {
+				} else if (angle >= 155 && angle < 225) {
 					// console.log('right');
 					controlX1 = x1 + (x2 - x1) / 1.5;
 					controlY1 = y1;
 					controlX2 = x2 - (x2 - x1) / 1.5;
 					controlY2 = y2;
-				} else if (angle >= 220 && angle < 230) {
+				} else if (angle >= 225 && angle < 240) {
 					// console.log('right bottom');
 					controlX1 = x1 + ((x2 - x1) / 100);
 					controlY1 = y1 + ((y2 - y1) / 1.3);
 					controlX2 = x2 - ((x2 - x1) / 1.3);
 					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 230 && angle < 290) {
+				} else if (angle >= 240 && angle < 300) {
 					// console.log('bottom');
 					controlX1 = x1;
 					controlY1 = y1 + (y2 - y1) / 1.5;
 					controlX2 = x2;
 					controlY2 = y2 - (y2 - y1) / 1.5;
-				} else if (angle >= 290 && angle < 320) {
+				} else if (angle >= 300 && angle < 315) {
 					// console.log('left bottom');
 					controlX1 = x1 + ((x2 - x1) / 100);
 					controlY1 = y1 + ((y2 - y1) / 1.3);
@@ -1535,6 +1952,7 @@ export class Flow {
 				const scrollContainer = document.querySelector('#app_root_container');
 				const snapRange = 90;
 				const sensitivity = 0.1;
+				let newTabCounter = 0;
 
 				// Initialize the scroll snap functionality
 				this.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);
@@ -1595,7 +2013,8 @@ export class Flow {
 						return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
-				 
+				document.querySelector('#graph_addnode_select').innerHTML = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.map(option => `<option value="${option.Kind}" data-nodetype="${option.Kind}Node" data-nodeicon="${option.Icon}">${option.Kind}</option>`).join('');
+
 				//NOTE - addGlobalEveentListener CLICK
 				this.Form.Events.addGlobalEventListener('click', [{
 					selector: '.datastore-status-indicator',
@@ -1737,8 +2156,9 @@ export class Flow {
 					callback: (e) => {
 						console.log('graph-edge CLICK');
 						console.log('e target', e.target);
-						const edge = e.target.id;
-						ParadigmREVOLUTION.Application.Cursor.push({table:edge.id.id.Table, id:edge});
+						const id = e.target.id;
+						const table = e.target.dataset.table;
+						ParadigmREVOLUTION.Application.Cursor.push({table:table, id:id});
 						e.target.classList.add('focused');
 					}
 				}, {
@@ -1978,11 +2398,48 @@ export class Flow {
 					callback: (e) => {
 						//NOTE - Create new node!
 						console.log('Create node! graph_addnode_button click!');
+						const dropdown = document.querySelector('#graph_addnode_select');
+						const selectedOption = dropdown.options[dropdown.selectedIndex];
+						const nodeKind = selectedOption.value; // Value of the selected option
+
+						const parent = document.querySelector('#graph_scroll_content'); // NOTE - NOW
+						const parentRect = parent.getBoundingClientRect();
+
+						console.log('parent', parent);
+						console.log('parentRect', parentRect);
+		
+						const parentScrollLeft = parent.scrollLeft;
+						const parentScrollTop = parent.scrollTop;
+						const parentLeft = parentRect.left;
+						const parentTop = parentRect.top;
+
+						console.log('scroll', parentScrollLeft, parentScrollTop);
+						console.log('pos', parentLeft, parentTop);
+					
+						let dx = parentRect.left; //+ parentScrollLeft;
+						let dy = parentRect.top + parentScrollTop;
+				
+						console.log('dxy :>> ', dx, dy);
+
+						// Extract custom data attributes from the selected option
+						const customData = {
+							nodetype: selectedOption.dataset.nodetype,
+							icon: selectedOption.dataset.nodeicon
+						};
+	
 						const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 						newNode.id.ID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
 						newNode.id.ULID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
-						newNode.id.Type = "Yggdrasil Node";
-						newNode.id.Status = "Active";
+						newNode.id.Node.Realm = "Universe"; 
+						newNode.id.Node.Kind = nodeKind; 
+						newNode.id.Node.Type = customData.nodetype; 
+						newNode.id.Node.Class = ""; 
+						newNode.id.Node.Group = ""; 
+						newNode.id.Node.Category = ""; 
+						newNode.id.Node.Icon = customData.icon;
+
+						newNode.id.Type = "";
+						newNode.id.Status = "Active"; 
 						newNode.id.Timestamp = Date.now();
 						newNode.id.Version.Number = 1;
 						newNode.id.Version.VersionID = newNode.id.ID;
@@ -1990,11 +2447,18 @@ export class Flow {
 						newNode.id.Version.Timestamp = newNode.id.Timestamp;
 						newNode.id.Link.Head = false;
 						newNode.id.Link.ID = 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID();
-						newNode.id.Link.Segment = "";
-						newNode.id.Node.Type = document.querySelector('#graph_addnode_select').value;
+						newNode.id.Link.Segment = "";	
 
-						const GraphNodeLength = ParadigmREVOLUTION.Application.GraphNodes.length;
-						newNode.Presentation.Perspectives.GraphNode.Position = { x: 30 + (GraphNodeLength * 30), y: 30 + (GraphNodeLength * 30)};
+						if (newTabCounter > 20) newTabCounter = 0;
+						let tx = 30 + (dx + (newTabCounter * 40));
+						let ty = dy + 60;
+
+						let coord = {
+							x: tx > 0 ? tx : 0,
+							y: ty > 0 ? ty : 0
+						}
+						newNode.Presentation.Perspectives.GraphNode.Position = coord;
+						newTabCounter++;
 
 						console.log('newNode :>> ', newNode);
 						ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
@@ -2014,38 +2478,52 @@ export class Flow {
 					selector: '#graph_removenodes_button', //NOTE - removenodes-button
 					callback: (e) => {
 						console.log('Remove nodes! graph_removenodes_button click!');
-						//NOTE - Remove nodes!
+						// NOTE - Remove nodes!
 						if (ParadigmREVOLUTION.Application.Cursor.length == 0) return;
 						console.log('ParadigmREVOLUTION.Application.Cursor :>> ', ParadigmREVOLUTION.Application.Cursor);
-						ParadigmREVOLUTION.Application.Cursor.forEach(znode => {
-							if (!confirm(`Apakah anda ingin menghapus dokumen ${znode.table}:${znode.id}?`)) return;
+					
+						const promises = ParadigmREVOLUTION.Application.Cursor.map(znode => {
+							if (!confirm(`Apakah anda ingin menghapus dokumen ${znode.table}:${znode.id}?`)) {
+								return Promise.resolve(); // Skip this node
+							}
+							
 							let table = znode.table;
 							let id = znode.id;
 							console.log('table, id >>>>>>', table, id);
+					
 							let qstr = `SELECT id FROM ONLY ${table} where id:{ID:"${id}"}.. limit 1 ;`;
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
-								console.log('result :>> ', result[0]);
-								if (result[0].id.id) result[0].id = result[0].id.id;
-								console.log('result :>> ', result[0]);
-								qstr = `DELETE FROM ${table} where id.ID = "${id}";`;
-								console.log('DELETE qstr :>> ', qstr);
-								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result =>{
-									console.log(`Node ID ${id} removal SUCCESS!`);
-									znode = null;
-									// ParadigmREVOLUTION.Application.Cursor.splice(ParadigmREVOLUTION.Application.Cursor.indexOf(znode), 1);
-
-									// Refresh render
-									document.querySelector('#document_refreshrender_button').click();
-								}).catch(error => {
-									console.error(`Node ID ${id} removal ERROR!`, error);
+							return ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr)
+								.then(result => {
+									console.log('result :>> ', result[0]);
+									if (result[0]?.id?.id) result[0].id = result[0].id.id;
+									console.log('result :>> ', result[0]);
+									qstr = `DELETE FROM ${table} where id.ID = "${id}";`;
+									console.log('DELETE qstr :>> ', qstr);
+									return ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr)
+										.then(() => {
+											console.log(`Node ID ${id} removal SUCCESS!`);
+											znode = null;
+										})
+										.catch(error => {
+											console.error(`Node ID ${id} removal ERROR!`, error);
+										});
+								})
+								.catch(error => {
+									console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
 								});
-							}).catch(error => {
-								console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
-							});
 						});
-						ParadigmREVOLUTION.Application.Cursor = [];
+						Promise.all(promises).then(() => {
+							console.log("All nodes have been processed.");
+							ParadigmREVOLUTION.Application.Cursor = [];
+							
+							// Refresh render
+							document.querySelector('#document_refreshrender_button').click();
+
+						}).catch(err => {
+							console.error("Error in processing nodes:", err);
+						});
 					}
-				}
+									}
 				]);
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
@@ -2246,21 +2724,40 @@ export class Flow {
 						});
 						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
 							console.log('Success fetching edges from TestServer >>>>>>>>', result[0]);
-							// ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(() => {
-							// 	let qstr = "";
-							// 	result[0].forEach(edge => {
-							// 		if (edge.id.id) edge.id = edge.id.id;
-							// 		qstr += `create ${edge.id.Table} content ${JSON.stringify(edge)};`;
-							// 	});
-							// 	ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-							// 	console.log('Success fetching edges from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(() => {
+								let qstr = "";
+								result[0].forEach(edge => {
+									let edgeTable = edge.id.tb;
+									let edgeID = JSON.stringify(edge.id.id)
+									let edgeInTable = edge.in.tb;
+									let edgeInID = JSON.stringify(edge.in.id);
+									let edgeOutTable = edge.out.tb;
+									let edgeOutID = JSON.stringify(edge.out.id);
+									let tEdge = edge;
+									delete tEdge.id;
+									delete tEdge.in;
+									delete tEdge.out;
+									let tEdgestr = JSON.stringify(tEdge).slice(1, -1);
+									console.log('tEdgestr :>> ', tEdgestr);
+									qstr += `
+									insert relation into
+									${edgeTable} 
+									{
+										id:${edgeID}, 
+										in:${edgeInTable}:${edgeInID}, 
+										out:${edgeOutTable}:${edgeOutID}, 
+										${tEdgestr}
+									};\n`
+								});
+								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+								console.log('Success fetching edges from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
 
-							// 	// Refresh render
-							// 	document.querySelector('#document_refreshrender_button').click();
+								// Refresh render
+								document.querySelector('#document_refreshrender_button').click();
 
-							// }).catch(error => {
-							// 	console.error('Error deleting edges from TestServer', error);
-							// });
+							}).catch(error => {
+								console.error('Error deleting edges from TestServer', error);
+							});
 						}).catch(error => {
 							console.error('Error fetching edges from LocalDB', error);
 						});
@@ -2285,13 +2782,31 @@ export class Flow {
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
 							let qstr = "";
 							result[0].forEach(edge => {
-								if (edge.id.id) edge.id = edge.id.id;
-								console.log(edge.in.tb, edge.out.tb); // NOTE - NOOWWWWWWWWWWW
-								qstr += `insert relation into ${edge.id.Table} content ${JSON.stringify(edge)};`;
+								let edgeTable = edge.id.tb;
+								let edgeID = JSON.stringify(edge.id.id)
+								let edgeInTable = edge.in.tb;
+								let edgeInID = JSON.stringify(edge.in.id);
+								let edgeOutTable = edge.out.tb;
+								let edgeOutID = JSON.stringify(edge.out.id);
+								let tEdge = edge;
+								delete tEdge.id;
+								delete tEdge.in;
+								delete tEdge.out;
+								let tEdgestr = JSON.stringify(tEdge).slice(1, -1);
+								console.log('tEdgestr :>> ', tEdgestr);
+								qstr += `
+								insert relation into
+								${edgeTable} 
+								{
+									id:${edgeID}, 
+									in:${edgeInTable}:${edgeInID}, 
+									out:${edgeOutTable}:${edgeOutID}, 
+									${tEdgestr}
+								};\n`;
 							});
 							console.log('qstr :>> ', qstr);
-							// ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
-							// console.log('Success fetching edges from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
+							ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
+							console.log('Success fetching edges from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
 						}).catch(error => {
 							console.error('Error fetching edges from LocalDB', error);
 						});
@@ -2441,7 +2956,6 @@ export class Flow {
 						}
 					}
 				]);
-				
 				this.Graph.Events.enableDragSelect('.graph_surfaces');
 
 				//NOTE - end of InitializeFormControls

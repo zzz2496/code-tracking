@@ -10,7 +10,7 @@ if (cr) console.log('>>> Module Loader');
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 // import { Flow } from "../Classes/Flow.mjs";
 
-let Utility, uuid, ulid, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, mqtt;
+let Utility, ulid, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, mqtt;
 // let Utility, GraphSurface, Connection, WorkerThread, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
@@ -21,12 +21,6 @@ let ParadigmREVOLUTION = {
 				"Icon": "tv",
 				"Label": "UI",
 				"ShortLabel": "UI"
-			},
-			"UUID": {
-				"Status": "NOT LOADED",
-				"Icon": "id-card",
-				"Label": "UUID",
-				"ShortLabel": "UUID"
 			},
 			"ULID": {
 				"Status": "NOT LOADED",
@@ -46,18 +40,18 @@ let ParadigmREVOLUTION = {
 				"Label": "Utility",
 				"ShortLabel": "UTL"
 			},
-			"Connection": {
-				"Status": "NOT LOADED",
-				"Icon": "arrows-left-right-to-line",
-				"Label": "Connection",
-				"ShortLabel": "CON"
-			},
-			"WorkerThread": {
-				"Status": "NOT LOADED",
-				"Icon": "shuffle",
-				"Label": "WorkerThread",
-				"ShortLabel": "WT"
-			},
+			// "Connection": {
+			// 	"Status": "NOT LOADED",
+			// 	"Icon": "arrows-left-right-to-line",
+			// 	"Label": "Connection",
+			// 	"ShortLabel": "CON"
+			// },
+			// "WorkerThread": {
+			// 	"Status": "NOT LOADED",
+			// 	"Icon": "shuffle",
+			// 	"Label": "WorkerThread",
+			// 	"ShortLabel": "WT"
+			// },
 			"Flow": {
 				"Status": "NOT LOADED",
 				"Icon": "diagram-project",
@@ -103,10 +97,9 @@ let ParadigmREVOLUTION = {
 		},
 		"Modules": {
 			"Utility": Utility,
-			"UUID": uuid,
 			"ULID": ulid,
 			"Connection": Connection,
-			"WorkerThread": WorkerThread,
+			// "WorkerThread": WorkerThread,
 			"Flow": Flow,
 			"Surreal": Surreal,
 			"surrealdbWasmEngines": surrealdbWasmEngines,
@@ -224,21 +217,6 @@ if (typeof finder !== 'undefined') {
 })();
 (async () => {
 	try {
-		const UIResult = await import("../node_modules/uuid/dist/esm-browser/index.js");
-		const { uuid } = UIResult;
-		ParadigmREVOLUTION.SystemCore.CoreStatus.UUID.Status = "LOADED";
-		ParadigmREVOLUTION.SystemCore.Modules.UUID = uuid;
-		document.querySelector('#uuid').classList.add('has-text-success');
-		document.querySelector('#uuid_status').innerHTML = "<li class='fa fa-check'></li>";
-	} catch (error) {
-		document.querySelector('#uuid').classList.add('has-text-danger');
-		document.querySelector('#uuid_status').innerHTML = "<li class='fa fa-xmark'></li>";
-		ParadigmREVOLUTION.SystemCore.CoreStatus.UUID.Status = "FAILED TO LOAD";
-		console.error("Failed to import UUID.");
-	}
-})();
-(async () => {
-	try {
 		const UtilityResult = await import("../Classes/Utility.mjs");
 		const { Utility } = UtilityResult;
 		ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "LOADED";
@@ -302,44 +280,44 @@ if (typeof finder !== 'undefined') {
 })();
 (async () => {
 	const moduleHandlers = [
-		{
-			importPromise: import("../Classes/GraphConnection.mjs"),
-			onSuccess: (module) => {
-				const { Connection } = module;
-				if (cr) console.log(">>> ||| Connection imported successfully.");
-				ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "LOADED";
-				ParadigmREVOLUTION.SystemCore.Modules.Connection = Connection;
-				loader.value++;
-				document.querySelector('#connection').classList.add('has-text-success');
-				document.querySelector('#connection_status').innerHTML = "<li class='fa fa-check'></li>";
-				document.dispatchEvent(new Event('GraphConnectionLoaded'));
-			},
-			onFailure: () => {
-				document.querySelector('#connection').classList.add('has-text-danger');
-				document.querySelector('connection_status').innerHTML = "<li class='fa fa-xmark'></li>";
-				ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "FAILED TO LOAD";
-				console.error("Failed to import Connection.");
-			}
-		},
-		{
-			importPromise: import("../Classes/WorkerThread.mjs"),
-			onSuccess: (module) => {
-				const { WorkerThread } = module;
-				if (cr) console.log(">>> ||| WorkerThread imported successfully.");
-				ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "LOADED";
-				ParadigmREVOLUTION.SystemCore.Modules.WorkerThread = WorkerThread;
-				loader.value++;
-				document.querySelector('#workerthread').classList.add('has-text-success');
-				document.querySelector('#workerthread_status').innerHTML = "<li class='fa fa-check'></li>";
-				document.dispatchEvent(new Event('WorkerThreadLoaded'));
-			},
-			onFailure: () => {
-				document.querySelector('#workerthread').classList.add('has-text-danger');
-				document.querySelector('#workerthread_status').innerHTML = "<li class='fa fa-xmark'></li>";
-				ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "FAILED TO LOAD";
-				console.error("Failed to import WorkerThread.");
-			}
-		},
+		// {
+		// 	importPromise: import("../Classes/GraphConnection.mjs"),
+		// 	onSuccess: (module) => {
+		// 		const { Connection } = module;
+		// 		if (cr) console.log(">>> ||| Connection imported successfully.");
+		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "LOADED";
+		// 		ParadigmREVOLUTION.SystemCore.Modules.Connection = Connection;
+		// 		loader.value++;
+		// 		document.querySelector('#connection').classList.add('has-text-success');
+		// 		document.querySelector('#connection_status').innerHTML = "<li class='fa fa-check'></li>";
+		// 		document.dispatchEvent(new Event('GraphConnectionLoaded'));
+		// 	},
+		// 	onFailure: () => {
+		// 		document.querySelector('#connection').classList.add('has-text-danger');
+		// 		document.querySelector('connection_status').innerHTML = "<li class='fa fa-xmark'></li>";
+		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "FAILED TO LOAD";
+		// 		console.error("Failed to import Connection.");
+		// 	}
+		// },
+		// {
+		// 	importPromise: import("../Classes/WorkerThread.mjs"),
+		// 	onSuccess: (module) => {
+		// 		const { WorkerThread } = module;
+		// 		if (cr) console.log(">>> ||| WorkerThread imported successfully.");
+		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "LOADED";
+		// 		ParadigmREVOLUTION.SystemCore.Modules.WorkerThread = WorkerThread;
+		// 		loader.value++;
+		// 		document.querySelector('#workerthread').classList.add('has-text-success');
+		// 		document.querySelector('#workerthread_status').innerHTML = "<li class='fa fa-check'></li>";
+		// 		document.dispatchEvent(new Event('WorkerThreadLoaded'));
+		// 	},
+		// 	onFailure: () => {
+		// 		document.querySelector('#workerthread').classList.add('has-text-danger');
+		// 		document.querySelector('#workerthread_status').innerHTML = "<li class='fa fa-xmark'></li>";
+		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "FAILED TO LOAD";
+		// 		console.error("Failed to import WorkerThread.");
+		// 	}
+		// },
 		{
 			importPromise: import("../Classes/Flow.mjs"),
 			onSuccess: (module) => {
