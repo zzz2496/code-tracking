@@ -225,12 +225,13 @@ export class Flow {
 					callback: (e) => {
 						// Check if the clicked element is the .card-header
 						if (!e.target.closest('.card-header-icon')) return;
-
+						console.log('MakeNodeDraggable mousedown');
 						isDragging = true;
 						draggedElement = e.target.closest(draggableSelector);
 						nodeID = draggedElement.id;
-
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`).then((edges) => {
+						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`;
+						console.log('qstr :>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((edges) => {
 							dbedges = edges[0];
 							if (edges) if (Array.isArray(edges)) edges[0].forEach((edge, edgeIndex) => {
 								this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
@@ -254,6 +255,7 @@ export class Flow {
 			
 				document.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
 					if (!isDragging || !draggedElement) return;
+					console.log('MakeNodeDraggable mousemove');
 			
 					const parentScrollLeft = parent.scrollLeft;
 					const parentScrollTop = parent.scrollTop;
@@ -273,6 +275,7 @@ export class Flow {
 					fy = y;
 
 					dbedges.forEach((edge, edgeIndex) => {
+						console.log('edge :>> ', edge);
 						this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
 					});
 				});
@@ -513,15 +516,15 @@ export class Flow {
 			
 			connectNodes: (edge, svgcontainerselector, parentselector) => {
 				// Get the elements by their selector
-				// console.log('start connect nodes');
+				console.log('start connect nodes');
 				if (!edge) return;
 
 				// Get the SVG container
 				const svgContainer = document.querySelector(svgcontainerselector);
 				const existingPath = svgContainer.querySelector(`path[id="${edge.id.id.ID}"]`);
-				// console.log('existingPath :>> ', existingPath);
+				console.log('existingPath :>> ', existingPath);
 
-				// console.log('edge not empty! NICE!', edge);
+				console.log('edge not empty! NICE!', edge);
 
 				if (!existingPath) {
 					this.Graph.Events.createGutterDotsAndConnect(
@@ -533,8 +536,6 @@ export class Flow {
 				
 				const node1selector = '#'+edge.OutputPin.pinID;
 				const node2selector = '#'+edge.InputPin.pinID;
-
-				// console.log('nodeSelectors :>> ', node1selector, node2selector);
 
 				const node1 = document.querySelector(
 					node1selector.startsWith("#")
@@ -565,8 +566,6 @@ export class Flow {
 				const parentLeft = parentRect.left;
 				const parentTop = parentRect.top;
 
-				// console.log(parentRect, parentLeft, parentTop, parentScrollLeft, parentScrollTop);
-
 				// Get bounding rectangles of the nodes
 				const rect1 = node1.getBoundingClientRect();
 				const rect2 = node2.getBoundingClientRect();
@@ -591,7 +590,6 @@ export class Flow {
 				if (angle < 0) {
 					angle += 360;
 				}
-				// console.log("angle >>>>>>>>>", angle);
 
 				// Calculate control points for the curve
 				let controlX1;
@@ -600,57 +598,55 @@ export class Flow {
 				let controlY2;
 
 				// Determine gutter usage based on angle
-				if ((angle >= 330 && angle <= 360) || (angle >= 0 && angle < 30)) {	
+				if ((angle >= 320 && angle <= 360) || (angle >= 0 && angle < 40)) {	
 					// console.log('left');
 					controlX1 = x1 + (x2 - x1) / 1.5;
 					controlY1 = y1;
 					controlX2 = x2 - (x2 - x1) / 1.5;
 					controlY2 = y2;
-				} else if (angle >= 30 && angle < 60) {
+				} else if (angle >= 40 && angle < 50) {
 					// console.log('left top');
 					controlX1 = x1 + ((x2 - x1) / 100);
 					controlY1 = y1 + ((y2 - y1) / 1.3);
 					controlX2 = x2 - ((x2 - x1) / 1.3);
 					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 60 && angle < 120) {
+				} else if (angle >= 50 && angle < 130) {
 					// console.log('top');
 					controlX1 = x1;
 					controlY1 = y1 + (y2 - y1) / 1.5;
 					controlX2 = x2;
 					controlY2 = y2 - (y2 - y1) / 1.5;
-				} else if (angle >= 120 && angle < 150) {
+				} else if (angle >= 130 && angle < 140) {
 					// console.log('right top');
 					controlX1 = x1 + ((x2 - x1) / 100);
 					controlY1 = y1 + ((y2 - y1) / 1.3);
 					controlX2 = x2 - ((x2 - x1) / 1.3);
 					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 150 && angle < 210) {
+				} else if (angle >= 140 && angle < 220) {
 					// console.log('right');
 					controlX1 = x1 + (x2 - x1) / 1.5;
 					controlY1 = y1;
 					controlX2 = x2 - (x2 - x1) / 1.5;
 					controlY2 = y2;
-				} else if (angle >= 210 && angle < 240) {
+				} else if (angle >= 220 && angle < 230) {
 					// console.log('right bottom');
 					controlX1 = x1 + ((x2 - x1) / 100);
 					controlY1 = y1 + ((y2 - y1) / 1.3);
 					controlX2 = x2 - ((x2 - x1) / 1.3);
 					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 240 && angle < 300) {
+				} else if (angle >= 230 && angle < 290) {
 					// console.log('bottom');
 					controlX1 = x1;
 					controlY1 = y1 + (y2 - y1) / 1.5;
 					controlX2 = x2;
 					controlY2 = y2 - (y2 - y1) / 1.5;
-				} else if (angle >= 300 && angle < 330) {
+				} else if (angle >= 290 && angle < 320) {
 					// console.log('left bottom');
 					controlX1 = x1 + ((x2 - x1) / 100);
 					controlY1 = y1 + ((y2 - y1) / 1.3);
 					controlX2 = x2 - ((x2 - x1) / 1.3);
 					controlY2 = y2 - ((y2 - y1) / 100);
 				}
-
-			
 				if (!existingPath) {
 					// Create an SVG path
 					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -667,6 +663,7 @@ export class Flow {
 					path.setAttribute("stroke-linecap", "round");
 					path.setAttribute("fill", "none");
 					path.setAttribute("marker-end", "url(#arrowhead)");
+					path.setAttribute("data-table", edge.id.id.Table);
 				
 					// Append the path to the SVG container
 					svgContainer.appendChild(path);
@@ -908,7 +905,7 @@ export class Flow {
 			
 						for (const element of selectedElements) {
 							if (element.tagName == 'path') {
-								ParadigmREVOLUTION.Application.Cursor.push({table:'next_process', id:element.id});
+								ParadigmREVOLUTION.Application.Cursor.push({table:element.dataset.table, id:element.id});
 							} else { 
 								ParadigmREVOLUTION.Application.Cursor.push({table:ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id:element.id});
 							}
@@ -1741,7 +1738,7 @@ export class Flow {
 						console.log('graph-edge CLICK');
 						console.log('e target', e.target);
 						const edge = e.target.id;
-						ParadigmREVOLUTION.Application.Cursor.push({table:"next_process", id:edge});
+						ParadigmREVOLUTION.Application.Cursor.push({table:edge.id.id.Table, id:edge});
 						e.target.classList.add('focused');
 					}
 				}, {
@@ -2249,21 +2246,21 @@ export class Flow {
 						});
 						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
 							console.log('Success fetching edges from TestServer >>>>>>>>', result[0]);
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from next_process;`).then(() => {
-								let qstr = "";
-								result[0].forEach(edge => {
-									if (edge.id.id) edge.id = edge.id.id;
-									qstr += `create next_process content ${JSON.stringify(edge)};`;
-								});
-								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-								console.log('Success fetching edges from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
+							// ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(() => {
+							// 	let qstr = "";
+							// 	result[0].forEach(edge => {
+							// 		if (edge.id.id) edge.id = edge.id.id;
+							// 		qstr += `create ${edge.id.Table} content ${JSON.stringify(edge)};`;
+							// 	});
+							// 	ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+							// 	console.log('Success fetching edges from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
 
-								// Refresh render
-								document.querySelector('#document_refreshrender_button').click();
+							// 	// Refresh render
+							// 	document.querySelector('#document_refreshrender_button').click();
 
-							}).catch(error => {
-								console.error('Error deleting edges from TestServer', error);
-							});
+							// }).catch(error => {
+							// 	console.error('Error deleting edges from TestServer', error);
+							// });
 						}).catch(error => {
 							console.error('Error fetching edges from LocalDB', error);
 						});
@@ -2271,6 +2268,7 @@ export class Flow {
 				});
 				document.querySelector('#graph_save_data_button').addEventListener('click', (e) => {
 					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke SERVER. Apakah anda yakin?')) { 
+						// Sync Nodes data
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`).then(result => {
 							ParadigmREVOLUTION.Application.GraphNodes = result[0];
 							let qstr = "";
@@ -2283,14 +2281,17 @@ export class Flow {
 						}).catch(error => {
 							console.error('Error fetching nodes from LocalDB', error);
 						});
+						// Sync Edges data
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
 							let qstr = "";
 							result[0].forEach(edge => {
 								if (edge.id.id) edge.id = edge.id.id;
-								qstr += `upsert next_process content ${JSON.stringify(edge)};`;
+								console.log(edge.in.tb, edge.out.tb); // NOTE - NOOWWWWWWWWWWW
+								qstr += `insert relation into ${edge.id.Table} content ${JSON.stringify(edge)};`;
 							});
-							ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
-							console.log('Success fetching edges from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
+							console.log('qstr :>> ', qstr);
+							// ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
+							// console.log('Success fetching edges from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
 						}).catch(error => {
 							console.error('Error fetching edges from LocalDB', error);
 						});
@@ -2396,6 +2397,7 @@ export class Flow {
 										let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));;
 										newEdge.id = {
 											ID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+											Table: selectedType
 										}
 										newEdge.OutputPin.nodeID = selectedNodes.StartParam.id;
 										newEdge.InputPin.nodeID = selectedNodes.EndParam.id;
