@@ -18,6 +18,10 @@ export class Flow {
 		this.SnapScroll = null;
 		this.Utility = utility;
 		this.DragSelect = false;
+		this.ZoomScale = 1;
+		this.ZoomStep = 0.05; // Zoom scale increment
+		this.MinZoomScale = 0.1; // Prevents zooming out too far
+		this.MaxZoomScale = 10; // Prevents zooming in too far
 		this.selectedNodesToConnect = {
 			Start: null,
 			End: null,
@@ -161,7 +165,8 @@ export class Flow {
 	Graph = {
 		Elements: {
 			MakeDraggableNode: function (nodes, node, objclass) {
-				console.log('node :>> ', node);
+				console.log('================================== Start MakeDraggableNode');
+				// console.log('node :>> ', node);
 				let newElement = document.createElement('div');
 				newElement.id = node.id.id.ID;
 				newElement.className = objclass;
@@ -171,7 +176,7 @@ export class Flow {
 				newElement.style.position = `absolute`;
 	
 				newElement.tabIndex = 0;
-				console.log('node.id.id.Node.Icon :>> ', node.id.id.Node.Icon);
+				// console.log('node.id.id.Node.Icon :>> ', node.id.id.Node.Icon);
 				newElement.innerHTML = `
 					<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px;">
 						<div class="top-gutter" style="display: flex; justify-content: space-evenly; width: fit-content; width:100%;">
@@ -204,6 +209,7 @@ export class Flow {
 				newElement.addEventListener('animationend', function () {
 					this.classList.remove('fade-in');
 				});
+				console.log('================================== Done MakeDraggableNode');
 				return newElement;
 			},
 			MakeDraggableNodeV1: function (id, objclass, label, content, x, y, zIndex = 'auto') {
@@ -255,128 +261,6 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
-			makeNodeDraggableN: (draggableSelector, parentSelector = document.body) => { 
-				let isDragging = false;
-				let offsetX, offsetY, draggedElement;
-				let relatedElements = []; // To store related divs and their initial offsets
-				const parent = document.querySelector(parentSelector);
-				const parentRect = parent.getBoundingClientRect();
-
-				let parentScrollLeft = parent.scrollLeft;
-				let parentScrollTop = parent.scrollTop;
-				let parentTop = parentRect.top;
-				let parentLeft = parentRect.left;
-
-
-				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
-				let fx, fy = 0;
-				let nodeID = "";
-				let dbedges = [];
-			
-				this.Form.Events.addGlobalEventListener("mousedown", [{ 
-					selector: draggableSelector,
-					callback: (e) => {
-						if (!e.target.closest('.card-header-icon')) return;
-						isDragging = true;
-						draggedElement = e.target.closest(draggableSelector);
-						nodeID = draggedElement.id;
-			
-						// Fetch related elements based on Cursor
-						relatedElements = ParadigmREVOLUTION.Application.Cursor
-							.filter(cursor => cursor.id !== nodeID) // Exclude the currently dragged div
-							.map(cursor => {
-								const elem = document.getElementById(cursor.id);
-								if (!elem) return null;
-								const rect = elem.getBoundingClientRect();
-								return {
-									elem,
-									offsetX: rect.left - draggedElement.getBoundingClientRect().left,
-									offsetY: rect.top - draggedElement.getBoundingClientRect().top
-								};
-							})
-							.filter(item => item); // Remove nulls for non-existent elements
-			
-						const rect = draggedElement.getBoundingClientRect();
-						parentTop = parentRect.top;
-						parentLeft = parentRect.left;
-
-						console.log('parentRect :>> ', parentRect, parentTop, parentLeft);
-						offsetX = e.clientX - rect.left + parentLeft;
-						offsetY = e.clientY - rect.top + parentTop;
-			
-						console.log('onclick parent.scroll :>> ', parent.scrollLeft, parent.scrollTop);
-
-						draggedElement.style.position = "absolute";
-						draggedElement.style.zIndex = 1000; // Bring to front
-					}
-				}]);
-			
-				document.addEventListener("mousemove", (e) => { 
-					if (!isDragging || !draggedElement) return;
-
-					parentTop = parentRect.top;
-					parentLeft = parentRect.left;
-		
-					let x = e.clientX - offsetX + parentLeft;
-					let y = e.clientY - offsetY + parentTop;
-
-					console.log('onmove parent.scroll :>> ', parent.scrollLeft, parent.scrollTop);
-
-					x = snapToGrid(x, 10);
-					y = snapToGrid(y, 10);
-			
-					draggedElement.style.left = `${x}px`;
-					draggedElement.style.top = `${y}px`;
-			
-					// Move related elements
-					relatedElements.forEach(({ elem, offsetX, offsetY }) => {
-						elem.style.left = `${x + offsetX}px`;
-						elem.style.top = `${y + offsetY}px`;
-					});
-			
-					fx = x;
-					fy = y;
-			
-					dbedges.forEach((edge) => {
-						this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
-					});
-				});
-			
-				document.addEventListener("mouseup", (e) => { 
-					if (isDragging) {
-						isDragging = false;
-						draggedElement.style.zIndex = ""; // Reset z-index
-						draggedElement = null;
-			
-						const coord = { x: fx, y: fy };
-			
-						// Update database positions for dragged element
-						let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(coord)} where id.ID = '${nodeID}';`
-						console.log('qstr :>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
-							console.error('Coordinate update failed', error);
-						});
-			
-						// Update database positions for related elements
-						relatedElements.forEach(({ elem }) => {
-							const relatedId = elem.id;
-							const relatedCoord = {
-								x: parseInt(elem.style.left, 10),
-								y: parseInt(elem.style.top, 10)
-							};
-							let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
-							console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
-								console.error('Coordinate update failed for related element', error);
-							});
-						});
-			
-						dbedges.forEach((edge) => {
-							this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
-						});
-					}
-				});
-			},
 			makeNodeDraggable: (draggableSelector, parentSelector = document.body) => { //SECTION - makeNodeDraggable
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
@@ -399,12 +283,24 @@ export class Flow {
 
 						draggedElement = e.target.closest(draggableSelector);
 						nodeID = draggedElement.id;
+
 						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`;
 						console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((edges) => {
 							dbedges = edges[0];
-							if (edges) if (Array.isArray(edges)) edges[0].forEach((edge, edgeIndex) => {
-								this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+							if (edges[0]) if (Array.isArray(edges[0])) edges[0].forEach((edge, edgeIndex) => {
+								this.Graph.Events.createGutterDotsAndConnect(
+									document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+									document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+									edge
+								);
+							});
+							if (edges[0]) if (Array.isArray(edges[0])) edges[0].forEach((edge, edgeIndex) => {
+								this.Graph.Events.connectNodes(
+									edge,
+									'.graph_connection_surface',
+									'#graph_scroll_content'
+								);
 							});
 						});
 
@@ -442,7 +338,7 @@ export class Flow {
 			
 				document.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
 					if (!isDragging || !draggedElement) return;
-					console.log('MakeNodeDraggable mousemove');
+					// console.log('MakeNodeDraggable mousemove');
 			
 					const parentScrollLeft = parent.scrollLeft;
 					const parentScrollTop = parent.scrollTop;
@@ -450,8 +346,8 @@ export class Flow {
 					// Access the live ScrollPosition dynamically
 					const { app_root_container, app_container } = this.ScrollPosition;
 			
-					let x = e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2) ;
-					let y = e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2);
+					let x = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.ZoomScale;
+					let y = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.ZoomScale;
 					
 					x = snapToGrid(x, 10);
 					y = snapToGrid(y, 10);
@@ -461,16 +357,27 @@ export class Flow {
 
 					// Move related elements
 					relatedElements.forEach(({ elem, offsetX, offsetY }) => {
-						elem.style.left = `${x + offsetX}px`;
-						elem.style.top = `${y + offsetY}px`;
+						elem.style.left = `${(x + offsetX) / this.ZoomScale}px`;
+						elem.style.top = `${(y + offsetY) / this.ZoomScale}px`;
 					});
 					
 					fx = x;
 					fy = y;
 
 					dbedges.forEach((edge, edgeIndex) => {
-						console.log('edge :>> ', edge);
-						this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+						this.Graph.Events.createGutterDotsAndConnect(
+							document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+							document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+							edge
+						);
+					});
+					dbedges.forEach((edge, edgeIndex) => {
+						console.log('dbedge each:>> ', edge);
+						this.Graph.Events.connectNodes(
+							edge,
+							'.graph_connection_surface',
+							'#graph_scroll_content'
+						);
 					});
 				});
 			
@@ -487,7 +394,7 @@ export class Flow {
 							y: fy
 						};
 						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
-						console.log('qstr :>> ', qstr);
+						// console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
 							if (node[0].length == 0) return;
 							node = node[0][0];
@@ -513,129 +420,33 @@ export class Flow {
 								y: parseInt(elem.style.top, 10)
 							};
 							let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
-							console.log('qstr :>> ', qstr);
+							// console.log('qstr :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
 								console.error('Coordinate update failed for related element', error);
 							});
 						});
-						
-
 						dbedges.forEach((edge, edgeIndex) => {
-							this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+							this.Graph.Events.createGutterDotsAndConnect(
+								document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+								document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+								edge
+							);
 						});
-					}
-				});
-			},
-			makeNodeDraggableV1: (draggableSelector, parentSelector = document.body) => { //SECTION - makeNodeDraggable
-				let isDragging = false;
-				let offsetX, offsetY, draggedElement;
-				let relatedElements = []; // To store related divs and their initial offsets
-
-				const parent = document.querySelector(parentSelector);
-				const parentRect = parent.getBoundingClientRect();
-			
-				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
-				let fx, fy = 0;
-				let nodeID = "";
-				let dbedges = [];
-				this.Form.Events.addGlobalEventListener("mousedown", [{ //NOTE - makeNodeDraggable mousedown
-					selector: draggableSelector,
-					callback: (e) => {
-						// Check if the clicked element is the .card-header
-						if (!e.target.closest('.card-header-icon')) return;
-						console.log('MakeNodeDraggable mousedown');
-						isDragging = true;
-						draggedElement = e.target.closest(draggableSelector);
-						nodeID = draggedElement.id;
-						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`;
-						console.log('qstr :>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((edges) => {
-							dbedges = edges[0];
-							if (edges) if (Array.isArray(edges)) edges[0].forEach((edge, edgeIndex) => {
-								this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
-							});
-						});
-			
-						const parentScrollLeft = parent.scrollLeft;
-						const parentScrollTop = parent.scrollTop;
-			
-						// Access the live ScrollPosition dynamically
-						const { app_root_container, app_container } = this.ScrollPosition;
-			
-						const rect = draggedElement.getBoundingClientRect();
-						offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
-						offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
-			
-						draggedElement.style.position = "absolute";
-						draggedElement.style.zIndex = 1000; // Bring to front
-					}
-				}]);
-			
-				document.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
-					if (!isDragging || !draggedElement) return;
-					console.log('MakeNodeDraggable mousemove');
-			
-					const parentScrollLeft = parent.scrollLeft;
-					const parentScrollTop = parent.scrollTop;
-			
-					// Access the live ScrollPosition dynamically
-					const { app_root_container, app_container } = this.ScrollPosition;
-			
-					let x = e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2) ;
-					let y = e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2);
 					
-					x = snapToGrid(x, 10);
-					y = snapToGrid(y, 10);
-			
-					draggedElement.style.left = `${x}px`;
-					draggedElement.style.top = `${y}px`;
-					fx = x;
-					fy = y;
-
-					dbedges.forEach((edge, edgeIndex) => {
-						console.log('edge :>> ', edge);
-						this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
-					});
-				});
-			
-				document.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
-					if (isDragging) {
-						isDragging = false;
-						draggedElement.style.zIndex = ""; // Reset z-index
-						draggedElement = null;
-						const id = e.target.dataset.id;
-						console.log('id :>> ', id);
-
-						const coord = {
-							x: fx,
-							y: fy
-						};
-						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
-						console.log('qstr :>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
-							if (node[0].length == 0) return;
-							node = node[0][0];
-							node.Presentation.Perspectives.GraphNode.Position = coord;
-							// console.log('node.id after update coord :>>', node.id);
-
-							if (node.id.id) node.id = node.id.id;
-							// console.log('node after update coord :>> ', node);
-
-							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
-							// console.log('qstr :>> ', qstr);
-							
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-						}).catch(error => {
-							console.error('Coordinate update failed', error);
-						});
 						dbedges.forEach((edge, edgeIndex) => {
-							this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+							this.Graph.Events.connectNodes(
+								edge,
+								'.graph_connection_surface',
+								'#graph_scroll_content'
+							);
 						});
 					}
 				});
 			},
 			renderNodes: ((nodes, edges, callback, cr= 0) => { //SECTION - renderNodes
-				console.log('Start Render Nodes');
+				console.log('================= Start Render Nodes');
+
+				// console.log('nodes and edges :>> ', nodes, edges);
 				let temp;
 				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
 				
@@ -647,27 +458,37 @@ export class Flow {
 
 				this.Graph.Events.makeNodeDraggable(".graph-node", "#graph_scroll_content");
 
-				console.log('Done Render Nodes');
-				console.log('Start Render Edges');
+				console.log('================= Done Render Nodes');
+				console.log('=================Start Render Edges');
 
 				// document.querySelector('#app_graph_content>.graph_connection_surface').innerHTML = "";
 				const container = document.querySelector('#app_graph_content > .graph_connection_surface');
 				if (container) {
 					Array.from(container.children).forEach(child => {
 						if (child.tagName.toLowerCase() !== 'defs') {
-						container.removeChild(child);
+							container.removeChild(child);
 						}
 					});
 				}
-				if (edges) if (Array.isArray(edges)) edges.forEach((edge, edgeIndex) => {
-					this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+
+				if (edges) if (Array.isArray(edges)) edges.forEach((rEdge, edgeIndex) => {
+					this.Graph.Events.createGutterDotsAndConnect(
+						document.querySelector(`div[id="${rEdge.OutputPin.nodeID}"]`),
+						document.querySelector(`div[id="${rEdge.InputPin.nodeID}"]`),
+						rEdge
+					);
 				});
+
 				if (edges) if (Array.isArray(edges)) edges.forEach((edge, edgeIndex) => {
-					this.Graph.Events.connectNodes(edge, '.graph_connection_surface', '#graph_scroll_content');
+					this.Graph.Events.connectNodes(
+						edge,
+						'.graph_connection_surface',
+						'#graph_scroll_content'
+					);
 				});
 
 				if (callback) callback();
-				console.log('Done Render Edges');
+				console.log('================= Done Render Edges');
 			}).bind(this),
 			enableMiddleClickScroll: (containerId) => { //SECTION - enableMiddleClickScroll
 				const scrollContent = document.querySelector(containerId);
@@ -931,28 +752,27 @@ export class Flow {
 				cancelButtonFooter.onclick = cleanUp;
 			},
 			
-			connectNodes: (edge, svgcontainerselector, parentselector) => {
+			connectNodes: (rEdge, svgcontainerselector, parentselector) => {
 				// Get the elements by their selector
-				console.log('start connect nodes');
-				if (!edge) return;
-
+				console.log('======================================= start connect nodes');
+				// console.log('rEdge :>> ', rEdge);
+				// console.log('svgcontainerselector :>> ', svgcontainerselector);
+				// console.log('parentselector :>> ', parentselector);
+				
+				if (!rEdge) return;
+				const edge = rEdge;
+				const edgeID = edge.id.ID ? edge.id.ID : edge.id.id.ID;
+				const edgeTable = edge.id.Table ? edge.id.Table : edge.id.id.Table;
+				
 				// Get the SVG container
 				const svgContainer = document.querySelector(svgcontainerselector);
-				const existingPath = svgContainer.querySelector(`path[id="${edge.id.id.ID}"]`);
-				console.log('existingPath :>> ', existingPath);
+				const existingPath = svgContainer.querySelector(`path[id="${edgeID}"]`);
+				// console.log('existingPath :>> ', existingPath);
 
-				console.log('edge not empty! NICE!', edge);
-
-				if (!existingPath) {
-					this.Graph.Events.createGutterDotsAndConnect(
-						document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-						document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-						edge
-					);
-				}
+				const node1selector = '#' + edge.OutputPin.pinID;
+				const node2selector = '#' + edge.InputPin.pinID;
 				
-				const node1selector = '#'+edge.OutputPin.pinID;
-				const node2selector = '#'+edge.InputPin.pinID;
+				// console.log('nodeselectors', node1selector, node2selector);;
 
 				const node1 = document.querySelector(
 					node1selector.startsWith("#")
@@ -960,20 +780,43 @@ export class Flow {
 					  : node1selector.startsWith(".")
 					  ? `div[class="${node1selector.slice(1)}"]`
 					  : `div${node1selector}`
-				  );
-				  
-				  const node2 = document.querySelector(
-					node2selector.startsWith("#")
-					  ? `div[id="${node2selector.slice(1)}"]`
-					  : node2selector.startsWith(".")
-					  ? `div[class="${node2selector.slice(1)}"]`
-					  : `div${node2selector}`
-				  );
+				);
+				
+				const node2 = document.querySelector(
+				node2selector.startsWith("#")
+					? `div[id="${node2selector.slice(1)}"]`
+					: node2selector.startsWith(".")
+					? `div[class="${node2selector.slice(1)}"]`
+					: `div${node2selector}`
+				);
+				// console.log('nodes', node1, node2);;
 			
 				if (!node1 || !node2) {
 					console.error("One or both nodes not found.");
 					return;
 				}
+
+				const GraphNode1selector = '#' + edge.OutputPin.nodeID;
+				const GraphNode2selector = '#' + edge.InputPin.nodeID;
+
+				const GraphNode1 = document.querySelector(
+					GraphNode1selector.startsWith("#")
+					  ? `div[id="${GraphNode1selector.slice(1)}"]`
+					  : GraphNode1selector.startsWith(".")
+					  ? `div[class="${GraphNode1selector.slice(1)}"]`
+					  : `div${GraphNode1selector}`
+				);
+				
+				const GraphNode2 = document.querySelector(
+				GraphNode2selector.startsWith("#")
+					? `div[id="${GraphNode2selector.slice(1)}"]`
+					: GraphNode2selector.startsWith(".")
+					? `div[class="${GraphNode2selector.slice(1)}"]`
+					: `div${GraphNode2selector}`
+				);
+				
+				const rectGraphNode1 = GraphNode1.getBoundingClientRect();
+				const rectGraphNode2 = GraphNode2.getBoundingClientRect();
 
 				const parent = document.querySelector(parentselector);
 				const parentRect = parent.getBoundingClientRect();
@@ -988,19 +831,30 @@ export class Flow {
 				const rect2 = node2.getBoundingClientRect();
 							
 				// Calculate the center of each node
-				const x1 = rect1.left - parentLeft + parentScrollLeft + (rect1.width / 2);
-				const y1 = rect1.top  - parentTop  + parentScrollTop  + (rect1.height / 2);
-				const x2 = rect2.left - parentLeft + parentScrollLeft + (rect2.width / 2);
-				const y2 = rect2.top  - parentTop  + parentScrollTop  + (rect2.height / 2);
+				const x1 = (rect1.left - parentLeft + parentScrollLeft + (rect1.width / 2)) / this.ZoomScale;
+				const y1 = (rect1.top  - parentTop  + parentScrollTop  + (rect1.height / 2))/ this.ZoomScale;
+				const x2 = (rect2.left - parentLeft + parentScrollLeft + (rect2.width / 2))/ this.ZoomScale;
+				const y2 = (rect2.top  - parentTop  + parentScrollTop  + (rect2.height / 2))/ this.ZoomScale;
+
+				// Calculate the center of each GraphNode
+				const Gx1 = (rectGraphNode1.left - parentLeft + parentScrollLeft + (rectGraphNode1.width / 2)) / this.ZoomScale;
+				const Gy1 = (rectGraphNode1.top  - parentTop  + parentScrollTop  + (rectGraphNode1.height / 2)) / this.ZoomScale;
+				const Gx2 = (rectGraphNode2.left - parentLeft + parentScrollLeft + (rectGraphNode2.width / 2)) / this.ZoomScale;
+				const Gy2 = (rectGraphNode2.top  - parentTop  + parentScrollTop  + (rectGraphNode2.height / 2)) / this.ZoomScale;
 						
 				if (!svgContainer) {
 					console.error("SVG container not found.");
 					return;
 				}
 			
-				// Calculate the angle between node1 and node2
-				const dx = x2 - x1;
-				const dy = y2 - y1;
+				// // Calculate the angle between gutter node1 and node2
+				// const dx = x2 - x1;
+				// const dy = y2 - y1;
+				// let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+				// Calculate the angle between Graph node1 and node2
+				const dx = Gx2 - Gx1;
+				const dy = Gy2 - Gy1;
 				let angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
 				// Normalize the angle to 0 - 360 degrees
@@ -1014,63 +868,103 @@ export class Flow {
 				let controlX2;
 				let controlY2;
 
+				
+				// // 4 SEGMENTS
+				// const a = 315, b = 360, c = 0, d = 45;
+				// const e = 135,  f = 225;
+
+				// console.log('angle :>>>>>>>>>>>>>> ', angle);
+				// // Determine gutter usage based on angle
+				// if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {
+				// 	console.log('>>>>>>>>>>>>>>>>>>>> left');
+				// 	controlX1 = x1 + (x2 - x1) / 1.5;
+				// 	controlY1 = y1;
+				// 	controlX2 = x2 - (x2 - x1) / 1.5;
+				// 	controlY2 = y2;
+				// } else if (angle >= d && angle < e) {
+				// 	console.log('>>>>>>>>>>>>>>>>>>>> top');
+				// 	controlX1 = x1;
+				// 	controlY1 = y1 + (y2 - y1) / 1.5;
+				// 	controlX2 = x2;
+				// 	controlY2 = y2 - (y2 - y1) / 1.5;
+				// } else if (angle >= e && angle < f) {
+				// 	console.log('>>>>>>>>>>>>>>>>>>>> bottom');
+				// 	controlX1 = x1 + (x2 - x1) / 1.5;
+				// 	controlY1 = y1;
+				// 	controlX2 = x2 - (x2 - x1) / 1.5;
+				// 	controlY2 = y2;
+				// } else if (angle >= f && angle < a) {
+				// 	console.log('>>>>>>>>>>>>>>>>>>>> right');
+				// 	controlX1 = x1;
+				// 	controlY1 = y1 + (y2 - y1) / 1.5;
+				// 	controlX2 = x2;
+				// 	controlY2 = y2 - (y2 - y1) / 1.5;
+				// }
+
+				// 8 SEGMENTS
+
+				const a = 330, b = 360, c = 0, d = 30;
+				const e = 60,  f = 120;
+				const g = 150, h = 210;
+				const i = 240, j = 300;
+
 				// Determine gutter usage based on angle
-				if ((angle >= 315 && angle <= 360) || (angle >= 0 && angle < 45)) {	
+				if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {	
 					// console.log('left');
 					controlX1 = x1 + (x2 - x1) / 1.5;
 					controlY1 = y1;
 					controlX2 = x2 - (x2 - x1) / 1.5;
 					controlY2 = y2;
-				} else if (angle >= 45 && angle < 60) {
+				} else if (angle >= d && angle < e) {
 					// console.log('left top');
-					controlX1 = x1 + ((x2 - x1) / 100);
-					controlY1 = y1 + ((y2 - y1) / 1.3);
-					controlX2 = x2 - ((x2 - x1) / 1.3);
-					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 60 && angle < 120) {
+					controlX1 = x1 + ((x2 - x1) / 1.3);
+					controlY1 = y1 + ((y2 - y1) / 100);
+					controlX2 = x2 - ((x2 - x1) / 100);
+					controlY2 = y2 - ((y2 - y1) / 1.3);
+				} else if (angle >= e && angle < f) {
 					// console.log('top');
 					controlX1 = x1;
 					controlY1 = y1 + (y2 - y1) / 1.5;
 					controlX2 = x2;
 					controlY2 = y2 - (y2 - y1) / 1.5;
-				} else if (angle >= 120 && angle < 155) {
+				} else if (angle >= f && angle < g) {
 					// console.log('right top');
-					controlX1 = x1 + ((x2 - x1) / 100);
-					controlY1 = y1 + ((y2 - y1) / 1.3);
-					controlX2 = x2 - ((x2 - x1) / 1.3);
-					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 155 && angle < 225) {
+					controlX1 = x1 + ((x2 - x1) / 1.3);
+					controlY1 = y1 + ((y2 - y1) / 100);
+					controlX2 = x2 - ((x2 - x1) / 100);
+					controlY2 = y2 - ((y2 - y1) / 1.3);
+				} else if (angle >= g && angle < h) {
 					// console.log('right');
 					controlX1 = x1 + (x2 - x1) / 1.5;
 					controlY1 = y1;
 					controlX2 = x2 - (x2 - x1) / 1.5;
 					controlY2 = y2;
-				} else if (angle >= 225 && angle < 240) {
+				} else if (angle >= h && angle < i) {
 					// console.log('right bottom');
-					controlX1 = x1 + ((x2 - x1) / 100);
-					controlY1 = y1 + ((y2 - y1) / 1.3);
-					controlX2 = x2 - ((x2 - x1) / 1.3);
-					controlY2 = y2 - ((y2 - y1) / 100);
-				} else if (angle >= 240 && angle < 300) {
+					controlX1 = x1 + ((x2 - x1) / 1.3);
+					controlY1 = y1 + ((y2 - y1) / 100);
+					controlX2 = x2 - ((x2 - x1) / 100);
+					controlY2 = y2 - ((y2 - y1) / 1.3);
+				} else if (angle >= i && angle < j) {
 					// console.log('bottom');
 					controlX1 = x1;
 					controlY1 = y1 + (y2 - y1) / 1.5;
 					controlX2 = x2;
 					controlY2 = y2 - (y2 - y1) / 1.5;
-				} else if (angle >= 300 && angle < 315) {
+				} else if (angle >= j && angle < a) {
 					// console.log('left bottom');
-					controlX1 = x1 + ((x2 - x1) / 100);
-					controlY1 = y1 + ((y2 - y1) / 1.3);
-					controlX2 = x2 - ((x2 - x1) / 1.3);
-					controlY2 = y2 - ((y2 - y1) / 100);
+					controlX1 = x1 + ((x2 - x1) / 1.3);
+					controlY1 = y1 + ((y2 - y1) / 100);
+					controlX2 = x2 - ((x2 - x1) / 100);
+					controlY2 = y2 - ((y2 - y1) / 1.3);
 				}
 				if (!existingPath) {
 					// Create an SVG path
+					console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> create SVG path');
 					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
-					// console.log('path.d', d);
-					// console.log('edge.id.id.ID mau set attribute', edge.id.id.ID);
-					path.setAttribute("id", edge.id.id.ID);
+					console.log('edgeID di create new path', edgeID);
+					path.setAttribute("id", edgeID);
 					path.setAttribute("class", "graph-edge");
 					path.setAttribute("d", d);
 					path.setAttribute("stroke", edge.Path.Color);
@@ -1080,23 +974,38 @@ export class Flow {
 					path.setAttribute("stroke-linecap", "round");
 					path.setAttribute("fill", "none");
 					path.setAttribute("marker-end", "url(#arrowhead)");
-					path.setAttribute("data-table", edge.id.id.Table);
+					path.setAttribute("data-table", edgeTable);
 				
 					// Append the path to the SVG container
 					svgContainer.appendChild(path);
 				} else {
+					console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> modify SVG path');
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
 					// console.log('path.d', d);
 					existingPath.setAttribute("d", d);
 				}
+				console.log('======================================= done connectNodes');
 			},
-			createGutterDotsAndConnect: (node1, node2, edge) => {
+			createGutterDotsAndConnect: (node1, node2, rEdge) => {
+				console.log('======================================= start createGutterDotsAndConnect');
+				// NOTE - This functions as connecting 2 nodes then assign those 2 nodes to the edge.
+				if (!rEdge) return;
+				let edge = rEdge;
+				// console.log('edge.id.ID bikin gutter :>> ', edge.id.ID, edge.id, edge.id.id, edge.id.id.ID, edge);
+				const edgeID = edge.id.ID ? edge.id.ID : edge.id.id.ID;
+				// console.log('edgeID :>> ', edgeID);
+				// console.log('nodes', node1, node2);
+				
+				let gutters = document.querySelectorAll(`div[data-edge="${edgeID}"]`);
+				if (gutters.length > 0) gutters.forEach(gutter => gutter.remove());
+
 				const gutterDot1 = document.createElement('div');
 				gutterDot1.className = 'gutter-dot';
 				gutterDot1.style.width = '10px';
 				gutterDot1.style.height = '10px';
 				gutterDot1.style.backgroundColor = 'silver';
 				gutterDot1.style.borderRadius = '50%';
+				gutterDot1.dataset.edge = edgeID;
 			
 				if (edge.OutputPin.pinID === "") {
 					gutterDot1.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
@@ -1121,82 +1030,280 @@ export class Flow {
 				// Calculate the angle between node1 and node2
 				const dx = rect2.left + rect2.width / 2 - (rect1.left + rect1.width / 2);
 				const dy = rect2.top + rect2.height / 2 - (rect1.top + rect1.height / 2);
-				let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+				let angle = Math.round(Math.atan2(dy, dx) * (180 / Math.PI));
 			
 				// Normalize the angle to 0 - 360 degrees
 				if (angle < 0) {
 					angle += 360;
 				}
+
+				// // 4 SEGMENTS
+				// const a = 345, b = 360, c = 0, d = 15;
+				// const e = 165,  f = 195;
+
+				// console.log('angle :>>>>>>>>>>>>>> ', angle);
+				// // Determine gutter usage based on angle
+				// if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {
+				// 	console.log('>>>>>>>>>>>>>>>>>>>> left');
+				// 	if (node1.querySelector('.right-gutter')) {
+				// 		node1.querySelector('.right-gutter').appendChild(gutterDot1);
+				// 	}
+				// 	if (node2.querySelector('.left-gutter')) {
+				// 		node2.querySelector('.left-gutter').appendChild(gutterDot2);
+				// 	}
+				// } else if (angle >= d && angle < e) {
+				// 	console.log('>>>>>>>>>>>>>>>>>>>> top');
+				// 	if (node1.querySelector('.bottom-gutter')) {
+				// 		node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+				// 	}
+				// 	if (node2.querySelector('.top-gutter')) {
+				// 		node2.querySelector('.top-gutter').appendChild(gutterDot2);
+				// 	}
+				// } else if (angle >= e && angle < f) {
+				// 	console.log('>>>>>>>>>>>>>>>>>>>> bottom');
+				// 	if (node1.querySelector('.left-gutter')) {
+				// 		node1.querySelector('.left-gutter').appendChild(gutterDot1);
+				// 	}
+				// 	if (node2.querySelector('.right-gutter')) {
+				// 		node2.querySelector('.right-gutter').appendChild(gutterDot2);
+				// 	}
+				// } else if (angle >= f && angle < a) {
+				// 	console.log('>>>>>>>>>>>>>>>>>>>> right');
+				// 	if (node1.querySelector('.top-gutter')) {
+				// 		node1.querySelector('.top-gutter').appendChild(gutterDot1);
+				// 	}
+				// 	if (node2.querySelector('.bottom-gutter')) {
+				// 		node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+				// 	}
+				// }
 			
+				// 8 SEGMENTS
+				// const a = 345, b = 360, c = 0, d = 15;
+				// const e = 75,  f = 105; 
+				// const g = 165, h = 195;
+				// const i = 255, j = 285;
+
+				const a = 330, b = 360, c = 0, d = 30;
+				const e = 60,  f = 120;
+				const g = 150, h = 210;
+				const i = 240, j = 300;
+				
 				// Determine gutter usage based on angle
-				if ((angle >= 330 && angle <= 360) || (angle >= 0 && angle < 30)) {	
-					// console.log('left');
+				if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   left');
 					if (node1.querySelector('.right-gutter')) {
 						node1.querySelector('.right-gutter').appendChild(gutterDot1);
 					}
 					if (node2.querySelector('.left-gutter')) {
 						node2.querySelector('.left-gutter').appendChild(gutterDot2);
 					}
-				} else if (angle >= 30 && angle < 60) {
-					// console.log('left top');
-					if (node1.querySelector('.bottom-gutter')) {
-						node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+				} else if (angle >= d && angle < e) {
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   left top');
+					if (node1.querySelector('.right-gutter')) {
+						node1.querySelector('.right-gutter').appendChild(gutterDot1);
 					}
-					if (node2.querySelector('.left-gutter')) {
-						node2.querySelector('.left-gutter').appendChild(gutterDot2);
+					if (node2.querySelector('.top-gutter')) {
+						node2.querySelector('.top-gutter').appendChild(gutterDot2);
 					}
-				} else if (angle >= 60 && angle < 120) {
-					// console.log('top');
+				} else if (angle >= e && angle < f) {
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   top');
 					if (node1.querySelector('.bottom-gutter')) {
 						node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
 					}
 					if (node2.querySelector('.top-gutter')) {
 						node2.querySelector('.top-gutter').appendChild(gutterDot2);
 					}
-				} else if (angle >= 120 && angle < 150) {
-					// console.log('right top');
-					if (node1.querySelector('.bottom-gutter')) {
-						node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+				} else if (angle >= f && angle < g) {
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   right top');
+					if (node1.querySelector('.left-gutter')) {
+						node1.querySelector('.left-gutter').appendChild(gutterDot1);
 					}
-					if (node2.querySelector('.right-gutter')) {
-						node2.querySelector('.right-gutter').appendChild(gutterDot2);
+					if (node2.querySelector('.top-gutter')) {
+						node2.querySelector('.top-gutter').appendChild(gutterDot2);
 					}
-				} else if (angle >= 150 && angle < 210) {
-					// console.log('right');
+				} else if (angle >= g && angle < h) {
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   right');
 					if (node1.querySelector('.left-gutter')) {
 						node1.querySelector('.left-gutter').appendChild(gutterDot1);
 					}
 					if (node2.querySelector('.right-gutter')) {
 						node2.querySelector('.right-gutter').appendChild(gutterDot2);
 					}
-				} else if (angle >= 210 && angle < 240) {
-					// console.log('right bottom');
-					if (node1.querySelector('.top-gutter')) {
-						node1.querySelector('.top-gutter').appendChild(gutterDot1);
+				} else if (angle >= h && angle < i) {
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   right bottom');
+					if (node1.querySelector('.left-gutter')) {
+						node1.querySelector('.left-gutter').appendChild(gutterDot1);
 					}
-					if (node2.querySelector('.right-gutter')) {
-						node2.querySelector('.right-gutter').appendChild(gutterDot2);
+					if (node2.querySelector('.bottom-gutter')) {
+						node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
 					}
-				} else if (angle >= 240 && angle < 300) {
-					// console.log('bottom');
+				} else if (angle >= i && angle < j) {
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   bottom');
 					if (node1.querySelector('.top-gutter')) {
 						node1.querySelector('.top-gutter').appendChild(gutterDot1);
 					}
 					if (node2.querySelector('.bottom-gutter')) {
 						node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
 					}
-				} else if (angle >= 300 && angle < 330) {
-					// console.log('left bottom');
-					if (node1.querySelector('.top-gutter')) {
-						node1.querySelector('.top-gutter').appendChild(gutterDot1);
+				} else if (angle >= j && angle < a) {
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   left bottom');
+					if (node1.querySelector('.right-gutter')) {
+						node1.querySelector('.right-gutter').appendChild(gutterDot1);
 					}
-					if (node2.querySelector('.left-gutter')) {
-						node2.querySelector('.left-gutter').appendChild(gutterDot2);
+					if (node2.querySelector('.bottom-gutter')) {
+						node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
 					}
 				}
-				return edge;
+				console.log('======================================= end createGutterDotsAndConnect');
+
+				return [edge, gutterDot1, gutterDot2];
 			},
 			enableDragSelect: ((selector) => {
+				const container = document.querySelector(selector);
+				let self = this;
+				let isDragging = false;
+				let startX, startY;
+			
+				const selectedElements = new Set(); // Using Set to prevent duplicates
+				let highlightBox = null;
+			
+				// Function to create a highlight box
+				function createHighlightBox() {
+					highlightBox = document.createElement('div');
+					highlightBox.style.position = 'absolute';
+					highlightBox.style.backgroundColor = 'rgba(0, 123, 255, 0.3)';
+					highlightBox.style.border = '1px dashed #007bff';
+					highlightBox.style.borderRadius = '10px';
+					highlightBox.style.pointerEvents = 'none'; // Prevent interference with mouse events
+					highlightBox.style.zIndex = '1000';
+					container.appendChild(highlightBox);
+				}
+			
+				// Function to update the position and size of the highlight box
+				function updateHighlightBox(x1, y1, x2, y2) {
+					const rect = container.getBoundingClientRect();
+					const left = Math.min(x1, x2) - rect.left;
+					const top = Math.min(y1, y2) - rect.top;
+					const width = Math.abs(x2 - x1);
+					const height = Math.abs(y2 - y1);
+			
+					highlightBox.style.left = `${left}px`;
+					highlightBox.style.top = `${top}px`;
+					highlightBox.style.width = `${width}px`;
+					highlightBox.style.height = `${height}px`;
+				}
+			
+				// Function to handle mouse down event
+				function onMouseDown(e) {
+					if (e.button !== 0) return;
+			
+					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
+						isDragging = true;
+						startX = (e.clientX + container.scrollLeft) / self.ZoomScale;
+						startY = (e.clientY + container.scrollTop) / self.ZoomScale;
+			
+						selectedElements.clear(); // Reset selected elements
+			
+						if (!highlightBox) createHighlightBox();
+						updateHighlightBox(startX * self.ZoomScale, startY * self.ZoomScale, startX * self.ZoomScale, startY * self.ZoomScale);
+					}
+				}
+			
+				// Function to handle mouse move event
+				function onMouseMove(e) {
+					if (!isDragging) return;
+			
+					self.DragSelect = true;
+			
+					const currentX = (e.clientX + container.scrollLeft) / self.ZoomScale;
+					const currentY = (e.clientY + container.scrollTop) / self.ZoomScale;
+			
+					updateHighlightBox(startX * self.ZoomScale, startY * self.ZoomScale, currentX * self.ZoomScale, currentY * self.ZoomScale);
+			
+					const rect = container.getBoundingClientRect();
+					const dragArea = {
+						x1: Math.min(startX, currentX),
+						y1: Math.min(startY, currentY),
+						x2: Math.max(startX, currentX),
+						y2: Math.max(startY, currentY),
+					};
+			
+					// Highlight elements within the drag area
+					container.querySelectorAll('.graph-node, svg path').forEach(element => {
+						const elementRect = element.getBoundingClientRect();
+						const isInside =
+							elementRect.left / self.ZoomScale >= dragArea.x1 &&
+							elementRect.top / self.ZoomScale >= dragArea.y1 &&
+							elementRect.right / self.ZoomScale <= dragArea.x2 &&
+							elementRect.bottom / self.ZoomScale <= dragArea.y2;
+			
+						if (isInside) {
+							if (!selectedElements.has(element)) {
+								if (element.tagName === 'path') {
+									element.classList.add('focused');
+									selectedElements.add(element);
+								} else {
+									const elmnt = element.querySelector('.is-selectable-box');
+									if (elmnt) {
+										elmnt.classList.add('focused');
+										selectedElements.add(element);
+									}
+								}
+							}
+						} else if (selectedElements.has(element)) {
+							if (element.tagName === 'path') {
+								element.classList.remove('focused');
+								selectedElements.delete(element);
+							} else {
+								const elmnt = element.querySelector('.is-selectable-box');
+								if (elmnt) {
+									elmnt.classList.remove('focused');
+									selectedElements.delete(element);
+								}
+							}
+						}
+					});
+				}
+			
+				// Function to handle mouse up event
+				function onMouseUp() {
+					if (isDragging) {
+						isDragging = false;
+			
+						if (highlightBox) {
+							container.removeChild(highlightBox);
+							highlightBox = null;
+						}
+			
+						// Update global variable
+						ParadigmREVOLUTION.Application.Cursor.length = 0;
+			
+						for (const element of selectedElements) {
+							if (element.tagName === 'path') {
+								ParadigmREVOLUTION.Application.Cursor.push({ table: element.dataset.table, id: element.id });
+							} else {
+								ParadigmREVOLUTION.Application.Cursor.push({
+									table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name,
+									id: element.id,
+								});
+							}
+						}
+			
+						console.log('ParadigmREVOLUTION.Application.Cursor', ParadigmREVOLUTION.Application.Cursor);
+						setTimeout(() => {
+							self.DragSelect = false;
+						}, 300);
+					}
+				}
+			
+				// Attach event listeners to the container
+				container.addEventListener('mousedown', onMouseDown);
+				container.addEventListener('mousemove', onMouseMove);
+				container.addEventListener('mouseup', onMouseUp);
+				container.addEventListener('mouseleave', onMouseUp); // Ensure cleanup if mouse leaves the container
+			}).bind(this),
+
+			enableDragSelectV1: ((selector) => {
 				const container = document.querySelector(selector);
 				let self = this;
 				let isDragging = false;
@@ -2416,7 +2523,7 @@ export class Flow {
 						console.log('scroll', parentScrollLeft, parentScrollTop);
 						console.log('pos', parentLeft, parentTop);
 					
-						let dx = parentRect.left; //+ parentScrollLeft;
+						let dx = parentRect.left + parentScrollLeft; //+ parentScrollLeft;
 						let dy = parentRect.top + parentScrollTop;
 				
 						console.log('dxy :>> ', dx, dy);
@@ -2572,13 +2679,14 @@ export class Flow {
 				document.querySelector('#document_refreshrender_button').addEventListener('click', (e) => {
 					console.log('Refresh render button clicked!');
 					let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`;
-					console.log('qstr :>> ', qstr);
+					// console.log('qstr Yggdrasil :>> ', qstr);
 					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(nodes => {
 						// console.log('nodes :>> ', nodes);
 						qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`;
-						console.log('qstr :>> ', qstr);
+						// console.log('qstr edges :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(edges => {
-							// console.log('edges :>> ', edges);
+							// console.log('nodes each :>> ', nodes[0]);
+							// console.log('edges each :>> ', edges[0]);
 							this.Graph.Events.renderNodes(nodes[0], edges[0], () => {
 								// console.log('Nodes and Edges rendered, callback called');
 							});
@@ -2924,10 +3032,16 @@ export class Flow {
 										selectedNodes.Start = document.querySelector(`div[id="${selectedNodes.StartParam.id}"][class="${selectedNodes.StartParam.class}"]`);
 										selectedNodes.End = document.querySelector(`div[id="${selectedNodes.EndParam.id}"][class="${selectedNodes.EndParam.class}"]`);
 	
-										let edge = FlowGraph.Graph.Events.createGutterDotsAndConnect(
+										let [edge, dot1, dot2] = this.Graph.Events.createGutterDotsAndConnect(
 											selectedNodes.Start,
 											selectedNodes.End,
 											newEdge
+										);
+						
+										FlowGraph.Graph.Events.connectNodes(
+											newEdge,
+											'.graph_connection_surface',
+											'#graph_scroll_content'
 										);
 	
 										let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
@@ -2941,8 +3055,7 @@ export class Flow {
 												qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(outid)}\n-> ${selectedType} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
 												console.log(qstr);
 												ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
-													const newEdge = result[0][0];
-													FlowGraph.Graph.Events.connectNodes(newEdge, '.graph_connection_surface', '#graph_scroll_content');
+													console.log('Edge creation SUCCESS', result);
 												}).catch(err => console.error('Edge creation FAIL, ', err));
 											}).catch(err => console.error('Input nodePin not found', err));	
 										}).catch(err => console.error('Output nodePin not found', err));
@@ -2957,6 +3070,157 @@ export class Flow {
 					}
 				]);
 				this.Graph.Events.enableDragSelect('.graph_surfaces');
+				
+				// this.ZoomScale = 1;
+				// this.ZoomStep = 0.05; // Zoom scale increment
+				// this.MinZoomScale = 0.1; // Prevents zooming out too far
+				// this.MaxZoomScale = 10; // Prevents zooming in too far
+		
+				// // Get the container and buttons
+				// const graphContent = document.getElementById('app_graph_content');
+				// const zoomInButton = document.getElementById('zoom_in_button');
+				// const zoomResetButton = document.getElementById('zoom_reset_button');
+				// const zoomOutButton = document.getElementById('zoom_out_button');
+
+				// // Zoom In action
+				// zoomInButton.addEventListener('click', () => {
+				// 	if (this.ZoomScale < this.MaxZoomScale) {
+				// 		this.ZoomScale += this.ZoomStep;
+				// 		graphContent.style.transform = `scale(${this.ZoomScale})`;
+				// 		console.log('zoom in button clicked', this.ZoomScale);
+				// 	}
+				// });
+				// // Zoom In action
+				// zoomResetButton.addEventListener('click', () => {
+				// 	this.ZoomScale = 1;
+				// 	graphContent.style.transform = `scale(${this.ZoomScale})`;
+				// 	console.log('zoom in button clicked', this.ZoomScale);
+				// });
+
+				// // Zoom Out action
+				// zoomOutButton.addEventListener('click', () => {
+				// 	if (this.ZoomScale > this.MinZoomScale) {
+				// 		this.ZoomScale -= this.ZoomStep;
+				// 		graphContent.style.transform = `scale(${this.ZoomScale})`;
+				// 		console.log('zoom out button clicked', this.ZoomScale);
+				// 	}
+				// });
+
+				this.ZoomScale = 1;
+				this.ZoomStep = 0.05; // Zoom scale increment
+				this.MinZoomScale = 0.1; // Prevents zooming out too far
+				this.MaxZoomScale = 10; // Prevents zooming in too far
+				
+				let zoomTimeout = null; // Timeout variable for delayed scroll adjustment
+
+				// Get the container and buttons
+				const graphContent = document.getElementById('app_graph_content');
+				const zoomInButton = document.getElementById('zoom_in_button');
+				const zoomResetButton = document.getElementById('zoom_reset_button');
+				const zoomOutButton = document.getElementById('zoom_out_button');
+				const container = graphContent.parentElement; // Assuming parent is the scrollable container
+				let newScrollLeft;
+				let newScrollTop;
+				let clickCount = 0;
+				let zoombtn = '';
+				let prevzoombtn = '';
+
+				// Zoom function to adjust the viewport position
+				const applyZoom = (newScale) => {
+					clickCount++;
+					// Get the current scroll position and dimensions
+					const containerRect = container.getBoundingClientRect();
+					const graphContentRect = graphContent.getBoundingClientRect();
+				
+					// Get the viewport center relative to the content
+					const viewportCenterX = container.scrollLeft + containerRect.width / 2;
+					const viewportCenterY = container.scrollTop + containerRect.height / 2;
+				
+					// Calculate the relative position of the viewport center to the content
+					const relativeCenterX = viewportCenterX / this.ZoomScale;
+					const relativeCenterY = viewportCenterY / this.ZoomScale;
+				
+					// Update the scale
+					this.ZoomScale = newScale;
+					graphContent.style.transform = `scale(${this.ZoomScale})`;
+				
+					// Adjust the scroll position to maintain the same relative center
+					if (clickCount == 1) {
+						console.log('Masuk save scroll position');
+						newScrollLeft = relativeCenterX * this.ZoomScale - containerRect.width / 2;
+						newScrollTop = relativeCenterY * this.ZoomScale - containerRect.height / 2;
+						console.log(newScrollLeft, newScrollTop);
+					}
+				
+
+					if (zoomTimeout) {
+						clearTimeout(zoomTimeout);
+					}
+					zoomTimeout = setTimeout(() => {
+						// container.scrollLeft = newScrollLeft*this.ZoomScale;
+						// container.scrollTop = newScrollTop*this.ZoomScale;
+						if (zoombtn == 'in') {
+							container.scrollTo({
+								left: newScrollLeft * this.ZoomScale,
+								top: newScrollTop * this.ZoomScale,
+								behavior: 'smooth', // Enable smooth scrolling
+							});
+							prevzoombtn = 'in';
+						} else if (zoombtn == 'out') {
+							container.scrollTo({
+								left: newScrollLeft / this.ZoomScale,
+								top: newScrollTop / this.ZoomScale,
+								behavior: 'smooth', // Enable smooth scrolling
+							});
+							prevzoombtn = 'out';
+						} else if (zoombtn == 'reset') {
+							if (prevzoombtn == 'in') {
+								container.scrollTo({
+									left: newScrollLeft * this.ZoomScale,
+									top: newScrollTop * this.ZoomScale,
+									behavior: 'smooth', // Enable smooth scrolling
+								});
+							}else if (prevzoombtn == 'out') {
+								container.scrollTo({
+									left: newScrollLeft * this.ZoomScale,
+									top: newScrollTop * this.ZoomScale,
+									behavior: 'smooth', // Enable smooth scrolling
+								});
+							}
+							prevzoombtn = '';
+						}
+						clickCount = 0;
+					}, 500);
+
+				
+					console.log('Zoom adjusted:', this.ZoomScale);
+				};
+				
+				// Zoom In action
+				zoomInButton.addEventListener('click', () => {
+					if (this.ZoomScale < this.MaxZoomScale) {
+						applyZoom(this.ZoomScale + this.ZoomStep);
+						zoombtn = 'in';
+					}
+				});
+				
+				// Zoom Reset action
+				zoomResetButton.addEventListener('click', () => {
+					applyZoom(1);
+					zoombtn = 'reset';
+				});
+				
+				// Zoom Out action
+				zoomOutButton.addEventListener('click', () => {
+					if (this.ZoomScale > this.MinZoomScale) {
+						applyZoom(this.ZoomScale - this.ZoomStep);
+						zoombtn = 'out';
+					}
+				});
+				
+				
+
+
 
 				//NOTE - end of InitializeFormControls
 			},

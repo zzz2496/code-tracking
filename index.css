@@ -304,6 +304,11 @@
 	opacity: 1;
 }
 
+#app_graph_content {
+    transition: transform 0.3s ease; /* Smooth zoom transition */
+    transform-origin: top left; /* Adjust the origin of zoom */
+}
+
 .app_graph_controls_containers{
 	height: fit-content;
 	width: fit-content;

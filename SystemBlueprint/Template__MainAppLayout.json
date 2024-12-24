@@ -92,6 +92,11 @@
 							]},
 							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
 								{"tag":"div", "class":"document-saveload-container show", "content":[
+									{ "comment": "Zoom out",   "tag": "button", "class": "button mr-1 document-saveload p-4 is-outlined is-danger", "id": "zoom_out_button", "title": "Graph Zoom Out", "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus\"></i>" },
+									{ "comment": "Zoom reset", "tag": "button", "class": "button mr-1 document-saveload p-4 is-outlined is-warning", "id": "zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<i class=\"fa-solid fa-magnifying-glass\"></i>" },
+									{ "comment": "Zoom in",    "tag": "button", "class": "button mr-1 document-saveload p-4 is-outlined is-success", "id": "zoom_in_button", "title": "Graph Zoom In", "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus\"></i>" }
+								]},
+								{"tag":"div", "class":"document-saveload-container show", "content":[
 									{ "comment": "Enable Programming sections",    "tag": "button", "class": "button mr-1 document-saveload p-4 is-default", "id": "enable_programming_sections_button", "title": "Enable Programming Sections", "innerHTML": "<i class=\"fa-solid fa-square-binary\"></i>" },
 									{ "comment": "Document Refresh Render button", "tag": "button", "class": "button mr-1 document-saveload p-4 is-default", "id": "document_refreshrender_button", "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
 									{ "comment": "Load Document button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" },
