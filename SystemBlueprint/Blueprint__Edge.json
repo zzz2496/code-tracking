@@ -2,6 +2,7 @@
 	"Label":"",
 	"Name":"",
 	"Value":{},
+	"ArrowBend":"convex",
 	"Connection":{
 		"Type":"",
 		"ChainID":""

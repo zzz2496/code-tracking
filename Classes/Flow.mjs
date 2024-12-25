@@ -273,12 +273,14 @@ export class Flow {
 				let fx, fy = 0;
 				let nodeID = "";
 				let dbedges = [];
+
+				let aX, aY;
 				this.Form.Events.addGlobalEventListener("mousedown", [{ //NOTE - makeNodeDraggable mousedown
 					selector: draggableSelector,
 					callback: (e) => {
 						// Check if the clicked element is the .card-header
 						if (!e.target.closest('.card-header-icon')) return;
-						console.log('MakeNodeDraggable mousedown');
+						console.log('================================================================================================ MakeNodeDraggable mousedown start');
 						isDragging = true;
 
 						draggedElement = e.target.closest(draggableSelector);
@@ -288,6 +290,7 @@ export class Flow {
 						console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((edges) => {
 							dbedges = edges[0];
+							// console.log('dbedges :>> ', dbedges);
 							if (edges[0]) if (Array.isArray(edges[0])) edges[0].forEach((edge, edgeIndex) => {
 								this.Graph.Events.createGutterDotsAndConnect(
 									document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
@@ -319,7 +322,7 @@ export class Flow {
 							})
 							.filter(item => item); // Remove nulls for non-existent elements
 
-						console.log('relatedElements :>> ', relatedElements);
+						// console.log('relatedElements :>> ', relatedElements);
 			
 						const parentScrollLeft = parent.scrollLeft;
 						const parentScrollTop = parent.scrollTop;
@@ -333,6 +336,11 @@ export class Flow {
 			
 						draggedElement.style.position = "absolute";
 						draggedElement.style.zIndex = 1000; // Bring to front
+
+						aX = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.ZoomScale;
+						aY = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.ZoomScale;
+						console.log('================================================================================================ MakeNodeDraggable mousedown done');
+
 					}
 				}]);
 			
@@ -351,95 +359,110 @@ export class Flow {
 					
 					x = snapToGrid(x, 10);
 					y = snapToGrid(y, 10);
-			
-					draggedElement.style.left = `${x}px`;
-					draggedElement.style.top = `${y}px`;
 
-					// Move related elements
-					relatedElements.forEach(({ elem, offsetX, offsetY }) => {
-						elem.style.left = `${(x + offsetX) / this.ZoomScale}px`;
-						elem.style.top = `${(y + offsetY) / this.ZoomScale}px`;
-					});
-					
-					fx = x;
-					fy = y;
+					if ((aX !== x) || (aY !== y)) {
+						// console.log('================================================================================================ mouse moved enough, start mousemove!')
+						aX = x;
+						aY = y;
 
-					dbedges.forEach((edge, edgeIndex) => {
-						this.Graph.Events.createGutterDotsAndConnect(
-							document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-							document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-							edge
-						);
-					});
-					dbedges.forEach((edge, edgeIndex) => {
-						console.log('dbedge each:>> ', edge);
-						this.Graph.Events.connectNodes(
-							edge,
-							'.graph_connection_surface',
-							'#graph_scroll_content'
-						);
-					});
-				});
-			
-				document.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
-					if (isDragging) {
-						isDragging = false;
-						draggedElement.style.zIndex = ""; // Reset z-index
-						draggedElement = null;
-						const id = e.target.dataset.id;
-						console.log('id :>> ', id);
-
-						const coord = {
-							x: fx,
-							y: fy
-						};
-						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
-						// console.log('qstr :>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
-							if (node[0].length == 0) return;
-							node = node[0][0];
-							node.Presentation.Perspectives.GraphNode.Position = coord;
-							// console.log('node.id after update coord :>>', node.id);
-
-							if (node.id.id) node.id = node.id.id;
-							// console.log('node after update coord :>> ', node);
-
-							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
-							// console.log('qstr :>> ', qstr);
-							
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-						}).catch(error => {
-							console.error('Coordinate update failed', error);
+						draggedElement.style.left = `${aX}px`;
+						draggedElement.style.top = `${aY}px`;
+	
+						// Move related elements
+						relatedElements.forEach(({ elem, offsetX, offsetY }) => {
+							elem.style.left = `${(aX + offsetX) / this.ZoomScale}px`;
+							elem.style.top = `${(aY + offsetY) / this.ZoomScale}px`;
 						});
-
-						// Update database positions for related elements
-						relatedElements.forEach(({ elem }) => {
-							const relatedId = elem.id;
-							const relatedCoord = {
-								x: parseInt(elem.style.left, 10),
-								y: parseInt(elem.style.top, 10)
-							};
-							let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
-							// console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
-								console.error('Coordinate update failed for related element', error);
-							});
-						});
+						
+						fx = aX;
+						fy = aY;
+	
 						dbedges.forEach((edge, edgeIndex) => {
+							// console.log('dbedge each:>> ', edge.id);
 							this.Graph.Events.createGutterDotsAndConnect(
 								document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
 								document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
 								edge
 							);
 						});
-					
 						dbedges.forEach((edge, edgeIndex) => {
+							// console.log('dbedge each:>> ', edge);
 							this.Graph.Events.connectNodes(
 								edge,
 								'.graph_connection_surface',
 								'#graph_scroll_content'
 							);
 						});
+						// console.log('================================================================================================ mouse moved enough, DONE mousemove!')
+					}
+				});
+			
+				document.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
+					if (isDragging) {
+						console.log('================================================================================================ MakeNodeDraggable mouseup start');
+
+						isDragging = false;
+						draggedElement.style.zIndex = ""; // Reset z-index
+						draggedElement = null;
+						// const id = e.target.dataset.id;
+						const id = e.target.closest('.graph-node').id;	
+						if (id == undefined) {
+							console.error('id :>> ', id);
+						} else {
+							console.log('id :>> ', id);
+							const coord = {
+								x: fx,
+								y: fy
+							};
+							let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
+							// console.log('qstr :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
+								if (node[0].length == 0) return;
+								node = node[0][0];
+								node.Presentation.Perspectives.GraphNode.Position = coord;
+								// console.log('node.id after update coord :>>', node.id);
+	
+								if (node.id.id) node.id = node.id.id;
+								// console.log('node after update coord :>> ', node);
+	
+								qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+								// console.log('qstr :>> ', qstr);
+								
+								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+							}).catch(error => {
+								console.error('Coordinate update failed', error);
+							});
+	
+							// Update database positions for related elements
+							relatedElements.forEach(({ elem }) => {
+								const relatedId = elem.id;
+								const relatedCoord = {
+									x: parseInt(elem.style.left, 10),
+									y: parseInt(elem.style.top, 10)
+								};
+								let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
+								// console.log('qstr :>> ', qstr);
+								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
+									console.error('Coordinate update failed for related element', error);
+								});
+							});
+							dbedges.forEach((edge, edgeIndex) => {
+								this.Graph.Events.createGutterDotsAndConnect(
+									document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+									document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+									edge
+								);
+							});
+						
+							dbedges.forEach((edge, edgeIndex) => {
+								this.Graph.Events.connectNodes(
+									edge,
+									'.graph_connection_surface',
+									'#graph_scroll_content'
+								);
+							});
+						}
+						console.log('================================================================================================ MakeNodeDraggable mouseup done');
 					}
 				});
 			},
@@ -653,10 +676,9 @@ export class Flow {
 				cancelButton.onclick = cleanUp;
 				cancelButtonFooter.onclick = cleanUp;
 			},
-			showGeneralModal: (modal_title, schema, callback) => {
+			showSchemaModal: (modal_title, schema, passedData, callback) => {
 				// Create modal HTML as a string with animation classes
-				let schemastr = "";
-				
+				let schemastr = this.Form.Render.traverseDOMProxyOBJ(this.Form.Events.GenerateSchemaToParadigmJSON('id_modal_connection_type', schema.Dataset.Schema, this.Utility, 1, ''));				
 				const modalHTML = `
 					<div id="connectionModal" class="modal is-active fade-in">
 						<div class="modal-background"></div>
@@ -665,7 +687,7 @@ export class Flow {
 								<p class="modal-card-title">${modal_title}</p>
 								<button class="delete" aria-label="close" id="cancelButton"></button>
 							</header>
-							<section class="modal-card-body">
+							<section class="modal-card-body modal-form">
 								${schemastr}
 							</section>
 							<footer class="modal-card-foot" style="justify-content: center; gap: 20px;">
@@ -735,18 +757,16 @@ export class Flow {
 			
 				// Handle confirm button click
 				confirmButton.onclick = () => {
-					const selectedOption = dropdown.options[dropdown.selectedIndex];
-					const selectedType = selectedOption.value; // Value of the selected option
-			
-					// Extract custom data attributes from the selected option
-					const customData = {
-						color: selectedOption.dataset.color
-					};
-			
+					let data = [];
+					document.querySelector('.modal-form').querySelectorAll('input, button, select, textarea').forEach(input => {
+						const key = input.id.split('___')[1];
+						let temp = {};
+						temp[key] = input.value;
+						data.push(temp);
+					});
 					cleanUp(); // Clean up modal
-					callback(selectedType, customData, selectedNodes, FlowGraph); // Execute the callback with the selected type
-				};
-			
+					callback(data, passedData); // Execute the callback with the selected type
+				};			
 				// Handle cancel button clicks
 				cancelButton.onclick = cleanUp;
 				cancelButtonFooter.onclick = cleanUp;
@@ -754,7 +774,7 @@ export class Flow {
 			
 			connectNodes: (rEdge, svgcontainerselector, parentselector) => {
 				// Get the elements by their selector
-				console.log('======================================= start connect nodes');
+				// console.log('======================================= start connect nodes');
 				// console.log('rEdge :>> ', rEdge);
 				// console.log('svgcontainerselector :>> ', svgcontainerselector);
 				// console.log('parentselector :>> ', parentselector);
@@ -763,6 +783,7 @@ export class Flow {
 				const edge = rEdge;
 				const edgeID = edge.id.ID ? edge.id.ID : edge.id.id.ID;
 				const edgeTable = edge.id.Table ? edge.id.Table : edge.id.id.Table;
+				const arrowBend = edge.ArrowBend;
 				
 				// Get the SVG container
 				const svgContainer = document.querySelector(svgcontainerselector);
@@ -853,9 +874,9 @@ export class Flow {
 				// let angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
 				// Calculate the angle between Graph node1 and node2
-				const dx = Gx2 - Gx1;
-				const dy = Gy2 - Gy1;
-				let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+				const zx = Gx2 - Gx1;
+				const zy = Gy2 - Gy1;
+				let angle = Math.atan2(zy, zx) * (180 / Math.PI);
 
 				// Normalize the angle to 0 - 360 degrees
 				if (angle < 0) {
@@ -868,7 +889,6 @@ export class Flow {
 				let controlX2;
 				let controlY2;
 
-				
 				// // 4 SEGMENTS
 				// const a = 315, b = 360, c = 0, d = 45;
 				// const e = 135,  f = 225;
@@ -907,60 +927,100 @@ export class Flow {
 				const e = 60,  f = 120;
 				const g = 150, h = 210;
 				const i = 240, j = 300;
-
+				let direction;
 				// Determine gutter usage based on angle
 				if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {	
-					// console.log('left');
-					controlX1 = x1 + (x2 - x1) / 1.5;
+					direction = 'left';
+					controlX1 = x1 + (x2 - x1) / 2;
 					controlY1 = y1;
-					controlX2 = x2 - (x2 - x1) / 1.5;
+					controlX2 = x2 - (x2 - x1) / 2;
 					controlY2 = y2;
 				} else if (angle >= d && angle < e) {
-					// console.log('left top');
-					controlX1 = x1 + ((x2 - x1) / 1.3);
-					controlY1 = y1 + ((y2 - y1) / 100);
-					controlX2 = x2 - ((x2 - x1) / 100);
-					controlY2 = y2 - ((y2 - y1) / 1.3);
+					direction = 'left top';
+					switch (arrowBend) {
+						case 'convex':
+							controlX1 = x1 + ((x2 - x1) / 2);
+							controlY1 = y1 + ((y2 - y1) / 100);
+							controlX2 = x2 - ((x2 - x1) / 100);
+							controlY2 = y2 - ((y2 - y1) / 2);
+						break;
+						default:
+							controlX1 = x1 + ((x2 - x1) / 100);
+							controlY1 = y1 + ((y2 - y1) / 2);
+							controlX2 = x2 - ((x2 - x1) / 2);
+							controlY2 = y2 - ((y2 - y1) / 100);
+							break;
+					}
 				} else if (angle >= e && angle < f) {
-					// console.log('top');
+					direction = 'top';
 					controlX1 = x1;
-					controlY1 = y1 + (y2 - y1) / 1.5;
+					controlY1 = y1 + (y2 - y1) / 2;
 					controlX2 = x2;
-					controlY2 = y2 - (y2 - y1) / 1.5;
+					controlY2 = y2 - (y2 - y1) / 2;
 				} else if (angle >= f && angle < g) {
-					// console.log('right top');
-					controlX1 = x1 + ((x2 - x1) / 1.3);
-					controlY1 = y1 + ((y2 - y1) / 100);
-					controlX2 = x2 - ((x2 - x1) / 100);
-					controlY2 = y2 - ((y2 - y1) / 1.3);
+					direction = 'right top';
+					switch (arrowBend) {
+						case 'convex':
+							controlX1 = x1 + ((x2 - x1) / 2);
+							controlY1 = y1 + ((y2 - y1) / 100);
+							controlX2 = x2 - ((x2 - x1) / 100);
+							controlY2 = y2 - ((y2 - y1) / 2);
+							break;
+						default:
+							controlX1 = x1 + ((x2 - x1) / 100);
+							controlY1 = y1 + ((y2 - y1) / 2);
+							controlX2 = x2 - ((x2 - x1) / 2);
+							controlY2 = y2 - ((y2 - y1) / 100);
+							break;
+					}
 				} else if (angle >= g && angle < h) {
-					// console.log('right');
-					controlX1 = x1 + (x2 - x1) / 1.5;
+					direction = 'right';
+					controlX1 = x1 + (x2 - x1) / 2;
 					controlY1 = y1;
-					controlX2 = x2 - (x2 - x1) / 1.5;
+					controlX2 = x2 - (x2 - x1) / 2;
 					controlY2 = y2;
 				} else if (angle >= h && angle < i) {
-					// console.log('right bottom');
-					controlX1 = x1 + ((x2 - x1) / 1.3);
-					controlY1 = y1 + ((y2 - y1) / 100);
-					controlX2 = x2 - ((x2 - x1) / 100);
-					controlY2 = y2 - ((y2 - y1) / 1.3);
+					direction = 'right bottom';
+					switch (arrowBend) {
+						case 'convex':
+							controlX1 = x1 + ((x2 - x1) / 2);
+							controlY1 = y1 + ((y2 - y1) / 100);
+							controlX2 = x2 - ((x2 - x1) / 100);
+							controlY2 = y2 - ((y2 - y1) / 2);
+							break;
+						default:
+							controlX1 = x1 + ((x2 - x1) / 100);
+							controlY1 = y1 + ((y2 - y1) / 2);
+							controlX2 = x2 - ((x2 - x1) / 2);
+							controlY2 = y2 - ((y2 - y1) / 100);
+						break;
+					}
 				} else if (angle >= i && angle < j) {
-					// console.log('bottom');
+					direction = 'bottom';
 					controlX1 = x1;
-					controlY1 = y1 + (y2 - y1) / 1.5;
+					controlY1 = y1 + (y2 - y1) / 2;
 					controlX2 = x2;
-					controlY2 = y2 - (y2 - y1) / 1.5;
+					controlY2 = y2 - (y2 - y1) / 2;
 				} else if (angle >= j && angle < a) {
-					// console.log('left bottom');
-					controlX1 = x1 + ((x2 - x1) / 1.3);
-					controlY1 = y1 + ((y2 - y1) / 100);
-					controlX2 = x2 - ((x2 - x1) / 100);
-					controlY2 = y2 - ((y2 - y1) / 1.3);
+					direction = 'left bottom';
+					switch (arrowBend) {
+						case 'convex':
+							controlX1 = x1 + ((x2 - x1) / 2);
+							controlY1 = y1 + ((y2 - y1) / 100);
+							controlX2 = x2 - ((x2 - x1) / 100);
+							controlY2 = y2 - ((y2 - y1) / 2);
+							break;
+						default:
+							controlX1 = x1 + ((x2 - x1) / 100);
+							controlY1 = y1 + ((y2 - y1) / 2);
+							controlX2 = x2 - ((x2 - x1) / 2);
+							controlY2 = y2 - ((y2 - y1) / 100);
+							break;
+					}
 				}
 				if (!existingPath) {
 					// Create an SVG path
-					console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> create SVG path');
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> create SVG path');
 					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
 					console.log('edgeID di create new path', edgeID);
@@ -975,27 +1035,75 @@ export class Flow {
 					path.setAttribute("fill", "none");
 					path.setAttribute("marker-end", "url(#arrowhead)");
 					path.setAttribute("data-table", edgeTable);
+					path.setAttribute("data-arrowBend", arrowBend);
+					path.setAttribute("data-direction", direction);
 				
 					// Append the path to the SVG container
 					svgContainer.appendChild(path);
 				} else {
-					console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> modify SVG path');
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> modify SVG path');
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
 					// console.log('path.d', d);
 					existingPath.setAttribute("d", d);
 				}
-				console.log('======================================= done connectNodes');
+				// console.log('======================================= done connectNodes');
 			},
 			createGutterDotsAndConnect: (node1, node2, rEdge) => {
-				console.log('======================================= start createGutterDotsAndConnect');
+				// console.log('======================================= start createGutterDotsAndConnect');
 				// NOTE - This functions as connecting 2 nodes then assign those 2 nodes to the edge.
 				if (!rEdge) return;
 				let edge = rEdge;
-				// console.log('edge.id.ID bikin gutter :>> ', edge.id.ID, edge.id, edge.id.id, edge.id.id.ID, edge);
 				const edgeID = edge.id.ID ? edge.id.ID : edge.id.id.ID;
-				// console.log('edgeID :>> ', edgeID);
-				// console.log('nodes', node1, node2);
+				const arrowBend = edge.ArrowBend;
+				// console.log('arrowBend >>>>>', arrowBend);
+			
+				//get each node getBoundingClientRect
+				const rect1 = node1.getBoundingClientRect();
+				const rect2 = node2.getBoundingClientRect();
+							
+				// Calculate the angle between node1 and node2
+				const dx = rect2.left + rect2.width / 2 - (rect1.left + rect1.width / 2);
+				const dy = rect2.top + rect2.height / 2 - (rect1.top + rect1.height / 2);
+				let angle = Math.round(Math.atan2(dy, dx) * (180 / Math.PI));
+			
+				// Normalize the angle to 0 - 360 degrees
+				if (angle < 0) {
+					angle += 360;
+				}
+				const a = 330, b = 360, c = 0, d = 30;
+				const e = 60,  f = 120;
+				const g = 150, h = 210;
+				const i = 240, j = 300;
+
+				let direction = "";
 				
+				// Determine gutter usage based on angle
+				if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {
+					direction = 'left';
+				} else if (angle >= d && angle < e) {
+					direction = 'top left';
+				} else if (angle >= e && angle < f) {
+					direction = 'top';
+				} else if (angle >= f && angle < g) {
+					direction = 'top right';
+				} else if (angle >= g && angle < h) {
+					direction = 'right';
+				} else if (angle >= h && angle < i) {
+					direction = 'bottom right';
+				} else if (angle >= i && angle < j) {
+					direction = 'bottom';
+				} else if (angle >= j && angle < a) {
+					direction = 'bottom left';
+				}
+
+				if (node1.dataset.direction == direction && node2.dataset.direction == direction) {
+					// console.log(`Gutter direction match: "${direction}"'`);
+					// console.log('======================================= end createGutterDotsAndConnect');
+					return;
+				}
+				// console.log(`Gutter direction mismatch: "${direction}"'`);
+
+				// REMOVE OLD GUTTERS
 				let gutters = document.querySelectorAll(`div[data-edge="${edgeID}"]`);
 				if (gutters.length > 0) gutters.forEach(gutter => gutter.remove());
 
@@ -1023,139 +1131,179 @@ export class Flow {
 				} else {
 					gutterDot2.id = edge.InputPin.pinID;
 				}
-			
-				const rect1 = node1.getBoundingClientRect();
-				const rect2 = node2.getBoundingClientRect();
-							
-				// Calculate the angle between node1 and node2
-				const dx = rect2.left + rect2.width / 2 - (rect1.left + rect1.width / 2);
-				const dy = rect2.top + rect2.height / 2 - (rect1.top + rect1.height / 2);
-				let angle = Math.round(Math.atan2(dy, dx) * (180 / Math.PI));
-			
-				// Normalize the angle to 0 - 360 degrees
-				if (angle < 0) {
-					angle += 360;
+
+				switch (arrowBend) {
+					case 'convex':
+						switch (direction) {
+							case 'left':
+								if (node1.querySelector('.right-gutter')) {
+									node1.querySelector('.right-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.left-gutter')) {
+									node2.querySelector('.left-gutter').appendChild(gutterDot2);
+									node1.dataset.direction = direction;
+								}
+								break;
+							case 'top left':
+								if (node1.querySelector('.right-gutter')) {
+									node1.querySelector('.right-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.top-gutter')) {
+									node2.querySelector('.top-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'top':
+								if (node1.querySelector('.bottom-gutter')) {
+									node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.top-gutter')) {
+									node2.querySelector('.top-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'top right':
+								if (node1.querySelector('.left-gutter')) {
+									node1.querySelector('.left-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.top-gutter')) {
+									node2.querySelector('.top-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'right':
+								if (node1.querySelector('.left-gutter')) {
+									node1.querySelector('.left-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.right-gutter')) {
+									node2.querySelector('.right-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;					
+							case 'bottom right':
+								if (node1.querySelector('.left-gutter')) {
+									node1.querySelector('.left-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.bottom-gutter')) {
+									node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'bottom':
+								if (node1.querySelector('.top-gutter')) {
+									node1.querySelector('.top-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.bottom-gutter')) {
+									node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'bottom left':
+								if (node1.querySelector('.right-gutter')) {
+									node1.querySelector('.right-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.bottom-gutter')) {
+									node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							}
+							break;
+					case 'concave':
+						switch (direction) {
+							case 'left':
+								if (node1.querySelector('.right-gutter')) {
+									node1.querySelector('.right-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.left-gutter')) {
+									node2.querySelector('.left-gutter').appendChild(gutterDot2);
+									node1.dataset.direction = direction;
+								}
+								break;
+							case 'top left':
+								if (node1.querySelector('.bottom-gutter')) {
+									node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.left-gutter')) {
+									node2.querySelector('.left-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'top':
+								if (node1.querySelector('.bottom-gutter')) {
+									node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.top-gutter')) {
+									node2.querySelector('.top-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'top right':
+								if (node1.querySelector('.bottom-gutter')) {
+									node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.right-gutter')) {
+									node2.querySelector('.right-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'right':
+								if (node1.querySelector('.left-gutter')) {
+									node1.querySelector('.left-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.right-gutter')) {
+									node2.querySelector('.right-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'bottom right':
+								if (node1.querySelector('.top-gutter')) {
+									node1.querySelector('.top-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.right-gutter')) {
+									node2.querySelector('.right-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'bottom':
+								if (node1.querySelector('.top-gutter')) {
+									node1.querySelector('.top-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.bottom-gutter')) {
+									node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+							case 'bottom left':
+								if (node1.querySelector('.top-gutter')) {
+									node1.querySelector('.top-gutter').appendChild(gutterDot1);
+									node1.dataset.direction = direction;
+								}
+								if (node2.querySelector('.left-gutter')) {
+									node2.querySelector('.left-gutter').appendChild(gutterDot2);
+									node2.dataset.direction = direction;
+								}
+								break;
+						}
+						break;
 				}
 
-				// // 4 SEGMENTS
-				// const a = 345, b = 360, c = 0, d = 15;
-				// const e = 165,  f = 195;
-
-				// console.log('angle :>>>>>>>>>>>>>> ', angle);
-				// // Determine gutter usage based on angle
-				// if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {
-				// 	console.log('>>>>>>>>>>>>>>>>>>>> left');
-				// 	if (node1.querySelector('.right-gutter')) {
-				// 		node1.querySelector('.right-gutter').appendChild(gutterDot1);
-				// 	}
-				// 	if (node2.querySelector('.left-gutter')) {
-				// 		node2.querySelector('.left-gutter').appendChild(gutterDot2);
-				// 	}
-				// } else if (angle >= d && angle < e) {
-				// 	console.log('>>>>>>>>>>>>>>>>>>>> top');
-				// 	if (node1.querySelector('.bottom-gutter')) {
-				// 		node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
-				// 	}
-				// 	if (node2.querySelector('.top-gutter')) {
-				// 		node2.querySelector('.top-gutter').appendChild(gutterDot2);
-				// 	}
-				// } else if (angle >= e && angle < f) {
-				// 	console.log('>>>>>>>>>>>>>>>>>>>> bottom');
-				// 	if (node1.querySelector('.left-gutter')) {
-				// 		node1.querySelector('.left-gutter').appendChild(gutterDot1);
-				// 	}
-				// 	if (node2.querySelector('.right-gutter')) {
-				// 		node2.querySelector('.right-gutter').appendChild(gutterDot2);
-				// 	}
-				// } else if (angle >= f && angle < a) {
-				// 	console.log('>>>>>>>>>>>>>>>>>>>> right');
-				// 	if (node1.querySelector('.top-gutter')) {
-				// 		node1.querySelector('.top-gutter').appendChild(gutterDot1);
-				// 	}
-				// 	if (node2.querySelector('.bottom-gutter')) {
-				// 		node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
-				// 	}
-				// }
-			
-				// 8 SEGMENTS
-				// const a = 345, b = 360, c = 0, d = 15;
-				// const e = 75,  f = 105; 
-				// const g = 165, h = 195;
-				// const i = 255, j = 285;
-
-				const a = 330, b = 360, c = 0, d = 30;
-				const e = 60,  f = 120;
-				const g = 150, h = 210;
-				const i = 240, j = 300;
-				
-				// Determine gutter usage based on angle
-				if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   left');
-					if (node1.querySelector('.right-gutter')) {
-						node1.querySelector('.right-gutter').appendChild(gutterDot1);
-					}
-					if (node2.querySelector('.left-gutter')) {
-						node2.querySelector('.left-gutter').appendChild(gutterDot2);
-					}
-				} else if (angle >= d && angle < e) {
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   left top');
-					if (node1.querySelector('.right-gutter')) {
-						node1.querySelector('.right-gutter').appendChild(gutterDot1);
-					}
-					if (node2.querySelector('.top-gutter')) {
-						node2.querySelector('.top-gutter').appendChild(gutterDot2);
-					}
-				} else if (angle >= e && angle < f) {
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   top');
-					if (node1.querySelector('.bottom-gutter')) {
-						node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
-					}
-					if (node2.querySelector('.top-gutter')) {
-						node2.querySelector('.top-gutter').appendChild(gutterDot2);
-					}
-				} else if (angle >= f && angle < g) {
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   right top');
-					if (node1.querySelector('.left-gutter')) {
-						node1.querySelector('.left-gutter').appendChild(gutterDot1);
-					}
-					if (node2.querySelector('.top-gutter')) {
-						node2.querySelector('.top-gutter').appendChild(gutterDot2);
-					}
-				} else if (angle >= g && angle < h) {
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   right');
-					if (node1.querySelector('.left-gutter')) {
-						node1.querySelector('.left-gutter').appendChild(gutterDot1);
-					}
-					if (node2.querySelector('.right-gutter')) {
-						node2.querySelector('.right-gutter').appendChild(gutterDot2);
-					}
-				} else if (angle >= h && angle < i) {
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   right bottom');
-					if (node1.querySelector('.left-gutter')) {
-						node1.querySelector('.left-gutter').appendChild(gutterDot1);
-					}
-					if (node2.querySelector('.bottom-gutter')) {
-						node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
-					}
-				} else if (angle >= i && angle < j) {
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   bottom');
-					if (node1.querySelector('.top-gutter')) {
-						node1.querySelector('.top-gutter').appendChild(gutterDot1);
-					}
-					if (node2.querySelector('.bottom-gutter')) {
-						node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
-					}
-				} else if (angle >= j && angle < a) {
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>   left bottom');
-					if (node1.querySelector('.right-gutter')) {
-						node1.querySelector('.right-gutter').appendChild(gutterDot1);
-					}
-					if (node2.querySelector('.bottom-gutter')) {
-						node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
-					}
-				}
-				console.log('======================================= end createGutterDotsAndConnect');
-
+				// console.log('======================================= end createGutterDotsAndConnect');
 				return [edge, gutterDot1, gutterDot2];
 			},
 			enableDragSelect: ((selector) => {
@@ -3016,43 +3164,94 @@ export class Flow {
 									// NOTE - Create new Graph edge
 
 									console.log('selectedNodes sebelum di pass:>> ', selectedNodes);
-									this.Graph.Events.showDropdownModal('Connection Type', 'Pilih tipe connection', ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray, selectedNodes, this, (selectedType, color, selectedNodes, FlowGraph) => {
-										let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));;
+									// this.Graph.Events.showDropdownModal('Connection Type', 'Pilih tipe connection', ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray, selectedNodes, this, (selectedType, color, selectedNodes, FlowGraph) => {
+									let schema = {
+										"id": "form_select_connection_type",
+										"label": "Form Select Connection Type",
+										"type": "record",
+										"typeSelection": ["record","array"],
+										"icon": "<i class=\"fa-brands fa-wpforms\"></i>",
+										"order": 100,
+										"Dataset": {
+											"Layout": {
+												"Form": {},
+												"Properties": {
+													"FormEntry": {
+														"Show": 1,
+														"Label": "Form Select Connection Type",
+														"ShowLabel": 1
+													},
+													"Preview": {
+														"Show": 1,
+														"Label": "Form Select Connection Type",
+														"ShowLabel": 1
+													}
+												}
+											},
+											"Schema": [
+												{
+													"id": "connectionType",
+													"label": "Connection Type",
+													"type": "select",
+													"value": [...(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(elmt => elmt.Type))],
+													"field_class":"is-selectable-box",
+													"form": 1
+												},
+												{
+													"id": "arrowBend",
+													"label": "Arrow Bend",
+													"type": "select",
+													"value": ["convex", "concave"],
+													"field_class":"is-selectable-box",
+													"form": 1
+									
+												}
+											]
+										}
+									}
+									
+									console.log('schema :>> ', schema);
+									this.Graph.Events.showSchemaModal('Connection Type', schema, { selectedNodes: selectedNodes, FlowGraph: this }, (data, passedData) => {
+										let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
+										const selectedType = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray[ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.findIndex(item => item.Type === data[0].connectionType)];
+										const arrowBend = data[1].arrowBend;
+
 										newEdge.id = {
 											ID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
-											Table: selectedType
+											Table: selectedType.Type
 										}
 										newEdge.OutputPin.nodeID = selectedNodes.StartParam.id;
 										newEdge.InputPin.nodeID = selectedNodes.EndParam.id;
-										newEdge.Path.Color = color.color;
-										newEdge.Path.Color = color.color;
+										newEdge.Path.Color = selectedType.Color;
 										newEdge.Path.PathThickness = 5;
+										newEdge.ArrowBend = arrowBend;
 
-										console.log('newEdge :>> ', newEdge);
+										// console.log('newEdge :>> ', newEdge);
 										selectedNodes.Start = document.querySelector(`div[id="${selectedNodes.StartParam.id}"][class="${selectedNodes.StartParam.class}"]`);
 										selectedNodes.End = document.querySelector(`div[id="${selectedNodes.EndParam.id}"][class="${selectedNodes.EndParam.class}"]`);
 	
-										let [edge, dot1, dot2] = this.Graph.Events.createGutterDotsAndConnect(
+										this.Graph.Events.createGutterDotsAndConnect(
 											selectedNodes.Start,
 											selectedNodes.End,
 											newEdge
 										);
 						
-										FlowGraph.Graph.Events.connectNodes(
+										passedData.FlowGraph.Graph.Events.connectNodes(
 											newEdge,
 											'.graph_connection_surface',
-											'#graph_scroll_content'
+											'#graph_scroll_content',
 										);
 	
-										let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
+										let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${newEdge.OutputPin.nodeID}'`;
 										// console.log(qstr);
 										ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
 											let outid = result[0][0].id.id;
-											qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.InputPin.nodeID}'`;
+											qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${newEdge.InputPin.nodeID}'`;
+											console.log('qstr', qstr);
 											ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
 												let inid = result[0][0].id.id;
-												console.log('edge sebelum insert:>> ', edge);
-												qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(outid)}\n-> ${selectedType} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
+												console.log('newEdge sebelum insert:>> ', newEdge);
+												qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(outid)}\n-> ${selectedType.Type} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(newEdge)}`;
 												console.log(qstr);
 												ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
 													console.log('Edge creation SUCCESS', result);
@@ -3224,8 +3423,8 @@ export class Flow {
 
 				//NOTE - end of InitializeFormControls
 			},
-			GenerateFormToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
-				// console.log('generateFormToParadigmJSON', form_container);
+			GenerateSchemaToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
+				// console.log('generateSchemaToParadigmJSON', form_container);
 				function makeFieldParadigmJSON($id, field, utilily, form_container) {
 					// console.log('makeFieldParadigmJSON', form_container);
 					const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
@@ -3794,7 +3993,7 @@ export class Flow {
 					headerIcon: form.icon,
 					header: form.label,
 					headerControls: null,
-					content: [this.Form.Events.GenerateFormToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal, form_container)]
+					content: [this.Form.Events.GenerateSchemaToParadigmJSON(id, form.Dataset.Schema, this.Utility, is_horizontal, form_container)]
 				});
 				let column = { comment: "Column", tag: "div", class: `column is-flex collapsible m-0 p-0 form-input-column-container`, style: "max-width:25.5rem;min-width:25.5rem;", order: 0, content: [testcard] }
 				return isHTML ? this.Form.Render.traverseDOMProxyOBJ(column) : column;

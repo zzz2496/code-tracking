@@ -23,6 +23,7 @@
 		{"Type":"Version", "Color":"var(--bulma-text-weak)"},
 		{"Type":"Contains", "Color":"var(--bulma-warning)"},
 		{"Type":"Workflow", "Color":"var(--bulma-link)"},
-		{"Type":"DataConnection", "Color":"var(--bulma-danger)"}
+		{"Type":"DataInput", "Color":"var(--bulma-danger)"},
+		{"Type":"DataOutput", "Color":"var(--bulma-info)"}
 	]
 }
