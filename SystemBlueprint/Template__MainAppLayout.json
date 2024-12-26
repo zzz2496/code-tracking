@@ -92,29 +92,10 @@
 							]},
 							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
 								{"tag":"div", "class":"document-saveload-container show", "content":[
-									{ "comment": "Zoom out",   "tag": "button", "class": "button mr-1 document-saveload p-4 is-outlined is-danger", "id": "zoom_out_button", "title": "Graph Zoom Out", "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus\"></i>" },
-									{ "comment": "Zoom reset", "tag": "button", "class": "button mr-1 document-saveload p-4 is-outlined is-warning", "id": "zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<i class=\"fa-solid fa-magnifying-glass\"></i>" },
-									{ "comment": "Zoom in",    "tag": "button", "class": "button mr-1 document-saveload p-4 is-outlined is-success", "id": "zoom_in_button", "title": "Graph Zoom In", "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus\"></i>" }
-								]},
-								{"tag":"div", "class":"document-saveload-container show", "content":[
 									{ "comment": "Enable Programming sections",    "tag": "button", "class": "button mr-1 document-saveload p-4 is-default", "id": "enable_programming_sections_button", "title": "Enable Programming Sections", "innerHTML": "<i class=\"fa-solid fa-square-binary\"></i>" },
-									{ "comment": "Document Refresh Render button", "tag": "button", "class": "button mr-1 document-saveload p-4 is-default", "id": "document_refreshrender_button", "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
 									{ "comment": "Load Document button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-success", "id": "graph_load_data_button", "title": "Load Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-down\"></i>" },
 									{ "comment": "Save Document button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-warning", "id": "graph_save_data_button", "title": "Save Document", "innerHTML": "<i class=\"fa-solid fa-file-arrow-up\"></i>" },
 									{ "comment": "Clear Document button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-danger", "id": "graph_clear_data_button", "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel\"></i>" }
-								]},
-								{"tag":"div", "class":"document-saveload-container show", "content":[
-									{ "comment": "Remove Node button",           "tag": "button", "class": "button mr-1 document-saveload is-outlined is-danger", "id": "graph_removenodes_button", "title": "Remove Document", "innerHTML": "<i class=\"fa-solid fa-x\"></i>" },
-									{ "comment": "Add Node button", "tag":"div", "class":"field has-addons", "style":"", "content":[
-										{"tag":"div", "class":"control", "style":"", "content":[
-											{"tag":"div", "class":"select", "style":"", "content":[
-												{"tag":"select", "id":"graph_addnode_select", "class":"graph_addnode_select", "content":[]}
-											]}
-										]},
-										{"tag":"div", "class":"control", "style":"", "content":[
-											{"tag":"button", "class":"button mx-1 is-medium is-success graph_addnode_button", "id":"graph_addnode_button", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
-										]}
-									]}
 								]},
 								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datasource"}, "content":[
 									{ "comment": "Remove Datasource", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatasource_button", "title": "Remove Datasource", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
@@ -141,6 +122,21 @@
 						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show app_configurator_groups", "innerHTML": "", "content": [
 							{
 								"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
+									{"tag": "div", "id": "graph_controls", "class":"is-flex node-background-frosted", "content": [
+										{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-4 mt-0 mb-0 ml-0", "content":[
+											{ "comment": "Zoom out",   "tag": "button", "class": "button", "id": "zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
+											{ "comment": "Zoom reset", "tag": "button", "class": "button", "id": "zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<i class=\"fa-solid fa-magnifying-glass\"></i>"},
+											{ "comment": "Zoom in",    "tag": "button", "class": "button", "id": "zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
+										]},
+										{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mr-4 mt-0 mb-0 ml-0", "content":[
+											{ "comment": "Remove Node button", "tag": "button", "class": "button is-danger",                       "id": "graph_removenodes_button",  "title": "Remove Thing", "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" },
+											{ "comment": "Add Node button",    "tag": "button", "class": "button is-success graph_addnode_button", "id": "graph_addnode_button",      "title": "Add Node",     "innerHTML":"<li class='fa-solid fa-cube mr-3 has-text-success'></li><li class='fa-solid fa-plus has-text-success'></li>"}
+										]},
+										{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mr-4 mt-0 mb-0 ml-0", "content":[
+											{ "comment": "Document Refresh Render button", "tag": "button", "class": "button p-4",                         "id": "document_refreshrender_button", "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
+											{ "comment": "Fullscreen button",              "tag": "button", "class": "button p-4 graph_fullscreen_button", "id": "graph_fullscreen_button",       "title": "Graph Zoom Out", "innerHTML": "<i class=\"fa-solid fa-expand\"></i>" }
+										]}
+									]},
 									{
 										"tag": "div", "id": "graph_scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
 											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-selectable-parent is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_graph_content", "content": [
@@ -158,7 +154,7 @@
 									{
 										"tag": "div", "id": "programming_scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
 											{ "comment": "App Programming Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_programming_content", "content": [
-												{"tag":"div", "class":"graph_node_surface  ", "innerHTML":"<span>App Programming Content</span>"},
+												{"tag":"div", "class":"graph_node_surface", "innerHTML":"<span>App Programming Content</span>", "style":"position:relative;"},
 												{"tag":"svg", "class":"graph_connection_surface", "content":[
 													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
 												]}

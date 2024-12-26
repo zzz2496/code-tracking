@@ -5027,6 +5027,38 @@ export class Utility {
 		"Kanban": function ($fetch, tlegend, id = '') { },
 		"Timeline": function ($fetch, tlegend, id = '') { }
 	}
+	Notification = {
+		showNotification: (message, type = 'is-info', duration = 3000) => {
+			// Create the notification div
+			const notification = document.createElement('div');
+			notification.className = `notification ${type} fade-in`;
+			notification.innerHTML = `
+				<button class="delete"></button>
+				<div class="">
+					${message.title ? `<div class="container has-text-weight-semibold is-size-5">${message.title}</div>` : ''}
+					${message.info ? `<div class="container has-text-weight-normal is-size-6 mt-1">${message.info}</div>` : ''}
+				</div>
+			`;
+		  
+			// Add the notification to the container
+			const container = document.getElementById('notification-container');
+			container.appendChild(notification);
+		  
+			// Auto-dismiss after the specified duration
+			setTimeout(() => {
+				notification.classList.remove('fade-in');
+				notification.classList.add('fade-out');
+				setTimeout(() => {
+					notification.remove(); // Remove the modal
+				}, 300); // Matches the animation duration
+			}, duration);
+		  
+			// Add dismiss functionality to the close button
+			notification.querySelector('.delete').addEventListener('click', () => {
+				notification.remove();
+			});
+		}
+	};
 	// NOTE - Datastore related methods
 	DataStore = {
 		// NOTE - SurrealDB

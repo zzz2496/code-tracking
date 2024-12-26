@@ -172,6 +172,9 @@ export class Flow {
 				newElement.className = objclass;
 				newElement.style.top = `${node.Presentation.Perspectives.GraphNode.Position.y}px`;
 				newElement.style.left = `${node.Presentation.Perspectives.GraphNode.Position.x}px`;
+				newElement.dataset.nodetype = node.id.id.Node.Kind;
+				newElement.dataset.nodename = node.Properties.Name;
+				newElement.dataset.nodelabel = node.Properties.Label;
 
 				newElement.style.position = `absolute`;
 	
@@ -184,7 +187,7 @@ export class Flow {
 						<div style="display: flex;">
 							<div class="left-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
 							</div>
-							<div class="card is-selectable-box" style="margin: 5px; padding: 0px; width: fit-content;">
+							<div class="card is-selectable-box node-background-frosted" style="margin: 5px; padding: 0px; width: fit-content;">
 								<div id="${node.id.id.ID}-header" class="card-header " style="cursor:pointer;">
 									<div class="card-header-icon" data-id="${node.id.id.ID}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
 									<div class="card-header-title pl-0 is-selectable" data-id="${node.id.id.ID}">${node.id.id.Node.Kind}</div>
@@ -194,8 +197,8 @@ export class Flow {
 										<div class="title is-1" style="width: fit-content">
 											${node.id.id.Node.Icon} 
 										</div>
-										<h class="m-0" style="font-size: 1.5rem; font-weight:600; text-align:center;">${node.id.id.Node.Kind} ID:</h>
-										<h class="m-0" style="font-size: 1rem; text-align:center;">${node.id.id.ID}</h>
+										<h class="m-0" style="font-size: 1.2rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
+										<h class="m-0" style="font-size: 0.8rem; text-align:center;">ID: ${node.id.id.ID}</h>
 									</div>
 								</div>
 							</div>
@@ -282,6 +285,8 @@ export class Flow {
 						if (!e.target.closest('.card-header-icon')) return;
 						console.log('================================================================================================ MakeNodeDraggable mousedown start');
 						isDragging = true;
+
+						this.DragSelect = true;
 
 						draggedElement = e.target.closest(draggableSelector);
 						nodeID = draggedElement.id;
@@ -461,6 +466,10 @@ export class Flow {
 									'#graph_scroll_content'
 								);
 							});
+							setTimeout(() => { 
+								this.DragSelect = false;
+							}, 200);
+	
 						}
 						console.log('================================================================================================ MakeNodeDraggable mouseup done');
 					}
@@ -676,7 +685,7 @@ export class Flow {
 				cancelButton.onclick = cleanUp;
 				cancelButtonFooter.onclick = cleanUp;
 			},
-			showSchemaModal: (modal_title, schema, passedData, callback) => {
+			showSchemaModal: (modal_title, schema, passedData, callback, callbackPreConfirm) => {
 				// Create modal HTML as a string with animation classes
 				let schemastr = this.Form.Render.traverseDOMProxyOBJ(this.Form.Events.GenerateSchemaToParadigmJSON('id_modal_connection_type', schema.Dataset.Schema, this.Utility, 1, ''));				
 				const modalHTML = `
@@ -712,37 +721,6 @@ export class Flow {
 			
 				// Add CSS for animations
 				const style = document.createElement('style');
-				style.innerHTML = `
-					.fade-in {
-						animation: fadeIn 0.3s ease-in-out;
-					}
-
-					.fade-out {
-						animation: fadeOut 0.3s ease-in-out;
-					}
-
-					@keyframes fadeIn {
-						from {
-							opacity: 0;
-							filter: blur(5px);
-						}
-						to {
-							opacity: 1;
-							filter: blur(0);
-						}
-					}
-
-					@keyframes fadeOut {
-						from {
-							opacity: 1;
-							filter: blur(0);
-						}
-						to {
-							opacity: 0;
-							filter: blur(10px);
-						}
-					}
-				`;
 				document.head.appendChild(style);
 			
 				// Function to clean up modal
@@ -757,16 +735,29 @@ export class Flow {
 			
 				// Handle confirm button click
 				confirmButton.onclick = () => {
-					let data = [];
+					let data = {};
 					document.querySelector('.modal-form').querySelectorAll('input, button, select, textarea').forEach(input => {
 						const key = input.id.split('___')[1];
-						let temp = {};
-						temp[key] = input.value;
-						data.push(temp);
+						console.log('input :>> ', input.type);
+						switch (input.type) { 
+							case 'checkbox':
+								data[key] = input.checked;
+								break;
+							default:
+								data[key] = input.value;
+								break;
+						}
 					});
-					cleanUp(); // Clean up modal
-					callback(data, passedData); // Execute the callback with the selected type
-				};			
+					if (callbackPreConfirm) {
+						if (callbackPreConfirm(data, passedData)) { 
+							cleanUp(); // Clean up modal
+							callback(data, passedData); // Execute the callback with the selected type
+						}
+					} else {
+						cleanUp(); // Clean up modal
+						callback(data, passedData); // Execute the callback with the selected type
+					}
+				};
 				// Handle cancel button clicks
 				cancelButton.onclick = cleanUp;
 				cancelButtonFooter.onclick = cleanUp;
@@ -790,6 +781,7 @@ export class Flow {
 				const existingPath = svgContainer.querySelector(`path[id="${edgeID}"]`);
 				// console.log('existingPath :>> ', existingPath);
 
+				// console.log('edge :>> ', edge, edge.OutputPin, edge.InputPin);
 				const node1selector = '#' + edge.OutputPin.pinID;
 				const node2selector = '#' + edge.InputPin.pinID;
 				
@@ -813,7 +805,7 @@ export class Flow {
 				// console.log('nodes', node1, node2);;
 			
 				if (!node1 || !node2) {
-					console.error("One or both nodes not found.");
+					console.error("One or both nodes not found.", node1 ? 'node1 found' : 'node1 not found', node2 ? 'node2 found' : 'node2 not found');	
 					return;
 				}
 
@@ -1020,10 +1012,11 @@ export class Flow {
 				}
 				if (!existingPath) {
 					// Create an SVG path
-					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> create SVG path');
+					console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> create SVG path');
+					console.log('edge', edge);	
 					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
-					console.log('edgeID di create new path', edgeID);
+					// console.log('edgeID di create new path', edgeID);
 					path.setAttribute("id", edgeID);
 					path.setAttribute("class", "graph-edge");
 					path.setAttribute("d", d);
@@ -1037,6 +1030,19 @@ export class Flow {
 					path.setAttribute("data-table", edgeTable);
 					path.setAttribute("data-arrowBend", arrowBend);
 					path.setAttribute("data-direction", direction);
+					switch (edge.Path.PathDecoration) {
+						case "Normal":
+							break;
+						case "Dotted":
+							path.setAttribute("stroke-dasharray", "1, 8");
+							break;
+						case "Dashed":
+							path.setAttribute("stroke-dasharray", "10, 25");
+							break;
+						default:
+							path.setAttribute("stroke-dasharray", `${edge.Path.PathDecoration}, ${node.Path.PathDecoration}`);
+							break;
+					}
 				
 					// Append the path to the SVG container
 					svgContainer.appendChild(path);
@@ -1304,7 +1310,7 @@ export class Flow {
 				}
 
 				// console.log('======================================= end createGutterDotsAndConnect');
-				return [edge, gutterDot1, gutterDot2];
+				return [edge, gutterDot1, gutterDot2, direction];
 			},
 			enableDragSelect: ((selector) => {
 				const container = document.querySelector(selector);
@@ -1347,13 +1353,13 @@ export class Flow {
 			
 					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
 						isDragging = true;
-						startX = (e.clientX + container.scrollLeft) / self.ZoomScale;
-						startY = (e.clientY + container.scrollTop) / self.ZoomScale;
+						startX = (e.clientX + container.scrollLeft);
+						startY = (e.clientY + container.scrollTop);
 			
 						selectedElements.clear(); // Reset selected elements
 			
 						if (!highlightBox) createHighlightBox();
-						updateHighlightBox(startX * self.ZoomScale, startY * self.ZoomScale, startX * self.ZoomScale, startY * self.ZoomScale);
+						updateHighlightBox(startX / self.ZoomScale, startY / self.ZoomScale, startX / self.ZoomScale, startY / self.ZoomScale);
 					}
 				}
 			
@@ -1363,10 +1369,10 @@ export class Flow {
 			
 					self.DragSelect = true;
 			
-					const currentX = (e.clientX + container.scrollLeft) / self.ZoomScale;
-					const currentY = (e.clientY + container.scrollTop) / self.ZoomScale;
+					const currentX = (e.clientX + container.scrollLeft);
+					const currentY = (e.clientY + container.scrollTop);
 			
-					updateHighlightBox(startX * self.ZoomScale, startY * self.ZoomScale, currentX * self.ZoomScale, currentY * self.ZoomScale);
+					updateHighlightBox(startX / self.ZoomScale, startY / self.ZoomScale, currentX / self.ZoomScale, currentY / self.ZoomScale);
 			
 					const rect = container.getBoundingClientRect();
 					const dragArea = {
@@ -2268,7 +2274,7 @@ export class Flow {
 						return this.Form.Initialize.FormCard(`New_FORM___${num}`, this.Forms[0], 0, 1, 100, container_id);
 					});
 				});
-				document.querySelector('#graph_addnode_select').innerHTML = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.map(option => `<option value="${option.Kind}" data-nodetype="${option.Kind}Node" data-nodeicon="${option.Icon}">${option.Kind}</option>`).join('');
+				// document.querySelector('#graph_addnode_select').innerHTML = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.map(option => `<option value="${option.Kind}" data-nodetype="${option.Kind}Node" data-nodeicon="${option.Icon}">${option.Kind}</option>`).join('');
 
 				//NOTE - addGlobalEveentListener CLICK
 				this.Form.Events.addGlobalEventListener('click', [{
@@ -2653,81 +2659,165 @@ export class Flow {
 					callback: (e) => {
 						//NOTE - Create new node!
 						console.log('Create node! graph_addnode_button click!');
-						const dropdown = document.querySelector('#graph_addnode_select');
-						const selectedOption = dropdown.options[dropdown.selectedIndex];
-						const nodeKind = selectedOption.value; // Value of the selected option
+						
+						let schema = {
+							"id": "form_select_connection_type",
+							"label": "Form Select Connection Type",
+							"type": "record",
+							"typeSelection": ["record","array"],
+							"icon": "<i class=\"fa-brands fa-wpforms\"></i>",
+							"order": 100,
+							"Dataset": {
+								"Layout": {
+									"Form": {},
+									"Properties": {
+										"FormEntry": {
+											"Show": 1,
+											"Label": "Form Select Connection Type",
+											"ShowLabel": 1
+										},
+										"Preview": {
+											"Show": 1,
+											"Label": "Form Select Connection Type",
+											"ShowLabel": 1
+										}
+									}
+								},
+								"Schema": [
+									{
+										"id": "name",
+										"label": "Name",
+										"type": "text",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "label",
+										"label": "Label",
+										"type": "text",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "nodeKind",
+										"label": "Node Kind",
+										"type": "select",
+										"value": [...(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.map(elmt => elmt.Kind))],
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isProgrammingEnabled",
+										"label": "Programming Enabled",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isReadOnly",
+										"label": "Read Only",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isExecutable",
+										"label": "Executable",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									}
+								]
+							}
+						}
+						this.Graph.Events.showSchemaModal('Node Information', schema, {}, (data, passedData) => {
+							console.log('data :>> ', data);
 
-						const parent = document.querySelector('#graph_scroll_content'); // NOTE - NOW
-						const parentRect = parent.getBoundingClientRect();
-
-						console.log('parent', parent);
-						console.log('parentRect', parentRect);
-		
-						const parentScrollLeft = parent.scrollLeft;
-						const parentScrollTop = parent.scrollTop;
-						const parentLeft = parentRect.left;
-						const parentTop = parentRect.top;
-
-						console.log('scroll', parentScrollLeft, parentScrollTop);
-						console.log('pos', parentLeft, parentTop);
-					
-						let dx = parentRect.left + parentScrollLeft; //+ parentScrollLeft;
-						let dy = parentRect.top + parentScrollTop;
-				
-						console.log('dxy :>> ', dx, dy);
-
-						// Extract custom data attributes from the selected option
-						const customData = {
-							nodetype: selectedOption.dataset.nodetype,
-							icon: selectedOption.dataset.nodeicon
-						};
+							const name = data.name;
+							const label = data.label;
+							const nodeKind = data.nodeKind; // Value of the selected option
+							const icon = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.find(option => option.Kind === nodeKind).Icon;
 	
-						const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
-						newNode.id.ID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
-						newNode.id.ULID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
-						newNode.id.Node.Realm = "Universe"; 
-						newNode.id.Node.Kind = nodeKind; 
-						newNode.id.Node.Type = customData.nodetype; 
-						newNode.id.Node.Class = ""; 
-						newNode.id.Node.Group = ""; 
-						newNode.id.Node.Category = ""; 
-						newNode.id.Node.Icon = customData.icon;
+							const parent = document.querySelector('#graph_scroll_content'); // NOTE - NOW
+							const parentRect = parent.getBoundingClientRect();
+	
+							console.log('parent', parent);
+							console.log('parentRect', parentRect);
+			
+							//CALCULATE COORDINATE
+							const parentScrollLeft = parent.scrollLeft;
+							const parentScrollTop = parent.scrollTop;
+							const parentLeft = parentRect.left;
+							const parentTop = parentRect.top;
+						
+							let dx = parentRect.left + parentScrollLeft; //+ parentScrollLeft;
+							let dy = parentRect.top + parentScrollTop;
+					
+							console.log('dxy :>> ', dx, dy);
+							//CALCULATE COORDINATE
+	
+							// Extract custom data attributes from the selected option
+		
+							const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
+							newNode.id.ID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
+							newNode.id.ULID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
+							newNode.id.Node.Realm = "Universe"; 
+							newNode.id.Node.Kind = nodeKind; 
+							newNode.id.Node.Type = ""; 
+							newNode.id.Node.Class = ""; 
+							newNode.id.Node.Group = ""; 
+							newNode.id.Node.Category = ""; 
+							newNode.id.Node.Icon = icon;
+	
+							newNode.id.Type = "";
+							newNode.id.Status = "Active"; 
+							newNode.id.Timestamp = Date.now();
+							newNode.id.Version.Number = 1;
+							newNode.id.Version.VersionID = newNode.id.ID;
+							newNode.id.Version.ULID = newNode.id.ULID;
+							newNode.id.Version.Timestamp = newNode.id.Timestamp;
+							newNode.id.Link.Head = false;
+							newNode.id.Link.ID = 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID();
+							newNode.id.Link.Segment = "";	
 
-						newNode.id.Type = "";
-						newNode.id.Status = "Active"; 
-						newNode.id.Timestamp = Date.now();
-						newNode.id.Version.Number = 1;
-						newNode.id.Version.VersionID = newNode.id.ID;
-						newNode.id.Version.ULID = newNode.id.ULID;
-						newNode.id.Version.Timestamp = newNode.id.Timestamp;
-						newNode.id.Link.Head = false;
-						newNode.id.Link.ID = 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID();
-						newNode.id.Link.Segment = "";	
+							newNode.Properties.Name = name;
+							newNode.Properties.Label = label;
+							newNode.Properties.isProgrammingEnabled = data.isProgrammingEnabled;
+							newNode.Properties.isReadOnly = data.isReadOnly;
+							newNode.Properties.isExecutable = data.isExecutable;
 
-						if (newTabCounter > 20) newTabCounter = 0;
-						let tx = 30 + (dx + (newTabCounter * 40));
-						let ty = dy + 60;
-
-						let coord = {
-							x: tx > 0 ? tx : 0,
-							y: ty > 0 ? ty : 0
-						}
-						newNode.Presentation.Perspectives.GraphNode.Position = coord;
-						newTabCounter++;
-
-						console.log('newNode :>> ', newNode);
-						ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
-						if (!this.storage) {
-							console.error('No storage found.');
-							return;
-						}
-						// NOTE - SurrealDB create/insert/upsert
-						let qstr = `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(newNode)};`;
-						console.log('qstr :>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-
-						// Refresh render
-						document.querySelector('#document_refreshrender_button').click();
+							console.log('newNode :>> ', newNode);
+	
+							if (newTabCounter > 20) newTabCounter = 0;
+							let tx = 30 + (dx + (newTabCounter * 40));
+							let ty = dy + 60;
+	
+							let coord = {
+								x: tx > 0 ? tx : 0,
+								y: ty > 0 ? ty : 0
+							}
+							newNode.Presentation.Perspectives.GraphNode.Position = coord;
+							newTabCounter++;
+	
+							console.log('newNode :>> ', newNode);
+							ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
+							if (!this.storage) {
+								console.error('No storage found.');
+								return;
+							}
+							// NOTE - SurrealDB create/insert/upsert
+							let qstr = `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(newNode)};`;
+							console.log('qstr :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+	
+							// Refresh render
+							document.querySelector('#document_refreshrender_button').click();
+						});
 					}
 				}, {
 					selector: '#graph_removenodes_button', //NOTE - removenodes-button
@@ -3104,10 +3194,16 @@ export class Flow {
 									if (graphSurface) {
 										graphSurface.style.userSelect = 'none';
 									}
-
+									
+									console.log('graphNode', graphNode);
 									// Set the starting node
 									this.selectedNodesToConnect.Start = graphNode;
-									this.selectedNodesToConnect.StartParam = {id: graphNode.id, class:'graph-node'};
+									this.selectedNodesToConnect.StartParam = {
+										id: graphNode.id,
+										class: 'graph-node',
+										name: graphNode.dataset.nodename,
+										label: graphNode.dataset.nodelabel
+									};
 									console.log('this.selectedNodesToConnect.Start :>> ', this.selectedNodesToConnect.Start);
 
 									// Add breathing to card-header-title
@@ -3154,113 +3250,164 @@ export class Flow {
 								}
 				
 								// Set the ending node
-								this.selectedNodesToConnect.End = e.target.closest('.graph-node');
-								this.selectedNodesToConnect.EndParam = {id: e.target.closest('.graph-node').id, class:'graph-node'};
+								const graphNode = e.target.closest('.graph-node');
+								this.selectedNodesToConnect.End = graphNode;
+								this.selectedNodesToConnect.EndParam = {
+									id: graphNode.id,
+									class: 'graph-node',
+									name: graphNode.dataset.nodename,
+									label: graphNode.dataset.nodelabel
+								};
 
 								let selectedNodes = this.selectedNodesToConnect;
 
 								if (this.selectedNodesToConnect.Start !== this.selectedNodesToConnect.End) {
-									console.log('A PAIR OF NODES SELECTED');
-									// NOTE - Create new Graph edge
 
-									console.log('selectedNodes sebelum di pass:>> ', selectedNodes);
-									// this.Graph.Events.showDropdownModal('Connection Type', 'Pilih tipe connection', ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray, selectedNodes, this, (selectedType, color, selectedNodes, FlowGraph) => {
-									let schema = {
-										"id": "form_select_connection_type",
-										"label": "Form Select Connection Type",
-										"type": "record",
-										"typeSelection": ["record","array"],
-										"icon": "<i class=\"fa-brands fa-wpforms\"></i>",
-										"order": 100,
-										"Dataset": {
-											"Layout": {
-												"Form": {},
-												"Properties": {
-													"FormEntry": {
-														"Show": 1,
-														"Label": "Form Select Connection Type",
-														"ShowLabel": 1
-													},
-													"Preview": {
-														"Show": 1,
-														"Label": "Form Select Connection Type",
-														"ShowLabel": 1
+									let qstr = `select * from Process, Version, Contains, Workflow, DataInput, DataOutput where OutputPin.nodeID = "${this.selectedNodesToConnect.StartParam.id}" and InputPin.nodeID = "${this.selectedNodesToConnect.EndParam.id}";`;
+									// console.log(qstr);
+									ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+										let edges = result[0];
+
+										console.log('qstr :>> ', qstr);
+										console.log('A PAIR OF NODES SELECTED');
+										// NOTE - Create new Graph edge
+
+										console.log('selectedNodes sebelum di pass:>> ', selectedNodes);
+										let schema = {
+											"id": "form_select_connection_type",
+											"label": "Form Select Connection Type",
+											"type": "record",
+											"typeSelection": ["record","array"],
+											"icon": "<i class=\"fa-brands fa-wpforms\"></i>",
+											"order": 100,
+											"Dataset": {
+												"Layout": {
+													"Form": {},
+													"Properties": {
+														"FormEntry": {
+															"Show": 1,
+															"Label": "Form Select Connection Type",
+															"ShowLabel": 1
+														},
+														"Preview": {
+															"Show": 1,
+															"Label": "Form Select Connection Type",
+															"ShowLabel": 1
+														}
 													}
-												}
-											},
-											"Schema": [
-												{
-													"id": "connectionType",
-													"label": "Connection Type",
-													"type": "select",
-													"value": [...(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(elmt => elmt.Type))],
-													"field_class":"is-selectable-box",
-													"form": 1
 												},
-												{
-													"id": "arrowBend",
-													"label": "Arrow Bend",
-													"type": "select",
-													"value": ["convex", "concave"],
-													"field_class":"is-selectable-box",
-													"form": 1
-									
-												}
-											]
+												"Schema": [
+													{
+														"id": "connectionType",
+														"label": "Connection Type",
+														"type": "select",
+														"value": [...(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(elmt => elmt.Type))],
+														"field_class":"is-selectable-box",
+														"form": 1
+													},
+													{
+														"id": "arrowBend",
+														"label": "Arrow Bend",
+														"type": "select",
+														"value": ["convex", "concave"],
+														"field_class":"is-selectable-box",
+														"form": 1
+										
+													}
+												]
+											}
 										}
-									}
-									
-									console.log('schema :>> ', schema);
-									this.Graph.Events.showSchemaModal('Connection Type', schema, { selectedNodes: selectedNodes, FlowGraph: this }, (data, passedData) => {
-										let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
-										const selectedType = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray[ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.findIndex(item => item.Type === data[0].connectionType)];
-										const arrowBend = data[1].arrowBend;
+										// const connectionMessage = 'Connection Type';
+										const connectionMessage = `
+											<div class="container has-text-centered">
+												<p class="is-size-4 has-text-primary">
+													${selectedNodes.StartParam.label} 
+													<span class="is-size-6 has-text-grey">(${selectedNodes.StartParam.id})</span>
+												</p>
+												<p class="is-size-6 has-text-grey">to</p>
+												<p class="is-size-4 has-text-primary">
+													${selectedNodes.EndParam.label} 
+													<span class="is-size-6 has-text-grey">(${selectedNodes.EndParam.id})</span>
+												</p>
+											</div>
+										`;
 
-										newEdge.id = {
-											ID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
-											Table: selectedType.Type
-										}
-										newEdge.OutputPin.nodeID = selectedNodes.StartParam.id;
-										newEdge.InputPin.nodeID = selectedNodes.EndParam.id;
-										newEdge.Path.Color = selectedType.Color;
-										newEdge.Path.PathThickness = 5;
-										newEdge.ArrowBend = arrowBend;
+										this.Graph.Events.showSchemaModal(connectionMessage, schema, { selectedNodes: selectedNodes, FlowGraph: this, edges: edges }, (data, passedData) => {
+											console.log(edges.findIndex(item => item.Connection.Type === data.connectionType));
 
-										// console.log('newEdge :>> ', newEdge);
-										selectedNodes.Start = document.querySelector(`div[id="${selectedNodes.StartParam.id}"][class="${selectedNodes.StartParam.class}"]`);
-										selectedNodes.End = document.querySelector(`div[id="${selectedNodes.EndParam.id}"][class="${selectedNodes.EndParam.class}"]`);
-	
-										this.Graph.Events.createGutterDotsAndConnect(
-											selectedNodes.Start,
-											selectedNodes.End,
-											newEdge
-										);
-						
-										passedData.FlowGraph.Graph.Events.connectNodes(
-											newEdge,
-											'.graph_connection_surface',
-											'#graph_scroll_content',
-										);
-	
-										let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${newEdge.OutputPin.nodeID}'`;
-										// console.log(qstr);
-										ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
-											let outid = result[0][0].id.id;
-											qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${newEdge.InputPin.nodeID}'`;
-											console.log('qstr', qstr);
+											let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
+											const selectedType = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray[ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.findIndex(item => item.Type === data.connectionType)];
+											const arrowBend = data.arrowBend;
+
+											newEdge.id = {
+												ID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+												Table: selectedType.Type
+											}
+											newEdge.OutputPin.nodeID = selectedNodes.StartParam.id;
+											newEdge.InputPin.nodeID = selectedNodes.EndParam.id;
+											newEdge.Connection.Type = data.connectionType;
+											newEdge.Path.Color = selectedType.Color;
+											newEdge.Path.PathThickness = 5;
+											newEdge.Path.PathDecoration = selectedType.PathDecoration;
+											newEdge.ArrowBend = arrowBend;
+
+											// console.log('newEdge :>> ', newEdge);
+											selectedNodes.Start = document.querySelector(`div[id="${selectedNodes.StartParam.id}"][class="${selectedNodes.StartParam.class}"]`);
+											selectedNodes.End = document.querySelector(`div[id="${selectedNodes.EndParam.id}"][class="${selectedNodes.EndParam.class}"]`);
+		
+											const [edge, pinOut, pinIn, direction] = this.Graph.Events.createGutterDotsAndConnect(
+												selectedNodes.Start,
+												selectedNodes.End,
+												newEdge
+											);
+											if (!pinOut || !pinIn) { 
+												console.error(`Failed to create gutter dots and connect nodes, pinOut:${pinOut} or pinIn:${pinIn}`);
+												return;
+											}
+											passedData.FlowGraph.Graph.Events.connectNodes(
+												edge,
+												'.graph_connection_surface',
+												'#graph_scroll_content',
+											);
+		
+											let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
+											// console.log(qstr);
 											ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
-												let inid = result[0][0].id.id;
-												console.log('newEdge sebelum insert:>> ', newEdge);
-												qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(outid)}\n-> ${selectedType.Type} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(newEdge)}`;
-												console.log(qstr);
-												ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
-													console.log('Edge creation SUCCESS', result);
-												}).catch(err => console.error('Edge creation FAIL, ', err));
-											}).catch(err => console.error('Input nodePin not found', err));	
-										}).catch(err => console.error('Output nodePin not found', err));
-									});					
+												let outid = result[0][0].id.id;
+												qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.InputPin.nodeID}'`;
+												console.log('qstr', qstr);
+												ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+													let inid = result[0][0].id.id;
+													console.log('edge sebelum insert:>> ', edge);
+													qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(outid)}\n-> ${selectedType.Type} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
+													console.log(qstr);
+													ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
+														console.log('Edge creation SUCCESS', result);
+													}).catch(err => console.error('Edge creation FAIL, ', err));
+												}).catch(err => console.error('Input nodePin not found', err));	
+											}).catch(err => console.error('Output nodePin not found', err));
+										}, (data, passedData) => { 
+											console.log('data :>> ', data);
+											console.log('passedData :>> ', passedData);
+											if (passedData.edges.findIndex(item => item.Connection.Type === data.connectionType) !== -1) { 
+												ParadigmREVOLUTION.Utility.Notification.showNotification(
+													{
+														title: 'ERROR',
+														info: 'Edge already exists for this connection type'
+													},
+													'is-danger',
+													3000
+												);
+												return false;
+											} else {
+												return true;
+											}
+											
+										});
+									}).catch(error => {
+										console.error('Error fetching edges:', error);
+									});
 								}
-				
 								// Reset the selected nodes
 								this.selectedNodesToConnect.Start = null;
 								this.selectedNodesToConnect.End = null;
@@ -3416,11 +3563,15 @@ export class Flow {
 						zoombtn = 'out';
 					}
 				});
-				
-				
 
+				document.querySelector('.graph_fullscreen_button').addEventListener('click', (e) => { 
+					ParadigmREVOLUTION.Utility.Notification.showNotification(
+						{ title: 'Graph Control', info: 'Zoom In/Out/Reset' },
+						'is-info',
+						1000
+					);
 
-
+				});
 				//NOTE - end of InitializeFormControls
 			},
 			GenerateSchemaToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
@@ -3441,7 +3592,7 @@ export class Flow {
 							break;
 						case 'checkbox':
 							inputField = {
-								comment: "label", tag: "label", class: "checkbox", content: [
+								comment: "label", tag: "label", class: "checkbox  mt-2", content: [
 									{
 										comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `paradigm-form-element ${d_class}`, value: value, readonly: readonly, type: 'checkbox', content: [
 											{tag:"label", class:"m-1" } //innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))

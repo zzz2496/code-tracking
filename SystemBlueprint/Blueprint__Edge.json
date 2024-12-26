@@ -41,11 +41,8 @@
 	"Path":{
 		"PathMode":["Internal", "External"],
 		"PathModeSelected": 0,
-		"ColorMode":["Custom", "Important", "Normal", "Danger", "Warning", "Disabled", "Died"],
-		"ColorModeSelected":0,
 		"Color":"#000000",
-		"PathDecoration":["Dashed", "Normal", "Dotted", "Custom"],
-		"PathDecorationSelected":0,
+		"PathDecoration":"",
 		"PathDashArray":20,
 		"PathThickness":2
 	}

@@ -19,11 +19,12 @@
 		"Generic":["GenericNode"]
 	},
 	"ConnectionArray":[
-		{"Type":"Process", "Color":"var(--bulma-primary)"},
-		{"Type":"Version", "Color":"var(--bulma-text-weak)"},
-		{"Type":"Contains", "Color":"var(--bulma-warning)"},
-		{"Type":"Workflow", "Color":"var(--bulma-link)"},
-		{"Type":"DataInput", "Color":"var(--bulma-danger)"},
-		{"Type":"DataOutput", "Color":"var(--bulma-info)"}
+		{"Type":"Process", "Color":"var(--bulma-primary)", "PathDecoration":"Normal" },
+		{"Type":"Version", "Color":"var(--bulma-text-weak)", "PathDecoration":"Dashed" },
+		{"Type":"Contains", "Color":"var(--bulma-warning)", "PathDecoration":"Dotted" },
+		{"Type":"Workflow", "Color":"var(--bulma-link)", "PathDecoration":"Normal" },
+		{"Type":"DataInput", "Color":"var(--bulma-danger)", "PathDecoration":"Normal" },
+		{"Type":"DataOutput", "Color":"var(--bulma-info)", "PathDecoration":"Normal" },
+		{"Type":"Dead", "Color":"var(--bulma-dark)", "PathDecoration":"Normal" }
 	]
 }

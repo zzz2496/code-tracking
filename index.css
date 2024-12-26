@@ -15,6 +15,7 @@
 	--transition-time: 0.6s;
 	--swoop:   cubic-bezier(.28,.2,0,1);
 	--swoopv1: cubic-bezier(0,0,0,1.03);
+	
 }
 
 * {
@@ -26,6 +27,10 @@
 	min-width: 2.5rem;
 }
 @media (prefers-color-scheme: light) {
+	.node-background-frosted {
+		background-color: rgba(245, 245, 245, 0.6);
+		backdrop-filter: blur(8px);
+	}
 	.grid2020-background {
 		background-color: var(--bulma-text-95);
 		background-size: 20px 20px;
@@ -33,6 +38,10 @@
 	}
 }
 @media (prefers-color-scheme: dark) {
+	.node-background-frosted {
+		background-color: rgba( 10, 10, 10, 0.6);
+		backdrop-filter: blur(8px);
+	}
 	.grid2020-background {
 		background-color: var(--bulma-text-15);
 		background-size: 20px 20px;
@@ -41,6 +50,10 @@
 }
 [data-theme=light],
 .theme-light {
+	.node-background-frosted {
+		background-color: rgba(245, 245, 245, 0.6);
+		backdrop-filter: blur(8px);
+	}
 	.grid2020-background {
 		background-color: var(--bulma-text-95);
 		background-size: 20px 20px;
@@ -49,6 +62,10 @@
 }
 [data-theme=dark],
 .theme-dark {
+	.node-background-frosted {
+		background-color: rgba( 10, 10, 10, 0.6);
+		backdrop-filter: blur(8px);
+	}
 	.grid2020-background {
 		background-color: var(--bulma-text-15);
 		background-size: 20px 20px;
@@ -635,20 +652,23 @@
 	top: 0;
 	left: 0;
 	z-index: 1;
-  }
-  
+	background: transparent;
+	pointer-events: none; /* Make the entire .graph_node_surface "transparent" to pointer events */
+}
+.graph_node_surface .card-header {
+	pointer-events: all; /* Allow pointer events on the header */
+}
 .graph_connection_surface {
 	position: absolute; /* Stacks in the same coordinate space as graph_node_surface */
 	width: 100%;
 	height: 100%;
 	top: 0;
 	left: 0;
-	pointer-events: none; /* Make the entire SVG transparent to pointer events */
-	z-index: 2;
-
+	z-index: 0;
+	pointer-events: none; /* Disable pointer events for the container */
 }
 .graph_connection_surface path {
-	pointer-events: stroke;      /* Ensure pointer events are detected on the stroke */
+	pointer-events: all;      /* Ensure pointer events are detected on the stroke */
 	transition: stroke-width 0.25s; /* Smoothly change the stroke width */
 }
 .graph_connection_surface path:hover {
@@ -665,31 +685,34 @@
 	height: 100%;
 }
   
+
 @keyframes fadeIn {
-    0% {
-        opacity: 0;
-        /* transform: scale(1.1); */
-    }
-    100% {
-        opacity: 1;
-        /* transform: scale(1); */
-    }
+	from {
+		opacity: 0;
+		filter: blur(5px);
+	}
+	to {
+		opacity: 1;
+		filter: blur(0);
+	}
 }
+
 @keyframes fadeOut {
-    0% {
-        opacity: 1;
-        /* transform: scale(1); */
-    }
-    100% {
-        opacity: 0;
-        /* transform: scale(0.8); */
-    }
+	from {
+		opacity: 1;
+		filter: blur(0);
+	}
+	to {
+		opacity: 0;
+		filter: blur(10px);
+	}
 }
+
 .fade-in {
-    animation: fadeIn 0.3s ease-in-out;
+	animation: fadeIn 0.3s ease-in-out;
 }
 .fade-out {
-    animation: fadeOut 0.3s ease-in-out;
+	animation: fadeOut 0.3s ease-in-out;
 }
 .graph-node .card-header-title{
 	user-select: none;
@@ -709,3 +732,32 @@
 	  color: var(--bulma-warning);
 	}
   }
+
+  #graph_controls {
+    gap: 5px;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 99999;
+    width: fit-content;
+    display: flex;
+    align-items: baseline;
+    border-radius: 10px; /* Rounded corners for aesthetic effect */
+    padding: 0.25rem; /* Add some spacing inside the container */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+}
+
+#graph_controls .button {
+    background: transparent; /* Transparent button backgrounds */
+    border: none; /* Remove button borders */
+    color: inherit; /* Keep icon colors consistent */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.9rem;
+    transition: background 0.3s ease; /* Smooth hover effect */
+}
+
+#graph_controls .button:hover {
+    background: rgba(255, 255, 255, 0.3)
+}

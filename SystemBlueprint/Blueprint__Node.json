@@ -39,7 +39,7 @@
 		"isNew": true,
 		"isChanged": false,
 		"isReadonly": false,
-		"Executable": true
+		"isExecutable": true
 	},
 	"Presentation": {
 		"Perspectives": {
