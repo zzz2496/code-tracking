@@ -755,9 +755,14 @@
     align-items: center;
     justify-content: center;
     height: 2.9rem;
-    transition: background 0.3s ease; /* Smooth hover effect */
+    transition: background 0.3s ease-in-outs, border 0.3s ease-in-outs; /* Smooth hover effect */
 }
 
 #graph_controls .button:hover {
-    background: rgba(255, 255, 255, 0.3)
+    border: solid 1px var(--bulma-primary);
+}
+
+.fullscreen{
+	width: 100vw !important;
+	height: 100vh !important;
 }

@@ -3565,11 +3565,23 @@ export class Flow {
 				});
 
 				document.querySelector('.graph_fullscreen_button').addEventListener('click', (e) => { 
-					ParadigmREVOLUTION.Utility.Notification.showNotification(
-						{ title: 'Graph Control', info: 'Zoom In/Out/Reset' },
-						'is-info',
-						1000
-					);
+					const appConfiguratorContainer = document.querySelector('#app_configurator_container');
+					const rectAppConfiguratorContainer = appConfiguratorContainer.getBoundingClientRect();
+					console.log('rectAppConfiguratorContainer :>> ', rectAppConfiguratorContainer);
+					appConfiguratorContainer.classList.toggle('fullscreen');
+					const fullscreen = appConfiguratorContainer.classList.contains('fullscreen')? true : false;
+					if (fullscreen) {
+						document.querySelector('#app_top_menu_container').classList.toggle('is-hidden');
+						document.querySelector('#app_graph_tabs_container').classList.toggle('show');
+						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.remove('fa-expand');
+						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.add('fa-compress');
+					} else {
+						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.remove('fa-compress');
+						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.add('fa-expand');
+
+						document.querySelector('#app_top_menu_container').classList.toggle('is-hidden');
+						document.querySelector('#app_graph_tabs_container').classList.toggle('show');
+					}
 
 				});
 				//NOTE - end of InitializeFormControls
