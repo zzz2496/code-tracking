@@ -265,8 +265,17 @@
 
 
 #app_top_menu_container{
-	height: auto;
+	height: 2.2rem;
+	transition: height var(--transition-time) var(--swoop);
 }
+#app_top_menu_container.hide{
+	height: 0rem;
+}
+.hide{
+	opacity: 0;
+	height: 0;
+}
+
 /* .app_configurator_containers{
 	width: 100%;
 	height: 0px;
@@ -348,52 +357,10 @@
 .system-status-indicator{
 	min-width: 3.5rem;
 }
-#graph_scroll_content, #programming_scroll_content{
+.scroll_content{
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	border-radius: 10px;
-}
-@media screen and (max-width: 800px) {
-	#object_collections.show {
-		min-width: 100vw;
-	}
-	
-	
-	/* Center all columns on small screens */
-   .app_graph_controls_containers {
-		justify-content: center !important; /* Center align content */
-		text-align: center; /* Optional: Center text inside */
-		backdrop-filter: blur(2px);
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-	}
-	#app_graph_tabs_container.show{
-		width: 100%;
-		height: 8.5rem;
-		justify-content: center !important; /* Center align content */
-		/* opacity: 1; */
-	}
-	#app_configurator_container.show {
-		height: calc(70vh);
-	}
-}
-@media screen and (min-width: 801px) and (max-width: 1000px) {
-	/* Center all columns on small screens */
-   .app_graph_controls_containers {
-	   justify-content: center !important; /* Center align content */
-	   text-align: center; /* Optional: Center text inside */
-	   backdrop-filter: blur(2px);
-   }
-   #app_graph_tabs_container.show{
-	   width: 100%;
-	   height: 5.8rem;
-	   justify-content: center !important; /* Center align content */
-	   /* opacity: 1; */
-   }
-   #app_configurator_container.show {
-	   height: calc(70vh);
-   }
-   
 }
 
 #app_content {
@@ -484,10 +451,6 @@
 	width: 2.5rem;
 	height: 2.5rem;
 }
-.graph-controls{
-	width: 2.5rem;
-	height: 2.5rem;
-}
 /* Always-visible document-saveload-container (no animation) */
 .document-saveload-container {
     width: auto;               /* Fixed width to keep it always visible */
@@ -540,7 +503,6 @@
 	opacity: 0;
 	height: 0vh;
 }
-
 #ParadigmREVOLUTION_Loader {
 	position: absolute;
 	top: 25%; /* 1/4 from the top */
@@ -733,18 +695,18 @@
 	}
   }
 
-  #graph_controls {
-    gap: 5px;
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 99999;
-    width: fit-content;
-    display: flex;
-    align-items: baseline;
-    border-radius: 10px; /* Rounded corners for aesthetic effect */
-    padding: 0.25rem; /* Add some spacing inside the container */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+#graph_controls {
+	gap: 5px;
+	position: fixed;
+	top: 1rem;
+	right: 1rem;
+	z-index: 99999;
+	width: fit-content;
+	display: flex;
+	align-items: baseline;
+	border-radius: 10px; /* Rounded corners for aesthetic effect */
+	padding: 0.25rem; /* Add some spacing inside the container */
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
 }
 
 #graph_controls .button {
@@ -765,4 +727,57 @@
 .fullscreen{
 	width: 100vw !important;
 	height: 100vh !important;
+}
+
+
+
+
+
+
+
+
+@media screen and (max-width: 800px) {
+	#object_collections.show {
+		min-width: 100vw;
+	}
+	#graph_controls{
+		width: 200px;
+	}
+		
+	
+	/* Center all columns on small screens */
+   .app_graph_controls_containers {
+		justify-content: center !important; /* Center align content */
+		text-align: center; /* Optional: Center text inside */
+		backdrop-filter: blur(2px);
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+	#app_graph_tabs_container.show{
+		width: 100%;
+		height: 8.5rem;
+		justify-content: center !important; /* Center align content */
+		/* opacity: 1; */
+	}
+	#app_configurator_container.show {
+		height: calc(70vh);
+	}
+}
+@media screen and (min-width: 801px) and (max-width: 1000px) {
+	/* Center all columns on small screens */
+   .app_graph_controls_containers {
+	   justify-content: center !important; /* Center align content */
+	   text-align: center; /* Optional: Center text inside */
+	   backdrop-filter: blur(2px);
+   }
+   #app_graph_tabs_container.show{
+	   width: 100%;
+	   height: 5.8rem;
+	   justify-content: center !important; /* Center align content */
+	   /* opacity: 1; */
+   }
+   #app_configurator_container.show {
+	   height: calc(70vh);
+   }
+   
 }

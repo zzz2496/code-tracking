@@ -933,6 +933,65 @@ export class Utility {
 	};
 	// NOTE - Objects related methods
 	Objects = {
+		monitorObject: (obj, callback) => {
+			/* Example usage:
+			// Initialize the object and monitor it
+				const myObject = { name: "John", details: { age: 30, address: { city: "New York" } } };
+				const monitoredObject = monitorObject(myObject, (changes) => {
+					console.log("Change detected:", changes);
+				});
+
+				// Add event listeners for demonstration
+				document.getElementById('addKey').addEventListener('click', () => {
+					monitoredObject.newKey = "New Value";
+				});
+
+				document.getElementById('addNested').addEventListener('click', () => {
+					monitoredObject.details.newNestedKey = "Nested Value";
+				});
+
+				document.getElementById('removeKey').addEventListener('click', () => {
+					delete monitoredObject.details.age;
+				});
+			*/
+			// Recursive function to wrap objects and arrays in a Proxy
+			function createProxy(target) {
+				if (typeof target !== "object" || target === null) {
+					return target; // Return non-objects as is
+				}
+		
+				return new Proxy(target, {
+					set(obj, prop, value) {
+						const isArray = Array.isArray(obj);
+						const oldValue = obj[prop];
+						const result = Reflect.set(obj, prop, value);
+		
+						// If the value is an object or array, wrap it in a Proxy
+						if (typeof value === "object" && value !== null) {
+							obj[prop] = createProxy(value);
+						}
+		
+						// Trigger the callback with the changes, but avoid duplicate notifications for array methods
+						if (!(isArray && prop === "length")) {
+							callback({ type: "set", property: prop, oldValue, newValue: value, object: target });
+						}
+		
+						return result;
+					},
+					deleteProperty(obj, prop) {
+						const oldValue = obj[prop];
+						const result = Reflect.deleteProperty(obj, prop);
+		
+						// Trigger the callback with the changes
+						callback({ type: "delete", property: prop, oldValue, object: target });
+						return result;
+					}
+				});
+			}
+		
+			// Wrap the initial object with the Proxy
+			return createProxy(obj);
+		},
 		"monitorDependentPropertyChanges": ((object, dependencies, finalCallback) => {
 			const state = {};
 			dependencies.forEach(dep => {

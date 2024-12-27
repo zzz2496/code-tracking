@@ -164,11 +164,13 @@ export class Flow {
 	};
 	Graph = {
 		Elements: {
-			MakeDraggableNode: function (nodes, node, objclass) {
+			MakeDraggableNode: function (nodes, node, objclass, content) {
 				console.log('================================== Start MakeDraggableNode');
 				// console.log('node :>> ', node);
 				let newElement = document.createElement('div');
-				newElement.id = node.id.id.ID;
+				const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
+				
+				newElement.id = nodeID;
 				newElement.className = objclass;
 				newElement.style.top = `${node.Presentation.Perspectives.GraphNode.Position.y}px`;
 				newElement.style.left = `${node.Presentation.Perspectives.GraphNode.Position.x}px`;
@@ -188,19 +190,7 @@ export class Flow {
 							<div class="left-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
 							</div>
 							<div class="card is-selectable-box node-background-frosted" style="margin: 5px; padding: 0px; width: fit-content;">
-								<div id="${node.id.id.ID}-header" class="card-header " style="cursor:pointer;">
-									<div class="card-header-icon" data-id="${node.id.id.ID}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
-									<div class="card-header-title pl-0 is-selectable" data-id="${node.id.id.ID}">${node.id.id.Node.Kind}</div>
-								</div>
-								<div id="${node.id.id.ID}-content" class="card-content" style="width: 100%; height: 100%;">
-									<div class="is-flex is-flex-direction-column is-align-items-center" style="width:100%; height:100%;">
-										<div class="title is-1" style="width: fit-content">
-											${node.id.id.Node.Icon} 
-										</div>
-										<h class="m-0" style="font-size: 1.2rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
-										<h class="m-0" style="font-size: 0.8rem; text-align:center;">ID: ${node.id.id.ID}</h>
-									</div>
-								</div>
+								${content}
 							</div>
 							<div class="right-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
 							</div>
@@ -209,6 +199,20 @@ export class Flow {
 						</div>
 					</div>
 				`;
+
+				// <div id="${node.id.id.ID}-header" class="card-header " style="cursor:pointer;">
+				// 	<div class="card-header-icon" data-id="${node.id.id.ID}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+				// 	<div class="card-header-title pl-0 is-selectable" data-id="${node.id.id.ID}">${node.id.id.Node.Kind}</div>
+				// </div>
+				// <div id="${node.id.id.ID}-content" class="card-content" style="width: 100%; height: 100%;">
+				// 	<div class="is-flex is-flex-direction-column is-align-items-center" style="width:100%; height:100%;">
+				// 		<div class="title is-1" style="width: fit-content">
+				// 			${node.id.id.Node.Icon} 
+				// 		</div>
+				// 		<h class="m-0" style="font-size: 1.2rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
+				// 		<h class="m-0" style="font-size: 0.8rem; text-align:center;">ID: ${node.id.id.ID}</h>
+				// 	</div>
+				// </div>
 				newElement.addEventListener('animationend', function () {
 					this.classList.remove('fade-in');
 				});
@@ -483,8 +487,23 @@ export class Flow {
 				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
 				
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
-					// temp = this.Graph.Elements.MakeDraggableNode(node.id.id.ID, 'graph-node fade-in', node.id.id.ID, node.id.id.Node.Type, node.Presentation.Perspectives.GraphNode.Position.x, node.Presentation.Perspectives.GraphNode.Position.y, nodes.length);
-					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in');
+					const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
+					const nodeKind = node.id.ID ? node.id.Node.Kind : node.id.id.Node.Kind;
+					const nodeContent = `
+					<div id="${nodeID}-header" class="card-header " style="cursor:pointer;">
+						<div class="card-header-icon" data-id="${nodeID}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+						<div class="card-header-title pl-0 is-selectable" data-id="${nodeID}">${node.id.id.Node.Kind}</div>
+					</div>
+					<div id="${nodeID}-content" class="card-content" style="width: 100%; height: 100%;">
+						<div class="is-flex is-flex-direction-column is-align-items-center" style="width:100%; height:100%;">
+							<div class="title is-1" style="width: fit-content">
+								${node.id.id.Node.Icon} 
+							</div>
+							<h class="m-0" style="font-size: 1.2rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
+							<h class="m-0" style="font-size: 0.8rem; text-align:center;">ID: ${node.id.id.ID}</h>
+						</div>
+					</div>`;
+					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent);
 					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
 				});
 
@@ -3026,7 +3045,7 @@ export class Flow {
 				// console.log('Elements with horizontal scrollbars:', scrollableElements.horizontal);
 				// console.log('Elements with both scrollbars:', scrollableElements.both);
 
-				document.querySelector('#enable_programming_sections_button').addEventListener('click', () => {
+				document.querySelector('#enable_algorithm_sections_button').addEventListener('click', () => {
 					document.querySelectorAll('.tabs-extended-functions').forEach((tab) => {
 						if (tab.classList.contains('show')) {
 							tab.style.transform = 'translateY(100%)';
@@ -3571,7 +3590,7 @@ export class Flow {
 					appConfiguratorContainer.classList.toggle('fullscreen');
 					const fullscreen = appConfiguratorContainer.classList.contains('fullscreen')? true : false;
 					if (fullscreen) {
-						document.querySelector('#app_top_menu_container').classList.toggle('is-hidden');
+						document.querySelector('#app_top_menu_container').classList.toggle('hide');
 						document.querySelector('#app_graph_tabs_container').classList.toggle('show');
 						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.remove('fa-expand');
 						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.add('fa-compress');
@@ -3579,11 +3598,15 @@ export class Flow {
 						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.remove('fa-compress');
 						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.add('fa-expand');
 
-						document.querySelector('#app_top_menu_container').classList.toggle('is-hidden');
+						document.querySelector('#app_top_menu_container').classList.toggle('hide');
 						document.querySelector('#app_graph_tabs_container').classList.toggle('show');
 					}
-
 				});
+				let testArr = {};
+				const monitoredObject = ParadigmREVOLUTION.Utility.Objects.monitorObject(testArr, (changes) => { 
+					console.log("Changes detected:", changes);
+				});
+				window.testMonitoredObject = monitoredObject;
 				//NOTE - end of InitializeFormControls
 			},
 			GenerateSchemaToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
