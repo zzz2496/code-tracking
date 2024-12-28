@@ -330,7 +330,7 @@
 	opacity: 1;
 }
 
-#app_graph_content {
+.canvas_zoom {
     transition: transform 0.3s ease; /* Smooth zoom transition */
     transform-origin: top left; /* Adjust the origin of zoom */
 }
@@ -358,6 +358,8 @@
 	min-width: 3.5rem;
 }
 .scroll_content{
+	transition: transform 0.3s ease; /* Smooth zoom transition */
+    transform-origin: top left; /* Adjust the origin of zoom */
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	border-radius: 10px;
@@ -444,7 +446,7 @@
 }
 
 .document-saveload{
-	width: 2.5rem;
+	width: fit-content;
 	height: 2.5rem;
 }
 .runtime-controls{
@@ -645,6 +647,8 @@
 	position: relative; /* Establishes stacking context for child elements */
 	width: 100%;
 	height: 100%;
+	transition: transform 0.3s ease; /* Smooth zoom transition */
+	transform-origin: top left; /* Adjust the origin of zoom */
 }
   
 
@@ -695,7 +699,7 @@
 	}
   }
 
-#graph_controls {
+.graph_controls {
 	gap: 5px;
 	position: fixed;
 	top: 1rem;
@@ -707,11 +711,12 @@
 	border-radius: 10px; /* Rounded corners for aesthetic effect */
 	padding: 0.25rem; /* Add some spacing inside the container */
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+	border: solid 1px var(--bulma-border-weak); /* Add a border for contrast */
 }
 
-#graph_controls .button {
+.graph_controls .button {
     background: transparent; /* Transparent button backgrounds */
-    border: none; /* Remove button borders */
+    border: none; 
     color: inherit; /* Keep icon colors consistent */
     display: flex;
     align-items: center;
@@ -720,8 +725,8 @@
     transition: background 0.3s ease-in-outs, border 0.3s ease-in-outs; /* Smooth hover effect */
 }
 
-#graph_controls .button:hover {
-    border: solid 1px var(--bulma-primary);
+.graph_controls .button:hover {
+    border: solid 1px var(--bulma-border-weak);
 }
 
 .fullscreen{
@@ -740,7 +745,7 @@
 	#object_collections.show {
 		min-width: 100vw;
 	}
-	#graph_controls{
+	.graph_controls{
 		width: 200px;
 	}
 		

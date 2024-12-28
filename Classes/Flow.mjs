@@ -18,6 +18,7 @@ export class Flow {
 		this.SnapScroll = null;
 		this.Utility = utility;
 		this.DragSelect = false;
+		this.GraphCanvas = {};
 		this.ZoomScale = 1;
 		this.ZoomStep = 0.05; // Zoom scale increment
 		this.MinZoomScale = 0.1; // Prevents zooming out too far
@@ -164,16 +165,18 @@ export class Flow {
 	};
 	Graph = {
 		Elements: {
-			MakeDraggableNode: function (nodes, node, objclass, content) {
+			MakeDraggableNode: function (nodes, node, objclass, content, graphCanvas) {
 				console.log('================================== Start MakeDraggableNode');
-				// console.log('node :>> ', node);
+				console.log('node :>> ', node);
+
 				let newElement = document.createElement('div');
 				const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
 				
 				newElement.id = nodeID;
 				newElement.className = objclass;
-				newElement.style.top = `${node.Presentation.Perspectives.GraphNode.Position.y}px`;
-				newElement.style.left = `${node.Presentation.Perspectives.GraphNode.Position.x}px`;
+				newElement.style.top = `${node.Presentation.Perspectives.GraphNode.Position[graphCanvas]? node.Presentation.Perspectives.GraphNode.Position[graphCanvas].y : 30}px`;
+				newElement.style.left = `${node.Presentation.Perspectives.GraphNode.Position[graphCanvas] ? node.Presentation.Perspectives.GraphNode.Position[graphCanvas].x : 30}px`;
+				console.log(graphCanvas, node.Presentation.Perspectives.GraphNode.Position);
 				newElement.dataset.nodetype = node.id.id.Node.Kind;
 				newElement.dataset.nodename = node.Properties.Name;
 				newElement.dataset.nodelabel = node.Properties.Label;
@@ -268,10 +271,11 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
-			makeNodeDraggable: (draggableSelector, parentSelector = document.body) => { //SECTION - makeNodeDraggable
+			makeNodeDraggable: (draggableSelector, parentSelector = document.body, graphCanvas) => { //SECTION - makeNodeDraggable
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
 				let relatedElements = []; // To store related divs and their initial offsets
+				
 
 				const parent = document.querySelector(parentSelector);
 				const parentRect = parent.getBoundingClientRect();
@@ -286,6 +290,11 @@ export class Flow {
 					selector: draggableSelector,
 					callback: (e) => {
 						// Check if the clicked element is the .card-header
+						const graphCanvasParent = e.target.closest('.app_configurator_containers');
+						const graphCanvasParentId = graphCanvasParent.id;
+
+						console.log(document.querySelector(`#${graphCanvasParentId} .scroll_content`));
+
 						if (!e.target.closest('.card-header-icon')) return;
 						console.log('================================================================================================ MakeNodeDraggable mousedown start');
 						isDragging = true;
@@ -297,21 +306,21 @@ export class Flow {
 
 						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`;
 						console.log('qstr :>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((edges) => {
+						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
 							dbedges = edges[0];
 							// console.log('dbedges :>> ', dbedges);
-							if (edges[0]) if (Array.isArray(edges[0])) edges[0].forEach((edge, edgeIndex) => {
+							if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
 								this.Graph.Events.createGutterDotsAndConnect(
 									document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
 									document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
 									edge
 								);
 							});
-							if (edges[0]) if (Array.isArray(edges[0])) edges[0].forEach((edge, edgeIndex) => {
+							if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
 								this.Graph.Events.connectNodes(
 									edge,
-									'.graph_connection_surface',
-									'#graph_scroll_content'
+									`#${graphCanvasParentId} .graph_connection_surface`,
+									`#${graphCanvasParentId} .scroll_content`
 								);
 							});
 						});
@@ -359,7 +368,10 @@ export class Flow {
 			
 					const parentScrollLeft = parent.scrollLeft;
 					const parentScrollTop = parent.scrollTop;
-			
+
+					const graphCanvasParent = e.target.closest('.app_configurator_containers');
+					const graphCanvasParentId = graphCanvasParent.id;
+
 					// Access the live ScrollPosition dynamically
 					const { app_root_container, app_container } = this.ScrollPosition;
 			
@@ -398,9 +410,9 @@ export class Flow {
 							// console.log('dbedge each:>> ', edge);
 							this.Graph.Events.connectNodes(
 								edge,
-								'.graph_connection_surface',
-								'#graph_scroll_content'
-							);
+								`#${graphCanvasParentId} .graph_connection_surface`,
+								`#${graphCanvasParentId} .scroll_content`
+						);
 						});
 						// console.log('================================================================================================ mouse moved enough, DONE mousemove!')
 					}
@@ -410,14 +422,21 @@ export class Flow {
 					if (isDragging) {
 						console.log('================================================================================================ MakeNodeDraggable mouseup start');
 
+						let graphCanvas = e.target.closest('.app_configurator_containers');
+						console.log('graphCanvas :>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ', graphCanvas);
+						let tabtype = graphCanvas.dataset.tabtype;
+
+
 						isDragging = false;
 						draggedElement.style.zIndex = ""; // Reset z-index
 						draggedElement = null;
 						// const id = e.target.dataset.id;
-						const id = e.target.closest('.graph-node').id;	
+						let id = e.target.closest('.graph-node');
+
 						if (id == undefined) {
 							console.error('id :>> ', id);
 						} else {
+							id = id.id;
 							console.log('id :>> ', id);
 							const coord = {
 								x: fx,
@@ -425,10 +444,10 @@ export class Flow {
 							};
 							let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
 							// console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(node => { 
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
 								if (node[0].length == 0) return;
 								node = node[0][0];
-								node.Presentation.Perspectives.GraphNode.Position = coord;
+								node.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;
 								// console.log('node.id after update coord :>>', node.id);
 	
 								if (node.id.id) node.id = node.id.id;
@@ -437,7 +456,7 @@ export class Flow {
 								qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
 								// console.log('qstr :>> ', qstr);
 								
-								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
 							}).catch(error => {
 								console.error('Coordinate update failed', error);
 							});
@@ -449,9 +468,9 @@ export class Flow {
 									x: parseInt(elem.style.left, 10),
 									y: parseInt(elem.style.top, 10)
 								};
-								let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
-								// console.log('qstr :>> ', qstr);
-								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).catch(error => {
+								let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position.${graphCanvas.dataset.tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
+								console.log('qstr :>> ', qstr);
+								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).catch(error => {
 									console.error('Coordinate update failed for related element', error);
 								});
 							});
@@ -479,13 +498,13 @@ export class Flow {
 					}
 				});
 			},
-			renderNodes: ((nodes, edges, callback, cr= 0) => { //SECTION - renderNodes
+			renderNodes: ((nodes, edges, parentGraphID, callback, cr= 0) => { //SECTION - renderNodes
 				console.log('================= Start Render Nodes');
-
-				// console.log('nodes and edges :>> ', nodes, edges);
 				let temp;
-				document.querySelector('#app_graph_content>.graph_node_surface').innerHTML = "";
-				
+				const selector = `#${parentGraphID} .graph_node_surface`;
+
+				console.log('selector :>> ', selector);
+				document.querySelector(selector).innerHTML = "";
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
 					const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
 					const nodeKind = node.id.ID ? node.id.Node.Kind : node.id.id.Node.Kind;
@@ -503,11 +522,14 @@ export class Flow {
 							<h class="m-0" style="font-size: 0.8rem; text-align:center;">ID: ${node.id.id.ID}</h>
 						</div>
 					</div>`;
-					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent);
-					document.querySelector('#app_graph_content>.graph_node_surface').append(temp);
+					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent, document.querySelector('#'+parentGraphID).dataset.tabtype);
+					console.log('temp:>>', temp);
+					console.log('graph html :>>', selector, document.querySelector(selector).innerHTML);
+					document.querySelector(selector).append(temp);
 				});
+				
+				this.Graph.Events.makeNodeDraggable(".graph-node", `#${parentGraphID} .scroll_content`, document.querySelector('#'+parentGraphID).dataset.tabtype);
 
-				this.Graph.Events.makeNodeDraggable(".graph-node", "#graph_scroll_content");
 
 				console.log('================= Done Render Nodes');
 				console.log('=================Start Render Edges');
@@ -522,18 +544,21 @@ export class Flow {
 					});
 				}
 
-				if (edges) if (Array.isArray(edges)) edges.forEach((rEdge, edgeIndex) => {
+				if (edges) if (Array.isArray(edges)) if (edges.length > 0) edges.forEach((rEdge, edgeIndex) => {
+					console.log(rEdge.OutputPin.nodeID, document.querySelector(`div[id="${rEdge.OutputPin.nodeID}"]`));
+					console.log(rEdge.InputPin.nodeID, document.querySelector(`div[id="${rEdge.InputPin.nodeID}"]`));
+
 					this.Graph.Events.createGutterDotsAndConnect(
 						document.querySelector(`div[id="${rEdge.OutputPin.nodeID}"]`),
 						document.querySelector(`div[id="${rEdge.InputPin.nodeID}"]`),
 						rEdge
 					);
 				});
-
-				if (edges) if (Array.isArray(edges)) edges.forEach((edge, edgeIndex) => {
+				console.log('parentGraphID :>> ', parentGraphID);
+				if (edges) if (Array.isArray(edges)) if (edges.length > 0) edges.forEach((edge, edgeIndex) => {
 					this.Graph.Events.connectNodes(
 						edge,
-						'.graph_connection_surface',
+						`#${parentGraphID} .graph_connection_surface`,
 						'#graph_scroll_content'
 					);
 				});
@@ -541,8 +566,8 @@ export class Flow {
 				if (callback) callback();
 				console.log('================= Done Render Edges');
 			}).bind(this),
-			enableMiddleClickScroll: (containerId) => { //SECTION - enableMiddleClickScroll
-				const scrollContent = document.querySelector(containerId);
+			enableMiddleClickScroll: (rContainer) => { //SECTION - enableMiddleClickScroll
+				const scrollContent = rContainer;
 			
 				if (!scrollContent) {
 					console.error(`Element with query selector '${containerId}' not found.`);
@@ -797,6 +822,7 @@ export class Flow {
 				
 				// Get the SVG container
 				const svgContainer = document.querySelector(svgcontainerselector);
+				// console.log('svgContainer :>> ', svgcontainerselector, svgContainer);	
 				const existingPath = svgContainer.querySelector(`path[id="${edgeID}"]`);
 				// console.log('existingPath :>> ', existingPath);
 
@@ -824,7 +850,7 @@ export class Flow {
 				// console.log('nodes', node1, node2);;
 			
 				if (!node1 || !node2) {
-					console.error("One or both nodes not found.", node1 ? 'node1 found' : 'node1 not found', node2 ? 'node2 found' : 'node2 not found');	
+					console.error("One or both nodes not found.", node1 ? `node1: ${node1selector} found` : `node1: ${node1selector} not found`, node2 ? `node2: ${node2selector} found` : `node2 ${node2selector} not found`);	
 					return;
 				}
 
@@ -1136,7 +1162,7 @@ export class Flow {
 				gutterDot1.className = 'gutter-dot';
 				gutterDot1.style.width = '10px';
 				gutterDot1.style.height = '10px';
-				gutterDot1.style.backgroundColor = 'silver';
+				gutterDot1.style.backgroundColor = 'transparent';
 				gutterDot1.style.borderRadius = '50%';
 				gutterDot1.dataset.edge = edgeID;
 			
@@ -1332,7 +1358,14 @@ export class Flow {
 				return [edge, gutterDot1, gutterDot2, direction];
 			},
 			enableDragSelect: ((selector) => {
-				const container = document.querySelector(selector);
+				// console.log('typeof selector :>> ', typeof selector);
+				let container;
+				if (typeof selector === 'string') {
+					container = document.querySelector(selector);
+				} else {
+					container = selector;
+				}
+				
 				let self = this;
 				let isDragging = false;
 				let startX, startY;
@@ -1625,9 +1658,9 @@ export class Flow {
 			}).bind(this)
 		}
 	};
-	Form = {
-		Components: {
-			DOMElement: () => {
+	Form = { //!SECTION - Form
+		Components: { //!SECTION - Components
+			DOMElement: () => { //!SECTION - DOMElement	
 				return {
 					comment: comment,
 					tag: tag,
@@ -2014,9 +2047,9 @@ export class Flow {
 				}
 			}
 		},
-		Events: {
+		Events: { //!SECTION - Events
 			// NOTE - addGlobalEventListener
-			addGlobalEventListener: function (type, selectors, parent = document) {
+			addGlobalEventListener: function (type, selectors, parent = document) { //!SECTION - addGlobalEventListener
 				parent.addEventListener(
 					type,
 					(e) => {
@@ -2034,7 +2067,7 @@ export class Flow {
 					true // Capture phase
 				);
 			},
-			setupTabSwitcher: ((tabSelector, contentContainerSelector, activeClass = 'is-active', showClass = 'show', callback) => {
+			setupTabSwitcher: ((tabSelector, contentContainerSelector, activeClass = 'is-active', showClass = 'show', callback) => { //!SECTION - setupTabSwitcher	
 				console.log('setupTabSwitcher click!');
 				document.querySelectorAll(tabSelector).forEach((tab, index, tabs) => {
 					tab.addEventListener('click', () => {
@@ -2360,13 +2393,13 @@ export class Flow {
 					selector: '.is-selectable',
 					callback: (e) => {
 						console.log('is-selectable CLICK');
-						
+
 						this.DragSelect = true;
 						// console.log('e target', e.target);
 						// console.log('e currentTarget', e.currentTarget);
 						const selectableParent = e.target.closest('.is-selectable-parent');
 						const selectableBox = e.target.closest('.is-selectable-box');
-						// ParadigmREVOLUTION.Application.Cursor = [];
+						console.log('selectables', selectableParent, selectableBox);
 				
 						if (!selectableParent || !selectableBox) return; // Guard clause
 				
@@ -2674,11 +2707,13 @@ export class Flow {
 						}
 					}
 				}, {
-					selector: '#graph_addnode_button', //NOTE - addnode-button
+					selector: '.graph_addnode_button', //NOTE - addnode-button
 					callback: (e) => {
 						//NOTE - Create new node!
 						console.log('Create node! graph_addnode_button click!');
-						
+						const graphCanvas = e.target.closest('.app_configurator_containers');
+						const tabtype = graphCanvas.dataset.tabtype;
+						console.log('graphCanvas', graphCanvas);
 						let schema = {
 							"id": "form_select_connection_type",
 							"label": "Form Select Connection Type",
@@ -2754,7 +2789,9 @@ export class Flow {
 								]
 							}
 						}
-						this.Graph.Events.showSchemaModal('Node Information', schema, {}, (data, passedData) => {
+						let flow = this;
+						// console.log('flow :>> ', flow);
+						this.Graph.Events.showSchemaModal('Node Information', schema, {graphCanvas:graphCanvas, flow:flow}, (data, passedData) => {
 							console.log('data :>> ', data);
 
 							const name = data.name;
@@ -2820,11 +2857,15 @@ export class Flow {
 								x: tx > 0 ? tx : 0,
 								y: ty > 0 ? ty : 0
 							}
-							newNode.Presentation.Perspectives.GraphNode.Position = coord;
+							Object.entries(passedData.flow.GraphCanvas).forEach((key, value) => {
+								newNode.Presentation.Perspectives.GraphNode.Position[key] = coord;
+							});
+							
+							newNode.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;
 							newTabCounter++;
 	
 							console.log('newNode :>> ', newNode);
-							ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
+							// ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
 							if (!this.storage) {
 								console.error('No storage found.');
 								return;
@@ -2832,17 +2873,18 @@ export class Flow {
 							// NOTE - SurrealDB create/insert/upsert
 							let qstr = `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(newNode)};`;
 							console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
 	
 							// Refresh render
-							document.querySelector('#document_refreshrender_button').click();
+							passedData.graphCanvas.querySelector('.document_refreshrender_button').click();
 						});
 					}
 				}, {
-					selector: '#graph_removenodes_button', //NOTE - removenodes-button
+					selector: '.graph_removenodes_button', //NOTE - removenodes-button
 					callback: (e) => {
 						console.log('Remove nodes! graph_removenodes_button click!');
 						// NOTE - Remove nodes!
+						let graphCanvas = e.target.closest('.app_configurator_containers');
 						if (ParadigmREVOLUTION.Application.Cursor.length == 0) return;
 						console.log('ParadigmREVOLUTION.Application.Cursor :>> ', ParadigmREVOLUTION.Application.Cursor);
 					
@@ -2856,14 +2898,14 @@ export class Flow {
 							console.log('table, id >>>>>>', table, id);
 					
 							let qstr = `SELECT id FROM ONLY ${table} where id:{ID:"${id}"}.. limit 1 ;`;
-							return ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr)
+							return ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr)
 								.then(result => {
 									console.log('result :>> ', result[0]);
 									if (result[0]?.id?.id) result[0].id = result[0].id.id;
 									console.log('result :>> ', result[0]);
 									qstr = `DELETE FROM ${table} where id.ID = "${id}";`;
 									console.log('DELETE qstr :>> ', qstr);
-									return ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr)
+									return ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr)
 										.then(() => {
 											console.log(`Node ID ${id} removal SUCCESS!`);
 											znode = null;
@@ -2881,8 +2923,7 @@ export class Flow {
 							ParadigmREVOLUTION.Application.Cursor = [];
 							
 							// Refresh render
-							document.querySelector('#document_refreshrender_button').click();
-
+							graphCanvas.querySelector('.document_refreshrender_button').click();
 						}).catch(err => {
 							console.error("Error in processing nodes:", err);
 						});
@@ -2933,28 +2974,61 @@ export class Flow {
 					}
 				});
 				
-				document.querySelector('#document_refreshrender_button').addEventListener('click', (e) => {
-					console.log('Refresh render button clicked!');
-					let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`;
-					// console.log('qstr Yggdrasil :>> ', qstr);
-					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(nodes => {
-						// console.log('nodes :>> ', nodes);
-						qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`;
-						// console.log('qstr edges :>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(edges => {
-							// console.log('nodes each :>> ', nodes[0]);
-							// console.log('edges each :>> ', edges[0]);
-							this.Graph.Events.renderNodes(nodes[0], edges[0], () => {
-								// console.log('Nodes and Edges rendered, callback called');
+				document.querySelectorAll('.document_refreshrender_button').forEach(button => {
+					button.addEventListener('click', (e) => {
+						let parentGraphID = e.target.closest('.app_configurator_containers ').id;
+						console.log('parentGraphID :>> ', parentGraphID);
+						let onlyContainers = e.target.closest('.buttons').querySelector('#graph_show_only_containers');
+						let qstr = '';
+	
+						console.log('parentGraphID >>>>>>', parentGraphID);	
+						// console.log('Refresh render button clicked!');
+						console.log('Refresh render button clicked!');
+	
+						switch (parentGraphID) {
+							case 'app_datastorage_container':
+								qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.Node.Kind = 'Datastore';`;
+								break;
+							case 'app_graph_container':
+								if (onlyContainers.checked) {
+									qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.Node.Kind = 'Container';`;
+								} else {
+									qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`;
+								}	
+								break;
+							case 'app_containers_container':
+								qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.Node.Kind != 'Container';-- and id.Node.;`;
+								break;
+						}
+						console.log('qstr Yggdrasil :>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(nodes => {
+							// console.log('nodes :>> ', nodes);
+							qstr = '';
+							switch (parentGraphID) {
+								case 'app_graph_container':
+									if (onlyContainers.checked) {
+										qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where id.Table = 'Process' or id.Table = 'Version';`;
+									} else {
+										qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`;
+									}
+									break;
+							}
+							console.log('qstr edges :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(edges => {
+								// console.log('nodes each :>> ', nodes[0]);
+								// console.log('edges each :>> ', edges[0]);
+								this.Graph.Events.renderNodes(nodes[0], edges[0], parentGraphID, () => {
+									// console.log('Nodes and Edges rendered, callback called');
+								});
+							}).catch(err => {
+								console.error('Document refresh render error: Edges retreival error ', err);
 							});
 						}).catch(err => {
-							console.error('Document refresh render error: Edges retreival error ', err);
+							console.error('Document refresh render error: Nodes retreival error ', err);
 						});
-					}).catch(err => {
-						console.error('Document refresh render error: Nodes retreival error ', err);
 					});
 				});
-
+				
 				console.log('Set default theme to SYSTEM');
 				const root = document.documentElement;
 			
@@ -3071,27 +3145,101 @@ export class Flow {
 
 					// console.log('this.ScrollPosition.app_root_container :>> ', this.ScrollPosition.app_root_container);
 				});
-				document.querySelector('#graph_load_data_button').addEventListener('click', (e) => {
-					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari SERVER ke CLIENT. Apakah anda yakin?')) { 
-						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`).then(result => {
-							ParadigmREVOLUTION.Application.GraphNodes = result[0];
-							let qstr = "";
-							ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
-								node.id = node.id.id;
-								qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(node)};`;
-							});
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-		
-							console.log('Success fetching data from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
-	
-						}).catch(error => {
-							console.error('Error fetching data from TestServer', error);
-						});
-						ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
-							console.log('Success fetching edges from TestServer >>>>>>>>', result[0]);
-							ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(() => {
+				document.querySelectorAll('.graph_load_data_button').forEach(button => {
+					button.addEventListener('click', (e) => {
+						const storage = e.target.closest('.graph_load_data_button').dataset.storage;
+						const graphCanvas = e.target.closest('.app_configurator_containers');
+
+						if (confirm(`Anda akan melakukan sinkronisasi GRAPH DATA dari ${storage}. Apakah anda yakin?`)) { 
+							// GET NODES from server/storage
+							ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`).then(result => {
+								// ParadigmREVOLUTION.Application.GraphNodes = result[0];
+								let TGraphNodes = result[0];
 								let qstr = "";
-								result[0].forEach(edge => {
+								TGraphNodes.forEach(node => {
+									node.id = node.id.id;
+									qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(node)};`;
+								});
+								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
+			
+								console.log(`Success fetching data from ${storage}`, TGraphNodes);
+		
+							}).catch(error => {
+								console.error(`Error fetching data from ${storage}`, error);
+							});
+							// GET EDGES from server/storage
+							ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
+								console.log(`Success fetching edges from ${storage}`, result[0]);
+								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(() => {
+									let qstr = "";
+									result[0].forEach(edge => {
+										let edgeTable = edge.id.tb;
+										let edgeID = JSON.stringify(edge.id.id)
+										let edgeInTable = edge.in.tb;
+										let edgeInID = JSON.stringify(edge.in.id);
+										let edgeOutTable = edge.out.tb;
+										let edgeOutID = JSON.stringify(edge.out.id);
+										let tEdge = edge;
+										delete tEdge.id;
+										delete tEdge.in;
+										delete tEdge.out;
+										let tEdgestr = JSON.stringify(tEdge).slice(1, -1);
+										console.log('tEdgestr :>> ', tEdgestr);
+										qstr += `
+										insert relation into
+										${edgeTable} 
+										{
+											id:${edgeID}, 
+											in:${edgeInTable}:${edgeInID}, 
+											out:${edgeOutTable}:${edgeOutID}, 
+											${tEdgestr}
+										};\n`
+									});
+									ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
+									console.log('Success fetching edges from TestServer', TGraphNodes);
+
+									// Refresh render
+									graphCanvas.querySelector('.document_refreshrender_button').click();
+									// document.querySelector('#document_refreshrender_button').click();
+								}).catch(error => {
+									console.error('Error deleting edges from TestServer', error);
+								});
+							}).catch(error => {
+								console.error('Error fetching edges from LocalDB', error);
+							});
+						}
+					});
+				});
+				document.querySelectorAll('.graph_save_data_button').forEach(button => {
+					button.addEventListener('click', (e) => {
+						const storage = e.target.closest('.graph_save_data_button').dataset.storage;
+						let qstr = '';
+						if (confirm(`Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke ${storage}. Apakah anda yakin?`)) { 
+							// Sync Nodes data
+							qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`;
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(results => {
+								// ParadigmREVOLUTION.Application.GraphNodes = result[0];
+								console.log(`Success fetching nodes from Memory`, results);
+								let TGraphNodes = results[0];
+								let qstr = "";
+								TGraphNodes.forEach(node => {
+									node.id = node.id.id;
+									qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(node)};`;
+								});
+								ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(qstr).then((results) => {
+									console.log(`Success sending nodes to ${storage}`, results);
+								}).catch(error => { 
+									console.error(`Error sending nodes to ${storage}`, error);
+								});
+							}).catch(error => {
+								console.error('Error fetching nodes from Memory', error, qstr);
+							});
+							// Sync Edges data
+							qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`;
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(results => {
+								console.log('Success fetching edges from Memory', results);
+								let qstr = "";
+								results[0].forEach(edge => {
 									let edgeTable = edge.id.tb;
 									let edgeID = JSON.stringify(edge.id.id)
 									let edgeInTable = edge.in.tb;
@@ -3112,96 +3260,56 @@ export class Flow {
 										in:${edgeInTable}:${edgeInID}, 
 										out:${edgeOutTable}:${edgeOutID}, 
 										${tEdgestr}
-									};\n`
+									};\n`;
 								});
-								ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr);
-								console.log('Success fetching edges from TestServer', ParadigmREVOLUTION.Application.GraphNodes);
-
-								// Refresh render
-								document.querySelector('#document_refreshrender_button').click();
-
+								console.log('qstr :>> ', qstr);
+								ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(qstr).then((results) => {
+									console.log(`Success sending edges to ${storage}`, results);
+								}).catch(error => { 
+									console.error(`Error sending edges to ${storage}`, error);
+								});
 							}).catch(error => {
-								console.error('Error deleting edges from TestServer', error);
+								console.error('Error fetching edges from Memory', error, qstr);
 							});
-						}).catch(error => {
-							console.error('Error fetching edges from LocalDB', error);
-						});
-					}
-				});
-				document.querySelector('#graph_save_data_button').addEventListener('click', (e) => {
-					if (confirm('Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke SERVER. Apakah anda yakin?')) { 
-						// Sync Nodes data
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`).then(result => {
-							ParadigmREVOLUTION.Application.GraphNodes = result[0];
-							let qstr = "";
-							ParadigmREVOLUTION.Application.GraphNodes.forEach(node => {
-								node.id = node.id.id;
-								qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(node)};`;
-							});
-							ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
-							console.log('Success fetching nodes from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
-						}).catch(error => {
-							console.error('Error fetching nodes from LocalDB', error);
-						});
-						// Sync Edges data
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`).then(result => {
-							let qstr = "";
-							result[0].forEach(edge => {
-								let edgeTable = edge.id.tb;
-								let edgeID = JSON.stringify(edge.id.id)
-								let edgeInTable = edge.in.tb;
-								let edgeInID = JSON.stringify(edge.in.id);
-								let edgeOutTable = edge.out.tb;
-								let edgeOutID = JSON.stringify(edge.out.id);
-								let tEdge = edge;
-								delete tEdge.id;
-								delete tEdge.in;
-								delete tEdge.out;
-								let tEdgestr = JSON.stringify(tEdge).slice(1, -1);
-								console.log('tEdgestr :>> ', tEdgestr);
-								qstr += `
-								insert relation into
-								${edgeTable} 
-								{
-									id:${edgeID}, 
-									in:${edgeInTable}:${edgeInID}, 
-									out:${edgeOutTable}:${edgeOutID}, 
-									${tEdgestr}
-								};\n`;
-							});
-							console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.query(qstr);
-							console.log('Success fetching edges from LocalDB', ParadigmREVOLUTION.Application.GraphNodes);
-						}).catch(error => {
-							console.error('Error fetching edges from LocalDB', error);
-						});
-					}
-				});
-				document.querySelector('#graph_clear_data_button').addEventListener('click', (e) => {
-					if (confirm('Anda akan melakukan penghapusan GRAPH DATA di CLIENT. Apakah anda yakin?'))
-					if (prompt('DATA YANG DIHAPUS TIDAK BISA DIKEMBALIKAN. Apakah anda yakin? Ketik DELETE untuk melanjutkan') == 'DELETE')
-					ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}`).then(result => {
-						ParadigmREVOLUTION.Application.GraphNodes = [];
-						ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(`delete from next_process;`);
-						
-						// Refresh render
-						document.querySelector('#document_refreshrender_button').click();
-						
-						console.log('Success deleting data from LocalDB');
-					}).catch(error => {
-						console.error('Error deletinging data from LocalDB', error);
+						}
 					});
 				});
-				this.Graph.Events.enableMiddleClickScroll('#app_root_container');
-				this.Graph.Events.enableMiddleClickScroll('#graph_scroll_content');
-				this.Graph.Events.enableMiddleClickScroll('#app_data_preparation_area');
+				document.querySelectorAll('.graph_clear_data_button').forEach(btn => { 
+					btn.addEventListener('click', (e) => {
+						let storage = e.target.closest('.graph_clear_data_button').dataset.storage;
+						const graphCanvas = e.target.closest('.app_configurator_containers');
+						console.log('graphCanvas :>> ', graphCanvas);
+						
+						if (!storage) storage = 'Memory';
+						let qstr = '';
+
+						const confirmString = 'a';
+						if (confirm(`Anda akan melakukan penghapusan GRAPH DATA di ${storage}. Apakah anda yakin?`))
+						if (prompt(`DATA YANG DIHAPUS TIDAK BISA DIKEMBALIKAN. Apakah anda yakin? Ketik [${confirmString}] untuk melanjutkan`) == confirmString)
+						ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}`).then(result => {
+							// ParadigmREVOLUTION.Application.GraphNodes = [];
+							ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`delete from next_process;`);
+							
+							// Refresh render
+							if (graphCanvas) graphCanvas.querySelector('.document_refreshrender_button').click();
+							console.log('Success deleting data from LocalDB');
+						}).catch(error => {
+							console.error('Error deletinging data from LocalDB', error);
+						});
+					});
+				});
+				this.Graph.Events.enableMiddleClickScroll(document.querySelector('#app_root_container'));
+				document.querySelectorAll('.scroll_content').forEach(element => { 
+					this.Graph.Events.enableMiddleClickScroll(element);
+				});
+				this.Graph.Events.enableMiddleClickScroll(document.querySelector('#app_data_preparation_area'));
 
 				// NOTE - CONNECT NODES!
 				this.Form.Events.addGlobalEventListener('mousedown', [
 					{
 						selector: '.graph-node .card-header-title', // Select .card-content within .graph-node
 						callback: (e) => {
-							console.log('e.button', e.button);
+							console.log('For node move, e.button', e.button);
 							if (e.button === 0) { // Left mouse button
 								console.log('Mouse down on .card-content inside .graph-node');
 				
@@ -3255,6 +3363,8 @@ export class Flow {
 							if (e.button === 0 && this.selectedNodesToConnect.Start) { // Left mouse button
 								console.log('Mouse up on .graph-node');
 				
+								let parentGraphID = e.target.closest('.app_configurator_containers').id;
+
 								// Reset breathing to card-header-title
 								document.querySelectorAll('.graph-node .card-header-title').forEach(node => {
 									if (node !== this.selectedNodesToConnect.Start) {
@@ -3281,10 +3391,10 @@ export class Flow {
 								let selectedNodes = this.selectedNodesToConnect;
 
 								if (this.selectedNodesToConnect.Start !== this.selectedNodesToConnect.End) {
-
+									
 									let qstr = `select * from Process, Version, Contains, Workflow, DataInput, DataOutput where OutputPin.nodeID = "${this.selectedNodesToConnect.StartParam.id}" and InputPin.nodeID = "${this.selectedNodesToConnect.EndParam.id}";`;
 									// console.log(qstr);
-									ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+									ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(result => {
 										let edges = result[0];
 
 										console.log('qstr :>> ', qstr);
@@ -3383,24 +3493,25 @@ export class Flow {
 												console.error(`Failed to create gutter dots and connect nodes, pinOut:${pinOut} or pinIn:${pinIn}`);
 												return;
 											}
+											// console.log('parentGraphID :>> ', parentGraphID);
 											passedData.FlowGraph.Graph.Events.connectNodes(
 												edge,
-												'.graph_connection_surface',
+												`#${parentGraphID} .graph_connection_surface`,
 												'#graph_scroll_content',
 											);
 		
 											let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
 											// console.log(qstr);
-											ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+											ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(result => {
 												let outid = result[0][0].id.id;
 												qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.InputPin.nodeID}'`;
 												console.log('qstr', qstr);
-												ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then(result => {
+												ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(result => {
 													let inid = result[0][0].id.id;
 													console.log('edge sebelum insert:>> ', edge);
 													qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(outid)}\n-> ${selectedType.Type} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
 													console.log(qstr);
-													ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.query(qstr).then((result) => { 
+													ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((result) => { 
 														console.log('Edge creation SUCCESS', result);
 													}).catch(err => console.error('Edge creation FAIL, ', err));
 												}).catch(err => console.error('Input nodePin not found', err));	
@@ -3434,174 +3545,193 @@ export class Flow {
 						}
 					}
 				]);
-				this.Graph.Events.enableDragSelect('.graph_surfaces');
-				
-				// this.ZoomScale = 1;
-				// this.ZoomStep = 0.05; // Zoom scale increment
-				// this.MinZoomScale = 0.1; // Prevents zooming out too far
-				// this.MaxZoomScale = 10; // Prevents zooming in too far
-		
-				// // Get the container and buttons
-				// const graphContent = document.getElementById('app_graph_content');
-				// const zoomInButton = document.getElementById('zoom_in_button');
-				// const zoomResetButton = document.getElementById('zoom_reset_button');
-				// const zoomOutButton = document.getElementById('zoom_out_button');
 
-				// // Zoom In action
-				// zoomInButton.addEventListener('click', () => {
-				// 	if (this.ZoomScale < this.MaxZoomScale) {
-				// 		this.ZoomScale += this.ZoomStep;
-				// 		graphContent.style.transform = `scale(${this.ZoomScale})`;
-				// 		console.log('zoom in button clicked', this.ZoomScale);
-				// 	}
-				// });
-				// // Zoom In action
-				// zoomResetButton.addEventListener('click', () => {
-				// 	this.ZoomScale = 1;
-				// 	graphContent.style.transform = `scale(${this.ZoomScale})`;
-				// 	console.log('zoom in button clicked', this.ZoomScale);
-				// });
+				document.querySelectorAll('.app_configurator_containers').forEach(container => { 
+					// console.log('container :>> ', container);
+					this.GraphCanvas[container.dataset.tabtype] = {
+						ZoomScale: 1,
+						ZoomStep: 0.05, // Zoom scale increment
+						MinZoomScale: 0.1, // Prevents zooming out too far
+						MaxZoomScale: 10 // Prevents zooming in too far
+					};
+				});
 
-				// // Zoom Out action
-				// zoomOutButton.addEventListener('click', () => {
-				// 	if (this.ZoomScale > this.MinZoomScale) {
-				// 		this.ZoomScale -= this.ZoomStep;
-				// 		graphContent.style.transform = `scale(${this.ZoomScale})`;
-				// 		console.log('zoom out button clicked', this.ZoomScale);
-				// 	}
-				// });
-
-				this.ZoomScale = 1;
-				this.ZoomStep = 0.05; // Zoom scale increment
-				this.MinZoomScale = 0.1; // Prevents zooming out too far
-				this.MaxZoomScale = 10; // Prevents zooming in too far
+				document.querySelectorAll('.graph_surfaces').forEach(surface => { 
+					// console.log('surfaces :>> ', surface);
+					this.Graph.Events.enableDragSelect(surface);
+				});
 				
-				let zoomTimeout = null; // Timeout variable for delayed scroll adjustment
-
-				// Get the container and buttons
-				const graphContent = document.getElementById('app_graph_content');
-				const zoomInButton = document.getElementById('zoom_in_button');
-				const zoomResetButton = document.getElementById('zoom_reset_button');
-				const zoomOutButton = document.getElementById('zoom_out_button');
-				const container = graphContent.parentElement; // Assuming parent is the scrollable container
-				let newScrollLeft;
-				let newScrollTop;
-				let clickCount = 0;
-				let zoombtn = '';
-				let prevzoombtn = '';
-
-				// Zoom function to adjust the viewport position
-				const applyZoom = (newScale) => {
-					clickCount++;
-					// Get the current scroll position and dimensions
-					const containerRect = container.getBoundingClientRect();
-					const graphContentRect = graphContent.getBoundingClientRect();
-				
-					// Get the viewport center relative to the content
-					const viewportCenterX = container.scrollLeft + containerRect.width / 2;
-					const viewportCenterY = container.scrollTop + containerRect.height / 2;
-				
-					// Calculate the relative position of the viewport center to the content
-					const relativeCenterX = viewportCenterX / this.ZoomScale;
-					const relativeCenterY = viewportCenterY / this.ZoomScale;
-				
-					// Update the scale
-					this.ZoomScale = newScale;
-					graphContent.style.transform = `scale(${this.ZoomScale})`;
-				
-					// Adjust the scroll position to maintain the same relative center
-					if (clickCount == 1) {
-						console.log('Masuk save scroll position');
-						newScrollLeft = relativeCenterX * this.ZoomScale - containerRect.width / 2;
-						newScrollTop = relativeCenterY * this.ZoomScale - containerRect.height / 2;
-						console.log(newScrollLeft, newScrollTop);
-					}
-				
-
-					if (zoomTimeout) {
-						clearTimeout(zoomTimeout);
-					}
-					zoomTimeout = setTimeout(() => {
-						// container.scrollLeft = newScrollLeft*this.ZoomScale;
-						// container.scrollTop = newScrollTop*this.ZoomScale;
-						if (zoombtn == 'in') {
-							container.scrollTo({
-								left: newScrollLeft * this.ZoomScale,
-								top: newScrollTop * this.ZoomScale,
-								behavior: 'smooth', // Enable smooth scrolling
-							});
-							prevzoombtn = 'in';
-						} else if (zoombtn == 'out') {
-							container.scrollTo({
-								left: newScrollLeft / this.ZoomScale,
-								top: newScrollTop / this.ZoomScale,
-								behavior: 'smooth', // Enable smooth scrolling
-							});
-							prevzoombtn = 'out';
-						} else if (zoombtn == 'reset') {
-							if (prevzoombtn == 'in') {
-								container.scrollTo({
-									left: newScrollLeft * this.ZoomScale,
-									top: newScrollTop * this.ZoomScale,
-									behavior: 'smooth', // Enable smooth scrolling
-								});
-							}else if (prevzoombtn == 'out') {
-								container.scrollTo({
-									left: newScrollLeft * this.ZoomScale,
-									top: newScrollTop * this.ZoomScale,
-									behavior: 'smooth', // Enable smooth scrolling
-								});
-							}
-							prevzoombtn = '';
+				function enableZoomControl(flow) { 
+					// console.log('>>>>>>>', flow.GraphCanvas);
+					// flow.GraphCanvas[graphCanvas].ZoomScale = 1;
+					// flow.GraphCanvas[graphCanvas].ZoomStep = 0.05; // Zoom scale increment
+					// this.MinZoomScale = 0.1; // Prevents zooming out too far
+					// this.MaxZoomScale = 10; // Prevents zooming in too far
+					
+					let zoomTimeout = null; // Timeout variable for delayed scroll adjustment
+	
+					// Get the container and buttons
+					const zoomInButton = document.querySelectorAll('.zoom_in_button');
+					const zoomResetButton = document.querySelectorAll('.zoom_reset_button');
+					const zoomOutButton = document.querySelectorAll('.zoom_out_button');
+	
+					console.log('zoom controls', zoomInButton, zoomResetButton, zoomOutButton);
+					let newScrollLeft;
+					let newScrollTop;
+					let clickCount = 0;
+					let zoombtn = '';
+					let prevzoombtn = '';
+	
+					// Zoom function to adjust the viewport position
+					const applyZoom = (newScale, container, graphContent, flow) => {
+						clickCount++;
+						// Get the current scroll position and dimensions
+						const containerRect = container.getBoundingClientRect();
+						const graphContentRect = graphContent.getBoundingClientRect();
+					
+						// Get the viewport center relative to the content
+						const viewportCenterX = container.scrollLeft + containerRect.width / 2;
+						const viewportCenterY = container.scrollTop + containerRect.height / 2;
+					
+						// Calculate the relative position of the viewport center to the content
+						const relativeCenterX = viewportCenterX / flow.ZoomScale;
+						const relativeCenterY = viewportCenterY / flow.ZoomScale;
+					
+						// Update the scale
+						flow.ZoomScale = newScale;
+						graphContent.style.transform = `scale(${flow.ZoomScale})`;
+					
+						// Adjust the scroll position to maintain the same relative center
+						if (clickCount == 1) {
+							console.log('Masuk save scroll position');
+							newScrollLeft = relativeCenterX * flow.ZoomScale - containerRect.width / 2;
+							newScrollTop = relativeCenterY * flow.ZoomScale - containerRect.height / 2;
+							console.log(newScrollLeft, newScrollTop);
 						}
-						clickCount = 0;
-					}, 500);
+					
+	
+						if (zoomTimeout) {
+							clearTimeout(zoomTimeout);
+						}
+						zoomTimeout = setTimeout(() => {
+							// container.scrollLeft = newScrollLeft*flow.ZoomScale;
+							// container.scrollTop = newScrollTop*flow.ZoomScale;
+							if (zoombtn == 'in') {
+								container.scrollTo({
+									left: newScrollLeft * flow.ZoomScale,
+									top: newScrollTop * flow.ZoomScale,
+									behavior: 'smooth', // Enable smooth scrolling
+								});
+								prevzoombtn = 'in';
+							} else if (zoombtn == 'out') {
+								container.scrollTo({
+									left: newScrollLeft / flow.ZoomScale,
+									top: newScrollTop / flow.ZoomScale,
+									behavior: 'smooth', // Enable smooth scrolling
+								});
+								prevzoombtn = 'out';
+							} else if (zoombtn == 'reset') {
+								if (prevzoombtn == 'in') {
+									container.scrollTo({
+										left: newScrollLeft * flow.ZoomScale,
+										top: newScrollTop * flow.ZoomScale,
+										behavior: 'smooth', // Enable smooth scrolling
+									});
+								}else if (prevzoombtn == 'out') {
+									container.scrollTo({
+										left: newScrollLeft * flow.ZoomScale,
+										top: newScrollTop * flow.ZoomScale,
+										behavior: 'smooth', // Enable smooth scrolling
+									});
+								}
+								prevzoombtn = '';
+							}
+							clickCount = 0;
+						}, 500);
+					
+						console.log('Zoom adjusted:', flow.ZoomScale);
+					};
+					
+					// Zoom In action
+					zoomInButton.forEach((btn) => {
+						btn.addEventListener('click', (e) => {
+							console.log('zoom in clicked');
+							const graphCanvas = e.target.closest('.app_configurator_containers').dataset.tabtype;
+							const graphContent = e.target.closest('.app_configurator_containers').querySelector('.graph_surfaces');
+							const container = graphContent.parentElement; // Assuming parent is the scrollable container
+							console.log(graphCanvas, graphContent, container);
 
-				
-					console.log('Zoom adjusted:', this.ZoomScale);
-				};
-				
-				// Zoom In action
-				zoomInButton.addEventListener('click', () => {
-					if (this.ZoomScale < this.MaxZoomScale) {
-						applyZoom(this.ZoomScale + this.ZoomStep);
-						zoombtn = 'in';
-					}
-				});
-				
-				// Zoom Reset action
-				zoomResetButton.addEventListener('click', () => {
-					applyZoom(1);
-					zoombtn = 'reset';
-				});
-				
-				// Zoom Out action
-				zoomOutButton.addEventListener('click', () => {
-					if (this.ZoomScale > this.MinZoomScale) {
-						applyZoom(this.ZoomScale - this.ZoomStep);
-						zoombtn = 'out';
-					}
-				});
+							if (flow.GraphCanvas[graphCanvas].ZoomScale < flow.GraphCanvas[graphCanvas].MaxZoomScale) {
+								const zoomlv = ParadigmREVOLUTION.Utility.Numbers.Round2(flow.GraphCanvas[graphCanvas].ZoomScale + flow.GraphCanvas[graphCanvas].ZoomStep);
+								applyZoom(zoomlv, container, graphContent, flow.GraphCanvas[graphCanvas]);
+								zoomResetButton.forEach((btn) => {
+									btn.parentElement.querySelector('.zoomLevel').innerHTML = zoomlv;
+								});
+								zoombtn = 'in';
+							}
+						});
+					});
+						
+					
+					// Zoom Reset action
+					zoomResetButton.forEach((btn) => {
+						btn.addEventListener('click', (e) => {
+							const graphCanvas = e.target.closest('.app_configurator_containers').dataset.tabtype;
+							const graphContent = e.target.closest('.app_configurator_containers').querySelector('.graph_surfaces');
+							const container = graphContent.parentElement; // Assuming parent is the scrollable container
+							applyZoom(1, container, graphContent, flow.GraphCanvas[graphCanvas]);
+							zoomResetButton.forEach((btn) => {
+								btn.parentElement.querySelector('.zoomLevel').innerHTML = 1;
+							});
+						zoombtn = 'reset';
+						});
+					});
+					
+					// Zoom Out action
+					zoomOutButton.forEach((btn) => {
+						btn.addEventListener('click', (e) => {
+							console.log('zoom out clicked');
+							const graphCanvas = e.target.closest('.app_configurator_containers').dataset.tabtype;
+							const graphContent = e.target.closest('.app_configurator_containers').querySelector('.graph_surfaces');
+							const container = graphContent.parentElement; // Assuming parent is the scrollable container
 
-				document.querySelector('.graph_fullscreen_button').addEventListener('click', (e) => { 
-					const appConfiguratorContainer = document.querySelector('#app_configurator_container');
-					const rectAppConfiguratorContainer = appConfiguratorContainer.getBoundingClientRect();
-					console.log('rectAppConfiguratorContainer :>> ', rectAppConfiguratorContainer);
-					appConfiguratorContainer.classList.toggle('fullscreen');
-					const fullscreen = appConfiguratorContainer.classList.contains('fullscreen')? true : false;
-					if (fullscreen) {
-						document.querySelector('#app_top_menu_container').classList.toggle('hide');
-						document.querySelector('#app_graph_tabs_container').classList.toggle('show');
-						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.remove('fa-expand');
-						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.add('fa-compress');
-					} else {
-						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.remove('fa-compress');
-						document.querySelector('.graph_fullscreen_button').querySelector('i').classList.add('fa-expand');
+			
+							if (flow.GraphCanvas[graphCanvas].ZoomScale < flow.GraphCanvas[graphCanvas].MaxZoomScale) {
+								const zoomlv = ParadigmREVOLUTION.Utility.Numbers.Round2(flow.GraphCanvas[graphCanvas].ZoomScale - flow.GraphCanvas[graphCanvas].ZoomStep);
+								applyZoom(zoomlv, container, graphContent, flow.GraphCanvas[graphCanvas]);
+								zoomResetButton.forEach((btn) => {
+									btn.parentElement.querySelector('.zoomLevel').innerHTML = zoomlv;
+								});
+								zoombtn = 'out';
+							}
+						});
+					});
+				}
+				enableZoomControl(this);
 
-						document.querySelector('#app_top_menu_container').classList.toggle('hide');
-						document.querySelector('#app_graph_tabs_container').classList.toggle('show');
-					}
+				document.querySelectorAll('.graph_fullscreen_button').forEach((btn) => {
+					btn.addEventListener('click', (e) => { 
+						console.log('graph_fullscreen_button clicked');
+						const appConfiguratorContainer = document.querySelector('#app_configurator_container');
+						const rectAppConfiguratorContainer = appConfiguratorContainer.getBoundingClientRect();
+						console.log('rectAppConfiguratorContainer :>> ', rectAppConfiguratorContainer);
+						appConfiguratorContainer.classList.toggle('fullscreen');
+						const fullscreen = appConfiguratorContainer.classList.contains('fullscreen')? true : false;
+						if (fullscreen) {
+							document.querySelector('#app_top_menu_container').classList.toggle('hide');
+							document.querySelector('#app_graph_tabs_container').classList.toggle('show');
+							document.querySelector('.graph_fullscreen_button').querySelector('i').classList.remove('fa-expand');
+							document.querySelector('.graph_fullscreen_button').querySelector('i').classList.add('fa-compress');
+						} else {
+							document.querySelector('.graph_fullscreen_button').querySelector('i').classList.remove('fa-compress');
+							document.querySelector('.graph_fullscreen_button').querySelector('i').classList.add('fa-expand');
+	
+							document.querySelector('#app_top_menu_container').classList.toggle('hide');
+							document.querySelector('#app_graph_tabs_container').classList.toggle('show');
+						}
+					});
 				});
+				// NOTE - TEST MONITOR OBJECT onchange on an object structure
 				let testArr = {};
 				const monitoredObject = ParadigmREVOLUTION.Utility.Objects.monitorObject(testArr, (changes) => { 
 					console.log("Changes detected:", changes);

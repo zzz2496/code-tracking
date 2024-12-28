@@ -772,7 +772,6 @@ export class Utility {
 			return result;
 		}).bind(this),
 
-
 		"ThousandSeparatorV1": (function (num, decpoint, sep) {
 			console.log('thousand separator!!!', num);
 			if (num == null) {
@@ -991,6 +990,38 @@ export class Utility {
 		
 			// Wrap the initial object with the Proxy
 			return createProxy(obj);
+		},
+		searchJson:(jsonObj, keyToFind, valueToContain = null) => {
+			if (typeof jsonObj === "object" && jsonObj !== null) {
+				for (let key in jsonObj) {
+					// Check if the key matches
+					if (key === keyToFind) {
+						// If valueToContain is not provided, return the value immediately
+						if (valueToContain === null) {
+							return jsonObj[key];
+						}
+						// If valueToContain is provided, check if the value contains it
+						if (String(jsonObj[key]).includes(valueToContain)) {
+							return jsonObj[key];
+						}
+					}
+					// Recursively search in nested objects or arrays
+					if (typeof jsonObj[key] === "object") {
+						const result = searchJson(jsonObj[key], keyToFind, valueToContain);
+						if (result !== undefined) {
+							return result;
+						}
+					}
+				}
+			} else if (Array.isArray(jsonObj)) {
+				for (let item of jsonObj) {
+					const result = searchJson(item, keyToFind, valueToContain);
+					if (result !== undefined) {
+						return result;
+					}
+				}
+			}
+			return undefined; // Key or key-value pair not found
 		},
 		"monitorDependentPropertyChanges": ((object, dependencies, finalCallback) => {
 			const state = {};
