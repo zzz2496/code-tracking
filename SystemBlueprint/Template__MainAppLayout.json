@@ -142,7 +142,7 @@
 										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 											{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
 												{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "DataStorage Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
-												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\" style=\"min-width:2.2rem;\">1</span>"},
+												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<span style=\"color:var(--bulma-text-weak);\">(</span><span class=\"zoomLevel\" style=\"min-width:2.2rem;\">1</span><span style=\"color:var(--bulma-text-weak);\">)</span>"},
 												{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "DataStorage Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
 											]},
 											{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
@@ -181,7 +181,7 @@
 										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 											{ "comment": "Zoom controls",  "tag":"div", "class":"buttons has-addons p-0 mr-2 ml-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
 												{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
-												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\" style=\"min-width:2.2rem;\">1</span>"},
+												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<span style=\"color:var(--bulma-text-weak);\">(</span><span class=\"zoomLevel\" style=\"min-width:2.2rem;\">1</span><span style=\"color:var(--bulma-text-weak);\">)</span>"},
 												{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
 											]},
 											{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
@@ -223,7 +223,7 @@
 										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 											{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
 												{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
-												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\" style=\"min-width:2.2rem;\">1</span>"},
+												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<span style=\"color:var(--bulma-text-weak);\">(</span><span class=\"zoomLevel\" style=\"min-width:2.2rem;\">1</span><span style=\"color:var(--bulma-text-weak);\">)</span>"},
 												{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
 											]},
 											{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
@@ -262,7 +262,7 @@
 										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 											{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
 												{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
-												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\" style=\"min-width:2.2rem;\">1</span>"},
+												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button", "title": "Graph Zoom Reset", "innerHTML": "<span style=\"color:var(--bulma-text-weak);\">(</span><span class=\"zoomLevel\" style=\"min-width:2.2rem;\">1</span><span style=\"color:var(--bulma-text-weak);\">)</span>"},
 												{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
 											]},
 											{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}

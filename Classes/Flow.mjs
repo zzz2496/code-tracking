@@ -3147,8 +3147,11 @@ export class Flow {
 				});
 				document.querySelectorAll('.graph_load_data_button').forEach(button => {
 					button.addEventListener('click', (e) => {
+						const TgraphCanvas = e.target.closest('.app_configurator_groups');
+						const tabtype = TgraphCanvas.querySelector('.tabs .is-active').querySelector('a').dataset.tabtype;
+
+						const graphCanvas = document.querySelector(`#app_container`).querySelector(`#app_${tabtype.toLowerCase()}_container`);
 						const storage = e.target.closest('.graph_load_data_button').dataset.storage;
-						const graphCanvas = e.target.closest('.app_configurator_containers');
 
 						if (confirm(`Anda akan melakukan sinkronisasi GRAPH DATA dari ${storage}. Apakah anda yakin?`)) { 
 							// GET NODES from server/storage
@@ -3196,16 +3199,17 @@ export class Flow {
 										};\n`
 									});
 									ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
-									console.log('Success fetching edges from TestServer', TGraphNodes);
+									console.log(`Success Deleting edges from ${storage}`);
 
 									// Refresh render
+									console.log('graphCanvas :>> ', graphCanvas);
 									graphCanvas.querySelector('.document_refreshrender_button').click();
 									// document.querySelector('#document_refreshrender_button').click();
 								}).catch(error => {
-									console.error('Error deleting edges from TestServer', error);
+									console.error(`Error deleting edges from ${storage} `, error);
 								});
 							}).catch(error => {
-								console.error('Error fetching edges from LocalDB', error);
+								console.error(`Error fetching edges from ${storage}`, error);
 							});
 						}
 					});
@@ -3737,6 +3741,7 @@ export class Flow {
 					console.log("Changes detected:", changes);
 				});
 				window.testMonitoredObject = monitoredObject;
+
 				//NOTE - end of InitializeFormControls
 			},
 			GenerateSchemaToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {

@@ -132,8 +132,13 @@ document.addEventListener('SurrealDBLoaded', async () => {
 	document.querySelector('#datastore_status').innerHTML = datastore_status;
 	if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status');
 
-	// NOTE - Load Graph Nodes
-	ParadigmREVOLUTION.Application.GraphNodes = await local_db.Instance.query('select * from test_table');
+	// NOTE - TEST LIVE QUERY
+	ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.live('Yggdrasil', (action, result)=>{
+		console.log('start debug live query');
+		console.log('action', action);
+		console.log('result', result);
+		console.log('done debug live query');
+	});
 	// ParadigmREVOLUTION.Application.GraphNodes = await test_db.Instance.query('select * from test_table');
 
 	document.dispatchEvent(new Event('SurrealDBMonitorLoaded'));
