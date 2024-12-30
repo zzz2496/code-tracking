@@ -341,8 +341,19 @@
 				{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "is-flex is-flex-direction-column", "innerHTML": "", "content": [] },
 				{
 					"comment": "App Console", "tag": "div", "id": "app_console", "class":"", "innerHTML": "", "content": [
-						{ "comment": "Core Status Container", "tag": "div", "id": "core_status", "innerHTML": "", "class": "app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
-						{ "comment": "Debugging", "tag": "div", "id": "debugging", "innerHTML": "Console", "content": [] }
+						{ "comment": "Core Status Container", "tag": "div", "id": "core_status",         "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless m-0  p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
+						{ "comment": "Helper Container",      "tag": "div", "id": "debug_helper_status", "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless my-3 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [
+							{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
+								{"tag": "select", "type":"select", "class":"select", "content":[
+									{ "tag": "option", "value": "Memory", "innerHTML": "Memory" },
+									{ "tag": "option", "value": "IndexedDB", "innerHTML": "IndexedDB" },
+									{ "tag": "option", "value": "TestServer", "innerHTML": "TestServer" }
+								]}
+							]},
+							{ "comment": "SuQL", "tag": "textarea",  "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:15rem;", "innerHTML": "", "id": "suql_input"},
+							{ "comment": "Go button", "tag": "input", "type":"button", "class":"button", "value":"Execute Query", "innerHTML":""}
+						] },
+						{ "comment": "Debugging", "tag": "div", "class":"box", "id": "debugging", "style":"min-height:30rem; max-height:30rem; overflow:auto;", "innerHTML": "", "content": [] }
 					]
 				}
 			]

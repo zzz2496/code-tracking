@@ -734,7 +734,10 @@
 	height: 100vh !important;
 }
 
-
+#app_console{
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
 
 
 

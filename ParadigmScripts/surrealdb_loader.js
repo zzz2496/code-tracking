@@ -9,8 +9,13 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		return;
 	}
 	if (ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status != 'LOADED') {
-		console.error('suuraldbWasmEngines Module failed to load. Aborting. (surrealdbWasmEngines Status : ' + ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status + ')');
+		console.error('surrealdbWasmEngines Module failed to load. Aborting. (surrealdbWasmEngines Status : ' + ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status + ')');
 		document.querySelector('#debugging').innerHTML += "suuraldbWasmEngines Module failed to load. Aborting. (surrealdbWasmEngines Status : " + ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status + ")<br>";
+		return;
+	}
+	if (ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDBinterface.Status != 'LOADED') {
+		console.error('SurrealDBinterface Module failed to load. Aborting. (SurrealDBinterface Status : ' + ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDBinterface.Status + ')');
+		document.querySelector('#debugging').innerHTML += "SurrealDBinterface Module failed to load. Aborting. (surrealdbWasmEngines Status : " + ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDBinterface.Status + ")<br>";
 		return;
 	}
 
@@ -58,7 +63,8 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	};	
 
 	const promises = initConfigs.map(config => 
-		ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(
+		// ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(
+		ParadigmREVOLUTION.SurrealDBinterface.initSurrealDB(
 			config.name,
 			config.label,
 			config.shortlabel,

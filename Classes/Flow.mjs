@@ -2818,29 +2818,38 @@ export class Flow {
 							//CALCULATE COORDINATE
 	
 							// Extract custom data attributes from the selected option
-		
+							const ULID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
+							const tstmp = Date.now();
+							const newNodeID = {
+								ID: ULID,
+								ULID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+								Node: {
+									Realm: "Universe",
+									Kind: nodeKind,
+									Type: "",
+									Class: "",
+									Group: "",
+									Category: "",
+									Icon: icon
+								},
+								Type: "",
+								Status: "Active",
+								Timestamp: tstmp,
+								Version: {
+									Number: 1,
+									VersionID: ULID,
+									ULID: ULID,
+									Timestamp: tstmp,
+								},
+								Link: {
+									Head: false,
+									ID: 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+									Segment: "",
+								}
+							};
 							const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
-							newNode.id.ID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
-							newNode.id.ULID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
-							newNode.id.Node.Realm = "Universe"; 
-							newNode.id.Node.Kind = nodeKind; 
-							newNode.id.Node.Type = ""; 
-							newNode.id.Node.Class = ""; 
-							newNode.id.Node.Group = ""; 
-							newNode.id.Node.Category = ""; 
-							newNode.id.Node.Icon = icon;
-	
-							newNode.id.Type = "";
-							newNode.id.Status = "Active"; 
-							newNode.id.Timestamp = Date.now();
-							newNode.id.Version.Number = 1;
-							newNode.id.Version.VersionID = newNode.id.ID;
-							newNode.id.Version.ULID = newNode.id.ULID;
-							newNode.id.Version.Timestamp = newNode.id.Timestamp;
-							newNode.id.Link.Head = false;
-							newNode.id.Link.ID = 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID();
-							newNode.id.Link.Segment = "";	
 
+							newNode.id = newNodeID;
 							newNode.Properties.Name = name;
 							newNode.Properties.Label = label;
 							newNode.Properties.isProgrammingEnabled = data.isProgrammingEnabled;
@@ -2871,7 +2880,11 @@ export class Flow {
 								return;
 							}
 							// NOTE - SurrealDB create/insert/upsert
-							let qstr = `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(newNode)};`;
+							let qstr = `
+								upsert
+									${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(newNodeID)} 
+								content
+									${JSON.stringify(newNode)};`;
 							console.log('qstr :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
 	
@@ -4452,7 +4465,10 @@ export class Flow {
 			}
 		},
 	};
-	Datastore = {}; //Data storage where the Flow can store it's data.
+	Datastorage = {
+		
+	}; //Data storage where the Flow can store it's data.
+	DataProvider = {}; // Data source to be used by the Form, to fill the Form.
 	Datasource = {}; // Data source to be used by the Form, to fill the Form.
 	Sequence = {
 

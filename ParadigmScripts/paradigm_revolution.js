@@ -17,6 +17,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	document.querySelector('#Loader_container').classList.add('hide');
 	document.querySelector('#Loader_container').remove();
 	console.log('>>> >>> >>> >>> ||| STARTING YGGDRASIL INITIALIZATION');
+		
 
 	let CurrentDocument = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 	window.CurrentDocument = CurrentDocument;
@@ -84,7 +85,6 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			test_db: ParadigmREVOLUTION.Datastores.SurrealDB.TestServer
 		}
 	);
-	console.log('local_db :>> ',ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB);
 
 	// NOTE - Render Main Form, get something on the screen
 	Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
