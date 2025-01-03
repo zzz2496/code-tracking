@@ -64,8 +64,6 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	];
 	window.chain = chain;
 
-
-	
 	let ram_db = ParadigmREVOLUTION.Datastores.SurrealDB.Memory;
 	let local_db = ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB;
 	let test_db = ParadigmREVOLUTION.Datastores.SurrealDB.TestServer;
@@ -88,6 +86,15 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 
 	// NOTE - Render Main Form, get something on the screen
 	Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
+
+	ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.forEach((tab) => { 
+		let temp = `
+			<li class="${tab.LinkClass}">
+				<a class="${tab.AnchorClass}" data-tabtype="${tab.TabType}">${tab.Label}</a>
+			</li>
+		`;
+		Flow.FormContainer.querySelector('#tab-graph-selector-container').innerHTML += temp;
+	});
 
 	if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status in paradigm_revolution.js');
 	let datastore_status = '';

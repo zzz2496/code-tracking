@@ -19,10 +19,7 @@ export class Flow {
 		this.Utility = utility;
 		this.DragSelect = false;
 		this.GraphCanvas = {};
-		this.ZoomScale = 1;
-		this.ZoomStep = 0.05; // Zoom scale increment
-		this.MinZoomScale = 0.1; // Prevents zooming out too far
-		this.MaxZoomScale = 10; // Prevents zooming in too far
+		this.CurrentActiveTab = {};
 		this.selectedNodesToConnect = {
 			Start: null,
 			End: null,
@@ -222,53 +219,6 @@ export class Flow {
 				console.log('================================== Done MakeDraggableNode');
 				return newElement;
 			},
-			MakeDraggableNodeV1: function (id, objclass, label, content, x, y, zIndex = 'auto') {
-				let newElement = document.createElement('div');
-				newElement.id = id;
-				newElement.className = objclass;
-				newElement.style.top = `${y}px`;
-				newElement.style.left = `${x}px`;
-				
-				newElement.style.position = `absolute`;
-	
-				newElement.tabIndex = 0;
-				// newElement.innerHTML = `
-				// 	<div class="card is-selectable-box" style="margin:0px; padding: 0px; width: fit-content; height: 200px;">
-				// 		<div id="${id}-header" class="card-header is-selectable" style="cursor:pointer;" >
-				// 			<div class="card-header-icon" data-id="${id}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
-				// 			<div class="card-header-title pl-0" data-id="${id}">${label}</div>
-				// 		</div>
-				// 		<div id="${id}-content" class="card-content" style="margin-top: 1rem;">${content}</div>
-				// 	</div>
-				// `;
-				// NOTE - gutter-dot example: <div class="gutter-dot" style="width: 10px; height: 10px; background-color: silver; border-radius: 50%;"></div>
-
-				newElement.innerHTML = `
-					<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px;">
-						<div class="top-gutter" style="display: flex; justify-content: space-evenly; width: fit-content; width:100%;">
-						</div>
-						<div style="display: flex;">
-							<div class="left-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
-							</div>
-							<div class="card is-selectable-box" style="margin: 5px; padding: 0px; width: fit-content; height: 200px;">
-								<div id="${id}-header" class="card-header is-selectable" style="cursor:pointer;">
-									<div class="card-header-icon" data-id="${id}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
-									<div class="card-header-title pl-0" data-id="${id}">${label}</div>
-								</div>
-								<div id="${id}-content" class="card-content" style="margin-top: 1rem;">${content}</div>
-							</div>
-							<div class="right-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
-							</div>
-						</div>
-						<div class="bottom-gutter" style="display: flex; justify-content: space-evenly; width: 100%; width:100%;">
-						</div>
-					</div>
-				`;
-				newElement.addEventListener('animationend', function () {
-					this.classList.remove('fade-in');
-				});
-				return newElement;
-			},
 		},
 		Events: { //SECTION - Events
 			makeNodeDraggable: (draggableSelector, parentSelector = document.body, graphCanvas) => { //SECTION - makeNodeDraggable
@@ -304,7 +254,12 @@ export class Flow {
 						draggedElement = e.target.closest(draggableSelector);
 						nodeID = draggedElement.id;
 
-						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}"`;
+						let qstr = ''; 
+						if (document.querySelector('#graph_show_only_containers').checked) { 
+							qstr = `select * from Process where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}") `;
+						} else {
+							qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
+						}
 						console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
 							dbedges = edges[0];
@@ -317,6 +272,7 @@ export class Flow {
 								);
 							});
 							if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
+								console.log('edge >>>>>>>>>>>>>>>>>>> :>> ', edge);
 								this.Graph.Events.connectNodes(
 									edge,
 									`#${graphCanvasParentId} .graph_connection_surface`,
@@ -355,8 +311,8 @@ export class Flow {
 						draggedElement.style.position = "absolute";
 						draggedElement.style.zIndex = 1000; // Bring to front
 
-						aX = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.ZoomScale;
-						aY = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.ZoomScale;
+						aX = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+						aY = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 						console.log('================================================================================================ MakeNodeDraggable mousedown done');
 
 					}
@@ -375,8 +331,8 @@ export class Flow {
 					// Access the live ScrollPosition dynamically
 					const { app_root_container, app_container } = this.ScrollPosition;
 			
-					let x = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.ZoomScale;
-					let y = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.ZoomScale;
+					let x = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+					let y = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 					
 					x = snapToGrid(x, 10);
 					y = snapToGrid(y, 10);
@@ -391,15 +347,15 @@ export class Flow {
 	
 						// Move related elements
 						relatedElements.forEach(({ elem, offsetX, offsetY }) => {
-							elem.style.left = `${(aX + offsetX) / this.ZoomScale}px`;
-							elem.style.top = `${(aY + offsetY) / this.ZoomScale}px`;
+							elem.style.left = `${(aX + offsetX) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
+							elem.style.top = `${(aY + offsetY) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
 						});
 						
 						fx = aX;
 						fy = aY;
-	
+						console.log('dbedges on mousemove before foreach', dbedges);
 						dbedges.forEach((edge, edgeIndex) => {
-							// console.log('dbedge each:>> ', edge.id);
+							console.log('dbedge each:>> ', edge.id, edge.OutputPin.nodeID, edge.InputPin.nodeID);
 							this.Graph.Events.createGutterDotsAndConnect(
 								document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
 								document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
@@ -503,11 +459,13 @@ export class Flow {
 				let temp;
 				const selector = `#${parentGraphID} .graph_node_surface`;
 
-				console.log('selector :>> ', selector);
+				// console.log('selector :>> ', selector);
 				document.querySelector(selector).innerHTML = "";
+				// console.log('start foreach nodes ===========>');
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
 					const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
 					const nodeKind = node.id.ID ? node.id.Node.Kind : node.id.id.Node.Kind;
+					// console.log('start node'+nodeIndex, nodeID, nodeKind);
 					const nodeContent = `
 					<div id="${nodeID}-header" class="card-header " style="cursor:pointer;">
 						<div class="card-header-icon" data-id="${nodeID}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
@@ -523,13 +481,13 @@ export class Flow {
 						</div>
 					</div>`;
 					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent, document.querySelector('#'+parentGraphID).dataset.tabtype);
-					console.log('temp:>>', temp);
-					console.log('graph html :>>', selector, document.querySelector(selector).innerHTML);
+					// console.log('temp:>>', temp);
+					// console.log('graph html :>>', selector, document.querySelector(selector).innerHTML);
 					document.querySelector(selector).append(temp);
 				});
+				// console.log('done foreach nodes ===========>');
 				
 				this.Graph.Events.makeNodeDraggable(".graph-node", `#${parentGraphID} .scroll_content`, document.querySelector('#'+parentGraphID).dataset.tabtype);
-
 
 				console.log('================= Done Render Nodes');
 				console.log('=================Start Render Edges');
@@ -832,7 +790,9 @@ export class Flow {
 				
 				// console.log('nodeselectors', node1selector, node2selector);;
 
-				const node1 = document.querySelector(
+				console.log('this.CurrentActiveTab.app_container :>> ', this.CurrentActiveTab.app_container);
+
+				const node1 = document.querySelector(`div[data-tabType="${this.CurrentActiveTab.app_container}"]`).querySelector(
 					node1selector.startsWith("#")
 					  ? `div[id="${node1selector.slice(1)}"]`
 					  : node1selector.startsWith(".")
@@ -840,7 +800,7 @@ export class Flow {
 					  : `div${node1selector}`
 				);
 				
-				const node2 = document.querySelector(
+				const node2 = document.querySelector(`div[data-tabType="${this.CurrentActiveTab.app_container}"]`).querySelector(
 				node2selector.startsWith("#")
 					? `div[id="${node2selector.slice(1)}"]`
 					: node2selector.startsWith(".")
@@ -889,16 +849,16 @@ export class Flow {
 				const rect2 = node2.getBoundingClientRect();
 							
 				// Calculate the center of each node
-				const x1 = (rect1.left - parentLeft + parentScrollLeft + (rect1.width / 2)) / this.ZoomScale;
-				const y1 = (rect1.top  - parentTop  + parentScrollTop  + (rect1.height / 2))/ this.ZoomScale;
-				const x2 = (rect2.left - parentLeft + parentScrollLeft + (rect2.width / 2))/ this.ZoomScale;
-				const y2 = (rect2.top  - parentTop  + parentScrollTop  + (rect2.height / 2))/ this.ZoomScale;
+				const x1 = (rect1.left - parentLeft + parentScrollLeft + (rect1.width / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+				const y1 = (rect1.top  - parentTop  + parentScrollTop  + (rect1.height / 2))/ this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+				const x2 = (rect2.left - parentLeft + parentScrollLeft + (rect2.width / 2))/ this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+				const y2 = (rect2.top  - parentTop  + parentScrollTop  + (rect2.height / 2))/ this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 
 				// Calculate the center of each GraphNode
-				const Gx1 = (rectGraphNode1.left - parentLeft + parentScrollLeft + (rectGraphNode1.width / 2)) / this.ZoomScale;
-				const Gy1 = (rectGraphNode1.top  - parentTop  + parentScrollTop  + (rectGraphNode1.height / 2)) / this.ZoomScale;
-				const Gx2 = (rectGraphNode2.left - parentLeft + parentScrollLeft + (rectGraphNode2.width / 2)) / this.ZoomScale;
-				const Gy2 = (rectGraphNode2.top  - parentTop  + parentScrollTop  + (rectGraphNode2.height / 2)) / this.ZoomScale;
+				const Gx1 = (rectGraphNode1.left - parentLeft + parentScrollLeft + (rectGraphNode1.width / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+				const Gy1 = (rectGraphNode1.top  - parentTop  + parentScrollTop  + (rectGraphNode1.height / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+				const Gx2 = (rectGraphNode2.left - parentLeft + parentScrollLeft + (rectGraphNode2.width / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+				const Gy2 = (rectGraphNode2.top  - parentTop  + parentScrollTop  + (rectGraphNode2.height / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 						
 				if (!svgContainer) {
 					console.error("SVG container not found.");
@@ -1106,15 +1066,17 @@ export class Flow {
 				let edge = rEdge;
 				const edgeID = edge.id.ID ? edge.id.ID : edge.id.id.ID;
 				const arrowBend = edge.ArrowBend;
-				// console.log('arrowBend >>>>>', arrowBend);
+				// console.log('arrowBend >>>>>', arrowBend)
+				console.log('this FOR ZOOMMMMMMM:>> ', this);;
 			
 				//get each node getBoundingClientRect
 				const rect1 = node1.getBoundingClientRect();
 				const rect2 = node2.getBoundingClientRect();
-							
+				
+				console.log('  zzzzzz>>>>>>>>>>> ', this, this.GraphCanvas, this.CurrentActiveTab.app_container);
 				// Calculate the angle between node1 and node2
-				const dx = rect2.left + rect2.width / 2 - (rect1.left + rect1.width / 2);
-				const dy = rect2.top + rect2.height / 2 - (rect1.top + rect1.height / 2);
+				const dx = (rect2.left + rect2.width / 2 - (rect1.left + rect1.width / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+				const dy = (rect2.top + rect2.height / 2 - (rect1.top + rect1.height / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 				let angle = Math.round(Math.atan2(dy, dx) * (180 / Math.PI));
 			
 				// Normalize the angle to 0 - 360 degrees
@@ -2069,10 +2031,29 @@ export class Flow {
 			},
 			setupTabSwitcher: ((tabSelector, contentContainerSelector, activeClass = 'is-active', showClass = 'show', callback) => { //!SECTION - setupTabSwitcher	
 				console.log('setupTabSwitcher click!');
+				const flowSelf = this;
 				document.querySelectorAll(tabSelector).forEach((tab, index, tabs) => {
-					tab.addEventListener('click', () => {
+					tab.addEventListener('click', (e) => {
+						const AppDivID = e.target.closest('.application_divisions').id;
 						const tabType = tab.dataset.tabtype;
-			
+						// let AppDiv = '';
+						// switch (AppDivID) {
+						// 	case 'object_collections':
+						// 		AppDiv = 'ObjectCollections';
+						// 		break;
+						// 	case 'app_container':
+						// 		AppDiv = 'AppContainer';
+						// 		break;
+						// 	case 'app_data_preparation_area':
+						// 		AppDiv = 'AppDataPreparationArea';
+						// 		break;
+						// 	case 'app_console':
+						// 		AppDiv = 'AppConsole';
+						// 		break;
+						// }
+						flowSelf.CurrentActiveTab[AppDivID] = tabType;
+						console.log('flowSelf', flowSelf);
+
 						// Remove 'is-active' class from all tabs
 						tabs.forEach((t) => t.parentElement.classList.remove(activeClass));
 						
@@ -2343,7 +2324,7 @@ export class Flow {
 						};
 
 						const promises = initConfigs.map(config =>
-							ParadigmREVOLUTION.Utility.DataStore.SurrealDB.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
+							ParadigmREVOLUTION.SurrealDBinterface.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
 						);
 
 						const results = await Promise.all(promises);
@@ -3018,6 +2999,9 @@ export class Flow {
 							// console.log('nodes :>> ', nodes);
 							qstr = '';
 							switch (parentGraphID) {
+								case 'app_datastorage_container':
+									qstr = ``;
+									break;
 								case 'app_graph_container':
 									if (onlyContainers.checked) {
 										qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where id.Table = 'Process' or id.Table = 'Version';`;
@@ -3132,7 +3116,7 @@ export class Flow {
 				// console.log('Elements with horizontal scrollbars:', scrollableElements.horizontal);
 				// console.log('Elements with both scrollbars:', scrollableElements.both);
 
-				document.querySelector('#enable_algorithm_sections_button').addEventListener('click', () => {
+				document.querySelector('#enable_task_sections_button').addEventListener('click', () => {
 					document.querySelectorAll('.tabs-extended-functions').forEach((tab) => {
 						if (tab.classList.contains('show')) {
 							tab.style.transform = 'translateY(100%)';
@@ -3754,6 +3738,22 @@ export class Flow {
 					console.log("Changes detected:", changes);
 				});
 				window.testMonitoredObject = monitoredObject;
+
+				function initializeSuQL() { 
+					const datastore_select = document.querySelector('#console_datastorage_select');
+					const suql_input = document.querySelector('#console_suql_input');
+					const suql_exec = document.querySelector('#console_suql_execute');
+					suql_exec.addEventListener('click', (e) => {
+						ParadigmREVOLUTION.Datastores.SurrealDB[datastore_select.value].Instance.query(suql_input.value).then(result => {
+							console.log('SuQL Result :>> ', result);
+	
+						}).catch(error => {
+							console.error('SuQL Error :>> ', error);
+						});
+					});
+				}
+				initializeSuQL();
+				
 
 				//NOTE - end of InitializeFormControls
 			},

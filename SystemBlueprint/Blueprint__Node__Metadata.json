@@ -1,30 +1,246 @@
 {
-	"RealmArray":["Universe", "System", "UserDefined", "Private", "Public"],
-	"KindArray":[
-		{"Kind":"Container", "Icon":"<li class='fa-regular fa-folder-open'></li>"},
-		{"Kind":"Algorithm", "Icon":"<li class='fa-solid fa-chart-diagram'></li>"},
-		{"Kind":"Datastore", "Icon":"<li class='fa-solid fa-database'></li>"},
-		{"Kind":"Document", "Icon":"<li class='fa-regular fa-file-lines'></li>"},
-		{"Kind":"Comment", "Icon":"<li class='fa-regular fa-comment-dots'></li>"},
-		{"Kind":"Metadata", "Icon":"<li class='fa-solid fa-kitchen-set'></li>"},
-		{"Kind":"Generic", "Icon":"<li class='fa-solid fa-recycle'></li>"}
+	"RealmArray": [
+		"Universe",
+		"System",
+		"UserDefined",
+		"Private",
+		"Public"
 	],
-	"TypeArray":{
-		"Container":["GraphNode", "DatastoreNode", "DocumentNode", "CommentNode", "MetadataNode", "GenericNode"],
-		"Algorithm":["InputNode", "OutputNode", "FunctionNode", "OperationNode", "IterationNode", "DecisionNode"],
-		"Datastore":["DatabaseNode", "SchemaNode", "TableNode", "ViewNode", "EdgeNode"],
-		"Document":["DocumentNode", "FileNode", "ImageNode", "VideoNode", "AudioNode"],
-		"Comment":["CommentNode"],
-		"Metadata":["MetadataNode"],
-		"Generic":["GenericNode"]
+	"TabsArray": [
+		{
+			"TabType": "DataStorage",
+			"Label": "Data Storage",
+			"LinkClass": "show",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		},
+		{
+			"TabType": "Graph",
+			"Label": "Graph",
+			"LinkClass": "is-active show",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		},
+		{
+			"TabType": "Containers",
+			"Label": "Containers",
+			"LinkClass": "tabs-extended-functions",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		},
+		{
+			"TabType": "Tasks",
+			"Label": "Tasks",
+			"LinkClass": "tabs-extended-functions",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		},
+		{
+			"TabType": "DataProvider",
+			"Label": "Data Provider",
+			"LinkClass": "tabs-extended-functions",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		},
+		{
+			"TabType": "Datasource",
+			"Label": "Data Source",
+			"LinkClass": "tabs-extended-functions",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		},
+		{
+			"TabType": "PageLayout",
+			"Label": "Page Layout",
+			"LinkClass": "tabs-extended-functions",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		},
+		{
+			"TabType": "Schema",
+			"Label": "Schema",
+			"LinkClass": "tabs-extended-functions",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		},
+		{
+			"TabType": "Forms",
+			"Label": "Forms",
+			"innerHTML": "",
+			"LinkClass": "tabs-extended-functions",
+			"AnchorClass": "tab-graph-selector",
+			"Icon": ""
+		}
+	],
+	"KindArray": [
+		{
+			"Kind": "Container",
+			"Group": [
+				"Graph"
+			],
+			"Icon": "<li class='fa-regular fa-folder-open'></li>"
+		},
+		{
+			"Kind": "Task",
+			"Group": [
+				"Containers"
+			],
+			"Icon": "<li class='fa-solid fa-list-check'></li>"
+		},
+		{
+			"Kind": "Algorithm",
+			"Group": [],
+			"Icon": "<li class='fa-solid fa-chart-diagram'></li>"
+		},
+		{
+			"Kind": "Datastore",
+			"Group": [
+				"Datastorage"
+			],
+			"Icon": "<li class='fa-solid fa-database'></li>"
+		},
+		{
+			"Kind": "Document",
+			"Group": [
+				"Graph"
+			],
+			"Icon": "<li class='fa-regular fa-file-lines'></li>"
+		},
+		{
+			"Kind": "Comment",
+			"Group": [],
+			"Icon": "<li class='fa-regular fa-comment-dots'></li>"
+		},
+		{
+			"Kind": "Metadata",
+			"Group": [],
+			"Icon": "<li class='fa-solid fa-kitchen-set'></li>"
+		},
+		{
+			"Kind": "Generic",
+			"Group": [],
+			"Icon": "<li class='fa-solid fa-recycle'></li>"
+		}
+	],
+	"TypeArray": {
+		"Container": [
+			"GraphNode",
+			"DatastoreNode",
+			"DocumentNode",
+			"CommentNode",
+			"MetadataNode",
+			"GenericNode"
+		],
+		"Algorithm": [
+			"InputNode",
+			"OutputNode",
+			"FunctionNode",
+			"OperationNode",
+			"IterationNode",
+			"DecisionNode"
+		],
+		"Datastore": [
+			"DatabaseNode",
+			"SchemaNode",
+			"TableNode",
+			"ViewNode",
+			"EdgeNode"
+		],
+		"Document": [
+			"DocumentNode",
+			"FileNode",
+			"ImageNode",
+			"VideoNode",
+			"AudioNode"
+		],
+		"Comment": [
+			"CommentNode"
+		],
+		"Metadata": [
+			"MetadataNode"
+		],
+		"Generic": [
+			"GenericNode"
+		]
 	},
-	"ConnectionArray":[
-		{"Type":"Process", "Color":"var(--bulma-primary)", "PathDecoration":"Normal" },
-		{"Type":"Version", "Color":"var(--bulma-text-weak)", "PathDecoration":"Dashed" },
-		{"Type":"Contains", "Color":"var(--bulma-warning)", "PathDecoration":"Dotted" },
-		{"Type":"Workflow", "Color":"var(--bulma-link)", "PathDecoration":"Normal" },
-		{"Type":"DataInput", "Color":"var(--bulma-danger)", "PathDecoration":"Normal" },
-		{"Type":"DataOutput", "Color":"var(--bulma-info)", "PathDecoration":"Normal" },
-		{"Type":"Dead", "Color":"var(--bulma-dark)", "PathDecoration":"Normal" }
+	"ConnectionArray": [
+		{
+			"Type": "Process",
+			"Color": "var(--bulma-primary)",
+			"PathGroup": [
+				"Container",
+				"Task"
+			],
+			"PathDecoration": "Normal"
+		},
+		{
+			"Type": "Version",
+			"Color": "var(--bulma-text-weak)",
+			"PathGroup": [
+				"Container",
+				"Task",
+				"Algorithm",
+				"Datastore",
+				"Document",
+				"Comment",
+				"Metadata",
+				"Generic"
+			],
+			"PathDecoration": "Dashed"
+		},
+		{
+			"Type": "Contains",
+			"Color": "var(--bulma-warning)",
+			"PathGroup": [
+				"Container",
+				"Task",
+				"Datastore"
+			],
+			"PathDecoration": "Dotted"
+		},
+		{
+			"Type": "Workflow",
+			"Color": "var(--bulma-link)",
+			"PathGroup": [
+				"Algorithm",
+				"Datastore",
+				"Document",
+				"Comment",
+				"Metadata",
+				"Generic"
+			],
+			"PathDecoration": "Normal"
+		},
+		{
+			"Type": "DataInput",
+			"Color": "var(--bulma-danger)",
+			"PathGroup": [
+				"Datastore"
+			],
+			"PathDecoration": "Normal"
+		},
+		{
+			"Type": "DataOutput",
+			"Color": "var(--bulma-info)",
+			"PathGroup": [
+				"Datastore"
+			],
+			"PathDecoration": "Normal"
+		},
+		{
+			"Type": "Dead",
+			"Color": "var(--bulma-dark)",
+			"PathGroup": [
+				"Container",
+				"Task",
+				"Algorithm",
+				"Datastore",
+				"Document",
+				"Comment",
+				"Metadata",
+				"Generic"
+			],
+			"PathDecoration": "Normal"
+		}
 	]
 }

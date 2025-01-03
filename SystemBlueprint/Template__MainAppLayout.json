@@ -2,7 +2,7 @@
 	
 		{
 			"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
-				{ "comment": "Object Collections", "tag": "div", "id": "object_collections", "class": "", "innerHTML": "", "content": [
+				{ "comment": "Object Collections", "tag": "div", "id": "object_collections", "class": "application_divisions", "innerHTML": "", "content": [
 					{"tag": "div", "id":"app_menu_container", "class": "app_configurator_groups show", "style": "", "content": [
 						{"comment":"Object Collections controls", "tag":"div", "class":"container is-flex is-justify-content-center", "id":"object_collections_controls", "content":[
 							{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"dark_light_indicator\"></li>"}
@@ -40,7 +40,7 @@
 					] }
 				]},
 				{
-					"comment": "App Container", "tag": "div", "id": "app_container", "content": [
+					"comment": "App Container", "tag": "div", "id": "app_container", "class":"application_divisions", "content": [
 						{
 							"comment": "App Top Menu Container", "tag": "div", "id": "app_top_menu_container", "innerHTML": "", "class": "columns is-gapless is-mobile m-0", "content": [
 								{
@@ -62,42 +62,14 @@
 							{ "comment": "Left Container", "tag": "div", "id": "app_graph_tabs_container_left", "innerHTML": "", "class": "mt-1 p-0 is-flex is-justify-content-left app_graph_controls_containers", "content": [
 								{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
 									{ "tag": "div", "class": "tabs", "style":"scrollbar-width: none;-ms-overflow-style: none", "content": [
-										{ "tag": "ul", "class":"", "content": [
-											{ "tag": "li", "class":"show", "content": [
-												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"DataStorage"}, "innerHTML": "DataStorage" }
-											] },
-											{ "tag": "li", "class": "is-active show ", "content": [
-												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Graph"}, "innerHTML": "Graph" }
-											] },
-											{ "tag": "li", "class": "tabs-extended-functions", "content": [
-												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Containers"}, "innerHTML": "Containers <span id=\"container_id_on_tab\"></span>" }
-											] },
-											{ "tag": "li", "class": "tabs-extended-functions", "content": [
-												{ "tag": "a", "class":"tab-graph-selector ", "data":{"tabtype":"Algorithm"}, "innerHTML": "Algorithm  <span id=\"algorithm_id_on_tab\"></span>" }
-											] },
-											{ "tag": "li", "class":"tabs-extended-functions", "content": [
-												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"DataProvider"}, "innerHTML": "DataProvider" }
-											] },
-											{ "tag": "li", "class":"tabs-extended-functions", "content": [
-												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Datasource"}, "innerHTML": "Datasource" }
-											] },
-											{ "tag": "li", "class":"tabs-extended-functions", "content": [
-												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"PageLayout"}, "innerHTML": "Page Layout" }
-											] },
-											{ "tag": "li", "class":"tabs-extended-functions", "content": [
-												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
-											] },
-											{ "tag": "li", "class":"tabs-extended-functions", "content": [
-												{ "tag": "a", "class":"tab-graph-selector", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
-											] }
-										] }
+										{ "tag": "ul", "id":"tab-graph-selector-container", "class":"", "content": [] }
 									]}
 								] }
 							] },
 							{"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "m-1 p-0 app_graph_controls_containers column is-flex is-justify-content-center", "content": []},
 							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
 								{"tag":"div", "class":"document-saveload-container show", "innerHTML":"", "content":[
-									{ "comment": "Enable Algorithm sections",    "tag": "button", "class": "button mr-1 document-saveload p-4 is-default", "id": "enable_algorithm_sections_button", "title": "Enable Algorithm Sections", "innerHTML": "<i class=\"fa-solid fa-square-binary\"></i>" }
+									{ "comment": "Enable Task sections",    "tag": "button", "class": "button mr-1 document-saveload p-4 is-default", "id": "enable_task_sections_button", "title": "Enable Task Sections", "innerHTML": "<i class=\"fa-solid fa-square-binary\"></i>" }
 								]},
 								{"tag":"div", "class":"show", "innerHTML":"", "content":[
 									{ "comment": "", "tag":"div", "class":"buttons has-addons p-0 mr-1 ml-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
@@ -257,7 +229,7 @@
 								]
 							},
 							{
-								"comment": "App Algorithm Container", "tag": "div", "class": "m-0 p-0 show is-selectable-parent app_configurator_containers", "data":{"tabtype":"Algorithm"}, "id": "app_algorithm_container", "content": [
+								"comment": "App Task Container", "tag": "div", "class": "m-0 p-0 show is-selectable-parent app_configurator_containers", "data":{"tabtype":"Task"}, "id": "app_Task_container", "content": [
 									{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
 										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 											{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
@@ -284,9 +256,9 @@
 										]}
 									]},
 									{
-										"tag": "div", "id": "algorithm_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Algorithm Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_algorithm_content", "content": [
-												{"tag":"div", "class":"graph_node_surface", "innerHTML":"<span>App Algorithm Content</span>", "style":"position:relative;"},
+										"tag": "div", "id": "Task_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
+											{ "comment": "App Task Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_Task_content", "content": [
+												{"tag":"div", "class":"graph_node_surface", "innerHTML":"<span>App Task Content</span>", "style":"position:relative;"},
 												{"tag":"svg", "class":"graph_connection_surface", "content":[
 													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
 												]}
@@ -338,20 +310,20 @@
 						] }
 					]
 				},
-				{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "is-flex is-flex-direction-column", "innerHTML": "", "content": [] },
+				{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "application_divisions is-flex is-flex-direction-column", "innerHTML": "", "content": [] },
 				{
-					"comment": "App Console", "tag": "div", "id": "app_console", "class":"", "innerHTML": "", "content": [
+					"comment": "App Console", "tag": "div", "id": "app_console", "class":"application_divisions", "innerHTML": "", "content": [
 						{ "comment": "Core Status Container", "tag": "div", "id": "core_status",         "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless m-0  p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
 						{ "comment": "Helper Container",      "tag": "div", "id": "debug_helper_status", "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless my-3 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [
 							{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
-								{"tag": "select", "type":"select", "class":"select", "content":[
+								{"tag": "select", "type":"select", "class":"select", "id":"console_datastorage_select", "content":[
 									{ "tag": "option", "value": "Memory", "innerHTML": "Memory" },
 									{ "tag": "option", "value": "IndexedDB", "innerHTML": "IndexedDB" },
 									{ "tag": "option", "value": "TestServer", "innerHTML": "TestServer" }
 								]}
 							]},
-							{ "comment": "SuQL", "tag": "textarea",  "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:15rem;", "innerHTML": "", "id": "suql_input"},
-							{ "comment": "Go button", "tag": "input", "type":"button", "class":"button", "value":"Execute Query", "innerHTML":""}
+							{ "comment": "SuQL",      "tag": "textarea", "id":"console_suql_input",                    "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:15rem;", "innerHTML": ""},
+							{ "comment": "Go button", "tag": "input",    "id":"console_suql_execute", "type":"button", "class":"button", "value":"Execute Query", "innerHTML":""}
 						] },
 						{ "comment": "Debugging", "tag": "div", "class":"box", "id": "debugging", "style":"min-height:30rem; max-height:30rem; overflow:auto;", "innerHTML": "", "content": [] }
 					]
