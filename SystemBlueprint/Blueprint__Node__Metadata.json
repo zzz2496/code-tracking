@@ -89,7 +89,7 @@
 		},
 		{
 			"Kind": "Algorithm",
-			"Group": [],
+			"Group": ["Task"],
 			"Icon": "<li class='fa-solid fa-chart-diagram'></li>"
 		},
 		{
@@ -100,25 +100,53 @@
 			"Icon": "<li class='fa-solid fa-database'></li>"
 		},
 		{
+			"Kind": "Database",
+			"Group": [
+				"DataStorage"
+			],
+			"Icon": "<li class='fa-solid fa-database'></li>"
+		},
+		{
+			"Kind": "Table",
+			"Group": [
+				"DataStorage"
+			],
+			"Icon": "<li class='fa-solid fa-database'></li>"
+		},
+		{
+			"Kind": "View",
+			"Group": [
+				"DataStorage"
+			],
+			"Icon": "<li class='fa-solid fa-database'></li>"
+		},
+		{
+			"Kind": "LiveQuery",
+			"Group": [
+				"DataStorage"
+			],
+			"Icon": "<li class='fa-solid fa-database'></li>"
+		},
+		{
 			"Kind": "Document",
 			"Group": [
-				"Graph"
+				"Task"
 			],
 			"Icon": "<li class='fa-regular fa-file-lines'></li>"
 		},
 		{
 			"Kind": "Comment",
-			"Group": [],
+			"Group": ["DataStorage", "Graph", "Task", "Containers"],
 			"Icon": "<li class='fa-regular fa-comment-dots'></li>"
 		},
 		{
 			"Kind": "Metadata",
-			"Group": [],
+			"Group": ["DataStorage", "Graph", "Task", "Containers"],
 			"Icon": "<li class='fa-solid fa-kitchen-set'></li>"
 		},
 		{
 			"Kind": "Generic",
-			"Group": [],
+			"Group": ["DataStorage", "Graph", "Task", "Containers"],
 			"Icon": "<li class='fa-solid fa-recycle'></li>"
 		}
 	],
@@ -172,6 +200,33 @@
 				"Task"
 			],
 			"PathDecoration": "Normal"
+		},
+		{
+			"Type": "Supplemental",
+			"Color": "var(--bulma-primary)",
+			"PathGroup": [
+				"Container",
+				"Task"
+			],
+			"PathDecoration": "Dotted"
+		},
+		{
+			"Type": "Parent",
+			"Color": "var(--bulma-danger)",
+			"PathGroup": [
+				"Container",
+				"Task"
+			],
+			"PathDecoration": "Dashed"
+		},
+		{
+			"Type": "Child",
+			"Color": "var(--bulma-danger)",
+			"PathGroup": [
+				"Container",
+				"Task"
+			],
+			"PathDecoration": "Dotted"
 		},
 		{
 			"Type": "Version",

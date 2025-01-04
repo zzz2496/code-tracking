@@ -229,7 +229,7 @@
 								]
 							},
 							{
-								"comment": "App Task Container", "tag": "div", "class": "m-0 p-0 show is-selectable-parent app_configurator_containers", "data":{"tabtype":"Task"}, "id": "app_Task_container", "content": [
+								"comment": "App Task Container", "tag": "div", "class": "m-0 p-0 show is-selectable-parent app_configurator_containers", "data":{"tabtype":"Task"}, "id": "app_task_container", "content": [
 									{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
 										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 											{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[

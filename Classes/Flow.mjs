@@ -387,6 +387,7 @@ export class Flow {
 						draggedElement.style.zIndex = ""; // Reset z-index
 						draggedElement = null;
 						// const id = e.target.dataset.id;
+						console.log('e.target :>> ', e.target);
 						let id = e.target.closest('.graph-node');
 
 						if (id == undefined) {
@@ -1320,7 +1321,7 @@ export class Flow {
 				return [edge, gutterDot1, gutterDot2, direction];
 			},
 			enableDragSelect: ((selector) => {
-				// console.log('typeof selector :>> ', typeof selector);
+				console.log('Start enableDragSelect :>> ', typeof selector, selector);
 				let container;
 				if (typeof selector === 'string') {
 					container = document.querySelector(selector);
@@ -1363,6 +1364,7 @@ export class Flow {
 			
 				// Function to handle mouse down event
 				function onMouseDown(e) {
+					console.log('start mousedown on enableDragSelect')
 					if (e.button !== 0) return;
 			
 					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
@@ -1373,8 +1375,9 @@ export class Flow {
 						selectedElements.clear(); // Reset selected elements
 			
 						if (!highlightBox) createHighlightBox();
-						updateHighlightBox(startX / self.ZoomScale, startY / self.ZoomScale, startX / self.ZoomScale, startY / self.ZoomScale);
+						updateHighlightBox(startX / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, startY / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, startX / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, startY / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale);
 					}
+					console.log('done mousedown on enableDragSelect')
 				}
 			
 				// Function to handle mouse move event
@@ -1386,7 +1389,7 @@ export class Flow {
 					const currentX = (e.clientX + container.scrollLeft);
 					const currentY = (e.clientY + container.scrollTop);
 			
-					updateHighlightBox(startX / self.ZoomScale, startY / self.ZoomScale, currentX / self.ZoomScale, currentY / self.ZoomScale);
+					updateHighlightBox(startX / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, startY / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, currentX / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, currentY / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale);
 			
 					const rect = container.getBoundingClientRect();
 					const dragArea = {
@@ -1400,10 +1403,10 @@ export class Flow {
 					container.querySelectorAll('.graph-node, svg path').forEach(element => {
 						const elementRect = element.getBoundingClientRect();
 						const isInside =
-							elementRect.left / self.ZoomScale >= dragArea.x1 &&
-							elementRect.top / self.ZoomScale >= dragArea.y1 &&
-							elementRect.right / self.ZoomScale <= dragArea.x2 &&
-							elementRect.bottom / self.ZoomScale <= dragArea.y2;
+							elementRect.left / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale >= dragArea.x1 &&
+							elementRect.top / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale >= dragArea.y1 &&
+							elementRect.right / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale <= dragArea.x2 &&
+							elementRect.bottom / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale <= dragArea.y2;
 			
 						if (isInside) {
 							if (!selectedElements.has(element)) {
@@ -3558,7 +3561,7 @@ export class Flow {
 				});
 
 				document.querySelectorAll('.graph_surfaces').forEach(surface => { 
-					// console.log('surfaces :>> ', surface);
+					console.log('surfaces :>> ', surface);
 					this.Graph.Events.enableDragSelect(surface);
 				});
 				
