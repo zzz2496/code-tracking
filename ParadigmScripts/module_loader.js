@@ -1,84 +1,90 @@
-console.log('Start Module Loader');
-
+let cr = false;
+if (cr) console.log('>>> Module Loader');
 // import { Utility } from "../Classes/Utility.mjs";
-
-// console.log('Utility :>> ', Utility);
 // import { GraphSurface } from "../Classes/GraphSurface.mjs";
 // import { Connection} 	from "../Classes/GraphConnection.mjs";
 // import { WorkerThread } from "../Classes/WorkerThread.mjs";
-// import { Flowchart } 	from "../Classes/Flowchart.mjs";
+// import { Flow } 	from "../Classes/Flow.mjs";
 // import { Surreal } from '../../node_modules/surrealdb.js/dist/index.bundled.mjs';
 // import { surrealdbWasmEngines } from '../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js';
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
+// import { Flow } from "../Classes/Flow.mjs";
 
-let Utility, GraphSurface, Connection, WorkerThread, Flowchart, Surreal, surrealdbWasmEngines; //, Blockly, Blockly_blocks, Blockly_javascript, Blockly_msg_en
+let Utility, ulid, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, SurrealDBinterface, mqtt;
+// let Utility, GraphSurface, Connection, WorkerThread, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
 	"SystemCore": {
-		"CoreStatus":{
+		"CoreStatus": {
+			"ULID": {
+				"Status": "NOT LOADED",
+				"Icon": "id-card",
+				"Label": "ULID",
+				"ShortLabel": "ULID"
+			},
 			"Utility": {
-				"Status":"NOT LOADED",
+				"Status": "NOT LOADED",
 				"Icon": "screwdriver-wrench",
-				"Label":"Utility",
+				"Label": "Utility",
 				"ShortLabel": "UTL"
 			},
-			"GraphSurface": {
-				"Status":"NOT LOADED",
-				"Icon": "rectangle-xmark",
-				"Label":"GraphSurface",
-				"ShortLabel": "GFX"
-			},
-			"Connection": {
-				"Status":"NOT LOADED",
-				"Icon": "arrows-left-right-to-line",
-				"Label":"Connection",
-				"ShortLabel": "CON"
-			},
-			"WorkerThread": {
-				"Status":"NOT LOADED",
-				"Icon": "shuffle",
-				"Label":"WorkerThread",
-				"ShortLabel": "WT"
-			},
-			"Flowchart": {
-				"Status":"NOT LOADED",
+			"Flow": {
+				"Status": "NOT LOADED",
 				"Icon": "diagram-project",
-				"Label":"Flowchart",
+				"Label": "Flow",
 				"ShortLabel": "FCH"
 			},
 			"Surreal": {
-				"Status":"NOT LOADED",
+				"Status": "NOT LOADED",
 				"Icon": "server",
-				"Label":"Surreal",
+				"Label": "Surreal",
 				"ShortLabel": "SDBo"
 			},
 			"surrealdbWasmEngines": {
-				"Status":"NOT LOADED",
+				"Status": "NOT LOADED",
 				"Icon": "microchip",
-				"Label":"surrealdbWasmEngines",
+				"Label": "surrealdbWasmEngines",
 				"ShortLabel": "SDBe"
 			},
+			"SurrealDBinterface": {
+				"Status": "NOT LOADED",
+				"Icon": "microchip",
+				"Label": "SurrealDBinterface",
+				"ShortLabel": "SDBi"
+			},
 			"Blueprints": {
-				"Status":"NOT LOADED",
+				"Status": "NOT LOADED",
 				"Icon": "receipt",
-				"Label":"Blueprints",
+				"Label": "Blueprints",
 				"ShortLabel": "BPL"
 			},
 			"SurrealDB": {
-				"Status":"NOT LOADED",
+				"Status": "NOT LOADED",
 				"Icon": "database",
-				"Label":"SurrealDB",
+				"Label": "SurrealDB Datastore",
 				"ShortLabel": "SDB"
+			},
+			"FinderJS": {
+				"Status": "NOT LOADED",
+				"Icon": "table-columns",
+				"Label": "FinderJS",
+				"ShortLabel": "FJS"
+			},
+			"MQTT": {
+				"Status": "NOT LOADED",
+				"Icon": "link",
+				"Label": "MQTT",
+				"ShortLabel": "MQTT"
 			},
 		},
 		"Modules": {
 			"Utility": Utility,
-			"GraphSurface": GraphSurface,
-			"Connection": Connection,
-			"WorkerThread": WorkerThread,
-			"Flowchart": Flowchart,
+			"ULID": ulid,
+			"Flow": Flow,
 			"Surreal": Surreal,
-			"surrealdbWasmEngines": surrealdbWasmEngines
+			"surrealdbWasmEngines": surrealdbWasmEngines,
+			"SurrealDBinterface": SurrealDBinterface,
+			"mqtt": mqtt
 		},
 		"Blueprints": {
 			"URL": {
@@ -91,182 +97,250 @@ let ParadigmREVOLUTION = {
 				"System": { "URL": "./SystemBlueprint/Blueprint__System.json" },
 				"Datastore": { "URL": "./SystemBlueprint/Blueprint__Datastore.json" },
 				"Node": { "URL": "./SystemBlueprint/Blueprint__Node.json" },
+				"NodeMetadata": { "URL": "./SystemBlueprint/Blueprint__Node__Metadata.json" },
+				"Template__Node__DataStatus": { "URL": "./SystemBlueprint/Blueprint__Template__Node__DataStatus.json" },
 				"Edge": { "URL": "./SystemBlueprint/Blueprint__Edge.json" },
-				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" }
+				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" },
+			},
+			"Data": {}
+		},
+		"Schema": {
+			"URL": {
+				"FormInputTypes": { "URL": "./SystemBlueprint/Schema__FormInputTypes.json" },
+				"FormInputTypeDefinition": { "URL": "./SystemBlueprint/Schema__FormInputTypeDefinition.json" },
+				"Node__Datasets": { "URL": "./SystemBlueprint/Schema__Node__Datasets.json" }
+			},
+			"Data": {}
+		},
+		"Template": {
+			"URL": {
+				"MainAppLayout": { "URL": "./SystemBlueprint/Template__MainAppLayout.json" },
+				"ComponentCanvas": { "URL": "./SystemBlueprint/Template__ComponentCanvas.json" },
+				"GraphCanvas": { "URL": "./SystemBlueprint/Template__GraphCanvas.json" },
 			},
 			"Data": {}
 		},
 	},
 	"Utility": null,
+	"SurrealDBinterface": null,
+	"Application": {
+		"Cursor": [],
+		"State": [],
+		"GraphNodes": [],
+		"GraphEdges": [],
+		"Collections":[]
+	},
 	"Datastores": {},
-	"Initialization_Status":0
+	"Initialization_Status": 0
 };
-// console.log('window.ParadigmREVOLUTION :>> ', window.ParadigmREVOLUTION);
 window.ParadigmREVOLUTION = ParadigmREVOLUTION;
+let loader = document.querySelector('#ParadigmREVOLUTION_Loader');
+let loaderStatus = document.querySelector('#ParadigmREVOLUTION_LoaderStatus');
+window.loader = loader;
+window.loaderStatus = loaderStatus;
+loader.max = Object.keys(ParadigmREVOLUTION.SystemCore.Modules).length + 1;
 
+let key = 'FinderJS';
+let loadingstatus = `<p>Import module <span id='${key.toLowerCase()}' class=''><b>${key}</b> <span id='${key.toLowerCase()}_status' style='font-weight: bold;'>Loading...</span></span></p>\n`;;
+Object.keys(ParadigmREVOLUTION.SystemCore.Modules).forEach((key) => {
+	loadingstatus += `<p>Import module <span id='${key.toLowerCase()}' class=''><b>${key == 'surrealdbWasmEngines' ?  'SurrealDB.wasm' : key}</b> <span id='${key.toLowerCase()}_status' style='font-weight: bold;'>Loading...</span></span></p>\n`;
+});
+// console.log(loadingstatus);
+loaderStatus.innerHTML = loadingstatus;
+
+if (typeof finder !== 'undefined') {
+	if (cr) console.log(">>> ||| FinderJS module loaded successfully.");
+	document.dispatchEvent(new Event('FinderJSLoaded'));
+	ParadigmREVOLUTION.SystemCore.CoreStatus.FinderJS.Status = "LOADED";
+	ParadigmREVOLUTION.SystemCore.Modules.FinderJS = finder;
+	loader.value++;
+	document.querySelector('#finderjs').classList.add('has-text-success');
+	document.querySelector('#finderjs_status').innerHTML = "<li class='fa fa-check'></li>";
+} else {
+	document.querySelector('#finderjs').classList.add('has-text-danger');
+	document.querySelector('#finderjs_status').innerHTML = "<li class='fa fa-xmark'></li>";
+	ParadigmREVOLUTION.SystemCore.CoreStatus.FinderJS.Status = "FAILED TO LOAD";
+	console.error("Failed to import FinderJS.");
+}
 (async () => {
-    const importPromises = [
-        import("../Classes/Utility.mjs"),
-        import("../Classes/GraphSurface.mjs"),
-        import("../Classes/GraphConnection.mjs"),
-        import("../Classes/WorkerThread.mjs"),
-        import("../Classes/Flowchart.mjs"),
-        import('../../node_modules/surrealdb.js/dist/index.bundled.mjs'),
-        import('../../node_modules/surrealdb.wasm/dist/embedded/esm.bundled.js'),
-
-
-		// import('../../node_modules/blockly/blockly_compressed.js'),
-		// import('../../node_modules/blockly/blocks_compressed.js'),
-		// import('../../node_modules/blockly/javascript_compressed.js'),
-		// import('../../node_modules/blockly/msg/en.js'),
-    ];
-
-    const results = await Promise.allSettled(importPromises);
-
-    const [
-        UtilityResult,
-        GraphSurfaceResult,
-        ConnectionResult,
-        WorkerThreadResult,
-        FlowchartResult,
-        SurrealResult,
-		SurrealdbWasmEnginesResult,
-		BlocklyResult,
-		Blockly_blocksResult,
-		Blockly_javascriptResult,
-		Blockly_msg_enResult
-    ] = results;
-
-    const UtilityModule = UtilityResult.status === "fulfilled" ? UtilityResult.value : null;
-    const GraphSurfaceModule = GraphSurfaceResult.status === "fulfilled" ? GraphSurfaceResult.value : null;
-    const ConnectionModule = ConnectionResult.status === "fulfilled" ? ConnectionResult.value : null;
-    const WorkerThreadModule = WorkerThreadResult.status === "fulfilled" ? WorkerThreadResult.value : null;
-    const FlowchartModule = FlowchartResult.status === "fulfilled" ? FlowchartResult.value : null;
-	const SurrealModule = SurrealResult.status === "fulfilled" ? SurrealResult.value : null;
-    const SurrealdbWasmEnginesModule = SurrealdbWasmEnginesResult.status === "fulfilled" ? SurrealdbWasmEnginesResult.value : null;
-    // const BlocklyModule = BlocklyResult.status === "fulfilled" ? BlocklyResult.value : null;
-
-    if (UtilityModule) {
-        const { Utility } = UtilityModule;
-        console.log("Utility imported successfully.");
-		// Use Utility class
-        ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "LOADED";
-        ParadigmREVOLUTION.SystemCore.Modules.Utility = Utility;
+	try {
+		const UIResult = await import("../node_modules/ulid/dist/index.esm.js");
+		const { ulid } = UIResult;
+		ParadigmREVOLUTION.SystemCore.CoreStatus.ULID.Status = "LOADED";
+		ParadigmREVOLUTION.SystemCore.Modules.ULID = ulid;
+		document.querySelector('#ulid').classList.add('has-text-success');
+		document.querySelector('#ulid_status').innerHTML = "<li class='fa fa-check'></li>";
+	} catch (error) {
+		document.querySelector('#ulid').classList.add('has-text-danger');
+		document.querySelector('#ulid_status').innerHTML = "<li class='fa fa-xmark'></li>";
+		ParadigmREVOLUTION.SystemCore.CoreStatus.ULID.Status = "FAILED TO LOAD";
+		console.error("Failed to import ULID.");
+	}
+})();
+(async () => {
+	try {
+		const UtilityResult = await import("../Classes/Utility.mjs");
+		const { Utility } = UtilityResult;
+		ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "LOADED";
+		ParadigmREVOLUTION.SystemCore.Modules.Utility = Utility;
+		loader.value++;
+		document.querySelector('#utility').classList.add('has-text-success');
+		document.querySelector('#utility_status').innerHTML = "<li class='fa fa-check'></li>";
 		ParadigmREVOLUTION.Utility = new Utility();
+		document.dispatchEvent(new Event('UtilitiesLoaded'));
 
-		console.log('Start Blueprint Loader >>>>');
+		if (cr) console.log('>>> Blueprint Loader');
 		let SysUtil = window.ParadigmREVOLUTION.Utility;
-	
-		if (ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status == 'LOADED') { 
-			let initBlueprints = function(){
+
+		if (ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status == 'LOADED') {
+			let initBlueprints = function () {
 				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Blueprints.URL, function (results) {
 					window.ParadigmREVOLUTION.SystemCore.Blueprints.Data = results;
 					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Blueprints = "LOADED";
+
 					document.dispatchEvent(new Event('BlueprintsLoaded'));
-					console.log('Done Blueprint Loader >>>>');
-				}, function(key, url, status){
-					console.log('progress :>> ', status, key, url);
+					if (cr) console.log('>>> ||| Blueprint Loader | SUCCESS');
+				}, function (key, url, status) {
+					if (cr) console.log('>>> ||| progress :>> ', status, key, url);
 				});
 			}
-			initBlueprints();	
-		} else {
-			console.error('');
-		}	
-    } else {
-		document.querySelector('#debugging').innerHTML += "Failed to import Utility.<br>";
-        ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "FAILED TO LOAD";
+			initBlueprints();
+			let initSchema = function () {
+				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Schema.URL, function (results) {
+					window.ParadigmREVOLUTION.SystemCore.Schema.Data = results;
+					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Schema = "LOADED";
+					console.log('window.ParadigmREVOLUTION.SystemCore.Schema.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Schema.Data);
+
+					document.dispatchEvent(new Event('SchemaLoaded'));
+					if (cr) console.log('>>> ||| Schema Loader | SUCCESS');
+				}, function (key, url, status) {
+					if (cr) console.log('>>> ||| progress :>> ', status, key, url);
+				});
+			}
+			initSchema();
+			let initTemplate = function () {
+				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Template.URL, function (results) {
+					window.ParadigmREVOLUTION.SystemCore.Template.Data = results;
+					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Template = "LOADED";
+					console.log('window.ParadigmREVOLUTION.SystemCore.Template.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Template.Data);
+
+					document.dispatchEvent(new Event('SchemaLoaded'));
+					if (cr) console.log('>>> ||| Template Loader | SUCCESS');
+				}, function (key, url, status) {
+					if (cr) console.log('>>> ||| progress :>> ', status, key, url);
+				});
+			}
+			initTemplate();
+		}
+		if (cr) console.log('<<< Blueprint Loader');
+	} catch (error) {
+		document.querySelector('#utility').classList.add('has-text-danger');
+		document.querySelector('#utility_status').innerHTML = "<li class='fa fa-xmark'></li>";
+		ParadigmREVOLUTION.SystemCore.CoreStatus.Utility.Status = "FAILED TO LOAD";
 		console.error("Failed to import Utility.");
-    }
-
-    if (GraphSurfaceModule) {
-        const { GraphSurface } = GraphSurfaceModule;
-        console.log("GraphSurface imported successfully.");
-        ParadigmREVOLUTION.SystemCore.CoreStatus.GraphSurface.Status = "LOADED";
-        ParadigmREVOLUTION.SystemCore.Modules.GraphSurface = GraphSurface;
-        // Use GraphSurface module
-    } else {
-		document.querySelector('#debugging').innerHTML += "Failed to import GraphSurface.<br>";
-        ParadigmREVOLUTION.SystemCore.CoreStatus.GraphSurface.Status = "FAILED TO LOAD";
-        console.error("Failed to import GraphSurface.");
-    }
-
-    if (ConnectionModule) {
-        const { Connection } = ConnectionModule;
-        console.log("Connection imported successfully.");
-        ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "LOADED";
-		ParadigmREVOLUTION.SystemCore.Modules.Connection = Connection;
-        // Use Connection module
-    } else {
-		document.querySelector('#debugging').innerHTML += "Failed to import Connection.<br>";
-        ParadigmREVOLUTION.SystemCore.CoreStatus.Connection.Status = "FAILED TO LOAD";
-        console.error("Failed to import Connection.");
-    }
-
-    if (WorkerThreadModule) {
-        const { WorkerThread } = WorkerThreadModule;
-		ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "LOADED";
-		ParadigmREVOLUTION.SystemCore.Modules.WorkerThread = WorkerThread;
-        console.log("WorkerThread imported successfully.");
-        // Use WorkerThread module
-    } else {
-		document.querySelector('#debugging').innerHTML += "Failed to import WorkerThread.<br>";
-        ParadigmREVOLUTION.SystemCore.CoreStatus.WorkerThread.Status = "FAILED TO LOAD";
-        console.error("Failed to import WorkerThread.");
-    }
-
-    if (FlowchartModule) {
-        const { Flowchart } = FlowchartModule;
-        console.log("Flowchart imported successfully.");
-		ParadigmREVOLUTION.SystemCore.CoreStatus.Flowchart.Status = "LOADED";
-		ParadigmREVOLUTION.SystemCore.Modules.Flowchart = Flowchart;
-        // Use Flowchart module
-    } else {
-		document.querySelector('#debugging').innerHTML += "Failed to import Flowchart.<br>";
-        ParadigmREVOLUTION.SystemCore.CoreStatus.Flowchart.Status = "FAILED TO LOAD";
-        console.error("Failed to import Flowchart.");
-    }
-
-    if (SurrealModule) {
-        const { Surreal } = SurrealModule;
-        console.log("Surreal imported successfully.");
-		ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "LOADED";
-		ParadigmREVOLUTION.SystemCore.Modules.Surreal = Surreal;
-        // Use Surreal module
-    } else {
-		document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.js<br>";
-        ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "FAILED TO LOAD";
-        console.error("Failed to import Surreal.");
-    }
-
-    if (SurrealdbWasmEnginesModule) {
-        const { surrealdbWasmEngines } = SurrealdbWasmEnginesModule;
-        console.log("surrealdbWasmEngines imported successfully.");
-		ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "LOADED";
-		ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines = surrealdbWasmEngines;
-        // Use surrealdbWasmEngines module
-    } else {
-		document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.wasm.<br>";
-        ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "FAILED TO LOAD";
-        console.error("Failed to import surrealdbWasmEngines.");
-    }
-
-
-
-
-	// if (BlocklyModule) {
-    //     const { surrealdbWasmEngines } = BlocklyModule;
-    //     console.log("surrealdbWasmEngines imported successfully.");
-	// 	ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "LOADED";
-	// 	ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines = surrealdbWasmEngines;
-    //     // Use surrealdbWasmEngines module
-    // } else {
-	// 	document.querySelector('#debugging').innerHTML += "Failed to import SurrealDB.wasm.<br>";
-    //     ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "FAILED TO LOAD";
-    //     console.error("Failed to import surrealdbWasmEngines.");
-    // }
-
-    // Execute something else after checking all imports
-	console.log('Done Module Loader >>>>');
+	}
 })();
+(async () => {
+	const moduleHandlers = [
+		{
+			importPromise: import("../Classes/Flow.mjs"),
+			onSuccess: (module) => {
+				const { Flow } = module;
+				if (cr) console.log(">>> ||| Flow imported successfully.");
+				ParadigmREVOLUTION.SystemCore.CoreStatus.Flow.Status = "LOADED";
+				ParadigmREVOLUTION.SystemCore.Modules.Flow = Flow;
+				ParadigmREVOLUTION.Flow = new Flow();
+				loader.value++;
+				document.querySelector('#flow').classList.add('has-text-success');
+				document.querySelector('#flow_status').innerHTML = "<li class='fa fa-check'></li>";
+				document.dispatchEvent(new Event('FlowLoaded'));
+			},
+			onFailure: () => {
+				document.querySelector('#flow').classList.add('has-text-danger');
+				document.querySelector('#flow_status').innerHTML = "<li class='fa fa-xmark'></li>";
+				ParadigmREVOLUTION.SystemCore.CoreStatus.Flow.Status = "FAILED TO LOAD";
+				console.error("Failed to import Flow.");
+			}
+		},
+		{
+			importPromise: import('../../node_modules/surrealdb/dist/index.bundled.mjs'),
+			onSuccess: async (module) => {
+				const { Surreal } = module;
+				if (cr) console.log(">>> ||| Surreal imported successfully.");
+				ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "LOADED";
+				ParadigmREVOLUTION.SystemCore.Modules.Surreal = Surreal;
+				loader.value++;
+				document.querySelector('#surreal').classList.add('has-text-success');
+				document.querySelector('#surreal_status').innerHTML = "<li class='fa fa-check'></li>";
+				document.dispatchEvent(new Event('SurrealJSLoaded'));
+				try {
+					const surrealdbWasmEnginesModule = await import('../../node_modules/@surrealdb/wasm/dist/surreal/index.bundled.js');
+					const { surrealdbWasmEngines } = surrealdbWasmEnginesModule;
+					if (cr) console.log(">>> ||| surrealdbWasmEngines imported successfully.");
+					ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "LOADED";
+					ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines = surrealdbWasmEngines;
+					loader.value++;
+					document.querySelector('#surrealdbwasmengines').classList.add('has-text-success');
+					document.querySelector('#surrealdbwasmengines_status').innerHTML = "<li class='fa fa-check'></li>";
+					
+					try { 
+						const result = await import('../Classes/SurrealDBinterface.mjs');
+						const { SurrealDBinterface } = result;
+						if (cr) console.log(">>> ||| SurrealDBinterface imported successfully.");
+						ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDBinterface.Status = "LOADED";
+						ParadigmREVOLUTION.SystemCore.Modules.SurrealDBinterface = SurrealDBinterface;
+						loader.value++;
+						document.querySelector('#surrealdbinterface').classList.add('has-text-success');
+						document.querySelector('#surrealdbinterface_status').innerHTML = "<li class='fa fa-check'></li>";
+						ParadigmREVOLUTION.SurrealDBinterface = new SurrealDBinterface();
 
+						document.dispatchEvent(new Event('SurrealDBEnginesLoaded'));
+						if (cr) console.log('>>> ||| Done Blueprint Loader >>>>');	
+	
+					} catch (error) {
+						document.querySelector('#surrealdbinterface').classList.add('has-text-danger');
+						document.querySelector('#surrealdbinterface_status').innerHTML = "<li class='fa fa-xmark'></li>";
+						ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDBinterface.Status = "FAILED TO LOAD";
+						console.error("Failed to import SurrealDBinterface.");
+					}
 
+				} catch (error) {
+					document.querySelector('#surrealdbwasmengines').classList.add('has-text-danger');
+					document.querySelector('#surrealdbwasmengines_status').innerHTML = "<li class='fa fa-xmark'></li>";
+					ParadigmREVOLUTION.SystemCore.CoreStatus.surrealdbWasmEngines.Status = "FAILED TO LOAD";
+					console.error("Failed to import surrealdbWasmEngines.");
+				}
+		},
+			onFailure: () => {
+				document.querySelector('#sureal').classList.add('has-text-danger');
+				document.querySelector('#Sureal_status').innerHTML = "<li class='fa fa-xmark'></li>";
+				ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "FAILED TO LOAD";
+				console.error("Failed to import Surreal.");
+			}
+		},
+		// {
+		// 	importPromise: import("../../node_modules/mqtt/dist/mqtt.min.js"),
+		// 	onSuccess: (module) => {
+		// 		const { mqtt } = module;
+		// 		if (cr) console.log(">>> ||| MQTT imported successfully.");
+		// 		console.log('mqtt', mqtt);
+		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.MQTT.Status = "LOADED";
+		// 		ParadigmREVOLUTION.SystemCore.Modules.MQTT = mqtt;
+		// 		document.dispatchEvent(new Event('MQTTLoaded'));
+		// 	},
+		// 	onFailure: () => {
+		// 		ParadigmREVOLUTION.SystemCore.CoreStatus.MQTT.Status = "FAILED TO LOAD";
+		// 		console.error("Failed to import MQTT.");
+		// 	}
+		// },
+	];
+	for (const handler of moduleHandlers) {
+		try {
+			const module = await handler.importPromise;
+			handler.onSuccess(module);
+		} catch (error) {
+			handler.onFailure();
+		}
+	}
+})();
+if (cr) console.log('<<< Module Loader');

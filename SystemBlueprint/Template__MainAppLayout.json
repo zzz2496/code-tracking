@@ -8,9 +8,9 @@
 							{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"dark_light_indicator\"></li>"}
 						]},
 						{"comment":"Object Collections Tabs", "tag":"div", "id":"object_collection_tabs", "class":"container is-flex is-justify-content-center", "content":[
-							{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
+							{ "comment": "Tabs", "tag": "div", "id": "object_collections_tabs", "content": [
 								{ "tag": "div", "class": "tabs", "content": [
-									{ "tag": "ul", "class":"", "content": [
+									{ "tag": "ul", "id":"object-collections-tab-container", "class":"", "content": [
 										{ "tag": "li", "class": "is-active show", "content": [
 											{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Collection"}, "innerHTML": "Collection" }
 										] },

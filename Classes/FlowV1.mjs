@@ -19,7 +19,6 @@ export class Flow {
 		this.Utility = utility;
 		this.DragSelect = false;
 		this.GraphCanvas = {};
-
 		this.CurrentActiveTab = {};
 		this.selectedNodesToConnect = {
 			Start: null,
@@ -68,35 +67,6 @@ export class Flow {
 		this.storage = storage;
 
 		window.debugflow = this;
-	}
-	isElementInViewport = (element) => {
-		const rect = element.getBoundingClientRect();
-		return (
-			rect.top >= 0 &&
-			rect.left >= 0 &&
-			rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-			rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-		);
-	}
-	getActiveTab = (id) => {
-		const label = document.querySelector(`#${id}>li.is-active>a`).innerHTML;
-		const tabType = document.querySelector(`#${id}>li.is-active>a`).dataset.tabtype;
-		const element = document.querySelector(`#${id}>li.is-active>a`);
-		const graphCanvas = document.querySelector(`.app_configurator_containers[data-tabType="${tabType}"]`);
-		const graphCanvasID = document.querySelector(`.app_configurator_containers[data-tabType="${tabType}"]`).id;
-		const graphCanvasClasses = document.querySelector(`.app_configurator_containers[data-tabType="${tabType}"]`).classList;
-		return {
-			tab: {
-				label: label,
-				tabType: tabType,
-				element: element,
-			},
-			graphCanvas: {
-				id: graphCanvasID,
-				classes: graphCanvasClasses,
-				element: graphCanvas
-			}
-		};
 	}
 	checkType = function (variable) {
 		if (variable instanceof Date) {
@@ -229,6 +199,20 @@ export class Flow {
 						</div>
 					</div>
 				`;
+
+				// <div id="${node.id.id.ID}-header" class="card-header " style="cursor:pointer;">
+				// 	<div class="card-header-icon" data-id="${node.id.id.ID}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+				// 	<div class="card-header-title pl-0 is-selectable" data-id="${node.id.id.ID}">${node.id.id.Node.Kind}</div>
+				// </div>
+				// <div id="${node.id.id.ID}-content" class="card-content" style="width: 100%; height: 100%;">
+				// 	<div class="is-flex is-flex-direction-column is-align-items-center" style="width:100%; height:100%;">
+				// 		<div class="title is-1" style="width: fit-content">
+				// 			${node.id.id.Node.Icon} 
+				// 		</div>
+				// 		<h class="m-0" style="font-size: 1.2rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
+				// 		<h class="m-0" style="font-size: 0.8rem; text-align:center;">ID: ${node.id.id.ID}</h>
+				// 	</div>
+				// </div>
 				newElement.addEventListener('animationend', function () {
 					this.classList.remove('fade-in');
 				});
@@ -2048,21 +2032,30 @@ export class Flow {
 					true // Capture phase
 				);
 			},
-			
-			setupTabSwitcher: (({ 
-				tabSelector,
-				contentContainerSelector,
-				activeClass = 'is-active',
-				showClass = 'show'
-			},
-			callback) => { //!SECTION - setupTabSwitcher
-				// console.log('setupTabSwitcher click!');
+			setupTabSwitcher: ((tabSelector, contentContainerSelector, activeClass = 'is-active', showClass = 'show', callback) => { //!SECTION - setupTabSwitcher	
+				console.log('setupTabSwitcher click!');
 				const flowSelf = this;
 				document.querySelectorAll(tabSelector).forEach((tab, index, tabs) => {
 					tab.addEventListener('click', (e) => {
 						const AppDivID = e.target.closest('.application_divisions').id;
 						const tabType = tab.dataset.tabtype;
+						// let AppDiv = '';
+						// switch (AppDivID) {
+						// 	case 'object_collections':
+						// 		AppDiv = 'ObjectCollections';
+						// 		break;
+						// 	case 'app_container':
+						// 		AppDiv = 'AppContainer';
+						// 		break;
+						// 	case 'app_data_preparation_area':
+						// 		AppDiv = 'AppDataPreparationArea';
+						// 		break;
+						// 	case 'app_console':
+						// 		AppDiv = 'AppConsole';
+						// 		break;
+						// }
 						flowSelf.CurrentActiveTab[AppDivID] = tabType; // NOTE - SET CurrentActiveTab
+						console.log('flowSelf', flowSelf);
 
 						// Remove 'is-active' class from all tabs
 						tabs.forEach((t) => t.parentElement.classList.remove(activeClass));
@@ -2071,8 +2064,8 @@ export class Flow {
 						tab.parentElement.classList.add(activeClass);
 			
 						// Remove 'show' class and reset transforms on all content containers
-						const arrSelector = contentContainerSelector.includes(',')
-							? contentContainerSelector.split(',').map(s => s.trim())
+						const arrSelector = contentContainerSelector.includes(',') 
+							? contentContainerSelector.split(',').map(s => s.trim()) 
 							: [contentContainerSelector];
 
 						arrSelector.forEach(selector => {
@@ -2096,7 +2089,7 @@ export class Flow {
 								selectedContainer.style.opacity = '1'; // Fade in
 							}
 						});
-
+								
 						// Optionally show/hide additional controls (if applicable)
 						const controlContainerSelector = `[data-controltype="${tabType}"]`;
 						document.querySelectorAll('[data-controltype]').forEach((controlContainer) => {
@@ -2106,9 +2099,7 @@ export class Flow {
 						if (selectedControlContainer) {
 							selectedControlContainer.classList.add(showClass);
 						}
-						if (callback) setTimeout(() => { 
-							 callback();
-						}, 600);
+						if (callback) callback();
 					});
 				});
 			}),
@@ -2259,31 +2250,6 @@ export class Flow {
 				const snapRange = 90;
 				const sensitivity = 0.1;
 				let newTabCounter = 0;
-
-				// NOTE - Initialize GraphCanvas tabs
-				document.querySelectorAll('.app_configurator_containers').forEach(container => { 
-					this.GraphCanvas[container.dataset.tabtype] = {
-						ZoomScale: 1,
-						ZoomStep: 0.05, // Zoom scale increment
-						MinZoomScale: 0.1, // Prevents zooming out too far
-						MaxZoomScale: 10, // Prevents zooming in too far
-						Element: container,
-						isElementInViewport: (element) => {
-							const rect = element.getBoundingClientRect();
-							return (
-								rect.top >= 0 &&
-								rect.left >= 0 &&
-								rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-								rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-							);
-						}
-					};
-				});
-		
-				document.querySelectorAll('.graph_surfaces').forEach(surface => { 
-					console.log('surfaces :>> ', surface);
-					this.Graph.Events.enableDragSelect(surface);
-				});
 
 				// Initialize the scroll snap functionality
 				this.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);
@@ -2964,23 +2930,10 @@ export class Flow {
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});
-				this.Form.Events.setupTabSwitcher({
-					tabSelector: '.tab-graph-selector',
-					contentContainerSelector: '.app_configurator_containers, .addremove-control-container'
-				}, () => {
-					// console.log('starts on callback!');
-					// console.log('done on callback!');
-				});
-
+				this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers, .addremove-control-container');
 				// this.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers');
 				document.querySelector('.tab-graph-selector[data-tabtype="Graph"]').click();
-				this.Form.Events.setupTabSwitcher({
-					tabSelector: '.tab-object-collections',
-					contentContainerSelector: '.object-collections-containers'
-				}, () => {
-					// console.log('starts on callback!');
-					// console.log('done on callback!');
-				});
+				this.Form.Events.setupTabSwitcher('.tab-object-collections', '.object-collections-containers', 'is-active', 'show');
 				document.querySelector('.tab-object-collections[data-tabtype="Collection"]').click();
 				
 				document.querySelector('#dark_light_selector').addEventListener('click', (e) => {
@@ -3062,8 +3015,9 @@ export class Flow {
 							}
 							console.log('qstr edges :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(edges => {
-								const graphCanvas = Flow.getActiveTab('tab-graph-selector-container');
-								this.Graph.Events.renderNodes(nodes[0], edges[0], graphCanvas, () => {
+								// console.log('nodes each :>> ', nodes[0]);
+								// console.log('edges each :>> ', edges[0]);
+								this.Graph.Events.renderNodes(nodes[0], edges[0], parentGraphID, () => {
 									// console.log('Nodes and Edges rendered, callback called');
 								});
 							}).catch(err => {
@@ -3595,8 +3549,29 @@ export class Flow {
 						}
 					}
 				]);
+
+				document.querySelectorAll('.app_configurator_containers').forEach(container => { 
+					// console.log('container :>> ', container);
+					this.GraphCanvas[container.dataset.tabtype] = {
+						ZoomScale: 1,
+						ZoomStep: 0.05, // Zoom scale increment
+						MinZoomScale: 0.1, // Prevents zooming out too far
+						MaxZoomScale: 10 // Prevents zooming in too far
+					};
+				});
+
+				document.querySelectorAll('.graph_surfaces').forEach(surface => { 
+					console.log('surfaces :>> ', surface);
+					this.Graph.Events.enableDragSelect(surface);
+				});
 				
-				function enableZoomControl(flow) {
+				function enableZoomControl(flow) { 
+					// console.log('>>>>>>>', flow.GraphCanvas);
+					// flow.GraphCanvas[graphCanvas].ZoomScale = 1;
+					// flow.GraphCanvas[graphCanvas].ZoomStep = 0.05; // Zoom scale increment
+					// this.MinZoomScale = 0.1; // Prevents zooming out too far
+					// this.MaxZoomScale = 10; // Prevents zooming in too far
+					
 					let zoomTimeout = null; // Timeout variable for delayed scroll adjustment
 	
 					// Get the container and buttons
