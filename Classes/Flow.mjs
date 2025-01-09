@@ -471,7 +471,7 @@ export class Flow {
 					}
 				});
 			},
-			renderNodes: ((nodes, edges, parentGraphID, callback, cr = 0) => { //SECTION - renderNodes
+			renderNodes: ((nodes, edges, parentSet, callback, cr = 0) => { //SECTION - renderNodes
 				console.log('================= Start Render Nodes');
 				let temp;
 				const selector = `#${parentGraphID} .graph_node_surface`;
@@ -3062,7 +3062,8 @@ export class Flow {
 							}
 							console.log('qstr edges :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(edges => {
-								const graphCanvas = Flow.getActiveTab('tab-graph-selector-container');
+								const graphCanvas = this.getActiveTab('tab-graph-selector-container');
+								console.log('graphCanvas :>> ', graphCanvas);
 								this.Graph.Events.renderNodes(nodes[0], edges[0], graphCanvas, () => {
 									// console.log('Nodes and Edges rendered, callback called');
 								});
@@ -3740,10 +3741,10 @@ export class Flow {
 
 				document.querySelectorAll('.graph_fullscreen_button').forEach((btn) => {
 					btn.addEventListener('click', (e) => { 
-						console.log('graph_fullscreen_button clicked');
+						// console.log('graph_fullscreen_button clicked');
 						const appConfiguratorContainer = document.querySelector('#app_configurator_container');
 						const rectAppConfiguratorContainer = appConfiguratorContainer.getBoundingClientRect();
-						console.log('rectAppConfiguratorContainer :>> ', rectAppConfiguratorContainer);
+						// console.log('rectAppConfiguratorContainer :>> ', rectAppConfiguratorContainer);
 						appConfiguratorContainer.classList.toggle('fullscreen');
 						const fullscreen = appConfiguratorContainer.classList.contains('fullscreen')? true : false;
 						if (fullscreen) {
@@ -3774,7 +3775,6 @@ export class Flow {
 					suql_exec.addEventListener('click', (e) => {
 						ParadigmREVOLUTION.Datastores.SurrealDB[datastore_select.value].Instance.query(suql_input.value).then(result => {
 							console.log('SuQL Result :>> ', result);
-	
 						}).catch(error => {
 							console.error('SuQL Error :>> ', error);
 						});
