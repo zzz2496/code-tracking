@@ -94,8 +94,14 @@ export class Flow {
 			graphCanvas: {
 				id: graphCanvasID,
 				classes: graphCanvasClasses,
-				element: graphCanvas
-			}
+				element: graphCanvas,
+				graph_controls: graphCanvas.querySelector('.graph_controls'),
+				graph_surface: graphCanvas.querySelector('.graph_surfaces'),
+				graph_surface_id: graphCanvas.querySelector('.graph_surfaces').id,
+				graph_node_surface: graphCanvas.querySelector('.graph_node_surface'),
+				graph_connection_surface: graphCanvas.querySelector('.graph_connection_surface')
+			},
+			zoomProps: this.GraphCanvas[tabType]
 		};
 	}
 	checkType = function (variable) {
@@ -194,7 +200,7 @@ export class Flow {
 		Elements: {
 			MakeDraggableNode: function (nodes, node, objclass, content, graphCanvas) {
 				console.log('================================== Start MakeDraggableNode');
-				console.log('node :>> ', node);
+				// console.log('node :>> ', node);
 
 				let newElement = document.createElement('div');
 				const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
@@ -237,13 +243,13 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
-			makeNodeDraggable: (draggableSelector, parentSelector = document.body, graphCanvas) => { //SECTION - makeNodeDraggable
+			makeNodeDraggable: (draggableSelector, parent, parentSet) => { //SECTION - makeNodeDraggable
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
 				let relatedElements = []; // To store related divs and their initial offsets
 				
 
-				const parent = document.querySelector(parentSelector);
+				// const parent = document.querySelector(parentSelector);
 				const parentRect = parent.getBoundingClientRect();
 			
 				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
@@ -258,8 +264,6 @@ export class Flow {
 						// Check if the clicked element is the .card-header
 						const graphCanvasParent = e.target.closest('.app_configurator_containers');
 						const graphCanvasParentId = graphCanvasParent.id;
-
-						console.log(document.querySelector(`#${graphCanvasParentId} .scroll_content`));
 
 						if (!e.target.closest('.card-header-icon')) return;
 						console.log('================================================================================================ MakeNodeDraggable mousedown start');
@@ -276,14 +280,14 @@ export class Flow {
 						} else {
 							qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
 						}
-						console.log('qstr :>> ', qstr);
+						// console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
 							dbedges = edges[0];
 							// console.log('dbedges :>> ', dbedges);
 							if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
 								this.Graph.Events.createGutterDotsAndConnect(
-									document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-									document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+									parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+									parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
 									edge
 								);
 							});
@@ -291,8 +295,8 @@ export class Flow {
 								console.log('edge >>>>>>>>>>>>>>>>>>> :>> ', edge);
 								this.Graph.Events.connectNodes(
 									edge,
-									`#${graphCanvasParentId} .graph_connection_surface`,
-									`#${graphCanvasParentId} .scroll_content`
+									parentSet.graphCanvas.graph_connection_surface,
+									parentSet.graphCanvas.graph_surface.parentElement
 								);
 							});
 						});
@@ -369,12 +373,12 @@ export class Flow {
 						
 						fx = aX;
 						fy = aY;
-						console.log('dbedges on mousemove before foreach', dbedges);
+						// console.log('dbedges on mousemove before foreach', dbedges);
 						dbedges.forEach((edge, edgeIndex) => {
-							console.log('dbedge each:>> ', edge.id, edge.OutputPin.nodeID, edge.InputPin.nodeID);
+							// console.log('dbedge each:>> ', edge.id, edge.OutputPin.nodeID, edge.InputPin.nodeID);
 							this.Graph.Events.createGutterDotsAndConnect(
-								document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-								document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+								parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+								parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
 								edge
 							);
 						});
@@ -382,9 +386,9 @@ export class Flow {
 							// console.log('dbedge each:>> ', edge);
 							this.Graph.Events.connectNodes(
 								edge,
-								`#${graphCanvasParentId} .graph_connection_surface`,
-								`#${graphCanvasParentId} .scroll_content`
-						);
+								parentSet.graphCanvas.graph_connection_surface,
+								parentSet.graphCanvas.graph_surface.parentElement
+							);
 						});
 						// console.log('================================================================================================ mouse moved enough, DONE mousemove!')
 					}
@@ -395,7 +399,7 @@ export class Flow {
 						console.log('================================================================================================ MakeNodeDraggable mouseup start');
 
 						let graphCanvas = e.target.closest('.app_configurator_containers');
-						console.log('graphCanvas :>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ', graphCanvas);
+						// console.log('graphCanvas :>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ', graphCanvas);
 						let tabtype = graphCanvas.dataset.tabtype;
 
 
@@ -403,7 +407,7 @@ export class Flow {
 						draggedElement.style.zIndex = ""; // Reset z-index
 						draggedElement = null;
 						// const id = e.target.dataset.id;
-						console.log('e.target :>> ', e.target);
+						// console.log('e.target :>> ', e.target);
 						let id = e.target.closest('.graph-node');
 
 						if (id == undefined) {
@@ -442,15 +446,15 @@ export class Flow {
 									y: parseInt(elem.style.top, 10)
 								};
 								let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position.${graphCanvas.dataset.tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
-								console.log('qstr :>> ', qstr);
+								// console.log('qstr :>> ', qstr);
 								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).catch(error => {
 									console.error('Coordinate update failed for related element', error);
 								});
 							});
 							dbedges.forEach((edge, edgeIndex) => {
 								this.Graph.Events.createGutterDotsAndConnect(
-									document.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-									document.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+									parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+									parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
 									edge
 								);
 							});
@@ -458,8 +462,8 @@ export class Flow {
 							dbedges.forEach((edge, edgeIndex) => {
 								this.Graph.Events.connectNodes(
 									edge,
-									'.graph_connection_surface',
-									'#graph_scroll_content'
+									parentSet.graphCanvas.graph_connection_surface,
+									parentSet.graphCanvas.graph_surface.parentElement
 								);
 							});
 							setTimeout(() => { 
@@ -474,10 +478,10 @@ export class Flow {
 			renderNodes: ((nodes, edges, parentSet, callback, cr = 0) => { //SECTION - renderNodes
 				console.log('================= Start Render Nodes');
 				let temp;
-				const selector = `#${parentGraphID} .graph_node_surface`;
+				// Clear out the nodes and connections
+				parentSet.graphCanvas.graph_node_surface.innerHTML = "";
+				parentSet.graphCanvas.graph_connection_surface.innerHTML = "";
 
-				// console.log('selector :>> ', selector);
-				document.querySelector(selector).innerHTML = "";
 				// console.log('start foreach nodes ===========>');
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
 					const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
@@ -497,14 +501,13 @@ export class Flow {
 							<h class="m-0" style="font-size: 0.8rem; text-align:center;">ID: ${node.id.id.ID}</h>
 						</div>
 					</div>`;
-					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent, document.querySelector('#'+parentGraphID).dataset.tabtype);
-					// console.log('temp:>>', temp);
-					// console.log('graph html :>>', selector, document.querySelector(selector).innerHTML);
-					document.querySelector(selector).append(temp);
+					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent, parentSet.tab.tabType);
+					parentSet.graphCanvas.graph_node_surface.append(temp);
 				});
 				// console.log('done foreach nodes ===========>');
 				
-				this.Graph.Events.makeNodeDraggable(".graph-node", `#${parentGraphID} .scroll_content`, document.querySelector('#'+parentGraphID).dataset.tabtype);
+				// this.Graph.Events.makeNodeDraggable(".graph-node", `#${parentGraphID} .scroll_content`, document.querySelector('#'+parentGraphID).dataset.tabtype);
+				this.Graph.Events.makeNodeDraggable(".graph-node", parentSet.graphCanvas.graph_surface.parentElement, parentSet);
 
 				console.log('================= Done Render Nodes');
 				console.log('=================Start Render Edges');
@@ -520,21 +523,18 @@ export class Flow {
 				}
 
 				if (edges) if (Array.isArray(edges)) if (edges.length > 0) edges.forEach((rEdge, edgeIndex) => {
-					console.log(rEdge.OutputPin.nodeID, document.querySelector(`div[id="${rEdge.OutputPin.nodeID}"]`));
-					console.log(rEdge.InputPin.nodeID, document.querySelector(`div[id="${rEdge.InputPin.nodeID}"]`));
-
 					this.Graph.Events.createGutterDotsAndConnect(
-						document.querySelector(`div[id="${rEdge.OutputPin.nodeID}"]`),
-						document.querySelector(`div[id="${rEdge.InputPin.nodeID}"]`),
+						parentSet.graphCanvas.element.querySelector(`div[id="${rEdge.OutputPin.nodeID}"]`),
+						parentSet.graphCanvas.element.querySelector(`div[id="${rEdge.InputPin.nodeID}"]`),
 						rEdge
 					);
 				});
-				console.log('parentGraphID :>> ', parentGraphID);
+				
 				if (edges) if (Array.isArray(edges)) if (edges.length > 0) edges.forEach((edge, edgeIndex) => {
 					this.Graph.Events.connectNodes(
 						edge,
-						`#${parentGraphID} .graph_connection_surface`,
-						'#graph_scroll_content'
+						parentSet.graphCanvas.graph_connection_surface,
+						parentSet.graphCanvas.graph_surface.parentElement
 					);
 				});
 
@@ -782,11 +782,11 @@ export class Flow {
 				cancelButtonFooter.onclick = cleanUp;
 			},
 			
-			connectNodes: (rEdge, svgcontainerselector, parentselector) => {
+			connectNodes: (rEdge, svgcontainer, parentselector) => {
 				// Get the elements by their selector
 				// console.log('======================================= start connect nodes');
 				// console.log('rEdge :>> ', rEdge);
-				// console.log('svgcontainerselector :>> ', svgcontainerselector);
+				// console.log('svgcontainer :>> ', svgcontainer);
 				// console.log('parentselector :>> ', parentselector);
 				
 				if (!rEdge) return;
@@ -796,8 +796,8 @@ export class Flow {
 				const arrowBend = edge.ArrowBend;
 				
 				// Get the SVG container
-				const svgContainer = document.querySelector(svgcontainerselector);
-				// console.log('svgContainer :>> ', svgcontainerselector, svgContainer);	
+				const svgContainer = svgcontainer;
+				// console.log('svgContainer :>> ', svgcontainer, svgContainer);	
 				const existingPath = svgContainer.querySelector(`path[id="${edgeID}"]`);
 				// console.log('existingPath :>> ', existingPath);
 
@@ -807,7 +807,7 @@ export class Flow {
 				
 				// console.log('nodeselectors', node1selector, node2selector);;
 
-				console.log('this.CurrentActiveTab.app_container :>> ', this.CurrentActiveTab.app_container);
+				// console.log('this.CurrentActiveTab.app_container :>> ', this.CurrentActiveTab.app_container);
 
 				const node1 = document.querySelector(`div[data-tabType="${this.CurrentActiveTab.app_container}"]`).querySelector(
 					node1selector.startsWith("#")
@@ -853,7 +853,7 @@ export class Flow {
 				const rectGraphNode1 = GraphNode1.getBoundingClientRect();
 				const rectGraphNode2 = GraphNode2.getBoundingClientRect();
 
-				const parent = document.querySelector(parentselector);
+				const parent = parentselector;
 				const parentRect = parent.getBoundingClientRect();
 
 				const parentScrollLeft = parent.scrollLeft;
@@ -902,38 +902,6 @@ export class Flow {
 				let controlY1;
 				let controlX2;
 				let controlY2;
-
-				// // 4 SEGMENTS
-				// const a = 315, b = 360, c = 0, d = 45;
-				// const e = 135,  f = 225;
-
-				// console.log('angle :>>>>>>>>>>>>>> ', angle);
-				// // Determine gutter usage based on angle
-				// if ((angle >= a && angle <= b) || (angle >= c && angle < d)) {
-				// 	console.log('>>>>>>>>>>>>>>>>>>>> left');
-				// 	controlX1 = x1 + (x2 - x1) / 1.5;
-				// 	controlY1 = y1;
-				// 	controlX2 = x2 - (x2 - x1) / 1.5;
-				// 	controlY2 = y2;
-				// } else if (angle >= d && angle < e) {
-				// 	console.log('>>>>>>>>>>>>>>>>>>>> top');
-				// 	controlX1 = x1;
-				// 	controlY1 = y1 + (y2 - y1) / 1.5;
-				// 	controlX2 = x2;
-				// 	controlY2 = y2 - (y2 - y1) / 1.5;
-				// } else if (angle >= e && angle < f) {
-				// 	console.log('>>>>>>>>>>>>>>>>>>>> bottom');
-				// 	controlX1 = x1 + (x2 - x1) / 1.5;
-				// 	controlY1 = y1;
-				// 	controlX2 = x2 - (x2 - x1) / 1.5;
-				// 	controlY2 = y2;
-				// } else if (angle >= f && angle < a) {
-				// 	console.log('>>>>>>>>>>>>>>>>>>>> right');
-				// 	controlX1 = x1;
-				// 	controlY1 = y1 + (y2 - y1) / 1.5;
-				// 	controlX2 = x2;
-				// 	controlY2 = y2 - (y2 - y1) / 1.5;
-				// }
 
 				// 8 SEGMENTS
 
@@ -1034,8 +1002,8 @@ export class Flow {
 				}
 				if (!existingPath) {
 					// Create an SVG path
-					console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> create SVG path');
-					console.log('edge', edge);	
+					// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> create SVG path');
+					// console.log('edge', edge);	
 					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 					const d = `M ${x1},${y1} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${x2},${y2}`;
 					// console.log('edgeID di create new path', edgeID);
@@ -1077,20 +1045,25 @@ export class Flow {
 				// console.log('======================================= done connectNodes');
 			},
 			createGutterDotsAndConnect: (node1, node2, rEdge) => {
-				// console.log('======================================= start createGutterDotsAndConnect');
+				console.log('======================================= start createGutterDotsAndConnect');
 				// NOTE - This functions as connecting 2 nodes then assign those 2 nodes to the edge.
 				if (!rEdge) return;
+
 				let edge = rEdge;
 				const edgeID = edge.id.ID ? edge.id.ID : edge.id.id.ID;
 				const arrowBend = edge.ArrowBend;
-				// console.log('arrowBend >>>>>', arrowBend)
-				console.log('this FOR ZOOMMMMMMM:>> ', this);;
+
+
+				let gutters = document.querySelectorAll(`div[data-edge="${edgeID}"]`);
+				// if (gutters.length > 0) { 
+				// 	console.log('======================================= end createGutterDotsAndConnect: gutter already exists');
+				// 	return;
+				// }
 			
 				//get each node getBoundingClientRect
 				const rect1 = node1.getBoundingClientRect();
 				const rect2 = node2.getBoundingClientRect();
 				
-				console.log('  zzzzzz>>>>>>>>>>> ', this, this.GraphCanvas, this.CurrentActiveTab.app_container);
 				// Calculate the angle between node1 and node2
 				const dx = (rect2.left + rect2.width / 2 - (rect1.left + rect1.width / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 				const dy = (rect2.top + rect2.height / 2 - (rect1.top + rect1.height / 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
@@ -1128,13 +1101,13 @@ export class Flow {
 
 				if (node1.dataset.direction == direction && node2.dataset.direction == direction) {
 					// console.log(`Gutter direction match: "${direction}"'`);
-					// console.log('======================================= end createGutterDotsAndConnect');
+					console.log('======================================= end createGutterDotsAndConnect: match direction');
 					return;
 				}
 				// console.log(`Gutter direction mismatch: "${direction}"'`);
 
 				// REMOVE OLD GUTTERS
-				let gutters = document.querySelectorAll(`div[data-edge="${edgeID}"]`);
+				// gutters = document.querySelectorAll(`div[data-edge="${edgeID}"]`);
 				if (gutters.length > 0) gutters.forEach(gutter => gutter.remove());
 
 				const gutterDot1 = document.createElement('div');
@@ -1332,8 +1305,7 @@ export class Flow {
 						}
 						break;
 				}
-
-				// console.log('======================================= end createGutterDotsAndConnect');
+				console.log('======================================= end createGutterDotsAndConnect: new gutterDots');
 				return [edge, gutterDot1, gutterDot2, direction];
 			},
 			enableDragSelect: ((selector) => {
@@ -3054,7 +3026,7 @@ export class Flow {
 									break;
 								case 'app_graph_container':
 									if (onlyContainers.checked) {
-										qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where id.Table = 'Process' or id.Table = 'Version';`;
+										qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where id.Table = 'Process'; --or id.Table = 'Version';`;
 									} else {
 										qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')};`;
 									}
@@ -3062,9 +3034,7 @@ export class Flow {
 							}
 							console.log('qstr edges :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(edges => {
-								const graphCanvas = this.getActiveTab('tab-graph-selector-container');
-								console.log('graphCanvas :>> ', graphCanvas);
-								this.Graph.Events.renderNodes(nodes[0], edges[0], graphCanvas, () => {
+								this.Graph.Events.renderNodes(nodes[0], edges[0], this.getActiveTab('tab-graph-selector-container'), () => {
 									// console.log('Nodes and Edges rendered, callback called');
 								});
 							}).catch(err => {
@@ -3545,10 +3515,14 @@ export class Flow {
 												return;
 											}
 											// console.log('parentGraphID :>> ', parentGraphID);
+
+											const parentSet = passedData.FlowGraph.getActiveTab('tab-graph-selector-container');
+
+
 											passedData.FlowGraph.Graph.Events.connectNodes(
 												edge,
-												`#${parentGraphID} .graph_connection_surface`,
-												'#graph_scroll_content',
+												parentSet.graphCanvas.graph_connection_surface,
+												parentSet.graphCanvas.graph_surface.parentElement
 											);
 		
 											let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
