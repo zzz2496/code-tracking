@@ -492,16 +492,13 @@ export class Flow {
 					// console.log('start node'+nodeIndex, nodeID, nodeKind);
 					const nodeContent = `
 					<div id="${nodeID}-header" class="card-header " style="cursor:pointer;">
-						<div class="card-header-icon" data-id="${nodeID}"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
-						<div class="card-header-title pl-0 is-selectable" data-id="${nodeID}">${node.id.id.Node.Kind}</div>
+						<div class="card-header-icon m-0 px-2" data-id="${nodeID}">${node.id.id.Node.Icon} </div>
+						<div class="card-header-title pl-0 m-1 pr-0 py-1 is-selectable" data-id="${nodeID}" style="width: fit-content;">${node.id.id.Node.Kind}</div>
 					</div>
-					<div id="${nodeID}-content" class="card-content" style="width: 100%; height: 100%;">
-						<div class="is-flex is-flex-direction-column is-align-items-center" style="width:100%; height:100%;">
-							<div class="title is-1" style="width: fit-content">
-								${node.id.id.Node.Icon} 
-							</div>
-							<h class="m-0" style="font-size: 1.2rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
-							<h class="m-0" style="font-size: 0.8rem; text-align:center;">ID: ${node.id.id.ID}</h>
+					<div id="${nodeID}-content" class="card-content p-0" style="width: fit-content; height: 100%;">
+						<div class="m-0 p-0 is-flex is-flex-direction-column is-align-items-center" style="width:fit-content; height:100%;">
+							<h class="m-0" style="font-size: 1rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
+							<h class="m-0 p-3" style="font-size: 0.65rem; text-align:center;">ID: ${node.id.id.ID}</h>
 						</div>
 					</div>`;
 					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent, parentSet.tab.tabType);
