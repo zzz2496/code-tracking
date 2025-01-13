@@ -104,6 +104,33 @@ export class Flow {
 			zoomProps: this.GraphCanvas[tabType]
 		};
 	}
+	toggleFullscreen = () => {
+		if (!document.fullscreenElement) {
+		  // If not in fullscreen, request fullscreen
+		  const element = document.documentElement; // Fullscreen the entire document
+		  if (element.requestFullscreen) {
+			element.requestFullscreen();
+		  } else if (element.mozRequestFullScreen) { // For Firefox
+			element.mozRequestFullScreen();
+		  } else if (element.webkitRequestFullscreen) { // For Safari/Chrome
+			element.webkitRequestFullscreen();
+		  } else if (element.msRequestFullscreen) { // For IE/Edge
+			element.msRequestFullscreen();
+		  }
+		} else {
+		  // If in fullscreen, exit fullscreen
+		  if (document.exitFullscreen) {
+			document.exitFullscreen();
+		  } else if (document.mozCancelFullScreen) { // For Firefox
+			document.mozCancelFullScreen();
+		  } else if (document.webkitExitFullscreen) { // For Safari/Chrome
+			document.webkitExitFullscreen();
+		  } else if (document.msExitFullscreen) { // For IE/Edge
+			document.msExitFullscreen();
+		  }
+		}
+	}
+	  
 	checkType = function (variable) {
 		if (variable instanceof Date) {
 			return "DateTime";
@@ -3725,6 +3752,7 @@ export class Flow {
 						// console.log('rectAppConfiguratorContainer :>> ', rectAppConfiguratorContainer);
 						appConfiguratorContainer.classList.toggle('fullscreen');
 						const fullscreen = appConfiguratorContainer.classList.contains('fullscreen')? true : false;
+						this.toggleFullscreen();
 						if (fullscreen) {
 							document.querySelector('#app_top_menu_container').classList.toggle('hide');
 							document.querySelector('#app_graph_tabs_container').classList.toggle('show');
