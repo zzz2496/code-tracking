@@ -278,9 +278,9 @@ export class Flow {
 						if (document.querySelector('#graph_show_only_containers').checked) { 
 							qstr = `select * from Process where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}") `;
 						} else {
-							qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
+							qstr = `select *  from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
 						}
-						// console.log('qstr :>> ', qstr);
+						console.log('qstr for dbedges on mousedown:>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
 							dbedges = edges[0];
 							// console.log('dbedges :>> ', dbedges);
@@ -288,7 +288,8 @@ export class Flow {
 								this.Graph.Events.createGutterDotsAndConnect(
 									parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
 									parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-									edge
+									edge,
+									parentSet
 								);
 							});
 							if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
@@ -334,7 +335,6 @@ export class Flow {
 						aX = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 						aY = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 						console.log('================================================================================================ MakeNodeDraggable mousedown done');
-
 					}
 				}]);
 			
@@ -373,15 +373,17 @@ export class Flow {
 						
 						fx = aX;
 						fy = aY;
-						// console.log('dbedges on mousemove before foreach', dbedges);
+						console.log('dbedges on mousemove before foreach', dbedges);
 						dbedges.forEach((edge, edgeIndex) => {
 							// console.log('dbedge each:>> ', edge.id, edge.OutputPin.nodeID, edge.InputPin.nodeID);
 							this.Graph.Events.createGutterDotsAndConnect(
 								parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
 								parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-								edge
+								edge,
+								parentSet
 							);
 						});
+						console.log('dbedge on mouse move', dbedges);
 						dbedges.forEach((edge, edgeIndex) => {
 							// console.log('dbedge each:>> ', edge);
 							this.Graph.Events.connectNodes(
@@ -399,7 +401,7 @@ export class Flow {
 						console.log('================================================================================================ MakeNodeDraggable mouseup start');
 
 						let graphCanvas = e.target.closest('.app_configurator_containers');
-						// console.log('graphCanvas :>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ', graphCanvas);
+						console.log('e.target', e.target);
 						let tabtype = graphCanvas.dataset.tabtype;
 
 
@@ -455,7 +457,8 @@ export class Flow {
 								this.Graph.Events.createGutterDotsAndConnect(
 									parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
 									parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-									edge
+									edge,
+									parentSet
 								);
 							});
 						
@@ -526,7 +529,8 @@ export class Flow {
 					this.Graph.Events.createGutterDotsAndConnect(
 						parentSet.graphCanvas.element.querySelector(`div[id="${rEdge.OutputPin.nodeID}"]`),
 						parentSet.graphCanvas.element.querySelector(`div[id="${rEdge.InputPin.nodeID}"]`),
-						rEdge
+						rEdge,
+						parentSet
 					);
 				});
 				
@@ -781,7 +785,6 @@ export class Flow {
 				cancelButton.onclick = cleanUp;
 				cancelButtonFooter.onclick = cleanUp;
 			},
-			
 			connectNodes: (rEdge, svgcontainer, parentselector) => {
 				// Get the elements by their selector
 				// console.log('======================================= start connect nodes');
@@ -1044,7 +1047,7 @@ export class Flow {
 				}
 				// console.log('======================================= done connectNodes');
 			},
-			createGutterDotsAndConnect: (node1, node2, rEdge) => {
+			createGutterDotsAndConnect: (node1, node2, rEdge, parentSet) => {
 				console.log('======================================= start createGutterDotsAndConnect');
 				// NOTE - This functions as connecting 2 nodes then assign those 2 nodes to the edge.
 				if (!rEdge) return;
@@ -1054,7 +1057,7 @@ export class Flow {
 				const arrowBend = edge.ArrowBend;
 
 
-				let gutters = document.querySelectorAll(`div[data-edge="${edgeID}"]`);
+				let gutters = parentSet.graphCanvas.element.querySelectorAll(`div[data-edge="${edgeID}"]`);
 				// if (gutters.length > 0) { 
 				// 	console.log('======================================= end createGutterDotsAndConnect: gutter already exists');
 				// 	return;
@@ -1074,7 +1077,7 @@ export class Flow {
 					angle += 360;
 				}
 				const a = 330, b = 360, c = 0, d = 30;
-				const e = 60,  f = 120;
+				const e = 60, f = 120;
 				const g = 150, h = 210;
 				const i = 240, j = 300;
 
@@ -1098,215 +1101,219 @@ export class Flow {
 				} else if (angle >= j && angle < a) {
 					direction = 'bottom left';
 				}
-
-				if (node1.dataset.direction == direction && node2.dataset.direction == direction) {
-					// console.log(`Gutter direction match: "${direction}"'`);
-					console.log('======================================= end createGutterDotsAndConnect: match direction');
-					return;
-				}
-				// console.log(`Gutter direction mismatch: "${direction}"'`);
-
-				// REMOVE OLD GUTTERS
-				// gutters = document.querySelectorAll(`div[data-edge="${edgeID}"]`);
-				if (gutters.length > 0) gutters.forEach(gutter => gutter.remove());
-
-				const gutterDot1 = document.createElement('div');
-				gutterDot1.className = 'gutter-dot';
-				gutterDot1.style.width = '10px';
-				gutterDot1.style.height = '10px';
-				gutterDot1.style.backgroundColor = 'transparent';
-				gutterDot1.style.borderRadius = '50%';
-				gutterDot1.dataset.edge = edgeID;
-			
-				if (edge.OutputPin.pinID === "") {
-					gutterDot1.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
-					edge.OutputPin.pinID = gutterDot1.id;
+				
+				if (gutters.length > 0) {
+					console.log('======================================= REMOVE GUTTERS');
+					if (gutters[0].dataset.edgedirection == direction) {
+						console.log('======================================= end createGutterDotsAndConnect: match direction');
+						return;
+					}else if (gutters[0].dataset.edgedirection != direction) {
+						gutters.forEach(gutter => gutter.remove());
+					}
 				} else {
-					gutterDot1.id = edge.OutputPin.pinID;
-				}
-			
-				const gutterDot2 = gutterDot1.cloneNode(true);
-				gutterDot2.style.backgroundColor = 'transparent';
-			
-				if (edge.InputPin.pinID === "") {
-					gutterDot2.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
-					edge.InputPin.pinID = gutterDot2.id;
-				} else {
-					gutterDot2.id = edge.InputPin.pinID;
-				}
+					const gutterDot1 = document.createElement('div');
+					gutterDot1.className = 'gutter-dot';
+					gutterDot1.style.width = '10px';
+					gutterDot1.style.height = '10px';
+					gutterDot1.style.backgroundColor = 'transparent';
+					gutterDot1.style.borderRadius = '50%';
+					gutterDot1.dataset.edge = edgeID;
+					gutterDot1.dataset.edgeangle = angle;
+					gutterDot1.dataset.edgedirection = direction;
+					gutterDot1.dataset.nodeout = node1.id;
+					gutterDot1.dataset.nodein = node2.id;
 
-				switch (arrowBend) {
-					case 'convex':
-						switch (direction) {
-							case 'left':
-								if (node1.querySelector('.right-gutter')) {
-									node1.querySelector('.right-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.left-gutter')) {
-									node2.querySelector('.left-gutter').appendChild(gutterDot2);
-									node1.dataset.direction = direction;
-								}
-								break;
-							case 'top left':
-								if (node1.querySelector('.right-gutter')) {
-									node1.querySelector('.right-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.top-gutter')) {
-									node2.querySelector('.top-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'top':
-								if (node1.querySelector('.bottom-gutter')) {
-									node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.top-gutter')) {
-									node2.querySelector('.top-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'top right':
-								if (node1.querySelector('.left-gutter')) {
-									node1.querySelector('.left-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.top-gutter')) {
-									node2.querySelector('.top-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'right':
-								if (node1.querySelector('.left-gutter')) {
-									node1.querySelector('.left-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.right-gutter')) {
-									node2.querySelector('.right-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;					
-							case 'bottom right':
-								if (node1.querySelector('.left-gutter')) {
-									node1.querySelector('.left-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.bottom-gutter')) {
-									node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'bottom':
-								if (node1.querySelector('.top-gutter')) {
-									node1.querySelector('.top-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.bottom-gutter')) {
-									node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'bottom left':
-								if (node1.querySelector('.right-gutter')) {
-									node1.querySelector('.right-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.bottom-gutter')) {
-									node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
+					
+					if (edge.OutputPin.pinID === "") {
+						gutterDot1.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
+						edge.OutputPin.pinID = gutterDot1.id;
+					} else {
+						gutterDot1.id = edge.OutputPin.pinID;
+					}
+					
+					const gutterDot2 = gutterDot1.cloneNode(true);
+					gutterDot2.style.backgroundColor = 'transparent';
+					
+					if (edge.InputPin.pinID === "") {
+						gutterDot2.id = ParadigmREVOLUTION.SystemCore.Modules.ULID();
+						edge.InputPin.pinID = gutterDot2.id;
+					} else {
+						gutterDot2.id = edge.InputPin.pinID;
+					}
+
+					switch (arrowBend) {
+						case 'convex':
+							switch (direction) {
+								case 'left':
+									if (node1.querySelector('.right-gutter')) {
+										node1.querySelector('.right-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.left-gutter')) {
+										node2.querySelector('.left-gutter').appendChild(gutterDot2);
+										// node1.dataset.direction = direction;
+									}
+									break;
+								case 'top left':
+									if (node1.querySelector('.right-gutter')) {
+										node1.querySelector('.right-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.top-gutter')) {
+										node2.querySelector('.top-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'top':
+									if (node1.querySelector('.bottom-gutter')) {
+										node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.top-gutter')) {
+										node2.querySelector('.top-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'top right':
+									if (node1.querySelector('.left-gutter')) {
+										node1.querySelector('.left-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.top-gutter')) {
+										node2.querySelector('.top-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'right':
+									if (node1.querySelector('.left-gutter')) {
+										node1.querySelector('.left-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.right-gutter')) {
+										node2.querySelector('.right-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'bottom right':
+									if (node1.querySelector('.left-gutter')) {
+										node1.querySelector('.left-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.bottom-gutter')) {
+										node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'bottom':
+									if (node1.querySelector('.top-gutter')) {
+										node1.querySelector('.top-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.bottom-gutter')) {
+										node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'bottom left':
+									if (node1.querySelector('.right-gutter')) {
+										node1.querySelector('.right-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.bottom-gutter')) {
+										node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
 							}
 							break;
-					case 'concave':
-						switch (direction) {
-							case 'left':
-								if (node1.querySelector('.right-gutter')) {
-									node1.querySelector('.right-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.left-gutter')) {
-									node2.querySelector('.left-gutter').appendChild(gutterDot2);
-									node1.dataset.direction = direction;
-								}
-								break;
-							case 'top left':
-								if (node1.querySelector('.bottom-gutter')) {
-									node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.left-gutter')) {
-									node2.querySelector('.left-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'top':
-								if (node1.querySelector('.bottom-gutter')) {
-									node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.top-gutter')) {
-									node2.querySelector('.top-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'top right':
-								if (node1.querySelector('.bottom-gutter')) {
-									node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.right-gutter')) {
-									node2.querySelector('.right-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'right':
-								if (node1.querySelector('.left-gutter')) {
-									node1.querySelector('.left-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.right-gutter')) {
-									node2.querySelector('.right-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'bottom right':
-								if (node1.querySelector('.top-gutter')) {
-									node1.querySelector('.top-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.right-gutter')) {
-									node2.querySelector('.right-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'bottom':
-								if (node1.querySelector('.top-gutter')) {
-									node1.querySelector('.top-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.bottom-gutter')) {
-									node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-							case 'bottom left':
-								if (node1.querySelector('.top-gutter')) {
-									node1.querySelector('.top-gutter').appendChild(gutterDot1);
-									node1.dataset.direction = direction;
-								}
-								if (node2.querySelector('.left-gutter')) {
-									node2.querySelector('.left-gutter').appendChild(gutterDot2);
-									node2.dataset.direction = direction;
-								}
-								break;
-						}
-						break;
+						case 'concave':
+							switch (direction) {
+								case 'left':
+									if (node1.querySelector('.right-gutter')) {
+										node1.querySelector('.right-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.left-gutter')) {
+										node2.querySelector('.left-gutter').appendChild(gutterDot2);
+										// node1.dataset.direction = direction;
+									}
+									break;
+								case 'top left':
+									if (node1.querySelector('.bottom-gutter')) {
+										node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.left-gutter')) {
+										node2.querySelector('.left-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'top':
+									if (node1.querySelector('.bottom-gutter')) {
+										node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.top-gutter')) {
+										node2.querySelector('.top-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'top right':
+									if (node1.querySelector('.bottom-gutter')) {
+										node1.querySelector('.bottom-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.right-gutter')) {
+										node2.querySelector('.right-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'right':
+									if (node1.querySelector('.left-gutter')) {
+										node1.querySelector('.left-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.right-gutter')) {
+										node2.querySelector('.right-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'bottom right':
+									if (node1.querySelector('.top-gutter')) {
+										node1.querySelector('.top-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.right-gutter')) {
+										node2.querySelector('.right-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'bottom':
+									if (node1.querySelector('.top-gutter')) {
+										node1.querySelector('.top-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.bottom-gutter')) {
+										node2.querySelector('.bottom-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+								case 'bottom left':
+									if (node1.querySelector('.top-gutter')) {
+										node1.querySelector('.top-gutter').appendChild(gutterDot1);
+										// node1.dataset.direction = direction;
+									}
+									if (node2.querySelector('.left-gutter')) {
+										node2.querySelector('.left-gutter').appendChild(gutterDot2);
+										// node2.dataset.direction = direction;
+									}
+									break;
+							}
+							break;
+					}
+					console.log('======================================= end createGutterDotsAndConnect: new gutterDots');
+					return [edge, gutterDot1, gutterDot2, direction];
 				}
-				console.log('======================================= end createGutterDotsAndConnect: new gutterDots');
-				return [edge, gutterDot1, gutterDot2, direction];
 			},
 			enableDragSelect: ((selector) => {
 				console.log('Start enableDragSelect :>> ', typeof selector, selector);
@@ -3504,20 +3511,20 @@ export class Flow {
 											// console.log('newEdge :>> ', newEdge);
 											selectedNodes.Start = document.querySelector(`div[id="${selectedNodes.StartParam.id}"][class="${selectedNodes.StartParam.class}"]`);
 											selectedNodes.End = document.querySelector(`div[id="${selectedNodes.EndParam.id}"][class="${selectedNodes.EndParam.class}"]`);
-		
+
+											const parentSet = passedData.FlowGraph.getActiveTab('tab-graph-selector-container');
+											
 											const [edge, pinOut, pinIn, direction] = this.Graph.Events.createGutterDotsAndConnect(
 												selectedNodes.Start,
 												selectedNodes.End,
-												newEdge
+												newEdge,
+												parentSet
 											);
 											if (!pinOut || !pinIn) { 
 												console.error(`Failed to create gutter dots and connect nodes, pinOut:${pinOut} or pinIn:${pinIn}`);
 												return;
 											}
 											// console.log('parentGraphID :>> ', parentGraphID);
-
-											const parentSet = passedData.FlowGraph.getActiveTab('tab-graph-selector-container');
-
 
 											passedData.FlowGraph.Graph.Events.connectNodes(
 												edge,
@@ -3786,10 +3793,10 @@ export class Flow {
 							};
 							break;
 						case 'number':
-							inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `input paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `input paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), autocomplete: 'off'};
 							break;
 						case 'textarea':
-							inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `textarea paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+							inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `textarea paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), autocomplete: 'off'};
 							break;
 						case 'select':
 							inputField = {
