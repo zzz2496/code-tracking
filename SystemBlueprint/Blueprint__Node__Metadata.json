@@ -74,6 +74,7 @@
 	],
 	"KindArray": [
 		{
+			"Type": "Item",
 			"Kind": "Container",
 			"Group": [
 				"Graph"
@@ -81,53 +82,73 @@
 			"Icon": "<li class='fa-regular fa-folder-open'></li>"
 		},
 		{
+			"Type": "Array",
 			"Kind": "Task",
 			"Group": [
 				"Containers"
 			],
+			"Items":[
+				{
+					"Kind": "Task",
+					"Group": ["Task"],
+					"Icon": "<li class='fa-solid fa-list-check'></li>"
+				},
+				{
+					"Kind": "Algorithm",
+					"Group": ["Task"],
+					"Icon": "<li class='fa-solid fa-chart-diagram'></li>"
+				},
+				{
+					"Kind": "Schema",
+					"Group": ["Task"],
+					"Icon": "<li class='fa-solid fa-table-columns'></li>"
+				},
+				{
+					"Kind": "Form",
+					"Group": ["Task"],
+					"Icon": "<li class='fa-solid fa-rectangle-list'></li>"
+				},
+				{
+					"Kind": "PageLayout",
+					"Group": ["Task"],
+					"Icon": "<li class='fa-regular fa-newspaper'></li>"
+				}
+			],
 			"Icon": "<li class='fa-solid fa-list-check'></li>"
 		},
 		{
-			"Kind": "Algorithm",
-			"Group": ["Task"],
-			"Icon": "<li class='fa-solid fa-chart-diagram'></li>"
-		},
-		{
+			"Type": "Array",
 			"Kind": "Datastore",
 			"Group": [
 				"Datastorage"
 			],
-			"Icon": "<li class='fa-solid fa-database'></li>"
-		},
-		{
-			"Kind": "Database",
-			"Group": [
-				"DataStorage"
+			"Items":[
+				{
+					"Kind": "Table",
+					"Group": [
+						"DataStorage"
+					],
+					"Icon": "<li class='fa-solid fa-table'></li>"
+				},
+				{
+					"Kind": "View",
+					"Group": [
+						"DataStorage"
+					],
+					"Icon": "<li class='fa-solid fa-table-list'></li>"
+				},
+				{
+					"Kind": "LiveQuery",
+					"Group": [
+						"DataStorage"
+					],
+					"Icon": "<li class='fa-solid fa-table-cells'></li>"
+				}
 			],
 			"Icon": "<li class='fa-solid fa-database'></li>"
 		},
 		{
-			"Kind": "Table",
-			"Group": [
-				"DataStorage"
-			],
-			"Icon": "<li class='fa-solid fa-database'></li>"
-		},
-		{
-			"Kind": "View",
-			"Group": [
-				"DataStorage"
-			],
-			"Icon": "<li class='fa-solid fa-database'></li>"
-		},
-		{
-			"Kind": "LiveQuery",
-			"Group": [
-				"DataStorage"
-			],
-			"Icon": "<li class='fa-solid fa-database'></li>"
-		},
-		{
+			"Type": "Item",
 			"Kind": "Document",
 			"Group": [
 				"Task"
@@ -135,16 +156,19 @@
 			"Icon": "<li class='fa-regular fa-file-lines'></li>"
 		},
 		{
+			"Type": "Item",
 			"Kind": "Comment",
 			"Group": ["DataStorage", "Graph", "Task", "Containers"],
 			"Icon": "<li class='fa-regular fa-comment-dots'></li>"
 		},
 		{
+			"Type": "Item",
 			"Kind": "Metadata",
 			"Group": ["DataStorage", "Graph", "Task", "Containers"],
 			"Icon": "<li class='fa-solid fa-kitchen-set'></li>"
 		},
 		{
+			"Type": "Item",
 			"Kind": "Generic",
 			"Group": ["DataStorage", "Graph", "Task", "Containers"],
 			"Icon": "<li class='fa-solid fa-recycle'></li>"

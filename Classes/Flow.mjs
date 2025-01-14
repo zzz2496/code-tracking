@@ -285,87 +285,85 @@ export class Flow {
 				let dbedges = [];
 
 				let aX, aY;
-				this.Form.Events.addGlobalEventListener("mousedown", [{ //NOTE - makeNodeDraggable mousedown
-					selector: draggableSelector,
-					callback: (e) => {
-						// Check if the clicked element is the .card-header
-						const graphCanvasParent = e.target.closest('.app_configurator_containers');
-						const graphCanvasParentId = graphCanvasParent.id;
+				parentSet.graphCanvas.element.addEventListener("mousedown", (e) => { //NOTE - makeNodeDraggable mousedown
+					// Check if the clicked element is the .card-header
+					const graphCanvasParent = e.target.closest('.app_configurator_containers');
+					const graphCanvasParentId = graphCanvasParent.id;
 
-						if (!e.target.closest('.card-header-icon')) return;
-						console.log('================================================================================================ MakeNodeDraggable mousedown start');
-						isDragging = true;
+					if (!e.target.closest('.card-header-icon')) return;
+					console.log('================================================================================================ MakeNodeDraggable mousedown start');
+					isDragging = true;
 
-						this.DragSelect = true;
+					this.DragSelect = true;
 
-						draggedElement = e.target.closest(draggableSelector);
-						nodeID = draggedElement.id;
+					draggedElement = e.target.closest(draggableSelector);
+					nodeID = draggedElement.id;
 
-						let qstr = ''; 
-						if (document.querySelector('#graph_show_only_containers').checked) { 
-							qstr = `select * from Process where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}") `;
-						} else {
-							qstr = `select *  from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
-						}
-						console.log('qstr for dbedges on mousedown:>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
-							dbedges = edges[0];
-							// console.log('dbedges :>> ', dbedges);
-							if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
-								this.Graph.Events.createGutterDotsAndConnect(
-									parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-									parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-									edge,
-									parentSet
-								);
-							});
-							if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
-								console.log('edge >>>>>>>>>>>>>>>>>>> :>> ', edge);
-								this.Graph.Events.connectNodes(
-									edge,
-									parentSet.graphCanvas.graph_connection_surface,
-									parentSet.graphCanvas.graph_surface.parentElement
-								);
-							});
-						});
-
-						// Fetch related elements based on Cursor
-						relatedElements = ParadigmREVOLUTION.Application.Cursor
-							.filter(cursor => cursor.id !== nodeID) // Exclude the currently dragged div
-							.map(cursor => {
-								const elem = document.getElementById(cursor.id);
-								if (!elem) return null;
-								const rect = elem.getBoundingClientRect();
-								return {
-									elem,
-									offsetX: rect.left - draggedElement.getBoundingClientRect().left,
-									offsetY: rect.top - draggedElement.getBoundingClientRect().top
-								};
-							})
-							.filter(item => item); // Remove nulls for non-existent elements
-
-						// console.log('relatedElements :>> ', relatedElements);
-			
-						const parentScrollLeft = parent.scrollLeft;
-						const parentScrollTop = parent.scrollTop;
-			
-						// Access the live ScrollPosition dynamically
-						const { app_root_container, app_container } = this.ScrollPosition;
-			
-						const rect = draggedElement.getBoundingClientRect();
-						offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
-						offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
-			
-						draggedElement.style.position = "absolute";
-						draggedElement.style.zIndex = 1000; // Bring to front
-
-						aX = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-						aY = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-						console.log('================================================================================================ MakeNodeDraggable mousedown done');
+					let qstr = ''; 
+					if (document.querySelector('#graph_show_only_containers').checked) { 
+						qstr = `select * from Process where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}") `;
+					} else {
+						qstr = `select *  from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
 					}
-				}]);
+					console.log('qstr for dbedges on mousedown:>> ', qstr);
+					ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
+						dbedges = edges[0];
+						// console.log('dbedges :>> ', dbedges);
+						if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
+							this.Graph.Events.createGutterDotsAndConnect(
+								parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+								parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+								edge,
+								parentSet
+							);
+						});
+						if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
+							console.log('edge >>>>>>>>>>>>>>>>>>> :>> ', edge);
+							this.Graph.Events.connectNodes(
+								edge,
+								parentSet.graphCanvas.graph_connection_surface,
+								parentSet.graphCanvas.graph_surface.parentElement
+							);
+						});
+					});
+
+					// Fetch related elements based on Cursor
+					relatedElements = ParadigmREVOLUTION.Application.Cursor
+						.filter(cursor => cursor.id !== nodeID) // Exclude the currently dragged div
+						.map(cursor => {
+							const elem = document.getElementById(cursor.id);
+							if (!elem) return null;
+							const rect = elem.getBoundingClientRect();
+							return {
+								elem,
+								offsetX: rect.left - draggedElement.getBoundingClientRect().left,
+								offsetY: rect.top - draggedElement.getBoundingClientRect().top
+							};
+						})
+						.filter(item => item); // Remove nulls for non-existent elements
+
+					// console.log('relatedElements :>> ', relatedElements);
+		
+					const parentScrollLeft = parent.scrollLeft;
+					const parentScrollTop = parent.scrollTop;
+		
+					// Access the live ScrollPosition dynamically
+					const { app_root_container, app_container } = this.ScrollPosition;
+		
+					const rect = draggedElement.getBoundingClientRect();
+					offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
+					offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
+		
+					draggedElement.style.position = "absolute";
+					draggedElement.style.zIndex = 1000; // Bring to front
+
+					aX = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+					aY = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+					console.log('================================================================================================ MakeNodeDraggable mousedown done');
+					
+				});
 			
-				document.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
+				parentSet.graphCanvas.element.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
 					if (!isDragging || !draggedElement) return;
 					// console.log('MakeNodeDraggable mousemove');
 			
@@ -391,13 +389,7 @@ export class Flow {
 
 						draggedElement.style.left = `${aX}px`;
 						draggedElement.style.top = `${aY}px`;
-	
-						// Move related elements
-						relatedElements.forEach(({ elem, offsetX, offsetY }) => {
-							elem.style.left = `${(aX + offsetX) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
-							elem.style.top = `${(aY + offsetY) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
-						});
-						
+							
 						fx = aX;
 						fy = aY;
 						console.log('dbedges on mousemove before foreach', dbedges);
@@ -419,88 +411,85 @@ export class Flow {
 								parentSet.graphCanvas.graph_surface.parentElement
 							);
 						});
+
+						// Move related elements
+						relatedElements.forEach(({ elem, offsetX, offsetY }) => {
+							elem.style.left = `${(aX + offsetX) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
+							elem.style.top = `${(aY + offsetY) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
+						});
+
 						// console.log('================================================================================================ mouse moved enough, DONE mousemove!')
 					}
 				});
 			
-				document.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
+				parentSet.graphCanvas.element.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
 					if (isDragging) {
 						console.log('================================================================================================ MakeNodeDraggable mouseup start');
 
 						let graphCanvas = e.target.closest('.app_configurator_containers');
-						console.log('e.target', e.target);
 						let tabtype = graphCanvas.dataset.tabtype;
-
 
 						isDragging = false;
 						draggedElement.style.zIndex = ""; // Reset z-index
 						draggedElement = null;
-						// const id = e.target.dataset.id;
-						// console.log('e.target :>> ', e.target);
-						let id = e.target.closest('.graph-node');
+						const id = nodeID;
 
-						if (id == undefined) {
-							console.error('id :>> ', id);
-						} else {
-							id = id.id;
-							console.log('id :>> ', id);
-							const coord = {
-								x: fx,
-								y: fy
-							};
-							let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
+						const coord = {
+							x: fx,
+							y: fy
+						};
+						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
+						// console.log('qstr :>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
+							if (node[0].length == 0) return;
+							node = node[0][0];
+							node.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;
+							// console.log('node.id after update coord :>>', node.id);
+
+							if (node.id.id) node.id = node.id.id;
+							// console.log('node after update coord :>> ', node);
+
+							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
 							// console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
-								if (node[0].length == 0) return;
-								node = node[0][0];
-								node.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;
-								// console.log('node.id after update coord :>>', node.id);
-	
-								if (node.id.id) node.id = node.id.id;
-								// console.log('node after update coord :>> ', node);
-	
-								qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
-								// console.log('qstr :>> ', qstr);
-								
-								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
-							}).catch(error => {
-								console.error('Coordinate update failed', error);
+							
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
+						}).catch(error => {
+							console.error('Coordinate update failed', error);
+						});
+
+						// Update database positions for related elements
+						relatedElements.forEach(({ elem }) => {
+							const relatedId = elem.id;
+							const relatedCoord = {
+								x: parseInt(elem.style.left, 10),
+								y: parseInt(elem.style.top, 10)
+							};
+							let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position.${graphCanvas.dataset.tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
+							// console.log('qstr :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).catch(error => {
+								console.error('Coordinate update failed for related element', error);
 							});
-	
-							// Update database positions for related elements
-							relatedElements.forEach(({ elem }) => {
-								const relatedId = elem.id;
-								const relatedCoord = {
-									x: parseInt(elem.style.left, 10),
-									y: parseInt(elem.style.top, 10)
-								};
-								let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position.${graphCanvas.dataset.tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
-								// console.log('qstr :>> ', qstr);
-								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).catch(error => {
-									console.error('Coordinate update failed for related element', error);
-								});
-							});
-							dbedges.forEach((edge, edgeIndex) => {
-								this.Graph.Events.createGutterDotsAndConnect(
-									parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-									parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-									edge,
-									parentSet
-								);
-							});
-						
-							dbedges.forEach((edge, edgeIndex) => {
-								this.Graph.Events.connectNodes(
-									edge,
-									parentSet.graphCanvas.graph_connection_surface,
-									parentSet.graphCanvas.graph_surface.parentElement
-								);
-							});
-							setTimeout(() => { 
-								this.DragSelect = false;
-							}, 200);
-	
-						}
+						});
+						dbedges.forEach((edge, edgeIndex) => {
+							this.Graph.Events.createGutterDotsAndConnect(
+								parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+								parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+								edge,
+								parentSet
+							);
+						});
+					
+						dbedges.forEach((edge, edgeIndex) => {
+							this.Graph.Events.connectNodes(
+								edge,
+								parentSet.graphCanvas.graph_connection_surface,
+								parentSet.graphCanvas.graph_surface.parentElement
+							);
+						});
+						setTimeout(() => { 
+							this.DragSelect = false;
+						}, 200);
+
 						console.log('================================================================================================ MakeNodeDraggable mouseup done');
 					}
 				});
@@ -524,7 +513,7 @@ export class Flow {
 					</div>
 					<div id="${nodeID}-content" class="card-content p-0" style="width: fit-content; height: 100%;">
 						<div class="m-0 p-0 is-flex is-flex-direction-column is-align-items-center" style="width:fit-content; height:100%;">
-							<h class="m-0" style="font-size: 1rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
+							<h class="m-0 p-3" style="font-size: 1rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
 							<h class="m-0 p-3" style="font-size: 0.65rem; text-align:center;">ID: ${node.id.id.ID}</h>
 						</div>
 					</div>`;
@@ -2735,6 +2724,27 @@ export class Flow {
 						const graphCanvas = e.target.closest('.app_configurator_containers');
 						const tabtype = graphCanvas.dataset.tabtype;
 						console.log('graphCanvas', graphCanvas);
+
+						// Generate the HTML string for the select element
+						let values = '';
+
+						// Loop through KindArray to populate the select element
+						ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.forEach((element) => {
+							if (element.Type === "Item") {
+								// Create an option for Type: "Item"
+								values += `<option value="${element.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${element.Group.join(', ')}">${element.Kind}</option>`;
+							} else if (element.Type === "Array") {
+								// Create an optgroup for Type: "Array"
+								values += `<optgroup label="${element.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${element.Group.join(', ')}">`;
+						
+								// Add options for each item in the "Items" array
+								element.Items.forEach((item) => {
+									values += `<option value="${item.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${item.Group.join(', ')}">${item.Kind}</option>`;
+								});
+						
+								values += `</optgroup>`;
+							}
+						});
 						let schema = {
 							"id": "form_select_connection_type",
 							"label": "Form Select Connection Type",
@@ -2779,7 +2789,7 @@ export class Flow {
 										"id": "nodeKind",
 										"label": "Node Kind",
 										"type": "select",
-										"value": [...(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.map(elmt => elmt.Kind))],
+										"value": values,
 										"field_class":"is-selectable-box",
 										"form": 1
 									},
@@ -2843,7 +2853,8 @@ export class Flow {
 							const tstmp = Date.now();
 							const newNodeID = {
 								ID: ULID,
-								ULID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+								Table: "Yggdrasil",
+								ULID: nodeKind+'__'+ParadigmREVOLUTION.SystemCore.Modules.ULID(),
 								Node: {
 									Realm: "Universe",
 									Kind: nodeKind,
@@ -3521,7 +3532,7 @@ export class Flow {
 											const arrowBend = data.arrowBend;
 
 											newEdge.id = {
-												ID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+												ID: selectedType.Type+'__'+ParadigmREVOLUTION.SystemCore.Modules.ULID(),
 												Table: selectedType.Type
 											}
 											newEdge.OutputPin.nodeID = selectedNodes.StartParam.id;
@@ -3826,7 +3837,7 @@ export class Flow {
 						case 'select':
 							inputField = {
 								comment: "Select container", tag: "div", class: "select is-link is-fullwidth ", content: [
-									{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `select_input paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+									{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `select_input paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : value}` }
 								]
 							};
 							break;
