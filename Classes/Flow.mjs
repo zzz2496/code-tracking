@@ -246,15 +246,13 @@ export class Flow {
 				newElement.tabIndex = 0;
 				// console.log('node.id.id.Node.Icon :>> ', node.id.id.Node.Icon);
 				newElement.innerHTML = `
-					<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px;">
+					<div class="no-select no-outline" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px;">
 						<div class="top-gutter" style="display: flex; justify-content: space-evenly; width: fit-content; width:100%;">
 						</div>
 						<div style="display: flex;">
 							<div class="left-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
 							</div>
-							<div class="card is-selectable-box node-background-frosted" style="margin: 5px; padding: 0px; width: fit-content;">
-								${content}
-							</div>
+							${content}
 							<div class="right-gutter" style="display: flex; flex-direction: column; justify-content: space-evenly;">
 							</div>
 						</div>
@@ -506,17 +504,113 @@ export class Flow {
 					const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
 					const nodeKind = node.id.ID ? node.id.Node.Kind : node.id.id.Node.Kind;
 					// console.log('start node'+nodeIndex, nodeID, nodeKind);
+					let footer = ``;
+					switch (nodeKind) {
+						case "Container":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+						case "Task":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+						case "Algorithm":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+						case "Schema":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+'							</footer>
+							`;
+							break;
+						case "Form":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+						case "PageLayout":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+						case "Table":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+						case "View":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+						case "LiveQuery":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-play has-text-success"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+					}
+					footer += `</footer>`;
 					const nodeContent = `
-					<div id="${nodeID}-header" class="card-header " style="cursor:pointer;">
-						<div class="card-header-icon m-0 px-2" data-id="${nodeID}">${node.id.id.Node.Icon} </div>
-						<div class="card-header-title pl-0 m-1 pr-0 py-1 is-selectable" data-id="${nodeID}" style="width: fit-content;">${node.id.id.Node.Kind}</div>
-					</div>
-					<div id="${nodeID}-content" class="card-content p-0" style="width: fit-content; height: 100%;">
-						<div class="m-0 p-0 is-flex is-flex-direction-column is-align-items-center" style="width:fit-content; height:100%;">
-							<h class="m-0 p-3" style="font-size: 1rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
-							<h class="m-0 p-3" style="font-size: 0.65rem; text-align:center;">ID: ${node.id.id.ID}</h>
+					<div class="card is-selectable-box node-background-frosted" data-id="node-${nodeID}" style="margin: 5px; padding: 0px; width: fit-content;">
+						<header class="card-header" style="cursor:pointer;" data-id="header-${nodeID}">
+							<div class="card-header-icon m-0 pl-3 pr-0" data-id="${nodeID}">${node.id.id.Node.Icon}</div>
+							<div class="card-header-title pl-3 m-1 pr-3 py-1 is-selectable" data-id="${nodeID}" style="width: fit-content;align: center;">${node.Properties.Name}</div>
+						</header>
+						<div class="card-content p-3">
+							<div class="m-0 p-0 is-flex is-flex-direction-column is-align-items-center">
+								<h class="m-0 px-3 pt-0 pb-3" style="font-size: 1rem; font-weight:600; text-align:center;">${node.Properties.Label}</h>
+								<div class="content p-0 m-0 node-content" style="width:0px;height:0px;"></div>
+								<h class="m-0 p-0" style="font-size: 0.65rem; text-align:center;">ID: ${node.id.id.ID}</h>
+							</div>
 						</div>
-					</div>`;
+						${footer}
+					</div>
+					`;
 					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent, parentSet.tab.tabType);
 					parentSet.graphCanvas.graph_node_surface.append(temp);
 				});
@@ -2770,6 +2864,22 @@ export class Flow {
 								},
 								"Schema": [
 									{
+										"id": "nodeKind",
+										"label": "Node Kind",
+										"type": "select",
+										"value": values,
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "ulid",
+										"label": "ULID",
+										"type": "text",
+										"value": ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
 										"id": "name",
 										"label": "Name",
 										"type": "text",
@@ -2782,14 +2892,6 @@ export class Flow {
 										"label": "Label",
 										"type": "text",
 										"value": "",
-										"field_class":"is-selectable-box",
-										"form": 1
-									},
-									{
-										"id": "nodeKind",
-										"label": "Node Kind",
-										"type": "select",
-										"value": values,
 										"field_class":"is-selectable-box",
 										"form": 1
 									},
@@ -2823,12 +2925,29 @@ export class Flow {
 						let flow = this;
 						// console.log('flow :>> ', flow);
 						this.Graph.Events.showSchemaModal('Node Information', schema, {graphCanvas:graphCanvas, flow:flow}, (data, passedData) => {
+							function findKindObject(kindArray, targetKind) {
+								for (const option of kindArray) {
+									if (option.Kind === targetKind) {
+										return option; // Return the entire object
+									}
+									if (option.Items) {
+										const foundObject = findKindObject(option.Items, targetKind);
+										if (foundObject) {
+											return foundObject; // Return if found in nested structure
+										}
+									}
+								}
+								return null; // Return null if no match is found
+							}
+							
 							console.log('data :>> ', data);
 
 							const name = data.name;
 							const label = data.label;
+							const ulid = data.ulid;
 							const nodeKind = data.nodeKind; // Value of the selected option
-							const icon = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.find(option => option.Kind === nodeKind).Icon;
+							const tObj = findKindObject(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray, nodeKind);
+							const icon = tObj.Icon;
 	
 							const parent = document.querySelector('#graph_scroll_content'); // NOTE - NOW
 							const parentRect = parent.getBoundingClientRect();
@@ -2839,8 +2958,8 @@ export class Flow {
 							//CALCULATE COORDINATE
 							const parentScrollLeft = parent.scrollLeft;
 							const parentScrollTop = parent.scrollTop;
-							const parentLeft = parentRect.left;
-							const parentTop = parentRect.top;
+							// const parentLeft = parentRect.left;
+							// const parentTop = parentRect.top;
 						
 							let dx = parentRect.left + parentScrollLeft; //+ parentScrollLeft;
 							let dy = parentRect.top + parentScrollTop;
@@ -2852,9 +2971,9 @@ export class Flow {
 							const ULID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
 							const tstmp = Date.now();
 							const newNodeID = {
-								ID: ULID,
+								ID: nodeKind+'/'+ulid,
 								Table: "Yggdrasil",
-								ULID: nodeKind+'__'+ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+								ULID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
 								Node: {
 									Realm: "Universe",
 									Kind: nodeKind,

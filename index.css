@@ -789,3 +789,26 @@
    }
    
 }
+.zoomLevel {
+    display: inline-block; /* Ensures span respects dimensions */
+    text-align: center; /* Centers text inside the element */
+    vertical-align: middle; /* Aligns element content */
+    border: 2px solid var(--bulma-border-weak); /* Adds a border */
+    border-radius: 8px; /* Creates a rounded border */
+    min-width: 2.7rem; /* Sets the minimum width */
+    height: 2.2rem; /* Ensures it's a circle */
+    line-height: 2rem; /* Vertically centers the text */
+    padding: 0; /* Avoid extra spacing inside the element */
+    box-sizing: border-box; /* Ensures padding and border are included in size */
+}
+/* Disable text selection */
+.no-select {
+    user-select: none; /* Supported in most modern browsers */
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* Older versions of Internet Explorer */
+}
+
+/* Remove focus outline */
+.no-outline {
+    outline: none; /* Removes the focus outline */
+}
