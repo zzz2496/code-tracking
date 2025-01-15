@@ -509,7 +509,6 @@ export class Flow {
 						case "Container":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
@@ -519,8 +518,8 @@ export class Flow {
 						case "Task":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-play has-text-success"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
 							</footer>
@@ -529,7 +528,6 @@ export class Flow {
 						case "Algorithm":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
 							</footer>
@@ -538,7 +536,6 @@ export class Flow {
 						case "Schema":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
 '							</footer>
@@ -547,7 +544,6 @@ export class Flow {
 						case "Form":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
 							</footer>
@@ -556,7 +552,15 @@ export class Flow {
 						case "PageLayout":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
+							</footer>
+							`;
+							break;
+						case "Database":
+							footer += `
+							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
 							</footer>
@@ -565,7 +569,6 @@ export class Flow {
 						case "Table":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
@@ -575,7 +578,6 @@ export class Flow {
 						case "View":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
@@ -585,7 +587,6 @@ export class Flow {
 						case "LiveQuery":
 							footer += `
 							<footer class="card-footer">
-								<a href="#" class="card-footer-item"><i class="fa-solid fa-lock-open has-text-info"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-play has-text-success"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
@@ -600,6 +601,7 @@ export class Flow {
 						<header class="card-header" style="cursor:pointer;" data-id="header-${nodeID}">
 							<div class="card-header-icon m-0 pl-3 pr-0" data-id="${nodeID}">${node.id.id.Node.Icon}</div>
 							<div class="card-header-title pl-3 m-1 pr-3 py-1 is-selectable" data-id="${nodeID}" style="width: fit-content;align: center;">${node.Properties.Name}</div>
+							<div class="card-header-icon m-0 pr-3 pr-0 node-lock" data-id="${nodeID}"><i class="node-lock fa-solid fa-lock-open"></i></div>
 						</header>
 						<div class="card-content p-3">
 							<div class="m-0 p-0 is-flex is-flex-direction-column is-align-items-center">
@@ -2924,7 +2926,7 @@ export class Flow {
 						}
 						let flow = this;
 						// console.log('flow :>> ', flow);
-						this.Graph.Events.showSchemaModal('Node Information', schema, {graphCanvas:graphCanvas, flow:flow}, (data, passedData) => {
+						this.Graph.Events.showSchemaModal('New Node', schema, {graphCanvas:graphCanvas, flow:flow}, (data, passedData) => {
 							function findKindObject(kindArray, targetKind) {
 								for (const option of kindArray) {
 									if (option.Kind === targetKind) {

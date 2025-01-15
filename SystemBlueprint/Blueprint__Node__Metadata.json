@@ -124,6 +124,13 @@
 			],
 			"Items":[
 				{
+					"Kind": "Database",
+					"Group": [
+						"Database"
+					],
+					"Icon": "<li class='fa-solid fa-database'></li>"
+				},
+				{
 					"Kind": "Table",
 					"Group": [
 						"DataStorage"
