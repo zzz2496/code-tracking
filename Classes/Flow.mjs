@@ -515,7 +515,7 @@ export class Flow {
 							</footer>
 							`;
 							break;
-						case "Task":
+						case "Tasks":
 							footer += `
 							<footer class="card-footer">
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
@@ -528,6 +528,7 @@ export class Flow {
 						case "Algorithm":
 							footer += `
 							<footer class="card-footer">
+								<a href="#" class="card-footer-item"><i class="fa-solid fa-right-to-bracket has-text-link"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-cog has-text-warning"></i></a>
 								<a href="#" class="card-footer-item"><i class="fa-solid fa-trash-can has-text-danger"></i></a>
 							</footer>
@@ -596,12 +597,16 @@ export class Flow {
 							break;
 					}
 					footer += `</footer>`;
+
+					let node_lock = `<i class="node-lock fa-solid fa-lock-open"></i>`;
+					console.log('node :>> ', node);
+					if (node.id.id.Node.isLocked) node_lock = `<i class="node-lock fa-solid fa-lock has-text-danger"></i>`;
 					const nodeContent = `
 					<div class="card is-selectable-box node-background-frosted" data-id="node-${nodeID}" style="margin: 5px; padding: 0px; width: fit-content;">
 						<header class="card-header" style="cursor:pointer;" data-id="header-${nodeID}">
 							<div class="card-header-icon m-0 pl-3 pr-0" data-id="${nodeID}">${node.id.id.Node.Icon}</div>
 							<div class="card-header-title pl-3 m-1 pr-3 py-1 is-selectable" data-id="${nodeID}" style="width: fit-content;align: center;">${node.Properties.Name}</div>
-							<div class="card-header-icon m-0 pr-3 pr-0 node-lock" data-id="${nodeID}"><i class="node-lock fa-solid fa-lock-open"></i></div>
+							<div class="card-header-icon m-0 pr-3 pr-0 node-lock" data-id="${nodeID}">${node_lock}</div>
 						</header>
 						<div class="card-content p-3">
 							<div class="m-0 p-0 is-flex is-flex-direction-column is-align-items-center">
@@ -1424,7 +1429,7 @@ export class Flow {
 					return [edge, gutterDot1, gutterDot2, direction];
 				}
 			},
-			enableDragSelect: ((selector) => {
+			enableDragSelect: ((selector, parentSet) => {
 				console.log('Start enableDragSelect :>> ', typeof selector, selector);
 				let container;
 				if (typeof selector === 'string') {
@@ -2370,7 +2375,35 @@ export class Flow {
 		
 				document.querySelectorAll('.graph_surfaces').forEach(surface => { 
 					console.log('surfaces :>> ', surface);
-					this.Graph.Events.enableDragSelect(surface);
+
+					const tabType = surface.closest(`.app_configurator_containers`).dataset.tabtype;
+					const element = surface.closest(`.application_divisions`).querySelector(`a[data-tabtype="${tabType}"]`);
+					const label = element.innerHTML;
+
+					const graphCanvas = surface.closest(`.app_configurator_containers[data-tabType="${tabType}"]`);
+					const graphCanvasID = surface.closest(`.app_configurator_containers[data-tabType="${tabType}"]`).id;
+					const graphCanvasClasses = surface.closest(`.app_configurator_containers[data-tabType="${tabType}"]`).classList;
+
+					const parentSet = {
+						tab: {
+							label: label,
+							tabType: tabType,
+							element: element,
+						},
+						graphCanvas: {
+							id: graphCanvasID,
+							classes: graphCanvasClasses,
+							element: graphCanvas,
+							graph_controls: graphCanvas.querySelector('.graph_controls'),
+							graph_surface: graphCanvas.querySelector('.graph_surfaces'),
+							graph_surface_id: graphCanvas.querySelector('.graph_surfaces').id,
+							graph_node_surface: graphCanvas.querySelector('.graph_node_surface'),
+							graph_connection_surface: graphCanvas.querySelector('.graph_connection_surface')
+						},
+						zoomProps: this.GraphCanvas[tabType]
+					};
+					console.log('parentSet :>> ', parentSet);
+					this.Graph.Events.enableDragSelect(surface, parentSet);
 				});
 
 				// Initialize the scroll snap functionality
@@ -2898,16 +2931,8 @@ export class Flow {
 										"form": 1
 									},
 									{
-										"id": "isProgrammingEnabled",
-										"label": "Programming Enabled",
-										"type": "checkbox",
-										"value": "",
-										"field_class":"is-selectable-box",
-										"form": 1
-									},
-									{
-										"id": "isReadOnly",
-										"label": "Read Only",
+										"id": "isLocked",
+										"label": "Locked",
 										"type": "checkbox",
 										"value": "",
 										"field_class":"is-selectable-box",
@@ -2983,7 +3008,10 @@ export class Flow {
 									Class: "",
 									Group: "",
 									Category: "",
-									Icon: icon
+									Icon: icon,
+									isLocked: data.isLocked,
+									isExecutable: data.isExecutable
+							
 								},
 								Type: "",
 								Status: "Active",
@@ -3002,7 +3030,7 @@ export class Flow {
 							};
 							const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 
-							newNode.id = newNodeID;
+							// newNode.id = newNodeID;
 							newNode.Properties.Name = name;
 							newNode.Properties.Label = label;
 							newNode.Properties.isProgrammingEnabled = data.isProgrammingEnabled;
@@ -3299,7 +3327,7 @@ export class Flow {
 				// console.log('Elements with horizontal scrollbars:', scrollableElements.horizontal);
 				// console.log('Elements with both scrollbars:', scrollableElements.both);
 
-				document.querySelector('#enable_task_sections_button').addEventListener('click', () => {
+				document.querySelector('#enable_tasks_sections_button').addEventListener('click', () => {
 					document.querySelectorAll('.tabs-extended-functions').forEach((tab) => {
 						if (tab.classList.contains('show')) {
 							tab.style.transform = 'translateY(100%)';
@@ -3408,8 +3436,10 @@ export class Flow {
 								let qstr = "";
 								TGraphNodes.forEach(node => {
 									node.id = node.id.id;
-									qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(node)};`;
+									qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+									qstr += `\n\n`;
 								});
+								console.log('qstr', qstr);
 								ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(qstr).then((results) => {
 									console.log(`Success sending nodes to ${storage}`, results);
 								}).catch(error => { 

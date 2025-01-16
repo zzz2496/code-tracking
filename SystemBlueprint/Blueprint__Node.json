@@ -1,35 +1,6 @@
 {
 	"Order": 0,
 	"PinDescriptions": "Blueprint__NodeDesciptions.json",
-	"id":{
-		"ID":"",
-		"ULID":"",
-		"Type":"",
-		"Status":"",
-		"Timestamp":"",
-		"Node":{
-			"Realm":"Universe",
-			"Kind":"Container",
-			"Type":"GraphNode",
-			"Class":"",
-			"Group":"",
-			"Category":"",
-			"Icon":"<li class='fa-solid fa-cube'></li>"
-		},
-		"Link": {
-			"ChainID":"",
-			"ObjectSegment":"",
-			"ObjectSegmentOrder":null,
-			"Type": ""
-		},
-		"Version":{
-			"Current":true,
-			"Number":"",
-			"VersionID":"",
-			"ULID":"",
-			"Timestamp":""
-		}
-	},
 	"Properties": {
 		"Name": "",
 		"Label": "",
@@ -37,9 +8,7 @@
 		"Footer": "",
 		"isProgrammingEnabled": true,
 		"isNew": true,
-		"isChanged": false,
-		"isReadonly": false,
-		"isExecutable": true
+		"isChanged": false
 	},
 	"Presentation": {
 		"Perspectives": {

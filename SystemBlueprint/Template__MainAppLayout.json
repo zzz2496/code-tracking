@@ -1,331 +1,293 @@
-
-	
-		{
-			"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
-				{ "comment": "Object Collections", "tag": "div", "id": "object_collections", "class": "application_divisions", "innerHTML": "", "content": [
-					{"tag": "div", "id":"app_menu_container", "class": "app_configurator_groups show", "style": "", "content": [
-						{"comment":"Object Collections controls", "tag":"div", "class":"container is-flex is-justify-content-center", "id":"object_collections_controls", "content":[
-							{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"dark_light_indicator\"></li>"}
-						]},
-						{"comment":"Object Collections Tabs", "tag":"div", "id":"object_collection_tabs", "class":"container is-flex is-justify-content-center", "content":[
-							{ "comment": "Tabs", "tag": "div", "id": "object_collections_tabs", "content": [
-								{ "tag": "div", "class": "tabs", "content": [
-									{ "tag": "ul", "id":"object-collections-tab-container", "class":"", "content": [
-										{ "tag": "li", "class": "is-active show", "content": [
-											{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Collection"}, "innerHTML": "Collection" }
-										] },
-										{ "tag": "li", "class": "show ", "content": [
-											{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"RuntimeState"}, "innerHTML": "Runtime State" }
-										] },
-										{ "tag": "li", "class": "show ", "content": [
-											{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"DataStorage"}, "innerHTML": "Data Storage" }
-										] },
-										{ "tag": "li", "class": "show", "content": [
-											{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"ComponentGallery"}, "innerHTML": "Component Gallery" }
-										] },
-										{ "tag": "li", "class":"show", "content": [
-											{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Templates"}, "innerHTML": "Templates" }
-										] }
-									] }
-								]}
-							]}
-						]},
-						{"comment":"Object Collections Content", "id": "object-collections-container", "tag":"div", "class":"container", "content":[
-							{"comment":"Object collection space, every created object will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers show ",                   "data":{"tabtype":"Collection"}, "id":"object_collection_collection", "innerHTML":"Object collection space, every created object will be listed here", "content":[]},
-							{"comment":"Runtime State, any action that is done to the system will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                 "data":{"tabtype":"RuntimeState"}, "id":"object_collection_state", "innerHTML":"Runtime State, any action that is done to the system will be listed here", "content":[]},
-							{"comment":"Data Storage, any database server/data storage will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                       "data":{"tabtype":"DataStorage"}, "id":"object_collection_datastore", "innerHTML":"Data Storage, any database server/data storage will be listed here", "content":[]},
-							{"comment":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers", "data":{"tabtype":"ComponentGallery"}, "id":"object_collection_gallery", "innerHTML":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "content":[]},
-							{"comment":"Templates, pre-made object sets made in Object collection can be saved and listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",   "data":{"tabtype":"Templates"}, "id":"object_collection_templates", "innerHTML":"Templates, pre-made object sets made in Object collection can be saved and listed here", "content":[]}
-						]}
-					] }
+{
+	"comment": "App Root Container", "tag": "div", "id": "app_root_container", "content": [
+		{ "comment": "Object Collections", "tag": "div", "id": "object_collections", "class": "application_divisions", "innerHTML": "", "content": [
+			{"tag": "div", "id":"app_menu_container", "class": "app_configurator_groups show", "style": "", "content": [
+				{"comment":"Object Collections controls", "tag":"div", "class":"container is-flex is-justify-content-center", "id":"object_collections_controls", "content":[
+					{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"dark_light_indicator\"></li>"}
 				]},
+				{"comment":"Object Collections Tabs", "tag":"div", "id":"object_collection_tabs", "class":"container is-flex is-justify-content-center", "content":[
+					{ "comment": "Tabs", "tag": "div", "id": "object_collections_tabs", "content": [
+						{ "tag": "div", "class": "tabs", "content": [
+							{ "tag": "ul", "id":"object-collections-tab-container", "class":"", "content": [
+								{ "tag": "li", "class": "is-active show", "content": [
+									{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Collection"}, "innerHTML": "Collection" }
+								] },
+								{ "tag": "li", "class": "show ", "content": [
+									{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"RuntimeState"}, "innerHTML": "Runtime State" }
+								] },
+								{ "tag": "li", "class": "show ", "content": [
+									{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"DataStorage"}, "innerHTML": "Data Storage" }
+								] },
+								{ "tag": "li", "class": "show", "content": [
+									{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"ComponentGallery"}, "innerHTML": "Component Gallery" }
+								] },
+								{ "tag": "li", "class":"show", "content": [
+									{ "tag": "a", "class":"tab-object-collections ", "data":{"tabtype":"Templates"}, "innerHTML": "Templates" }
+								] }
+							] }
+						]}
+					]}
+				]},
+				{"comment":"Object Collections Content", "id": "object-collections-container", "tag":"div", "class":"container", "content":[
+					{"comment":"Object collection space, every created object will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers show ",                   "data":{"tabtype":"Collection"}, "id":"object_collection_collection", "innerHTML":"Object collection space, every created object will be listed here", "content":[]},
+					{"comment":"Runtime State, any action that is done to the system will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                 "data":{"tabtype":"RuntimeState"}, "id":"object_collection_state", "innerHTML":"Runtime State, any action that is done to the system will be listed here", "content":[]},
+					{"comment":"Data Storage, any database server/data storage will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                       "data":{"tabtype":"DataStorage"}, "id":"object_collection_datastore", "innerHTML":"Data Storage, any database server/data storage will be listed here", "content":[]},
+					{"comment":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers", "data":{"tabtype":"ComponentGallery"}, "id":"object_collection_gallery", "innerHTML":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "content":[]},
+					{"comment":"Templates, pre-made object sets made in Object collection can be saved and listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",   "data":{"tabtype":"Templates"}, "id":"object_collection_templates", "innerHTML":"Templates, pre-made object sets made in Object collection can be saved and listed here", "content":[]}
+				]}
+			] }
+		]},
+		{
+			"comment": "App Container", "tag": "div", "id": "app_container", "class":"application_divisions", "content": [
 				{
-					"comment": "App Container", "tag": "div", "id": "app_container", "class":"application_divisions", "content": [
+					"comment": "App Top Menu Container", "tag": "div", "id": "app_top_menu_container", "innerHTML": "", "class": "columns is-gapless is-mobile m-0", "content": [
 						{
-							"comment": "App Top Menu Container", "tag": "div", "id": "app_top_menu_container", "innerHTML": "", "class": "columns is-gapless is-mobile m-0", "content": [
-								{
-									"comment": "Left Container", "tag": "div", "id": "app_left_container", "innerHTML": "", "class": "column is-gapless is-one-quarter", "content": [
-										{ "comment": "Menu button", "tag": "button", "class": "button is-default", "id": "object_collections_button", "title": "Open Menu", "innerHTML": "<li class=\"fa fa-bars\"></li>" },
-										{ "comment": "Graph button", "tag": "button", "class": "button is-default", "id": "app_graph_button", "title": "Open Graph", "innerHTML": "<li class=\"fa fa-circle-nodes\"></li>" }
-									]
-								},
-								{
-									"comment": "Right Container", "tag": "div", "id": "app_right_container", "innerHTML": "", "class": "column is-gapless is-three-quarters is-justify-content-flex-end is-flex", "content": [
-										{ "comment": "Datastore Status", "tag": "div", "class": "is-inline", "id": "datastore_status", "innerHTML": "" },
-										{ "comment": "Console button", "tag": "button", "class": "button is-default", "id": "app_console_button", "title": "Open Console", "innerHTML": "<li class=\"fa fa-terminal\"></li>" },
-										{ "comment": "Data Preparation Area button", "tag": "button", "class": "button is-default", "id": "app_data_preparation_area_button", "title": "Open Data Perparation Area Sidebar", "innerHTML": "<li class=\"fa fa-arrows-left-right\"></li>" }
-									]
-								}
+							"comment": "Left Container", "tag": "div", "id": "app_left_container", "innerHTML": "", "class": "column is-gapless is-one-quarter", "content": [
+								{ "comment": "Menu button", "tag": "button", "class": "button is-default", "id": "object_collections_button", "title": "Open Menu", "innerHTML": "<li class=\"fa fa-bars\"></li>" },
+								{ "comment": "Graph button", "tag": "button", "class": "button is-default", "id": "app_graph_button", "title": "Open Graph", "innerHTML": "<li class=\"fa fa-circle-nodes\"></li>" }
 							]
 						},
-						{ "comment": "App Graph Tabs and Controls", "tag": "div", "id": "app_graph_tabs_container", "innerHTML": "", "class": "is-flex is-gapless m-0 show app_configurator_groups is-flex-wrap-wrap", "content": [
-							{ "comment": "Left Container", "tag": "div", "id": "app_graph_tabs_container_left", "innerHTML": "", "class": "mt-1 p-0 is-flex is-justify-content-left app_graph_controls_containers", "content": [
-								{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
-									{ "tag": "div", "class": "tabs", "style":"scrollbar-width: none;-ms-overflow-style: none", "content": [
-										{ "tag": "ul", "id":"tab-graph-selector-container", "class":"", "content": [] }
-									]}
-								] }
-							] },
-							{"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "m-1 p-0 app_graph_controls_containers column is-flex is-justify-content-center", "content": []},
-							{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
-								{"tag":"div", "class":"document-saveload-container show", "innerHTML":"", "content":[
-									{ "comment": "Enable Task sections",    "tag": "button", "class": "button mr-1 document-saveload p-4 is-default", "id": "enable_task_sections_button", "title": "Enable Task Sections", "innerHTML": "<i class=\"fa-solid fa-square-binary\"></i>" }
-								]},
-								{"tag":"div", "class":"show", "innerHTML":"", "content":[
-									{ "comment": "", "tag":"div", "class":"buttons has-addons p-0 mr-1 ml-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
-										{ "comment": "Load Document button",           "tag": "button", "class": "button document-saveload is-outlined is-info graph_load_local_data_button graph_load_data_button", "data":{"storage":"IndexedDB"}, "title": "Load Graph from Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-arrow-down\"></i>" },
-										{ "comment": "Clear Document button",          "tag": "button", "class": "button document-saveload is-outlined is-danger graph_clear_local_data_button graph_clear_data_button", "data":{"storage":"IndexedDB"}, "title": "Clear Graph from Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-excel\"></i>" },
-										{ "comment": "Save Document button",           "tag": "button", "class": "button document-saveload is-outlined is-success graph_save_local_data_button graph_save_data_button ", "data":{"storage":"IndexedDB"}, "title": "Save Graph to Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-arrow-up\"></i>" }
-									]}
-								]},
-								{"tag":"div", "class":"show", "innerHTML":"", "content":[
-									{ "comment": "", "tag":"div", "class":"buttons has-addons p-0 mr-0 ml-1 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
-										{ "comment": "Load Document button",           "tag": "button", "class": "button document-saveload is-outlined is-info graph_load_remote_data_button graph_load_data_button ", "data":{"storage":"TestServer"}, "title": "Load Graph from Remote Storage", "innerHTML": "<i class=\"fa-solid fa-server mr-2\"></i><i class=\"fa-solid fa-file-arrow-down\"></i>" },
-										{ "comment": "Save Document button",           "tag": "button", "class": "button document-saveload is-outlined is-success graph_save_remote_data_button graph_save_data_button", "data":{"storage":"TestServer"}, "title": "Save Graph to Remote Storage", "innerHTML": "<i class=\"fa-solid fa-server mr-2\"></i><i class=\"fa-solid fa-file-arrow-up\"></i>" }
-									]}
-								]},
-								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datasource"}, "content":[
-									{ "comment": "Remove Datasource", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatasource_button", "title": "Remove Datasource", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
-									{ "comment": "Add Datasource", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatasource_button", "title": "Add Datasource", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
-								]},
-								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datastore"}, "content":[
-									{ "comment": "Remove Datastore", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatastore_button", "title": "Remove Datastore", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
-									{ "comment": "Add Datastore", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatastore_button", "title": "Add Datastore", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
-								]},
-								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"PageLayout"}, "content":[
-									{ "comment": "Remove Layout", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removelayout_button", "title": "Remove Layout", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
-									{ "comment": "Add Layout", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addlayout_button", "title": "Add Layout", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
-								]},
-								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Schema"}, "content":[
-									{ "comment": "Remove Schema", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeschema_button", "title": "Remove Schema", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
-									{ "comment": "Add Schema", "tag": "button",    "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-link", "id": "graph_addschema_button", "title": "Add Schema", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
-								]},
-								{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Forms"}, "content":[
-									{ "comment": "Remove Form", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeform_button", "title": "Remove Form", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
-									{ "comment": "Add Form", "tag": "button",    "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-link", "id": "graph_addform_button", "title": "Add Form", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
-								]}
-							]}
-						] },
-
-						{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show app_configurator_groups", "innerHTML": "", "content": [
-							{
-								"comment": "App Data Storage Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers show", "data":{"tabtype":"DataStorage"}, "id": "app_datastorage_container", "content": [
-									{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
-											{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
-												{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "DataStorage Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
-												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button m-0 p-0 ", "title": "Graph Zoom Reset",       "innerHTML": "<span class=\"zoomLevel\">1</span>"},
-												{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "DataStorage Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
-											]},
-											{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]},
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-											{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
-												{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
-												{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					 "innerHTML": "<li class='fa-solid fa-cube has-text-success'></li>"},
-												{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" }
-											]},
-											{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]},
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-											{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mr-0 my-0 ml-2", "style":"height: 2.7rem; /*min-width:95px;*/", "content":[
-												{ "comment": "Document Refresh Render button", "tag": "button", "class": "button p-4 document_refreshrender_button",                                  "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
-												{ "comment": "Fullscreen button",              "tag": "button", "class": "button p-4 graph_fullscreen_button", "id": "DataStorage_fullscreen_button", "title": "DataStorage Zoom Out",    "innerHTML": "<i class=\"fa-solid fa-expand\"></i>" }
-											]},
-											{ "tag":"div", "innerHTML":"Display", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]}
-									]},
-									{
-										"tag": "div", "id": "datastorage_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Data Storage Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_datastorage_content", "content": [
-												{"tag":"div", "class":"graph_node_surface ", "innerHTML":"<span>App Data Storage Content</span>", "style":"position:relative;", "data":{"template":"DataStorageCanvas"}},
-												{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
-													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
-												]}
-											] }
-										]
-									}
-								]
-							},
-							{
-								"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
-									{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
-											{ "comment": "Zoom controls",  "tag":"div", "class":"buttons has-addons p-0 mr-2 ml-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
-												{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
-												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button m-0 p-0 ", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\">1</span>"},
-												{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
-											]},
-											{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]},
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-											{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
-												{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
-												{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					 "innerHTML":"<li class='fa-solid fa-cube has-text-success'></li>"},
-												{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" }
-											]},
-											{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]},
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-											{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mr-0 ml-2 my-0 ", "style":"height: 2.7rem; /*min-width:95px;*/", "content":[
-												{ "comment": "", "tag":"div", "class":"button", "content":[
-													{ "comment": "Only Containers", "tag": "input", "type":"checkbox", "class": "graph_show_only_containers",  "checked":"checked", "id":"graph_show_only_containers", "title": "ONLY CONTAINERS",         "innerHTML": "<i class=\"ml-2 fa-regular fa-folder-open\"></i>" }
-												]},
-												{ "comment": "Document Refresh Render button",  "tag": "button",   "class": "button document_refreshrender_button",                                  "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
-												{ "comment": "Fullscreen button",               "tag": "button",   "class": "button graph_fullscreen_button",     "id": "graph_fullscreen_button",   "title": "Graph Zoom Out",          "innerHTML": "<i class=\"fa-solid fa-expand\"></i>" }
-											]},
-											{ "tag":"div", "innerHTML":"Display", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]}
-									]},
-									{
-										"tag": "div", "id": "graph_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_graph_content", "content": [
-												{"tag":"div", "class":"graph_node_surface ", "innerHTML":"<span>App Graph Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
-												{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
-													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
-												]}
-											] }
-										]
-									}
-								]
-							},
-							{
-								"comment": "App Containers Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers show", "data":{"tabtype":"Containers"}, "id": "app_containers_container", "content": [
-									{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
-											{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
-												{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
-												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button m-0 p-0 ", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\">1</span>"},
-												{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
-											]},
-											{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]},
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-											{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
-												{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
-												{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					 "innerHTML":"<li class='fa-solid fa-cube mr-3 has-text-success'></li>"},
-												{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" }
-											]},
-											{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]},
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-											{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mr-0 my-0 ml-2", "style":"height: 2.7rem; /*min-width:95px;*/", "content":[
-												{ "comment": "Document Refresh Render button", "tag": "button", "class": "button p-4 document_refreshrender_button",                         "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
-												{ "comment": "Fullscreen button",              "tag": "button", "class": "button p-4 graph_fullscreen_button", "id": "graph_fullscreen_button",       "title": "Graph Zoom Out", "innerHTML": "<i class=\"fa-solid fa-expand\"></i>" }
-											]},
-											{ "tag":"div", "innerHTML":"Display", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]}
-									]},
-									{
-										"tag": "div", "id": "containers_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Containers Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_container_content", "content": [
-												{"tag":"div", "class":"graph_node_surface ", "innerHTML":"<span>App Container Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
-												{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
-													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
-												]}
-											] }
-										]
-									}
-								]
-							},
-							{
-								"comment": "App Task Container", "tag": "div", "class": "m-0 p-0 show is-selectable-parent app_configurator_containers", "data":{"tabtype":"Task"}, "id": "app_task_container", "content": [
-									{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
-											{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
-												{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
-												{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button m-0 p-0 ", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\">1</span>"},
-												{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
-											]},
-											{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]},
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-											{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
-												{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
-												{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					 "innerHTML":"<li class='fa-solid fa-cube mr-3 has-text-success'></li>"},
-												{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" }
-											]},
-											{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]},
-										{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-											{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mr-0 my-0 ml-3", "style":"height: 2.7rem; /*min-width:95px;*/", "content":[
-												{ "comment": "Document Refresh Render button", "tag": "button", "class": "button p-4 document_refreshrender_button",                         "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
-												{ "comment": "Fullscreen button",              "tag": "button", "class": "button p-4 graph_fullscreen_button", "id": "graph_fullscreen_button",       "title": "Graph Zoom Out", "innerHTML": "<i class=\"fa-solid fa-expand\"></i>" }
-											]},
-											{ "tag":"div", "innerHTML":"Display", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
-										]}
-									]},
-									{
-										"tag": "div", "id": "Task_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-											{ "comment": "App Task Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_Task_content", "content": [
-												{"tag":"div", "class":"graph_node_surface", "innerHTML":"<span>App Task Content</span>", "style":"position:relative;"},
-												{"tag":"svg", "class":"graph_connection_surface", "content":[
-													{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
-												]}
-											] }
-										]
-									}
-								]
-							},
-							{
-								"comment": "App DataProvider Container", "tag": "div", "class": " m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"DataProvider"}, "id": "app_dataprovider_container", "content": [
-									{ "comment": "App DataProvider Content", "tag": "div", "innerHTML": "App DataProvider Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_dataprovider_content", "content": [] }
-								]
-							},
-							{
-								"comment": "App Datasource Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Datasource"}, "id": "app_datasource_container", "content": [
-									{ "comment": "App Datasource Content", "tag": "div", "innerHTML": "App Datasource Content", "class": "columns is-gapless is-mobile  p-3",  "id": "app_datasource_content", "style":"width:100%; height:100%;", "content": [] }
-								]
-							},
-							{
-								"comment": "App Page Layout Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"PageLayout"}, "id": "app_page_layout_container", "content": [
-									{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile  p-3",  "id": "app_page_layout_content", "style":"width:100%; height:100%;", "content": [] }
-								]
-							},
-							{
-								"comment": "App Schema Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Schema"}, "id": "app_schema_container", "content": [
-									{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_schema_content", "content": [] }
-								]
-							},
-							{
-								"comment": "App Form Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Forms"}, "id": "app_form_container", "content": [
-									{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_form_content", "content": [] }
-								]
-							}
-						] },
-						
-						{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [
-							{ "comment": "Add Node button", "tag":"div", "class":"field has-addons", "style":"", "content":[
-								{"tag":"div", "class":"control", "style":"", "content":[
-									{"tag":"div", "class":"select", "style":"", "content":[
-										{"tag":"select", "id":"", "class":"", "content":[]}
-									]}
-								]},
-								{"tag":"div", "class":"control", "style":"", "content":[
-									{"tag":"button", "class":"button mx-1 is-medium is-success graph_addnode_button", "id":"graph_addnode_button", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
-								]}
-							]}
-
-
-						] }
+						{
+							"comment": "Right Container", "tag": "div", "id": "app_right_container", "innerHTML": "", "class": "column is-gapless is-three-quarters is-justify-content-flex-end is-flex", "content": [
+								{ "comment": "Datastore Status", "tag": "div", "class": "is-inline", "id": "datastore_status", "innerHTML": "" },
+								{ "comment": "Console button", "tag": "button", "class": "button is-default", "id": "app_console_button", "title": "Open Console", "innerHTML": "<li class=\"fa fa-terminal\"></li>" },
+								{ "comment": "Data Preparation Area button", "tag": "button", "class": "button is-default", "id": "app_data_preparation_area_button", "title": "Open Data Perparation Area Sidebar", "innerHTML": "<li class=\"fa fa-arrows-left-right\"></li>" }
+							]
+						}
 					]
 				},
-				{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "application_divisions is-flex is-flex-direction-column", "innerHTML": "", "content": [] },
-				{
-					"comment": "App Console", "tag": "div", "id": "app_console", "class":"application_divisions", "innerHTML": "", "content": [
-						{ "comment": "Core Status Container", "tag": "div", "id": "core_status",         "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless m-0  p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
-						{ "comment": "Helper Container",      "tag": "div", "id": "debug_helper_status", "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless my-3 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [
-							{ "comment": "SuQL", "tag": "textarea", "id":"console_suql_input", "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:15rem;", "innerHTML": ""},								{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
-								{"tag": "select", "type":"select", "class":"select", "id":"console_datastorage_select", "content":[
-									{ "tag": "option", "value": "Memory", "innerHTML": "Memory" },
-									{ "tag": "option", "value": "IndexedDB", "innerHTML": "IndexedDB" },
-									{ "tag": "option", "value": "TestServer", "innerHTML": "TestServer" }
+				{ "comment": "App Graph Tabs and Controls", "tag": "div", "id": "app_graph_tabs_container", "innerHTML": "", "class": "is-flex is-gapless m-0 show app_configurator_groups is-flex-wrap-wrap", "content": [
+					{ "comment": "Left Container", "tag": "div", "id": "app_graph_tabs_container_left", "innerHTML": "", "class": "mt-1 p-0 is-flex is-justify-content-left app_graph_controls_containers", "content": [
+						{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
+							{ "tag": "div", "class": "tabs", "style":"scrollbar-width: none;-ms-overflow-style: none", "content": [
+								{ "tag": "ul", "id":"tab-graph-selector-container", "class":"", "content": [] }
+							]}
+						] }
+					] },
+					{"comment": "Center Container", "tag": "div", "id": "app_graph_controls_container_center", "innerHTML": "", "class": "m-1 p-0 app_graph_controls_containers column is-flex is-justify-content-center", "content": []},
+					{ "comment": "Right Container", "tag": "div", "id": "app_graph_tabs_container_right", "innerHTML": "", "class": "p-0 is-flex is-justify-content-right app_graph_controls_containers", "content": [	
+						{"tag":"div", "class":"document-saveload-container show", "innerHTML":"", "content":[
+							{ "comment": "Enable Tasks sections",    "tag": "button", "class": "button mr-1 document-saveload p-4 is-default", "id": "enable_tasks_sections_button", "title": "Enable Tasks Sections", "innerHTML": "<i class=\"fa-solid fa-square-binary\"></i>" }
+						]},
+						{"tag":"div", "class":"show", "innerHTML":"", "content":[
+							{ "comment": "", "tag":"div", "class":"buttons has-addons p-0 mr-1 ml-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
+								{ "comment": "Load Document button",           "tag": "button", "class": "button document-saveload is-outlined is-info graph_load_local_data_button graph_load_data_button", "data":{"storage":"IndexedDB"}, "title": "Load Graph from Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-arrow-down\"></i>" },
+								{ "comment": "Clear Document button",          "tag": "button", "class": "button document-saveload is-outlined is-danger graph_clear_local_data_button graph_clear_data_button", "data":{"storage":"IndexedDB"}, "title": "Clear Graph from Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-excel\"></i>" },
+								{ "comment": "Save Document button",           "tag": "button", "class": "button document-saveload is-outlined is-success graph_save_local_data_button graph_save_data_button ", "data":{"storage":"IndexedDB"}, "title": "Save Graph to Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-arrow-up\"></i>" }
+							]}
+						]},
+						{"tag":"div", "class":"show", "innerHTML":"", "content":[
+							{ "comment": "", "tag":"div", "class":"buttons has-addons p-0 mr-0 ml-1 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
+								{ "comment": "Load Document button",           "tag": "button", "class": "button document-saveload is-outlined is-info graph_load_remote_data_button graph_load_data_button ", "data":{"storage":"TestServer"}, "title": "Load Graph from Remote Storage", "innerHTML": "<i class=\"fa-solid fa-server mr-2\"></i><i class=\"fa-solid fa-file-arrow-down\"></i>" },
+								{ "comment": "Save Document button",           "tag": "button", "class": "button document-saveload is-outlined is-success graph_save_remote_data_button graph_save_data_button", "data":{"storage":"TestServer"}, "title": "Save Graph to Remote Storage", "innerHTML": "<i class=\"fa-solid fa-server mr-2\"></i><i class=\"fa-solid fa-file-arrow-up\"></i>" }
+							]}
+						]},
+						{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datasource"}, "content":[
+							{ "comment": "Remove Datasource", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatasource_button", "title": "Remove Datasource", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+							{ "comment": "Add Datasource", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatasource_button", "title": "Add Datasource", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+						]},
+						{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Datastore"}, "content":[
+							{ "comment": "Remove Datastore", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removedatastore_button", "title": "Remove Datastore", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+							{ "comment": "Add Datastore", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_adddatastore_button", "title": "Add Datastore", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+						]},
+						{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"PageLayout"}, "content":[
+							{ "comment": "Remove Layout", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-outlined is-danger", "id": "graph_removelayout_button", "title": "Remove Layout", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+							{ "comment": "Add Layout", "tag": "button",   "class": "button mr-1 graph-controls mr-1 is-outlined is-link", "id": "graph_addlayout_button", "title": "Add Layout", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+						]},
+						{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Schema"}, "content":[
+							{ "comment": "Remove Schema", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeschema_button", "title": "Remove Schema", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+							{ "comment": "Add Schema", "tag": "button",    "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-link", "id": "graph_addschema_button", "title": "Add Schema", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+						]},
+						{"tag":"div", "class":"addremove-control-container", "data":{"tabtype":"Forms"}, "content":[
+							{ "comment": "Remove Form", "tag": "button", "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-danger", "id": "graph_removeform_button", "title": "Remove Form", "innerHTML": "<i class=\"fa-solid fa-minus\"></i></button>" },
+							{ "comment": "Add Form", "tag": "button",    "class": "button mr-1 graph-controls mr-1 is-small is-outlined is-link", "id": "graph_addform_button", "title": "Add Form", "innerHTML": "<i class=\"fa-solid fa-plus\"></i></button>" }
+						]}
+					]}
+				] },
+
+				{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show app_configurator_groups", "innerHTML": "", "content": [
+					{
+						"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
+							{"tag": "div", "class":"graph_path node-background-frosted p-3", "innerHTML": "<li class='fa-solid fa-map'></li>", "title":"Path to Graph Nodes", "content":[
+								{"tag": "span", "class":"mx-3", "innerHTML": "/PATH/TO/NODES", "title":"Path to Graph Nodes"}
+							]},
+							{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-flex-direction-column is-justify-content-center node-background-frosted m-0 p-0", "content": [
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
+									{ "comment": "Zoom controls",  "tag":"div", "class":"buttons has-addons p-0 m-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
+										{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
+										{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button m-0 p-0 ", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\">1</span>"},
+										{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
+									]},
+									{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]},
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
+									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 m-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
+										{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Memory Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
+										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					  "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" },
+										{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					  "innerHTML":"<li class='fa-solid fa-cube has-text-success'></li>"}
+									]},
+									{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]},
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
+									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 m-0 my-0 ", "style":"height: 2.7rem; /*min-width:95px;*/", "content":[
+										{ "comment": "", "tag":"div", "class":"button", "content":[
+											{ "comment": "Only Containers", "tag": "input", "type":"checkbox", "class": "graph_show_only_containers",  "checked":"checked", "id":"graph_show_only_containers", "title": "ONLY CONTAINERS",         "innerHTML": "<i class=\"ml-2 fa-regular fa-folder-open\"></i>" }
+										]},
+										{ "comment": "Document Refresh Render button",  "tag": "button",   "class": "button document_refreshrender_button",                                  "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
+										{ "comment": "Fullscreen button",               "tag": "button",   "class": "button graph_fullscreen_button",     "id": "graph_fullscreen_button",   "title": "Graph Zoom Out",          "innerHTML": "<i class=\"fa-solid fa-expand\"></i>" }
+									]},
+									{ "tag":"div", "innerHTML":"Display", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
 								]}
 							]},
-							{ "comment": "Go button", "tag": "div",    "id":"console_suql_execute", "class":"button", "innerHTML":"Run<i class=\"ml-2 fa-solid fa-play\"></i>"}
-						] },
-						{ "comment": "Debugging", "tag": "div", "class":"box", "id": "debugging", "style":"min-height:30rem; max-height:30rem; overflow:auto;", "innerHTML": "", "content": [] }
-					]
-				}
+							{
+								"tag": "div", "id": "graph_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
+									{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_graph_content", "content": [
+										{"tag":"div", "class":"graph_node_surface ", "innerHTML":"", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
+										{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
+											{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
+										]}
+									] }
+								]
+							}
+						]
+					},
+					{
+						"comment": "App Containers Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers show", "data":{"tabtype":"Containers"}, "id": "app_containers_container", "content": [
+							{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
+									{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
+										{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
+										{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button m-0 p-0 ", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\">1</span>"},
+										{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
+									]},
+									{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]},
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
+									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
+										{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
+										{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					 "innerHTML":"<li class='fa-solid fa-cube mr-3 has-text-success'></li>"},
+										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" }
+									]},
+									{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]},
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
+									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mr-0 my-0 ml-2", "style":"height: 2.7rem; /*min-width:95px;*/", "content":[
+										{ "comment": "Document Refresh Render button", "tag": "button", "class": "button p-4 document_refreshrender_button",                         "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
+										{ "comment": "Fullscreen button",              "tag": "button", "class": "button p-4 graph_fullscreen_button", "id": "graph_fullscreen_button",       "title": "Graph Zoom Out", "innerHTML": "<i class=\"fa-solid fa-expand\"></i>" }
+									]},
+									{ "tag":"div", "innerHTML":"Display", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]}
+							]},
+							{
+								"tag": "div", "id": "containers_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
+									{ "comment": "App Containers Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_container_content", "content": [
+										{"tag":"div", "class":"graph_node_surface ", "innerHTML":"<span>App Container Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
+										{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
+											{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
+										]}
+									] }
+								]
+							}
+						]
+					},
+					{
+						"comment": "App Tasks Container", "tag": "div", "class": "m-0 p-0 show is-selectable-parent app_configurator_containers", "data":{"tabtype":"Tasks"}, "id": "app_tasks_container", "content": [
+							{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
+									{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
+										{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
+										{ "comment": "Zoom reset", "tag": "button", "class": "button zoom_reset_button m-0 p-0 ", "title": "Graph Zoom Reset", "innerHTML": "<span class=\"zoomLevel\">1</span>"},
+										{ "comment": "Zoom in",    "tag": "button", "class": "button zoom_in_button",    "title": "Graph Zoom In",    "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-plus has-text-success\"></i>"}
+									]},
+									{ "tag":"div", "innerHTML":"Zoom", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]},
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
+									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
+										{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
+										{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					 "innerHTML":"<li class='fa-solid fa-cube mr-3 has-text-success'></li>"},
+										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" }
+									]},
+									{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]},
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
+									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mr-0 my-0 ml-3", "style":"height: 2.7rem; /*min-width:95px;*/", "content":[
+										{ "comment": "Document Refresh Render button", "tag": "button", "class": "button p-4 document_refreshrender_button",                         "title": "Document Refresh Render", "innerHTML": "<i class=\"fa fa-refresh\"></i>" },
+										{ "comment": "Fullscreen button",              "tag": "button", "class": "button p-4 graph_fullscreen_button", "id": "graph_fullscreen_button",       "title": "Graph Zoom Out", "innerHTML": "<i class=\"fa-solid fa-expand\"></i>" }
+									]},
+									{ "tag":"div", "innerHTML":"Display", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]}
+							]},
+							{
+								"tag": "div", "id": "tasks_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
+									{ "comment": "App Tasks Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_tasks_content", "content": [
+										{"tag":"div", "class":"graph_node_surface", "innerHTML":"<span>App Tasks Content</span>", "style":"position:relative;"},
+										{"tag":"svg", "class":"graph_connection_surface", "content":[
+											{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
+										]}
+									] }
+								]
+							}
+						]
+					},
+					{
+						"comment": "App DataProvider Container", "tag": "div", "class": " m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"DataProvider"}, "id": "app_dataprovider_container", "content": [
+							{ "comment": "App DataProvider Content", "tag": "div", "innerHTML": "App DataProvider Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_dataprovider_content", "content": [] }
+						]
+					},
+					{
+						"comment": "App Datasource Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Datasource"}, "id": "app_datasource_container", "content": [
+							{ "comment": "App Datasource Content", "tag": "div", "innerHTML": "App Datasource Content", "class": "columns is-gapless is-mobile  p-3",  "id": "app_datasource_content", "style":"width:100%; height:100%;", "content": [] }
+						]
+					},
+					{
+						"comment": "App Page Layout Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"PageLayout"}, "id": "app_page_layout_container", "content": [
+							{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile  p-3",  "id": "app_page_layout_content", "style":"width:100%; height:100%;", "content": [] }
+						]
+					},
+					{
+						"comment": "App Schema Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Schema"}, "id": "app_schema_container", "content": [
+							{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_schema_content", "content": [] }
+						]
+					},
+					{
+						"comment": "App Form Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Forms"}, "id": "app_form_container", "content": [
+							{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_form_content", "content": [] }
+						]
+					}
+				] },
+				
+				{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [
+					{ "comment": "Add Node button", "tag":"div", "class":"field has-addons", "style":"", "content":[
+						{"tag":"div", "class":"control", "style":"", "content":[
+							{"tag":"div", "class":"select", "style":"", "content":[
+								{"tag":"select", "id":"", "class":"", "content":[]}
+							]}
+						]},
+						{"tag":"div", "class":"control", "style":"", "content":[
+							{"tag":"button", "class":"button mx-1 is-medium is-success graph_addnode_button", "id":"graph_addnode_button", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
+						]}
+					]}
+
+
+				] }
+			]
+		},
+		{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "application_divisions is-flex is-flex-direction-column", "innerHTML": "", "content": [] },
+		{
+			"comment": "App Console", "tag": "div", "id": "app_console", "class":"application_divisions", "innerHTML": "", "content": [
+				{ "comment": "Core Status Container", "tag": "div", "id": "core_status",         "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless m-0  p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
+				{ "comment": "Helper Container",      "tag": "div", "id": "debug_helper_status", "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless my-3 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [
+					{ "comment": "SuQL", "tag": "textarea", "id":"console_suql_input", "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:15rem;", "innerHTML": ""},								{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
+						{"tag": "select", "type":"select", "class":"select", "id":"console_datastorage_select", "content":[
+							{ "tag": "option", "value": "Memory", "innerHTML": "Memory" },
+							{ "tag": "option", "value": "IndexedDB", "innerHTML": "IndexedDB" },
+							{ "tag": "option", "value": "TestServer", "innerHTML": "TestServer" }
+						]}
+					]},
+					{ "comment": "Go button", "tag": "div",    "id":"console_suql_execute", "class":"button", "innerHTML":"Run<i class=\"ml-2 fa-solid fa-play\"></i>"}
+				] },
+				{ "comment": "Debugging", "tag": "div", "class":"box", "id": "debugging", "style":"min-height:30rem; max-height:30rem; overflow:auto;", "innerHTML": "", "content": [] }
 			]
 		}
+	]
+}

@@ -8,13 +8,6 @@
 	],
 	"TabsArray": [
 		{
-			"TabType": "DataStorage",
-			"Label": "Data Storage",
-			"LinkClass": "show",
-			"AnchorClass": "tab-graph-selector",
-			"Icon": ""
-		},
-		{
 			"TabType": "Graph",
 			"Label": "Graph",
 			"LinkClass": "is-active show",

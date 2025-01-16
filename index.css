@@ -699,15 +699,28 @@
 	}
   }
 
-.graph_controls {
-	gap: 5px;
+.graph_path {
 	position: fixed;
-	top: 1rem;
-	right: 1rem;
+	top: 0.5rem;
+	left: 0.5rem;
 	z-index: 99999;
 	width: fit-content;
 	display: flex;
-	align-items: baseline;
+	align-items: center;
+	border-radius: 10px; /* Rounded corners for aesthetic effect */
+	padding: 0.25rem; /* Add some spacing inside the container */
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+	border: solid 1px var(--bulma-border-weak); /* Add a border for contrast */
+}
+
+.graph_controls {
+	position: fixed;
+	top: 0.5rem;
+	right: 0.5rem;
+	z-index: 99999;
+	width: fit-content;
+	display: flex;
+	align-items: center;
 	border-radius: 10px; /* Rounded corners for aesthetic effect */
 	padding: 0.25rem; /* Add some spacing inside the container */
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
