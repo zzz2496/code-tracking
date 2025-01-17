@@ -129,7 +129,7 @@
 									{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
 								]},
 								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
-									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 m-0 my-0 ", "style":"height: 2.7rem; /*min-width:95px;*/", "content":[
+									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 m-0 my-0 ", "style":"height: 2.7rem;", "content":[
 										{ "comment": "", "tag":"div", "class":"button", "content":[
 											{ "comment": "Only Containers", "tag": "input", "type":"checkbox", "class": "graph_show_only_containers",  "checked":"checked", "id":"graph_show_only_containers", "title": "ONLY CONTAINERS",         "innerHTML": "<i class=\"ml-2 fa-regular fa-folder-open\"></i>" }
 										]},
