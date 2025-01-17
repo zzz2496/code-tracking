@@ -75,39 +75,39 @@
 			"Icon": "<li class='fa-regular fa-folder-open'></li>",
 			"NodeControls": [
 				{
-					"Class": "show-node",
-					"title": "",
+					"Class": "node-controls show-node",
+					"title": "Show Node",
 					"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 				},
 				{
-					"Class": "enable-execute-node",
-					"title": "",
+					"Class": "node-controls enable-execute-node",
+					"title": "Enable Execute Node",
 					"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 				},
 				{
-					"Class": "disable-node",
-					"title": "",
-					"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+					"Class": "node-controls disable-node",
+					"title": "Disable Node",
+					"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 				}
 			],
 			"Footer": [
 				{
-					"Class": "open-node",
+					"Class": "node-footer open-node",
 					"title": "Open Node",
 					"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 				},
 				{
-					"Class": "configure-node",
+					"Class": "node-footer configure-node",
 					"title": "Configure Node",
 					"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 				},
 				{
-					"Class": "copy-node",
+					"Class": "node-footer copy-node",
 					"title": "Copy Node",
 					"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 				},
 				{
-					"Class": "delete-node",
+					"Class": "node-footer delete-node",
 					"title": "Delete Node",
 					"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 				}
@@ -115,7 +115,7 @@
 		},
 		{
 			"Type": "Array",
-			"Kind": "Task",
+			"Kind": "Tasks",
 			"Group": [
 				"Containers"
 			],
@@ -128,39 +128,39 @@
 					"Icon": "<li class='fa-solid fa-list-check'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -174,39 +174,39 @@
 					"Icon": "<li class='fa-solid fa-chart-diagram'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -220,39 +220,39 @@
 					"Icon": "<li class='fa-solid fa-table-columns'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -266,39 +266,39 @@
 					"Icon": "<li class='fa-solid fa-rectangle-list'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -312,39 +312,39 @@
 					"Icon": "<li class='fa-regular fa-newspaper'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -354,43 +354,44 @@
 			"Icon": "<li class='fa-solid fa-list-check'></li>",
 			"NodeControls": [
 				{
-					"Class": "show-node",
-					"title": "",
+					"Class": "node-controls show-node",
+					"title": "Show Node",
 					"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 				},
 				{
-					"Class": "enable-execute-node",
-					"title": "",
+					"Class": "node-controls enable-execute-node",
+					"title": "Enable Execute Node",
 					"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 				},
 				{
-					"Class": "disable-node",
-					"title": "",
-					"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+					"Class": "node-controls disable-node",
+					"title": "Disable Node",
+					"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 				}
 			],
 			"Footer": [
 				{
-					"Class": "open-node",
+					"Class": "node-footer open-node",
 					"title": "Open Node",
 					"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 				},
 				{
-					"Class": "configure-node",
+					"Class": "node-footer configure-node",
 					"title": "Configure Node",
 					"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 				},
 				{
-					"Class": "copy-node",
+					"Class": "node-footer copy-node",
 					"title": "Copy Node",
 					"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 				},
 				{
-					"Class": "delete-node",
+					"Class": "node-footer delete-node",
 					"title": "Delete Node",
 					"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 				}
 			]
+
 		},
 		{
 			"Type": "Array",
@@ -407,39 +408,39 @@
 					"Icon": "<li class='fa-solid fa-database'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -453,39 +454,39 @@
 					"Icon": "<li class='fa-solid fa-table'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -499,39 +500,39 @@
 					"Icon": "<li class='fa-solid fa-table-list'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -545,39 +546,39 @@
 					"Icon": "<li class='fa-solid fa-table-cells'></li>",
 					"NodeControls": [
 						{
-							"Class": "show-node",
-							"title": "",
+							"Class": "node-controls show-node",
+							"title": "Show Node",
 							"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 						},
 						{
-							"Class": "enable-execute-node",
-							"title": "",
+							"Class": "node-controls enable-execute-node",
+							"title": "Enable Execute Node",
 							"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 						},
 						{
-							"Class": "disable-node",
-							"title": "",
-							"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+							"Class": "node-controls disable-node",
+							"title": "Disable Node",
+							"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 						}
 					],
 					"Footer": [
 						{
-							"Class": "open-node",
+							"Class": "node-footer open-node",
 							"title": "Open Node",
 							"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 						},
 						{
-							"Class": "configure-node",
+							"Class": "node-footer configure-node",
 							"title": "Configure Node",
 							"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 						},
 						{
-							"Class": "copy-node",
+							"Class": "node-footer copy-node",
 							"title": "Copy Node",
 							"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 						},
 						{
-							"Class": "delete-node",
+							"Class": "node-footer delete-node",
 							"title": "Delete Node",
 							"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 						}
@@ -587,39 +588,39 @@
 			"Icon": "<li class='fa-solid fa-database'></li>",
 			"NodeControls": [
 				{
-					"Class": "show-node",
-					"title": "",
+					"Class": "node-controls show-node",
+					"title": "Show Node",
 					"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 				},
 				{
-					"Class": "enable-execute-node",
-					"title": "",
+					"Class": "node-controls enable-execute-node",
+					"title": "Enable Execute Node",
 					"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 				},
 				{
-					"Class": "disable-node",
-					"title": "",
-					"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+					"Class": "node-controls disable-node",
+					"title": "Disable Node",
+					"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 				}
 			],
 			"Footer": [
 				{
-					"Class": "open-node",
+					"Class": "node-footer open-node",
 					"title": "Open Node",
 					"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 				},
 				{
-					"Class": "configure-node",
+					"Class": "node-footer configure-node",
 					"title": "Configure Node",
 					"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 				},
 				{
-					"Class": "copy-node",
+					"Class": "node-footer copy-node",
 					"title": "Copy Node",
 					"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 				},
 				{
-					"Class": "delete-node",
+					"Class": "node-footer delete-node",
 					"title": "Delete Node",
 					"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 				}
@@ -634,39 +635,39 @@
 			"Icon": "<li class='fa-regular fa-file-lines'></li>",
 			"NodeControls": [
 				{
-					"Class": "show-node",
-					"title": "",
+					"Class": "node-controls show-node",
+					"title": "Show Node",
 					"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 				},
 				{
-					"Class": "enable-execute-node",
-					"title": "",
+					"Class": "node-controls enable-execute-node",
+					"title": "Enable Execute Node",
 					"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 				},
 				{
-					"Class": "disable-node",
-					"title": "",
-					"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+					"Class": "node-controls disable-node",
+					"title": "Disable Node",
+					"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 				}
 			],
 			"Footer": [
 				{
-					"Class": "open-node",
+					"Class": "node-footer open-node",
 					"title": "Open Node",
 					"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 				},
 				{
-					"Class": "configure-node",
+					"Class": "node-footer configure-node",
 					"title": "Configure Node",
 					"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 				},
 				{
-					"Class": "copy-node",
+					"Class": "node-footer copy-node",
 					"title": "Copy Node",
 					"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 				},
 				{
-					"Class": "delete-node",
+					"Class": "node-footer delete-node",
 					"title": "Delete Node",
 					"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 				}
@@ -684,39 +685,39 @@
 			"Icon": "<li class='fa-regular fa-comment-dots'></li>",
 			"NodeControls": [
 				{
-					"Class": "show-node",
-					"title": "",
+					"Class": "node-controls show-node",
+					"title": "Show Node",
 					"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 				},
 				{
-					"Class": "enable-execute-node",
-					"title": "",
+					"Class": "node-controls enable-execute-node",
+					"title": "Enable Execute Node",
 					"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 				},
 				{
-					"Class": "disable-node",
-					"title": "",
-					"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+					"Class": "node-controls disable-node",
+					"title": "Disable Node",
+					"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 				}
 			],
 			"Footer": [
 				{
-					"Class": "open-node",
+					"Class": "node-footer open-node",
 					"title": "Open Node",
 					"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 				},
 				{
-					"Class": "configure-node",
+					"Class": "node-footer configure-node",
 					"title": "Configure Node",
 					"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 				},
 				{
-					"Class": "copy-node",
+					"Class": "node-footer copy-node",
 					"title": "Copy Node",
 					"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 				},
 				{
-					"Class": "delete-node",
+					"Class": "node-footer delete-node",
 					"title": "Delete Node",
 					"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 				}
@@ -734,39 +735,39 @@
 			"Icon": "<li class='fa-solid fa-kitchen-set'></li>",
 			"NodeControls": [
 				{
-					"Class": "show-node",
-					"title": "",
+					"Class": "node-controls show-node",
+					"title": "Show Node",
 					"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 				},
 				{
-					"Class": "enable-execute-node",
-					"title": "",
+					"Class": "node-controls enable-execute-node",
+					"title": "Enable Execute Node",
 					"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 				},
 				{
-					"Class": "disable-node",
-					"title": "",
-					"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+					"Class": "node-controls disable-node",
+					"title": "Disable Node",
+					"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 				}
 			],
 			"Footer": [
 				{
-					"Class": "open-node",
+					"Class": "node-footer open-node",
 					"title": "Open Node",
 					"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 				},
 				{
-					"Class": "configure-node",
+					"Class": "node-footer configure-node",
 					"title": "Configure Node",
 					"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 				},
 				{
-					"Class": "copy-node",
+					"Class": "node-footer copy-node",
 					"title": "Copy Node",
 					"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 				},
 				{
-					"Class": "delete-node",
+					"Class": "node-footer delete-node",
 					"title": "Delete Node",
 					"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 				}
@@ -784,39 +785,39 @@
 			"Icon": "<li class='fa-solid fa-recycle'></li>",
 			"NodeControls": [
 				{
-					"Class": "show-node",
-					"title": "",
+					"Class": "node-controls show-node",
+					"title": "Show Node",
 					"Icon": "<i class=\"fa-solid fa-eye has-text-info\"></i>"
 				},
 				{
-					"Class": "enable-execute-node",
-					"title": "",
+					"Class": "node-controls enable-execute-node",
+					"title": "Enable Execute Node",
 					"Icon": "<i class=\"fa-solid fa-play has-text-success\"></i>"
 				},
 				{
-					"Class": "disable-node",
-					"title": "",
-					"Icon": "<i class=\"fa-solid fa-stop has-text-danger\"></i>"
+					"Class": "node-controls disable-node",
+					"title": "Disable Node",
+					"Icon": "<i class=\"fa-solid fa-ban has-text-danger\"></i>"
 				}
 			],
 			"Footer": [
 				{
-					"Class": "open-node",
+					"Class": "node-footer open-node",
 					"title": "Open Node",
 					"Icon": "<i class=\"fa-solid fa-right-to-bracket has-text-link\"></i>"
 				},
 				{
-					"Class": "configure-node",
+					"Class": "node-footer configure-node",
 					"title": "Configure Node",
 					"Icon": "<i class=\"fa-solid fa-cog has-text-warning\"></i>"
 				},
 				{
-					"Class": "copy-node",
+					"Class": "node-footer copy-node",
 					"title": "Copy Node",
 					"Icon": "<i class=\"fa-solid fa-copy has-text-info\"></i>"
 				},
 				{
-					"Class": "delete-node",
+					"Class": "node-footer delete-node",
 					"title": "Delete Node",
 					"Icon": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>"
 				}

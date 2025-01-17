@@ -503,10 +503,42 @@ export class Flow {
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
 					const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
 					const nodeKind = node.id.ID ? node.id.Node.Kind : node.id.id.Node.Kind;
+					console.log('nodeKind :>> ', nodeKind);
+					function findKindObject(kindArray, targetKind) {
+						for (const option of kindArray) {
+							if (option.Kind === targetKind) {
+								return option; // Return the entire object
+							}
+							if (option.Items) {
+								const foundObject = findKindObject(option.Items, targetKind);
+								if (foundObject) {
+									return foundObject; // Return if found in nested structure
+								}
+							}
+						}
+						return null; // Return null if no match is found
+					}
+					
+					const kind = findKindObject(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray, nodeKind);
+					
 					// console.log('start node'+nodeIndex, nodeID, nodeKind);
-					let footer = `<footer class="card-footer">`;
-
-					footer += `</footer>`;
+					let snodeControls = ``;
+					if (kind.NodeControls) { 
+						snodeControls += `<footer class="card-footer">`;
+						kind.NodeControls.forEach((control, controlIndex) => {
+							snodeControls += `<a href="#" class="card-footer-item ${control.Class}" title="${control.title}" data-id="${nodeID}">${control.Icon}</a>`;
+						});
+						snodeControls += `</footer>`;
+					}
+					let sfooter = "";
+					if (kind.Footer) { 
+						sfooter += `<footer class="card-footer">`;
+						kind.Footer.forEach((footer, footerIndex) => {
+							console.log('footer :>> ', footer);
+							sfooter += `<a href="#" class="card-footer-item ${footer.Class}" title="${footer.title}" data-id="${nodeID}">${footer.Icon}</a>`;
+						});
+						sfooter += `</footer>`;
+					}
 
 					let node_lock = `<i class="node-lock fa-solid fa-lock-open"></i>`;
 					console.log('node :>> ', node);
@@ -525,7 +557,8 @@ export class Flow {
 								<h class="m-0 p-0" style="font-size: 0.65rem; text-align:center;">ID: ${node.id.id.ID}</h>
 							</div>
 						</div>
-						${footer}
+						${snodeControls}
+						${sfooter}
 					</div>
 					`;
 					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent, parentSet.tab.tabType);
@@ -534,7 +567,7 @@ export class Flow {
 				// console.log('done foreach nodes ===========>');
 				
 				// this.Graph.Events.makeNodeDraggable(".graph-node", `#${parentGraphID} .scroll_content`, document.querySelector('#'+parentGraphID).dataset.tabtype);
-				this.Graph.Events.makeNodeDraggable(".graph-node", parentSet.graphCanvas.graph_surface.parentElement, parentSet);
+				// this.Graph.Events.makeNodeDraggable(".graph-node", parentSet.graphCanvas.graph_surface.parentElement, parentSet);
 
 				console.log('================= Done Render Nodes');
 				console.log('=================Start Render Edges');
@@ -1492,154 +1525,6 @@ export class Flow {
 				container.addEventListener('mouseup', onMouseUp);
 				container.addEventListener('mouseleave', onMouseUp); // Ensure cleanup if mouse leaves the container
 			}).bind(this),
-
-			enableDragSelectV1: ((selector) => {
-				const container = document.querySelector(selector);
-				let self = this;
-				let isDragging = false;
-				let startX, startY;
-			
-				const selectedElements = new Set(); // Using Set to prevent duplicates
-				let highlightBox = null;
-			
-				// Function to create a highlight box
-				function createHighlightBox() {
-					highlightBox = document.createElement('div');
-					highlightBox.style.position = 'absolute';
-					highlightBox.style.backgroundColor = 'rgba(0, 123, 255, 0.3)';
-					highlightBox.style.border = '1px dashed #007bff';
-					highlightBox.style.borderRadius = '10px';
-					highlightBox.style.pointerEvents = 'none'; // Prevent interference with mouse events
-					highlightBox.style.zIndex = '1000';
-					container.appendChild(highlightBox);
-				}
-			
-				// Function to update the position and size of the highlight box
-				function updateHighlightBox(x1, y1, x2, y2) {
-					const rect = container.getBoundingClientRect();
-					const left = Math.min(x1, x2) - rect.left;
-					const top = Math.min(y1, y2) - rect.top;
-					const width = Math.abs(x2 - x1);
-					const height = Math.abs(y2 - y1);
-			
-					highlightBox.style.left = `${left}px`;
-					highlightBox.style.top = `${top}px`;
-					highlightBox.style.width = `${width}px`;
-					highlightBox.style.height = `${height}px`;
-				}
-			
-				// Function to handle mouse down event
-				function onMouseDown(e) {
-					console.log('e.target :>> ', e.target);
-					if (e.button !== 0) return;
-					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
-						isDragging = true;
-						startX = e.clientX;
-						startY = e.clientY;
-			
-						selectedElements.clear(); // Reset selected elements
-			
-						if (!highlightBox) createHighlightBox();
-						updateHighlightBox(startX, startY, startX, startY);
-					}
-				}
-			
-				// Function to handle mouse move event
-				function onMouseMove(e) {
-					if (!isDragging) return;
-
-					// console.log('enableDragSelect mousedown');
-					self.DragSelect = true;
-			
-					const currentX = e.clientX;
-					const currentY = e.clientY;
-			
-					updateHighlightBox(startX, startY, currentX, currentY);
-			
-					const rect = container.getBoundingClientRect();
-					const dragArea = {
-						x1: Math.min(startX, currentX) - rect.left,
-						y1: Math.min(startY, currentY) - rect.top,
-						x2: Math.max(startX, currentX) - rect.left,
-						y2: Math.max(startY, currentY) - rect.top
-					};
-			
-					// Highlight elements within the drag area
-					container.querySelectorAll('.graph-node, svg path').forEach(element => {
-						// console.log('in mousemove element :>> ', element);
-						const elementRect = element.getBoundingClientRect();
-						const isInside = 
-							elementRect.left >= dragArea.x1 + rect.left &&
-							elementRect.top >= dragArea.y1 + rect.top &&
-							elementRect.right <= dragArea.x2 + rect.left &&
-							elementRect.bottom <= dragArea.y2 + rect.top;
-
-						if (isInside) {
-							if (!selectedElements.has(element)) {
-								if (element.tagName == 'path') {
-									element.classList.add('focused');
-									selectedElements.add(element);
-								} else { 
-									const elmnt = element.querySelector('.is-selectable-box');
-									if (elmnt) { 
-										element.querySelector('.is-selectable-box').classList.add('focused');
-										selectedElements.add(element);
-									}
-								}
-								
-							}
-						} else if (selectedElements.has(element)) {
-							if (element.tagName == 'path') {
-								element.classList.remove('focused');
-								selectedElements.delete(element);
-							} else { 
-								const elmnt = element.querySelector('.is-selectable-box');
-								if (elmnt) {
-									if (element.querySelector('.is-selectable-box').classList.contains('focused')) element.querySelector('.is-selectable-box').classList.remove('focused');
-									selectedElements.delete(element);
-								}
-							}
-
-						}
-					});
-				}
-			
-				// Function to handle mouse up event
-				function onMouseUp() {
-					if (isDragging) {
-						isDragging = false;
-			
-						if (highlightBox) {
-							container.removeChild(highlightBox);
-							highlightBox = null;
-						}
-			
-						// Update global variable
-						ParadigmREVOLUTION.Application.Cursor.length = 0;
-			
-						for (const element of selectedElements) {
-							if (element.tagName == 'path') {
-								ParadigmREVOLUTION.Application.Cursor.push({table:element.dataset.table, id:element.id});
-							} else { 
-								ParadigmREVOLUTION.Application.Cursor.push({table:ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id:element.id});
-							}
-							
-						}
-			
-						console.log("ParadigmREVOLUTION.Application.Cursor", ParadigmREVOLUTION.Application.Cursor);
-						setTimeout(() => {
-							// console.log('set DragSelect to false');
-							self.DragSelect = false;
-						}, 300);
-					}
-				}
-			
-				// Attach event listeners to the container
-				container.addEventListener('mousedown', onMouseDown);
-				container.addEventListener('mousemove', onMouseMove);
-				container.addEventListener('mouseup', onMouseUp);
-				container.addEventListener('mouseleave', onMouseUp); // Ensure cleanup if mouse leaves the container
-			}).bind(this)
 		}
 	};
 	Form = { //!SECTION - Form
@@ -2034,24 +1919,19 @@ export class Flow {
 		Events: { //!SECTION - Events
 			// NOTE - addGlobalEventListener
 			addGlobalEventListener: function (type, selectors, parent = document) { //!SECTION - addGlobalEventListener
-				parent.addEventListener(
-					type,
-					(e) => {
-						// e.preventDefault();
-						for (const { selector, callback } of selectors) {
-							const targetElement = e.target.closest(selector);
-					
-							if (targetElement && parent.contains(targetElement)) {
+				parent.addEventListener(type, (e) => {
+					// e.preventDefault();
+					for (const { selector, callback } of selectors) {
+						const targetElement = e.target.closest(selector);
+
+						if (targetElement && parent.contains(targetElement)) {
 							// Trigger callback for the matched selector
 							callback(e);
 							// break; // Stop checking other selectors once matched
-							}
 						}
-					},
-					true // Capture phase
-				);
+					}
+				} ,true); //Capture phase
 			},
-			
 			setupTabSwitcher: (({ 
 				tabSelector,
 				contentContainerSelector,
@@ -2284,7 +2164,7 @@ export class Flow {
 				});
 		
 				document.querySelectorAll('.graph_surfaces').forEach(surface => { 
-					console.log('surfaces :>> ', surface);
+					console.log('surface :>> ', surface);
 
 					const tabType = surface.closest(`.app_configurator_containers`).dataset.tabtype;
 					const element = surface.closest(`.application_divisions`).querySelector(`a[data-tabtype="${tabType}"]`);
@@ -2313,7 +2193,7 @@ export class Flow {
 						zoomProps: this.GraphCanvas[tabType]
 					};
 					console.log('parentSet :>> ', parentSet);
-					this.Graph.Events.enableDragSelect(surface, parentSet);
+					// this.Graph.Events.enableDragSelect(surface, parentSet);
 				});
 
 				// Initialize the scroll snap functionality
@@ -2379,6 +2259,11 @@ export class Flow {
 
 				//NOTE - addGlobalEveentListener CLICK
 				this.Form.Events.addGlobalEventListener('click', [{
+					selector: '.graph-node .node-footer',
+					callback: async (e) => {
+						console.log('clicked!!!!!')
+					}
+				},{
 					selector: '.datastore-status-indicator',
 					callback: async (e) => {
 						let Tokens = {};
@@ -2438,81 +2323,85 @@ export class Flow {
 							document.querySelector('#datastore_status').innerHTML = datastore_status;
 						});
 					}
-				}, {
-					selector: '.is-selectable',
-					callback: (e) => {
-						console.log('is-selectable CLICK');
-
-						this.DragSelect = true;
-						// console.log('e target', e.target);
-						// console.log('e currentTarget', e.currentTarget);
-						const selectableParent = e.target.closest('.is-selectable-parent');
-						const selectableBox = e.target.closest('.is-selectable-box');
-						console.log('selectables', selectableParent, selectableBox);
+				// }, {
+				// 	selector: '.is-selectable',
+				// 	callback: (e) => {
+				// 		console.log('is-selectable CLICK');
+						
+				// 		ParadigmREVOLUTION.Application.Cursor = [];
+						
+				// 		this.DragSelect = true;
+				// 		// console.log('e target', e.target);
+				// 		// console.log('e currentTarget', e.currentTarget);
+				// 		const selectableParent = e.target.closest('.is-selectable-parent');
+				// 		const selectableBox = e.target.closest('.is-selectable-box');
+				// 		console.log('selectables', selectableParent, selectableBox);
 				
-						if (!selectableParent || !selectableBox) return; // Guard clause
+				// 		if (!selectableParent || !selectableBox) return; // Guard clause
 				
-						const dataset = e.target.dataset;
-						const datasetEntries = Object.entries(dataset);
+				// 		const dataset = e.target.dataset;
+				// 		const datasetEntries = Object.entries(dataset);
 
-						if (datasetEntries.length > 0) {
-							// console.log('dataset is not empty');
-							// console.log('dataset :>> ', dataset);
+				// 		if (datasetEntries.length > 0) {
+				// 			// console.log('dataset is not empty');
+				// 			// console.log('dataset :>> ', dataset);
 
-							if (dataset.template) {
-								console.log('template: ', dataset.template);
-								// if (e.target.classList.contains('graph_node_surface')) { 
-								// 	this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-								// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
-								// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
-								// 	});
-								// }
-							} else if (dataset.schema) {
-								console.log('schema: ', dataset.schema);
-								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-									let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
-									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
-								});
-							}
-							if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id: dataset.id });
-							setTimeout(() => { 
-								this.DragSelect = false;
-							}, 300);
-						}
+				// 			if (dataset.template) {
+				// 				console.log('template: ', dataset.template);
+				// 				// if (e.target.classList.contains('graph_node_surface')) { 
+				// 				// 	this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+				// 				// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
+				// 				// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+				// 				// 	});
+				// 				// }
+				// 			} else if (dataset.schema) {
+				// 				console.log('schema: ', dataset.schema);
+				// 				this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+				// 					let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
+				// 					return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
+				// 				});
+				// 			}
+				// 			if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id: dataset.id });
+				// 			setTimeout(() => { 
+				// 				this.DragSelect = false;
+				// 			}, 300);
+				// 		}
 
-						console.log('selectable box or selectable parent exists!');
-						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
-							item.style.removeProperty('width');
-							item.classList.remove('box', 'focused', 'm-2');
-							item.classList.remove('m-2');
-						});
-						if (selectableBox.classList.contains('field')) {
-							selectableBox.style.width = '100%;';
-						} else {
-							selectableBox.style.width = 'fit-content;';
-						}
-						selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
-					}
-				}, {
-					selector: '.is-selectable-parent',
-					callback: (e) => {
-						console.log('is-selectable-parent CLICK');
-						if (e.target.classList.contains('is-selectable')) return;
-						console.log('this.DragSelect', this.DragSelect);
-						if (this.DragSelect) return;
-						console.log('is-selectable-parent GOOOO');
-						const selectableParent = e.target.closest('.is-selectable-parent');
-						selectableParent.querySelectorAll('.focused').forEach((item) => {
-							console.log('item', item);
-							if (item.tagName == 'path') {
-								item.classList.remove('focused');
-							} else { 
-								item.style.removeProperty('width');
-								item.classList.remove('box', 'focused', 'm-2');
-								item.classList.remove('m-2');
-							}
-						})
-					}
+				// 		console.log('selectable box or selectable parent exists!');
+				// 		selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
+				// 			item.style.removeProperty('width');
+				// 			item.classList.remove('box', 'focused', 'm-2');
+				// 			item.classList.remove('m-2');
+				// 		});
+				// 		if (selectableBox.classList.contains('field')) {
+				// 			selectableBox.style.width = '100%;';
+				// 		} else {
+				// 			selectableBox.style.width = 'fit-content;';
+				// 		}
+				// 		selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
+				// 	}
+				// }, {
+				// 	selector: '.is-selectable-parent',
+				// 	callback: (e) => {
+				// 		console.log('is-selectable-parent CLICK');
+				// 		if (e.target.classList.contains('is-selectable')) return;
+				// 		console.log('this.DragSelect', this.DragSelect);
+				// 		if (this.DragSelect) return;
+				// 		console.log('is-selectable-parent GOOOO');
+				// 		const selectableParent = e.target.closest('.is-selectable-parent');
+				// 		ParadigmREVOLUTION.Application.Cursor = [];
+				// 		selectableParent.querySelectorAll('.focused').forEach((item) => {
+				// 			console.log('item', item);
+				// 			if (item.tagName == 'path') {
+				// 				item.classList.remove('focused');
+				// 			} else { 
+				// 				item.style.removeProperty('width');
+				// 				item.classList.remove('box', 'focused', 'm-2');
+				// 				item.classList.remove('m-2');
+								
+				// 			}
+				// 		})
+				// 	}
 				}, {
 					selector: '.graph-edge',
 					callback: (e) => {
@@ -3032,7 +2921,7 @@ export class Flow {
 							console.error("Error in processing nodes:", err);
 						});
 					}
-									}
+				}
 				]);
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');

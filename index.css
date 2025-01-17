@@ -825,3 +825,6 @@
 .no-outline {
     outline: none; /* Removes the focus outline */
 }
+.node-controls .node-footer{
+	pointer-events: all;
+}
