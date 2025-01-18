@@ -526,7 +526,7 @@ export class Flow {
 					if (kind.NodeControls) { 
 						snodeControls += `<footer class="card-footer">`;
 						kind.NodeControls.forEach((control, controlIndex) => {
-							snodeControls += `<a href="#" class="card-footer-item ${control.Class}" title="${control.title}" data-id="${nodeID}">${control.Icon}</a>`;
+							snodeControls += `<a href="#" class="card-footer-item ${control.Class}" title="${control.title}" data-actiontype="${control.ActionType}" data-id="${nodeID}"><i class="${control.Icon} ${control.Class}" data-actiontype="${control.ActionType}" data-id="${nodeID}"></i></a>`;
 						});
 						snodeControls += `</footer>`;
 					}
@@ -535,7 +535,7 @@ export class Flow {
 						sfooter += `<footer class="card-footer">`;
 						kind.Footer.forEach((footer, footerIndex) => {
 							console.log('footer :>> ', footer);
-							sfooter += `<a href="#" class="card-footer-item ${footer.Class}" title="${footer.title}" data-id="${nodeID}">${footer.Icon}</a>`;
+							sfooter += `<a href="#" class="card-footer-item ${footer.Class}" title="${footer.title}" data-actiontype="${footer.ActionType}" data-id="${nodeID}"><i class="${footer.Icon} ${footer.Class}" data-actiontype="${footer.ActionType}" data-id="${nodeID}"></i></a>`;
 						});
 						sfooter += `</footer>`;
 					}
@@ -566,8 +566,7 @@ export class Flow {
 				});
 				// console.log('done foreach nodes ===========>');
 				
-				// this.Graph.Events.makeNodeDraggable(".graph-node", `#${parentGraphID} .scroll_content`, document.querySelector('#'+parentGraphID).dataset.tabtype);
-				// this.Graph.Events.makeNodeDraggable(".graph-node", parentSet.graphCanvas.graph_surface.parentElement, parentSet);
+				this.Graph.Events.makeNodeDraggable(".graph-node", parentSet.graphCanvas.graph_surface.parentElement, parentSet);
 
 				console.log('================= Done Render Nodes');
 				console.log('=================Start Render Edges');
@@ -2193,7 +2192,7 @@ export class Flow {
 						zoomProps: this.GraphCanvas[tabType]
 					};
 					console.log('parentSet :>> ', parentSet);
-					// this.Graph.Events.enableDragSelect(surface, parentSet);
+					this.Graph.Events.enableDragSelect(surface, parentSet);
 				});
 
 				// Initialize the scroll snap functionality
@@ -2258,150 +2257,128 @@ export class Flow {
 				// document.querySelector('#graph_addnode_select').innerHTML = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.map(option => `<option value="${option.Kind}" data-nodetype="${option.Kind}Node" data-nodeicon="${option.Icon}">${option.Kind}</option>`).join('');
 
 				//NOTE - addGlobalEveentListener CLICK
-				this.Form.Events.addGlobalEventListener('click', [{
-					selector: '.graph-node .node-footer',
-					callback: async (e) => {
-						console.log('clicked!!!!!')
-					}
-				},{
-					selector: '.datastore-status-indicator',
-					callback: async (e) => {
-						let Tokens = {};
-							
-						let initConfigs = ParadigmREVOLUTION.Datastores.Parameters;
-						window.SurrealDB = SurrealDB;
-						window.ParadigmREVOLUTION.Datastores = {
-							Tokens: Tokens,
-							Parameters: ParadigmREVOLUTION.Datastores.Parameters,
-							SurrealDB: ParadigmREVOLUTION.Datastores.SurrealDB,
-						};
-
-						const promises = initConfigs.map(config =>
-							ParadigmREVOLUTION.SurrealDBinterface.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
-						);
-
-						const results = await Promise.all(promises);
-
-						initConfigs.forEach((config, index) => {
-							Tokens[config.name] = results[index];
-						});
-						window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
-
-						async function getDatastoreStatus() {
-							let datastore_status = '';
-							for (const [idx, entry] of Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB)) {
-								// Check if Instance is false
-								if (!entry.Instance) {
-									datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
-								} else {
-									try {
-										// Await the promise for connection status
-										if (entry.Instance == false) {
-											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
-										} else if (entry.Instance.connection == undefined) {
-											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
-										} else {
-											const status = await entry.Instance.connection.status;
-											// Check connection status
-											if (status === "connected") {
-												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
-											} else if (status === "disconnected") {
-												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
-											} else {
+				this.Form.Events.addGlobalEventListener('click', [
+					{
+						selector: '.datastore-status-indicator',
+						callback: async (e) => {
+							let Tokens = {};
+								
+							let initConfigs = ParadigmREVOLUTION.Datastores.Parameters;
+							window.SurrealDB = SurrealDB;
+							window.ParadigmREVOLUTION.Datastores = {
+								Tokens: Tokens,
+								Parameters: ParadigmREVOLUTION.Datastores.Parameters,
+								SurrealDB: ParadigmREVOLUTION.Datastores.SurrealDB,
+							};
+	
+							const promises = initConfigs.map(config =>
+								ParadigmREVOLUTION.SurrealDBinterface.initSurrealDB(config.name, config.label, config.shortlabel, config.connect, config.instance, window.ParadigmREVOLUTION.SystemCore.Blueprints.Data, window.ParadigmREVOLUTION.SystemCore.Modules, cr)
+							);
+	
+							const results = await Promise.all(promises);
+	
+							initConfigs.forEach((config, index) => {
+								Tokens[config.name] = results[index];
+							});
+							window.ParadigmREVOLUTION.SystemCore.CoreStatus.SurrealDB.Status = "LOADED";
+	
+							async function getDatastoreStatus() {
+								let datastore_status = '';
+								for (const [idx, entry] of Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB)) {
+									// Check if Instance is false
+									if (!entry.Instance) {
+										datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
+									} else {
+										try {
+											// Await the promise for connection status
+											if (entry.Instance == false) {
+												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
+											} else if (entry.Instance.connection == undefined) {
 												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
+											} else {
+												const status = await entry.Instance.connection.status;
+												// Check connection status
+												if (status === "connected") {
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
+												} else if (status === "disconnected") {
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
+												} else {
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
+												}
 											}
+										} catch (error) {
+											console.error(`Error fetching status for ${idx}:`, error);
+											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} ERROR">${entry.Metadata.ShortLabel}</button>`;
 										}
-									} catch (error) {
-										console.error(`Error fetching status for ${idx}:`, error);
-										datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} ERROR">${entry.Metadata.ShortLabel}</button>`;
 									}
 								}
-							}
-							return datastore_status;
-						};
-						getDatastoreStatus().then(datastore_status => {
-							document.querySelector('#datastore_status').innerHTML = datastore_status;
-						});
+								return datastore_status;
+							};
+							getDatastoreStatus().then(datastore_status => {
+								document.querySelector('#datastore_status').innerHTML = datastore_status;
+							});
+						}
 					}
-				// }, {
-				// 	selector: '.is-selectable',
-				// 	callback: (e) => {
-				// 		console.log('is-selectable CLICK');
-						
-				// 		ParadigmREVOLUTION.Application.Cursor = [];
-						
-				// 		this.DragSelect = true;
-				// 		// console.log('e target', e.target);
-				// 		// console.log('e currentTarget', e.currentTarget);
-				// 		const selectableParent = e.target.closest('.is-selectable-parent');
-				// 		const selectableBox = e.target.closest('.is-selectable-box');
-				// 		console.log('selectables', selectableParent, selectableBox);
-				
-				// 		if (!selectableParent || !selectableBox) return; // Guard clause
-				
-				// 		const dataset = e.target.dataset;
-				// 		const datasetEntries = Object.entries(dataset);
+				], document.querySelector('#app_top_menu_container'));
 
-				// 		if (datasetEntries.length > 0) {
-				// 			// console.log('dataset is not empty');
-				// 			// console.log('dataset :>> ', dataset);
-
-				// 			if (dataset.template) {
-				// 				console.log('template: ', dataset.template);
-				// 				// if (e.target.classList.contains('graph_node_surface')) { 
-				// 				// 	this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-				// 				// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
-				// 				// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
-				// 				// 	});
-				// 				// }
-				// 			} else if (dataset.schema) {
-				// 				console.log('schema: ', dataset.schema);
-				// 				this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-				// 					let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
-				// 					return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
-				// 				});
-				// 			}
-				// 			if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id: dataset.id });
-				// 			setTimeout(() => { 
-				// 				this.DragSelect = false;
-				// 			}, 300);
-				// 		}
-
-				// 		console.log('selectable box or selectable parent exists!');
-				// 		selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
-				// 			item.style.removeProperty('width');
-				// 			item.classList.remove('box', 'focused', 'm-2');
-				// 			item.classList.remove('m-2');
-				// 		});
-				// 		if (selectableBox.classList.contains('field')) {
-				// 			selectableBox.style.width = '100%;';
-				// 		} else {
-				// 			selectableBox.style.width = 'fit-content;';
-				// 		}
-				// 		selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
-				// 	}
-				// }, {
-				// 	selector: '.is-selectable-parent',
-				// 	callback: (e) => {
-				// 		console.log('is-selectable-parent CLICK');
-				// 		if (e.target.classList.contains('is-selectable')) return;
-				// 		console.log('this.DragSelect', this.DragSelect);
-				// 		if (this.DragSelect) return;
-				// 		console.log('is-selectable-parent GOOOO');
-				// 		const selectableParent = e.target.closest('.is-selectable-parent');
-				// 		ParadigmREVOLUTION.Application.Cursor = [];
-				// 		selectableParent.querySelectorAll('.focused').forEach((item) => {
-				// 			console.log('item', item);
-				// 			if (item.tagName == 'path') {
-				// 				item.classList.remove('focused');
-				// 			} else { 
-				// 				item.style.removeProperty('width');
-				// 				item.classList.remove('box', 'focused', 'm-2');
-				// 				item.classList.remove('m-2');
-								
-				// 			}
-				// 		})
-				// 	}
+				this.Form.Events.addGlobalEventListener('click', [{
+					selector: '.graph-node .node-controls',
+					callback: async (e) => {
+						console.log(e.target.classList, e.target.dataset, 'CLICKED!!!');
+						switch (e.target.dataset.actiontype) {
+							case 'showNode':
+								console.log('Show Node clicked!');
+								break;
+							case 'enableNodeExecute':
+								console.log('Enable Node Execute clicked!');
+								break;
+							case 'disableNode':
+								console.log('Disable Node clicked!');
+								break;
+						};
+					
+					}
+				},{
+					selector: '.graph-node .node-footer',
+					callback: async (e) => {
+						console.log(e.target.classList, e.target.dataset, 'CLICKED!!!');
+						switch (e.target.dataset.actiontype) {
+							case 'openNode':
+								break;
+							case 'configureNode':
+								break;
+							case 'copyNode':
+								break;
+							case 'deleteNode':
+								const id = e.target.dataset.id;
+								const table = "Yggdrasil";
+								if (confirm(`Apakah anda ingin menghapus dokumen ${table}:${id}?`)) {
+									let qstr = `SELECT id FROM ONLY ${table} where id:{ID:"${id}"}.. limit 1 ;`;
+									console.log('qstr :>> ', qstr);
+									ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr)
+										.then(result => {
+											console.log('result :>> ', result[0]);
+											if (result[0]?.id?.id) result[0].id = result[0].id.id;
+											console.log('result :>> ', result[0]);
+											qstr = `DELETE FROM ${table} where id.ID = "${id}";`;
+											console.log('DELETE qstr :>> ', qstr);
+											ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr)
+												.then(() => {
+													console.log(`Node ID ${id} removal SUCCESS!`);
+													e.target.closest(`.app_configurator_containers`).querySelector('.document_refreshrender_button').click();
+												})
+												.catch(error => {
+													console.error(`Node ID ${id} removal ERROR!`, error);
+												});
+										})
+										.catch(error => {
+											console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
+										});
+									
+								}
+								break;
+						};
+					}
 				}, {
 					selector: '.graph-edge',
 					callback: (e) => {
@@ -2411,6 +2388,459 @@ export class Flow {
 						const table = e.target.dataset.table;
 						ParadigmREVOLUTION.Application.Cursor.push({table:table, id:id});
 						e.target.classList.add('focused');
+					}
+				}, {
+					selector: '.graph_addnode_button', //NOTE - addnode-button
+					callback: (e) => {
+						//NOTE - Create new node!
+						console.log('Create node! graph_addnode_button click!');
+						const graphCanvas = e.target.closest('.app_configurator_containers');
+						const tabtype = graphCanvas.dataset.tabtype;
+						console.log('graphCanvas', graphCanvas);
+
+						// Generate the HTML string for the select element
+						let values = '';
+
+						// Loop through KindArray to populate the select element
+						ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.forEach((element) => {
+							if (element.Type === "Item") {
+								// Create an option for Type: "Item"
+								values += `<option value="${element.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${element.Group.join(', ')}">${element.Kind}</option>`;
+							} else if (element.Type === "Array") {
+								// Create an optgroup for Type: "Array"
+								values += `<optgroup label="${element.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${element.Group.join(', ')}">`;
+						
+								// Add options for each item in the "Items" array
+								element.Items.forEach((item) => {
+									values += `<option value="${item.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${item.Group.join(', ')}">${item.Kind}</option>`;
+								});
+						
+								values += `</optgroup>`;
+							}
+						});
+						let schema = {
+							"id": "form_select_connection_type",
+							"label": "Form Select Connection Type",
+							"type": "record",
+							"typeSelection": ["record","array"],
+							"icon": "<i class=\"fa-brands fa-wpforms\"></i>",
+							"order": 100,
+							"Dataset": {
+								"Layout": {
+									"Form": {},
+									"Properties": {
+										"FormEntry": {
+											"Show": 1,
+											"Label": "Form Select Connection Type",
+											"ShowLabel": 1
+										},
+										"Preview": {
+											"Show": 1,
+											"Label": "Form Select Connection Type",
+											"ShowLabel": 1
+										}
+									}
+								},
+								"Schema": [
+									{
+										"id": "nodeKind",
+										"label": "Node Kind",
+										"type": "select",
+										"value": values,
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "ulid",
+										"label": "ULID",
+										"type": "text",
+										"value": ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "name",
+										"label": "Name",
+										"type": "text",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "label",
+										"label": "Label",
+										"type": "text",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isShown",
+										"label": "Shown",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isLocked",
+										"label": "Locked",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isExecutable",
+										"label": "Executable",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isDisabled",
+										"label": "Disabled",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									}
+								]
+							}
+						}
+						let flow = this;
+						// console.log('flow :>> ', flow);
+						this.Graph.Events.showSchemaModal('New Node', schema, {graphCanvas:graphCanvas, flow:flow}, (data, passedData) => {
+							function findKindObject(kindArray, targetKind) {
+								for (const option of kindArray) {
+									if (option.Kind === targetKind) {
+										return option; // Return the entire object
+									}
+									if (option.Items) {
+										const foundObject = findKindObject(option.Items, targetKind);
+										if (foundObject) {
+											return foundObject; // Return if found in nested structure
+										}
+									}
+								}
+								return null; // Return null if no match is found
+							}
+							
+							console.log('data :>> ', data);
+
+							const name = data.name;
+							const label = data.label;
+							const ulid = data.ulid;
+							const nodeKind = data.nodeKind; // Value of the selected option
+							const tObj = findKindObject(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray, nodeKind);
+							const icon = tObj.Icon;
+	
+							const parent = document.querySelector('#graph_scroll_content'); // NOTE - NOW
+							const parentRect = parent.getBoundingClientRect();
+	
+							console.log('parent', parent);
+							console.log('parentRect', parentRect);
+			
+							//CALCULATE COORDINATE
+							const parentScrollLeft = parent.scrollLeft;
+							const parentScrollTop = parent.scrollTop;
+							// const parentLeft = parentRect.left;
+							// const parentTop = parentRect.top;
+						
+							let dx = parentRect.left + parentScrollLeft; //+ parentScrollLeft;
+							let dy = parentRect.top + parentScrollTop;
+					
+							console.log('dxy :>> ', dx, dy);
+							//CALCULATE COORDINATE
+	
+							// Extract custom data attributes from the selected option
+							const ULID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
+							const tstmp = Date.now();
+							const newNodeID = {
+								ID: nodeKind+'/'+ulid,
+								Table: "Yggdrasil",
+								ULID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+								Node: {
+									Realm: "Universe",
+									Kind: nodeKind,
+									Type: "",
+									Class: "",
+									Group: "",
+									Category: "",
+									Icon: icon
+								},
+								Type: "",
+								Status: "Active",
+								Timestamp: tstmp,
+								Version: {
+									Number: 1,
+									VersionID: ULID,
+									ULID: ULID,
+									Timestamp: tstmp,
+								},
+								Link: {
+									Head: false,
+									ID: 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+									Segment: "",
+								}
+							};
+							const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
+
+							// newNode.id = newNodeID;
+							newNode.Properties.Name = name;
+							newNode.Properties.Label = label;
+							newNode.Properties.isLocked = data.isLocked;
+							newNode.Properties.isShown = data.isShown;
+							newNode.Properties.isEnableExecute = data.isExecutable;
+							newNode.Properties.isDisabled = data.isDisabled;
+
+
+							console.log('newNode :>> ', newNode);
+	
+							if (newTabCounter > 20) newTabCounter = 0;
+							let tx = 30 + (dx + (newTabCounter * 40));
+							let ty = dy + 60;
+	
+							let coord = {
+								x: tx > 0 ? tx : 0,
+								y: ty > 0 ? ty : 0
+							}
+							Object.entries(passedData.flow.GraphCanvas).forEach((key, value) => {
+								newNode.Presentation.Perspectives.GraphNode.Position[key] = coord;
+							});
+							
+							newNode.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;
+							newTabCounter++;
+	
+							console.log('newNode :>> ', newNode);
+							// ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
+							if (!this.storage) {
+								console.error('No storage found.');
+								return;
+							}
+							// NOTE - SurrealDB create/insert/upsert
+							let qstr = `
+								upsert
+									${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(newNodeID)} 
+								content
+									${JSON.stringify(newNode)};`;
+							console.log('qstr :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
+	
+							// Refresh render
+							passedData.graphCanvas.querySelector('.document_refreshrender_button').click();
+						});
+					}
+				}, {
+					selector: '.graph_removenodes_button', //NOTE - removenodes-button
+					callback: (e) => {
+						console.log('Remove nodes! graph_removenodes_button click!');
+						// NOTE - Remove nodes!
+						let graphCanvas = e.target.closest('.app_configurator_containers');
+						if (ParadigmREVOLUTION.Application.Cursor.length == 0) return;
+						console.log('ParadigmREVOLUTION.Application.Cursor :>> ', ParadigmREVOLUTION.Application.Cursor);
+					
+						const promises = ParadigmREVOLUTION.Application.Cursor.map(znode => {
+							if (!confirm(`Apakah anda ingin menghapus dokumen ${znode.table}:${znode.id}?`)) {
+								return Promise.resolve(); // Skip this node
+							}
+							
+							let table = znode.table;
+							let id = znode.id;
+							console.log('table, id >>>>>>', table, id);
+					
+							let qstr = `SELECT id FROM ONLY ${table} where id:{ID:"${id}"}.. limit 1 ;`;
+							return ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr)
+								.then(result => {
+									console.log('result :>> ', result[0]);
+									if (result[0]?.id?.id) result[0].id = result[0].id.id;
+									console.log('result :>> ', result[0]);
+									qstr = `DELETE FROM ${table} where id.ID = "${id}";`;
+									console.log('DELETE qstr :>> ', qstr);
+									return ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr)
+										.then(() => {
+											console.log(`Node ID ${id} removal SUCCESS!`);
+											znode = null;
+										})
+										.catch(error => {
+											console.error(`Node ID ${id} removal ERROR!`, error);
+										});
+								})
+								.catch(error => {
+									console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
+								});
+						});
+						Promise.all(promises).then(() => {
+							console.log("All nodes have been processed.");
+							ParadigmREVOLUTION.Application.Cursor = [];
+							
+							// Refresh render
+							graphCanvas.querySelector('.document_refreshrender_button').click();
+						}).catch(err => {
+							console.error("Error in processing nodes:", err);
+						});
+					}
+				},{
+					selector: '.is-selectable',
+					callback: (e) => {
+						console.log('is-selectable CLICK');
+						
+						ParadigmREVOLUTION.Application.Cursor = [];
+						
+						this.DragSelect = true;
+						// console.log('e target', e.target);
+						// console.log('e currentTarget', e.currentTarget);
+						const selectableParent = e.target.closest('.is-selectable-parent');
+						const selectableBox = e.target.closest('.is-selectable-box');
+						console.log('selectables', selectableParent, selectableBox);
+				
+						if (!selectableParent || !selectableBox) return; // Guard clause
+				
+						const dataset = e.target.dataset;
+						const datasetEntries = Object.entries(dataset);
+
+						if (datasetEntries.length > 0) {
+							// console.log('dataset is not empty');
+							// console.log('dataset :>> ', dataset);
+
+							if (dataset.template) {
+								console.log('template: ', dataset.template);
+								// if (e.target.classList.contains('graph_node_surface')) { 
+								// 	this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+								// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
+								// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+								// 	});
+								// }
+							} else if (dataset.schema) {
+								console.log('schema: ', dataset.schema);
+								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+									let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
+									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
+								});
+							}
+							if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id: dataset.id });
+							setTimeout(() => { 
+								this.DragSelect = false;
+							}, 300);
+						}
+
+						console.log('selectable box or selectable parent exists!');
+						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
+							item.style.removeProperty('width');
+							item.classList.remove('box', 'focused', 'm-2');
+							item.classList.remove('m-2');
+						});
+						if (selectableBox.classList.contains('field')) {
+							selectableBox.style.width = '100%;';
+						} else {
+							selectableBox.style.width = 'fit-content;';
+						}
+						selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
+					}
+				}, {
+					selector: '.is-selectable-parent',
+					callback: (e) => {
+						console.log('is-selectable-parent CLICK');
+						if (e.target.classList.contains('is-selectable')) return;
+						console.log('this.DragSelect', this.DragSelect);
+						if (this.DragSelect) return;
+						console.log('is-selectable-parent GOOOO');
+						const selectableParent = e.target.closest('.is-selectable-parent');
+						ParadigmREVOLUTION.Application.Cursor = [];
+						selectableParent.querySelectorAll('.focused').forEach((item) => {
+							console.log('item', item);
+							if (item.tagName == 'path') {
+								item.classList.remove('focused');
+							} else { 
+								item.style.removeProperty('width');
+								item.classList.remove('box', 'focused', 'm-2');
+								item.classList.remove('m-2');
+								
+							}
+						})
+					}
+				}
+				], document.querySelector('#app_graph_container'));
+
+				this.Form.Events.addGlobalEventListener('click', [{
+					selector: '.is-selectable',
+					callback: (e) => {
+						console.log('is-selectable CLICK');
+						
+						ParadigmREVOLUTION.Application.Cursor = [];
+						
+						this.DragSelect = true;
+						// console.log('e target', e.target);
+						// console.log('e currentTarget', e.currentTarget);
+						const selectableParent = e.target.closest('.is-selectable-parent');
+						const selectableBox = e.target.closest('.is-selectable-box');
+						console.log('selectables', selectableParent, selectableBox);
+				
+						if (!selectableParent || !selectableBox) return; // Guard clause
+				
+						const dataset = e.target.dataset;
+						const datasetEntries = Object.entries(dataset);
+
+						if (datasetEntries.length > 0) {
+							// console.log('dataset is not empty');
+							// console.log('dataset :>> ', dataset);
+
+							if (dataset.template) {
+								console.log('template: ', dataset.template);
+								// if (e.target.classList.contains('graph_node_surface')) { 
+								// 	this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+								// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
+								// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+								// 	});
+								// }
+							} else if (dataset.schema) {
+								console.log('schema: ', dataset.schema);
+								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+									let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
+									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
+								});
+							}
+							if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id: dataset.id });
+							setTimeout(() => { 
+								this.DragSelect = false;
+							}, 300);
+						}
+
+						console.log('selectable box or selectable parent exists!');
+						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
+							item.style.removeProperty('width');
+							item.classList.remove('box', 'focused', 'm-2');
+							item.classList.remove('m-2');
+						});
+						if (selectableBox.classList.contains('field')) {
+							selectableBox.style.width = '100%;';
+						} else {
+							selectableBox.style.width = 'fit-content;';
+						}
+						selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
+					}
+				}, {
+					selector: '.is-selectable-parent',
+					callback: (e) => {
+						console.log('is-selectable-parent CLICK');
+						if (e.target.classList.contains('is-selectable')) return;
+						console.log('this.DragSelect', this.DragSelect);
+						if (this.DragSelect) return;
+						console.log('is-selectable-parent GOOOO');
+						const selectableParent = e.target.closest('.is-selectable-parent');
+						ParadigmREVOLUTION.Application.Cursor = [];
+						selectableParent.querySelectorAll('.focused').forEach((item) => {
+							console.log('item', item);
+							if (item.tagName == 'path') {
+								item.classList.remove('focused');
+							} else { 
+								item.style.removeProperty('width');
+								item.classList.remove('box', 'focused', 'm-2');
+								item.classList.remove('m-2');
+								
+							}
+						})
 					}
 				}, {
 					selector: '.form-input-types',
@@ -2644,285 +3074,7 @@ export class Flow {
 							}, 300); // Match this duration to the CSS transition time
 						}
 					}
-				}, {
-					selector: '.graph_addnode_button', //NOTE - addnode-button
-					callback: (e) => {
-						//NOTE - Create new node!
-						console.log('Create node! graph_addnode_button click!');
-						const graphCanvas = e.target.closest('.app_configurator_containers');
-						const tabtype = graphCanvas.dataset.tabtype;
-						console.log('graphCanvas', graphCanvas);
-
-						// Generate the HTML string for the select element
-						let values = '';
-
-						// Loop through KindArray to populate the select element
-						ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.forEach((element) => {
-							if (element.Type === "Item") {
-								// Create an option for Type: "Item"
-								values += `<option value="${element.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${element.Group.join(', ')}">${element.Kind}</option>`;
-							} else if (element.Type === "Array") {
-								// Create an optgroup for Type: "Array"
-								values += `<optgroup label="${element.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${element.Group.join(', ')}">`;
-						
-								// Add options for each item in the "Items" array
-								element.Items.forEach((item) => {
-									values += `<option value="${item.Kind}" class="has-tooltip-arrow has-tooltip-multiline" data-tooltip="Groups: ${item.Group.join(', ')}">${item.Kind}</option>`;
-								});
-						
-								values += `</optgroup>`;
-							}
-						});
-						let schema = {
-							"id": "form_select_connection_type",
-							"label": "Form Select Connection Type",
-							"type": "record",
-							"typeSelection": ["record","array"],
-							"icon": "<i class=\"fa-brands fa-wpforms\"></i>",
-							"order": 100,
-							"Dataset": {
-								"Layout": {
-									"Form": {},
-									"Properties": {
-										"FormEntry": {
-											"Show": 1,
-											"Label": "Form Select Connection Type",
-											"ShowLabel": 1
-										},
-										"Preview": {
-											"Show": 1,
-											"Label": "Form Select Connection Type",
-											"ShowLabel": 1
-										}
-									}
-								},
-								"Schema": [
-									{
-										"id": "nodeKind",
-										"label": "Node Kind",
-										"type": "select",
-										"value": values,
-										"field_class":"is-selectable-box",
-										"form": 1
-									},
-									{
-										"id": "ulid",
-										"label": "ULID",
-										"type": "text",
-										"value": ParadigmREVOLUTION.SystemCore.Modules.ULID(),
-										"field_class":"is-selectable-box",
-										"form": 1
-									},
-									{
-										"id": "name",
-										"label": "Name",
-										"type": "text",
-										"value": "",
-										"field_class":"is-selectable-box",
-										"form": 1
-									},
-									{
-										"id": "label",
-										"label": "Label",
-										"type": "text",
-										"value": "",
-										"field_class":"is-selectable-box",
-										"form": 1
-									},
-									{
-										"id": "isLocked",
-										"label": "Locked",
-										"type": "checkbox",
-										"value": "",
-										"field_class":"is-selectable-box",
-										"form": 1
-									},
-									{
-										"id": "isExecutable",
-										"label": "Executable",
-										"type": "checkbox",
-										"value": "",
-										"field_class":"is-selectable-box",
-										"form": 1
-									}
-								]
-							}
-						}
-						let flow = this;
-						// console.log('flow :>> ', flow);
-						this.Graph.Events.showSchemaModal('New Node', schema, {graphCanvas:graphCanvas, flow:flow}, (data, passedData) => {
-							function findKindObject(kindArray, targetKind) {
-								for (const option of kindArray) {
-									if (option.Kind === targetKind) {
-										return option; // Return the entire object
-									}
-									if (option.Items) {
-										const foundObject = findKindObject(option.Items, targetKind);
-										if (foundObject) {
-											return foundObject; // Return if found in nested structure
-										}
-									}
-								}
-								return null; // Return null if no match is found
-							}
-							
-							console.log('data :>> ', data);
-
-							const name = data.name;
-							const label = data.label;
-							const ulid = data.ulid;
-							const nodeKind = data.nodeKind; // Value of the selected option
-							const tObj = findKindObject(ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray, nodeKind);
-							const icon = tObj.Icon;
-	
-							const parent = document.querySelector('#graph_scroll_content'); // NOTE - NOW
-							const parentRect = parent.getBoundingClientRect();
-	
-							console.log('parent', parent);
-							console.log('parentRect', parentRect);
-			
-							//CALCULATE COORDINATE
-							const parentScrollLeft = parent.scrollLeft;
-							const parentScrollTop = parent.scrollTop;
-							// const parentLeft = parentRect.left;
-							// const parentTop = parentRect.top;
-						
-							let dx = parentRect.left + parentScrollLeft; //+ parentScrollLeft;
-							let dy = parentRect.top + parentScrollTop;
-					
-							console.log('dxy :>> ', dx, dy);
-							//CALCULATE COORDINATE
-	
-							// Extract custom data attributes from the selected option
-							const ULID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
-							const tstmp = Date.now();
-							const newNodeID = {
-								ID: nodeKind+'/'+ulid,
-								Table: "Yggdrasil",
-								ULID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
-								Node: {
-									Realm: "Universe",
-									Kind: nodeKind,
-									Type: "",
-									Class: "",
-									Group: "",
-									Category: "",
-									Icon: icon,
-									isLocked: data.isLocked,
-									isExecutable: data.isExecutable
-							
-								},
-								Type: "",
-								Status: "Active",
-								Timestamp: tstmp,
-								Version: {
-									Number: 1,
-									VersionID: ULID,
-									ULID: ULID,
-									Timestamp: tstmp,
-								},
-								Link: {
-									Head: false,
-									ID: 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID(),
-									Segment: "",
-								}
-							};
-							const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
-
-							// newNode.id = newNodeID;
-							newNode.Properties.Name = name;
-							newNode.Properties.Label = label;
-							newNode.Properties.isProgrammingEnabled = data.isProgrammingEnabled;
-							newNode.Properties.isReadOnly = data.isReadOnly;
-							newNode.Properties.isExecutable = data.isExecutable;
-
-							console.log('newNode :>> ', newNode);
-	
-							if (newTabCounter > 20) newTabCounter = 0;
-							let tx = 30 + (dx + (newTabCounter * 40));
-							let ty = dy + 60;
-	
-							let coord = {
-								x: tx > 0 ? tx : 0,
-								y: ty > 0 ? ty : 0
-							}
-							Object.entries(passedData.flow.GraphCanvas).forEach((key, value) => {
-								newNode.Presentation.Perspectives.GraphNode.Position[key] = coord;
-							});
-							
-							newNode.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;
-							newTabCounter++;
-	
-							console.log('newNode :>> ', newNode);
-							// ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
-							if (!this.storage) {
-								console.error('No storage found.');
-								return;
-							}
-							// NOTE - SurrealDB create/insert/upsert
-							let qstr = `
-								upsert
-									${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(newNodeID)} 
-								content
-									${JSON.stringify(newNode)};`;
-							console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
-	
-							// Refresh render
-							passedData.graphCanvas.querySelector('.document_refreshrender_button').click();
-						});
-					}
-				}, {
-					selector: '.graph_removenodes_button', //NOTE - removenodes-button
-					callback: (e) => {
-						console.log('Remove nodes! graph_removenodes_button click!');
-						// NOTE - Remove nodes!
-						let graphCanvas = e.target.closest('.app_configurator_containers');
-						if (ParadigmREVOLUTION.Application.Cursor.length == 0) return;
-						console.log('ParadigmREVOLUTION.Application.Cursor :>> ', ParadigmREVOLUTION.Application.Cursor);
-					
-						const promises = ParadigmREVOLUTION.Application.Cursor.map(znode => {
-							if (!confirm(`Apakah anda ingin menghapus dokumen ${znode.table}:${znode.id}?`)) {
-								return Promise.resolve(); // Skip this node
-							}
-							
-							let table = znode.table;
-							let id = znode.id;
-							console.log('table, id >>>>>>', table, id);
-					
-							let qstr = `SELECT id FROM ONLY ${table} where id:{ID:"${id}"}.. limit 1 ;`;
-							return ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr)
-								.then(result => {
-									console.log('result :>> ', result[0]);
-									if (result[0]?.id?.id) result[0].id = result[0].id.id;
-									console.log('result :>> ', result[0]);
-									qstr = `DELETE FROM ${table} where id.ID = "${id}";`;
-									console.log('DELETE qstr :>> ', qstr);
-									return ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr)
-										.then(() => {
-											console.log(`Node ID ${id} removal SUCCESS!`);
-											znode = null;
-										})
-										.catch(error => {
-											console.error(`Node ID ${id} removal ERROR!`, error);
-										});
-								})
-								.catch(error => {
-									console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
-								});
-						});
-						Promise.all(promises).then(() => {
-							console.log("All nodes have been processed.");
-							ParadigmREVOLUTION.Application.Cursor = [];
-							
-							// Refresh render
-							graphCanvas.querySelector('.document_refreshrender_button').click();
-						}).catch(err => {
-							console.error("Error in processing nodes:", err);
-						});
-					}
-				}
-				]);
+				}], document.querySelector(`#app_data_preparation_area`));
 				document.querySelector('#app_console_button').addEventListener('click', () => {
 					document.querySelector('#app_console').classList.toggle('show');
 				});

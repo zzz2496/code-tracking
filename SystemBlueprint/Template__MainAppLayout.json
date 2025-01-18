@@ -123,7 +123,7 @@
 								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "content":[
 									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 m-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
 										{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Memory Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
-										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					  "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" },
+										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					  "innerHTML": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>" },
 										{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					  "innerHTML":"<li class='fa-solid fa-cube has-text-success'></li>"}
 									]},
 									{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
@@ -166,7 +166,7 @@
 									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
 										{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
 										{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					 "innerHTML":"<li class='fa-solid fa-cube mr-3 has-text-success'></li>"},
-										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" }
+										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>" }
 									]},
 									{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
 								]},
@@ -205,7 +205,7 @@
 									{ "comment": "Node controls", "tag":"div", "class":"buttons has-addons p-0 mx-2 my-0", "style":"height: 2.7rem; /*min-width:156px;*/", "content":[
 										{ "comment": "Clear Document button", "tag": "button", "class": "button graph_clear_data_button",  "id": "graph_clear_data_button",  "title": "Clear Document on Local Storage", "innerHTML": "<i class=\"fa-solid fa-file-excel has-text-danger\"></i>" },
 										{ "comment": "Add Node button",       "tag": "button", "class": "button graph_addnode_button",     "id": "graph_addnode_button",     "title": "Add Node",     					 "innerHTML":"<li class='fa-solid fa-cube mr-3 has-text-success'></li>"},
-										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-x has-text-danger\"></i>" }
+										{ "comment": "Remove Thing button",   "tag": "button", "class": "button graph_removenodes_button", "id": "graph_removenodes_button", "title": "Remove Thing", 					 "innerHTML": "<i class=\"fa-solid fa-trash-can has-text-danger\"></i>" }
 									]},
 									{ "tag":"div", "innerHTML":"Nodes", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
 								]},
@@ -277,7 +277,7 @@
 			"comment": "App Console", "tag": "div", "id": "app_console", "class":"application_divisions", "innerHTML": "", "content": [
 				{ "comment": "Core Status Container", "tag": "div", "id": "core_status",         "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless m-0  p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
 				{ "comment": "Helper Container",      "tag": "div", "id": "debug_helper_status", "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless my-3 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [
-					{ "comment": "SuQL", "tag": "textarea", "id":"console_suql_input", "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:15rem;", "innerHTML": ""},								{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
+					{ "comment": "SuQL", "tag": "textarea", "id":"console_suql_input", "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:fit-content;", "innerHTML": ""},								{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
 						{"tag": "select", "type":"select", "class":"select", "id":"console_datastorage_select", "content":[
 							{ "tag": "option", "value": "Memory", "innerHTML": "Memory" },
 							{ "tag": "option", "value": "IndexedDB", "innerHTML": "IndexedDB" },

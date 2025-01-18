@@ -680,8 +680,11 @@
 .fade-out {
 	animation: fadeOut 0.3s ease-in-out;
 }
-.graph-node .card-header-title{
+.card-header-title{
 	user-select: none;
+}
+.graph-node {
+	pointer-events: all;
 }
 .breathing-text {
 	animation: breathe-color 1.5s infinite;
@@ -827,4 +830,11 @@
 }
 .node-controls .node-footer{
 	pointer-events: all;
+}
+.graph-controls{
+	height: 2.5rem;
+	min-width: 2.5rem;
+}
+.addremove-control-container{
+	padding-left: 0.1rem;
 }
