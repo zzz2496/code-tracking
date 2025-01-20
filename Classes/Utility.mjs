@@ -2995,6 +2995,48 @@ export class Utility {
 
 			return `${YYYY}${MM}${DD}-${HH}${II}${SS}-${MS}`;
 		}).bind(this),
+		"FTStoYMDHISMS": (function (timestamp) {
+			const date = new Date(timestamp);
+			
+			const YYYY = date.getFullYear();
+			const MM = String(date.getMonth() + 1).padStart(2, '0');
+			const DD = String(date.getDate()).padStart(2, '0');
+			const HH = String(date.getHours()).padStart(2, '0');
+			const II = String(date.getMinutes()).padStart(2, '0');
+			const SS = String(date.getSeconds()).padStart(2, '0');
+			const MS = String(date.getMilliseconds()).padStart(3, '0');
+
+			return `${YYYY}-${MM}-${DD}T${HH}:${II}:${SS}.${MS}Z`;
+		}).bind(this),
+		"addDate":(num, unit, timestamp = Date.now()) => {
+			const date = new Date(timestamp);
+			switch (unit) {
+			  case "seconds":
+				date.setSeconds(date.getSeconds() + num);
+				break;
+			  case "minutes":
+				date.setMinutes(date.getMinutes() + num);
+				break;
+			  case "hours":
+				date.setHours(date.getHours() + num);
+				break;
+			  case "days":
+				date.setDate(date.getDate() + num);
+				break;
+			  case "weeks":
+				date.setDate(date.getDate() + num * 7);
+				break;
+			  case "months":
+				date.setMonth(date.getMonth() + num);
+				break;
+			  case "years":
+				date.setFullYear(date.getFullYear() + num);
+				break;
+			  default:
+				throw new Error("Invalid unit. Use seconds, minutes, hours, days, weeks, months, or years.");
+			}
+			return date.getTime(); // Return the new timestamp
+		  }
 	};
 	// NOTE - Window related methods
 	Window = {

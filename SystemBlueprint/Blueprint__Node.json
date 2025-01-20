@@ -8,8 +8,12 @@
 		"Footer": "",
 		"isProgrammingEnabled": true,
 		"isNew": true,
-		"isChanged": false
-	},
+		"isChanged": false,
+		"isLocked": false,
+		"isShown": true,
+		"isEnableExecute": true,
+		"isDisabled": false
+},
 	"Presentation": {
 		"Perspectives": {
 			"GraphNode": {

@@ -1,0 +1,28 @@
+{
+	"ID": "nodeKind+'/'+ulid",
+	"Table": "Yggdrasil",
+	"ULID": "ParadigmREVOLUTION.SystemCore.Modules.ULID()",
+	"Node": {
+		"Realm": "Universe",
+		"Kind": "nodeKind",
+		"Type": "",
+		"Class": "",
+		"Group": "",
+		"Category": "",
+		"Icon": "icon"
+	},
+	"Type": "",
+	"Status": "Active",
+	"Timestamp": "tstmp",
+	"Version": {
+		"Number": 1,
+		"VersionID": "ULID",
+		"ULID": "ULID",
+		"Timestamp": "tstmp"
+	},
+	"Link": {
+		"Head": false,
+		"ID": "'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID()",
+		"Segment": ""
+	}
+}

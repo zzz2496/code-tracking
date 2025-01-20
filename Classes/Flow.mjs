@@ -546,7 +546,7 @@ export class Flow {
 					const nodeContent = `
 					<div class="card is-selectable-box node-background-frosted" data-id="node-${nodeID}" style="margin: 5px; padding: 0px; width: fit-content;">
 						<header class="card-header" style="cursor:pointer;" data-id="header-${nodeID}">
-							<div class="card-header-icon m-0 pl-3 pr-0" data-id="${nodeID}">${node.id.id.Node.Icon}</div>
+							<div class="card-header-icon m-0 pl-3 pr-0" data-id="${nodeID}"><i class="${node.id.id.Node.Icon}"></i></div>
 							<div class="card-header-title pl-3 m-1 pr-3 py-1 is-selectable" data-id="${nodeID}" style="width: fit-content;align: center;">${node.Properties.Name}</div>
 							<div class="card-header-icon m-0 pr-3 pr-0 node-lock" data-id="${nodeID}">${node_lock}</div>
 						</header>
@@ -2556,11 +2556,18 @@ export class Flow {
 	
 							// Extract custom data attributes from the selected option
 							const ULID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
+							const Fdate = ParadigmREVOLUTION.Utility.Time.FTStoYMDHISMS(Date.now());
+
+							const tULID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
 							const tstmp = Date.now();
+							console.log('tstmp', new Date(tstmp));
+							
+							const futureTimestamp = ParadigmREVOLUTION.Utility.Time.addDate(100, 'years', tstmp);
+							console.log('futureTimestamp', new Date(futureTimestamp));
 							const newNodeID = {
-								ID: nodeKind+'/'+ulid,
+								ID: nodeKind+'/'+ULID+'/'+name,
 								Table: "Yggdrasil",
-								ULID: ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+								ULID: tULID,
 								Node: {
 									Realm: "Universe",
 									Kind: nodeKind,
@@ -2573,6 +2580,8 @@ export class Flow {
 								Type: "",
 								Status: "Active",
 								Timestamp: tstmp,
+								ETL: tstmp,
+								ETD: futureTimestamp,
 								Version: {
 									Number: 1,
 									VersionID: ULID,
@@ -2581,7 +2590,7 @@ export class Flow {
 								},
 								Link: {
 									Head: false,
-									ID: 'LINK-' + ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+									ID: 'LINK-' + tULID,
 									Segment: "",
 								}
 							};
