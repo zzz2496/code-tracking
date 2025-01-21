@@ -2256,7 +2256,7 @@ export class Flow {
 				});
 				// document.querySelector('#graph_addnode_select').innerHTML = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.map(option => `<option value="${option.Kind}" data-nodetype="${option.Kind}Node" data-nodeicon="${option.Icon}">${option.Kind}</option>`).join('');
 
-				//NOTE - addGlobalEveentListener CLICK
+				//NOTE - addGlobalEventListener CLICK
 				this.Form.Events.addGlobalEventListener('click', [
 					{
 						selector: '.datastore-status-indicator',
@@ -2344,10 +2344,13 @@ export class Flow {
 						console.log(e.target.classList, e.target.dataset, 'CLICKED!!!');
 						switch (e.target.dataset.actiontype) {
 							case 'openNode':
+								console.log('Open Node clicked!');
 								break;
 							case 'configureNode':
+								console.log('Configure Node clicked!');
 								break;
 							case 'copyNode':
+								console.log('Copy Node clicked!');
 								break;
 							case 'deleteNode':
 								const id = e.target.dataset.id;
@@ -2560,10 +2563,10 @@ export class Flow {
 
 							const tULID = ParadigmREVOLUTION.SystemCore.Modules.ULID();
 							const tstmp = Date.now();
-							console.log('tstmp', new Date(tstmp));
+							// console.log('tstmp', new Date(tstmp));
 							
 							const futureTimestamp = ParadigmREVOLUTION.Utility.Time.addDate(100, 'years', tstmp);
-							console.log('futureTimestamp', new Date(futureTimestamp));
+							// console.log('futureTimestamp', new Date(futureTimestamp));
 							const newNodeID = {
 								ID: nodeKind+'/'+ULID+'/'+name,
 								Table: "Yggdrasil",
@@ -2604,8 +2607,7 @@ export class Flow {
 							newNode.Properties.isEnableExecute = data.isExecutable;
 							newNode.Properties.isDisabled = data.isDisabled;
 
-
-							console.log('newNode :>> ', newNode);
+							// console.log('newNode :>> ', newNode);
 	
 							if (newTabCounter > 20) newTabCounter = 0;
 							let tx = 30 + (dx + (newTabCounter * 40));
