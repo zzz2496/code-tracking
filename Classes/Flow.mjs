@@ -3391,6 +3391,7 @@ export class Flow {
 						if (confirm(`Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke ${storage}. Apakah anda yakin?`)) { 
 							// Sync Nodes data
 							qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`;
+							console.log('qstr :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(results => {
 								// ParadigmREVOLUTION.Application.GraphNodes = result[0];
 								console.log(`Success fetching nodes from Memory`, results);

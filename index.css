@@ -34,6 +34,25 @@
 	.grid2020-background {
 		background-color: var(--bulma-text-95);
 		background-size: 20px 20px;
+		background-image: 
+			linear-gradient(var(--bulma-text-90) 1px, transparent 1px), 
+			linear-gradient(to right, var(--bulma-text-90) 1px, transparent 1px),
+			linear-gradient(var(--bulma-text-50) 1px, transparent 2px), 
+			linear-gradient(to right, var(--bulma-text-50) 1px, transparent 2px);
+		background-position: 
+			0px 0px, 
+			0px 0px, 
+			0px 0px, 
+			0px 0px;
+		background-size: 
+			20px 20px, 
+			20px 20px, 
+			100px 100px, 
+			100px 100px;
+	}	
+	.grid2020-backgroundV1 {
+		background-color: var(--bulma-text-95);
+		background-size: 20px 20px;
 		background-image: linear-gradient(var(--bulma-text-90) 1px, transparent 1px), linear-gradient(to right, var(--bulma-text-90) 1px, transparent 1px);
 	}
 }
@@ -42,7 +61,29 @@
 		background-color: rgba( 10, 10, 10, 0.6);
 		backdrop-filter: blur(8px);
 	}
+	/* Add this CSS to your stylesheet */
+  
 	.grid2020-background {
+		background-color: var(--bulma-text-15); /* Dark mode background */
+		background-size: 20px 20px;
+		background-image: 
+			linear-gradient(var(--bulma-text-20) 1px, transparent 1px), /* 20px grid lines */
+			linear-gradient(to right, var(--bulma-text-20) 1px, transparent 1px), 
+			linear-gradient(var(--bulma-text-25, var(--bulma-text-25)) 1px, transparent 2px), /* 100px bright lines */
+			linear-gradient(to right, var(--bulma-text-25, var(--bulma-text-25)) 1px, transparent 2px);
+		background-position: 
+			0px 0px, 
+			0px 0px, 
+			0px 0px, 
+			0px 0px;
+		background-size: 
+			20px 20px, 
+			20px 20px, 
+			100px 100px, 
+			100px 100px;
+	}
+	
+	.grid2020-backgroundV1 {
 		background-color: var(--bulma-text-15);
 		background-size: 20px 20px;
 		background-image: linear-gradient(var(--bulma-text-20) 1px, transparent 1px), linear-gradient(to right, var(--bulma-text-20) 1px, transparent 1px);
@@ -55,6 +96,25 @@
 		backdrop-filter: blur(8px);
 	}
 	.grid2020-background {
+		background-color: var(--bulma-text-90);
+		background-size: 20px 20px;
+		background-image: 
+			linear-gradient(var(--bulma-text-95) 1px, transparent 1px), 
+			linear-gradient(to right, var(--bulma-text-95) 1px, transparent 1px),
+			linear-gradient(var(--bulma-text-100) 1px, transparent 2px), 
+			linear-gradient(to right, var(--bulma-text-100) 1px, transparent 2px);
+		background-position: 
+			0px 0px, 
+			0px 0px, 
+			0px 0px, 
+			0px 0px;
+		background-size: 
+			20px 20px, 
+			20px 20px, 
+			100px 100px, 
+			100px 100px;
+	}	
+	.grid2020-backgroundV1 {
 		background-color: var(--bulma-text-95);
 		background-size: 20px 20px;
 		background-image: linear-gradient(var(--bulma-text-90) 1px, transparent 1px), linear-gradient(to right, var(--bulma-text-90) 1px, transparent 1px);
@@ -67,6 +127,26 @@
 		backdrop-filter: blur(8px);
 	}
 	.grid2020-background {
+		background-color: var(--bulma-text-15); /* Dark mode background */
+		background-size: 20px 20px;
+		background-image: 
+			linear-gradient(var(--bulma-text-20) 1px, transparent 1px), /* 20px grid lines */
+			linear-gradient(to right, var(--bulma-text-20) 1px, transparent 1px), 
+			linear-gradient(var(--bulma-text-25, var(--bulma-text-25)) 1px, transparent 2px), /* 100px bright lines */
+			linear-gradient(to right, var(--bulma-text-25, var(--bulma-text-25)) 1px, transparent 2px);
+		background-position: 
+			0px 0px, 
+			0px 0px, 
+			0px 0px, 
+			0px 0px;
+		background-size: 
+			20px 20px, 
+			20px 20px, 
+			100px 100px, 
+			100px 100px;
+	}
+	
+	.grid2020-backgroundV1 {
 		background-color: var(--bulma-text-15);
 		background-size: 20px 20px;
 		background-image: linear-gradient(var(--bulma-text-20) 1px, transparent 1px), linear-gradient(to right, var(--bulma-text-20) 1px, transparent 1px);
