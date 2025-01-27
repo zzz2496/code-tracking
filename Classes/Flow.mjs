@@ -2161,7 +2161,15 @@ export class Flow {
 						}
 					};
 				});
-		
+
+				const tabsStr = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.map(tab => `<option data-tabtype="${tab.TabType}" value="${tab.TabType}">${tab.Label}</option>`).join('');
+				document.querySelector('#app_graph_container').querySelector('.page_change_selector').innerHTML = tabsStr;
+				document.querySelector('#app_graph_container').querySelector('.page_change_selector').addEventListener('change', (e) => {
+					const tabType = e.target.value;
+					const element = document.querySelector(`a[data-tabtype="${tabType}"]`);
+					element.click();
+				});
+			
 				document.querySelectorAll('.graph_surfaces').forEach(surface => { 
 					console.log('surface :>> ', surface);
 
@@ -2209,6 +2217,8 @@ export class Flow {
 					document.querySelector('#app_configurator_container').classList.toggle('show');
 					document.querySelector('#app_graph_tabs_container').classList.toggle('show');
 					document.querySelector('#app_menu_container').classList.toggle('show');
+					document.querySelector('#app_center_container').classList.toggle('show');
+					document.querySelector('#project_controls').classList.toggle('show');
 				});
 
 				document.querySelector('#app_data_preparation_area_button').addEventListener('click', () => {
@@ -2287,28 +2297,28 @@ export class Flow {
 								for (const [idx, entry] of Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB)) {
 									// Check if Instance is false
 									if (!entry.Instance) {
-										datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
+										datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
 									} else {
 										try {
 											// Await the promise for connection status
 											if (entry.Instance == false) {
-												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
+												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
 											} else if (entry.Instance.connection == undefined) {
-												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
+												datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
 											} else {
 												const status = await entry.Instance.connection.status;
 												// Check connection status
 												if (status === "connected") {
-													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
 												} else if (status === "disconnected") {
-													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
 												} else {
-													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
+													datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>`;
 												}
 											}
 										} catch (error) {
 											console.error(`Error fetching status for ${idx}:`, error);
-											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} ERROR">${entry.Metadata.ShortLabel}</button>`;
+											datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 is-danger" value="${idx}" title="${entry.Metadata.Label} ERROR">${entry.Metadata.ShortLabel}</button>`;
 										}
 									}
 								}

@@ -118,15 +118,15 @@ document.addEventListener('SurrealDBLoaded', async () => {
 	let datastore_status = '';
 	Object.entries(window.ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
 		if (entry.Instance == false) { 
-			datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
+			datastore_status += `<button class="datastore-status-indicator show button is-outlined is-small p-1 m-0 is-disabled" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
 		} else if (typeof entry.Instance.connection != "undefined") {
 			if (entry.Instance.connection.status === "connected") {
-				datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
+				datastore_status += `<button class="datastore-status-indicator show button is-outlined is-small p-1 m-0 is-success" value="${idx}" title="${entry.Metadata.Label} CONNECTED">${entry.Metadata.ShortLabel}</button>`;
 			} else if (entry.Instance.connection.status === "disconnected") {
-				datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
+				datastore_status += `<button class="datastore-status-indicator show button is-outlined is-small p-1 m-0 is-warning" value="${idx}" title="${entry.Metadata.Label} DISCONNECTED">${entry.Metadata.ShortLabel}</button>`;
 			}
 		} else {
-			datastore_status += `<button class="datastore-status-indicator button is-outlined is-small p-2 m-0 mr-1 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>` ;
+			datastore_status += `<button class="datastore-status-indicator show button is-outlined is-small p-1 m-0 is-danger" value="${idx}" title="${entry.Metadata.Label} NO CONNECTION">${entry.Metadata.ShortLabel}</button>` ;
 		}
 	});
 	document.querySelector('#datastore_status').innerHTML = datastore_status;

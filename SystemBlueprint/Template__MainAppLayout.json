@@ -3,7 +3,6 @@
 		{ "comment": "Object Collections", "tag": "div", "id": "object_collections", "class": "application_divisions", "innerHTML": "", "content": [
 			{"tag": "div", "id":"app_menu_container", "class": "app_configurator_groups show", "style": "", "content": [
 				{"comment":"Object Collections controls", "tag":"div", "class":"container is-flex is-justify-content-center", "id":"object_collections_controls", "content":[
-					{"tag":"button", "class":"button is-default ", "id":"dark_light_selector", "title":"Dark/Light Mode", "innerHTML":"<li class=\"dark_light_indicator\"></li>"}
 				]},
 				{"comment":"Object Collections Tabs", "tag":"div", "id":"object_collection_tabs", "class":"container is-flex is-justify-content-center", "content":[
 					{ "comment": "Tabs", "tag": "div", "id": "object_collections_tabs", "content": [
@@ -39,23 +38,29 @@
 		]},
 		{
 			"comment": "App Container", "tag": "div", "id": "app_container", "class":"application_divisions", "content": [
-				{
-					"comment": "App Top Menu Container", "tag": "div", "id": "app_top_menu_container", "innerHTML": "", "class": "columns is-gapless is-mobile m-0", "content": [
-						{
-							"comment": "Left Container", "tag": "div", "id": "app_left_container", "innerHTML": "", "class": "column is-gapless is-one-quarter", "content": [
-								{ "comment": "Menu button", "tag": "button", "class": "button is-default", "id": "object_collections_button", "title": "Open Menu", "innerHTML": "<li class=\"fa fa-bars\"></li>" },
-								{ "comment": "Graph button", "tag": "button", "class": "button is-default", "id": "app_graph_button", "title": "Open Graph", "innerHTML": "<li class=\"fa fa-circle-nodes\"></li>" }
-							]
-						},
-						{
-							"comment": "Right Container", "tag": "div", "id": "app_right_container", "innerHTML": "", "class": "column is-gapless is-three-quarters is-justify-content-flex-end is-flex", "content": [
-								{ "comment": "Datastore Status", "tag": "div", "class": "is-inline", "id": "datastore_status", "innerHTML": "" },
-								{ "comment": "Console button", "tag": "button", "class": "button is-default", "id": "app_console_button", "title": "Open Console", "innerHTML": "<li class=\"fa fa-terminal\"></li>" },
-								{ "comment": "Data Preparation Area button", "tag": "button", "class": "button is-default", "id": "app_data_preparation_area_button", "title": "Open Data Perparation Area Sidebar", "innerHTML": "<li class=\"fa fa-arrows-left-right\"></li>" }
-							]
-						}
-					]
-				},
+				{"comment": "App Top Menu Container", "tag": "div", "id": "app_top_menu_container", "innerHTML": "", "class": "is-flex is-justify-content-space-between is-align-items-center m-0 p-0", "style":"width:100%;", "content": [
+					{"comment": "Left Container", "tag": "div", "id": "app_left_container", "innerHTML": "", "class": "is-flex", "content": [
+						{ "comment": "App controls", "tag": "div", "class": "buttons has-addons my-0 mr-2 ", "content":[
+							{ "comment": "Menu button",   "tag": "button", "id": "object_collections_button", "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "title": "Open Collection", "innerHTML": "<li class=\"fa fa-bars\"></li>" },
+							{ "comment": "Graph button",  "tag": "button", "id": "app_graph_button",          "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "title": "Open Graph", "innerHTML": "<li class=\"fa fa-circle-nodes\"></li>" }
+						]},
+						{ "comment": "Project Controls", "tag": "div", "class": "buttons has-addons my-0 mx-2 show", "id": "project_controls", "innerHTML":"", "content":[
+							{ "comment": "New Project",   "tag": "button", "id":"app_new_project",   "title":"New Project",   "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "innerHTML":"<i class=\"fa-regular fa-plus\"></i>", "content": [] },
+							{ "comment": "Load Project",  "tag": "button", "id":"app_load_project",  "title":"Open Project",  "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "innerHTML":"<i class=\"fa-regular fa-folder-open\"></i>", "content": [] },
+							{ "comment": "Close Project", "tag": "button", "id":"app_close_project", "title":"Close Project", "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "innerHTML":"<i class=\"fa-solid fa-xmark\"></i>", "content": [] }
+						]}
+					]},
+					{"comment": "Left Container", "tag": "div", "id": "app_center_container", "innerHTML": "", "class": "show m-0 p-0", "content": [
+						{ "comment": "Datastore Status", "tag": "div", "class": "buttons has-addons mx-2", "id": "datastore_status", "innerHTML": "" }
+					]},
+					{"comment": "Right Container", "tag": "div", "id": "app_right_container", "innerHTML": "", "class": "is-flex is-justify-content-flex-end", "content": [
+						{ "comment": "Console and Helper buttons", "tag": "div", "class": "buttons has-addons my-0 ml-2", "id": "console_and_helper_buttons", "content":[
+							{ "comment":"Light/Dark switch",             "tag": "button", "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "id": "dark_light_selector",              "title":"Dark/Light Mode", "innerHTML":"<li class=\"dark_light_indicator\"></li>"},
+							{ "comment": "Console button",               "tag": "button", "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "id": "app_console_button",               "title": "Open Console",   "innerHTML": "<li class=\"fa fa-terminal\"></li>" },
+							{ "comment": "Data Preparation Area button", "tag": "button", "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "id": "app_data_preparation_area_button", "title": "Open Data Perparation Area Sidebar", "innerHTML": "<li class=\"fa fa-arrows-left-right\"></li>" }
+						] }
+					]}
+				]},
 				{ "comment": "App Graph Tabs and Controls", "tag": "div", "id": "app_graph_tabs_container", "innerHTML": "", "class": "is-flex is-gapless m-0 show app_configurator_groups is-flex-wrap-wrap", "content": [
 					{ "comment": "Left Container", "tag": "div", "id": "app_graph_tabs_container_left", "innerHTML": "", "class": "mt-1 p-0 is-flex is-justify-content-left app_graph_controls_containers", "content": [
 						{ "comment": "Tabs", "tag": "div", "id": "app_graph_tabs", "content": [
@@ -112,6 +117,14 @@
 								{"tag": "span", "class":"mx-3", "innerHTML": "/PATH/TO/NODES", "title":"Path to Graph Nodes"}
 							]},
 							{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-flex-direction-column is-justify-content-center node-background-frosted m-0 p-0", "content": [
+								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
+									{ "comment": "Zoom controls",  "tag":"div", "class":"buttons has-addons p-0 m-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
+										{"tag": "div", "class":"select", "content":[
+											{ "comment": "Page change", "id":"", "tag": "select", "class": "select page_change_selector", "title": "Page change", "innerHTML": "", "content": []}
+										]}
+									]},
+									{ "tag":"div", "innerHTML":"Page change", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
+								]},
 								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 									{ "comment": "Zoom controls",  "tag":"div", "class":"buttons has-addons p-0 m-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
 										{ "comment": "Zoom out",   "tag": "button", "class": "button zoom_out_button",   "title": "Graph Zoom Out",   "innerHTML": "<i class=\"fa-solid fa-magnifying-glass-minus has-text-danger\"></i>" },
@@ -267,15 +280,17 @@
 							{"tag":"button", "class":"button mx-1 is-medium is-success graph_addnode_button", "id":"graph_addnode_button", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
 						]}
 					]}
-
-
 				] }
 			]
 		},
 		{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "application_divisions is-flex is-flex-direction-column", "innerHTML": "", "content": [] },
 		{
 			"comment": "App Console", "tag": "div", "id": "app_console", "class":"application_divisions", "innerHTML": "", "content": [
-				{ "comment": "Core Status Container", "tag": "div", "id": "core_status",         "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless m-0  p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
+				{"comment": "Console Top bar", "tag": "div", "style":"width:100%;", "class":"app_graph_controls_containers is-gapless m-0 p-0 is-flex is-flex-wrap-nowrap is-justify-content-space-between is-align-items-center", "content":[
+					{ "comment": "Close Console",          "tag": "button", "class":"has-text-danger", "innerHTML":"<i class=\"fa-solid fa-xmark\"></i>"},
+					{ "comment": "Core Status Container", "tag": "div",     "id": "core_status", "innerHTML": "", "style":"width:100%;", "class": "is-gapless m-0 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [] },
+					{ "comment": "Core Status Container", "tag": "div",     "id": "", "innerHTML": "", "style":"", "class": "", "content": [] }
+				]},
 				{ "comment": "Helper Container",      "tag": "div", "id": "debug_helper_status", "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless my-3 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [
 					{ "comment": "SuQL", "tag": "textarea", "id":"console_suql_input", "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:fit-content;", "innerHTML": ""},								{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
 						{"tag": "select", "type":"select", "class":"select", "id":"console_datastorage_select", "content":[

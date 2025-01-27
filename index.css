@@ -367,7 +367,34 @@
 	width: 100%;
 	height: auto;
 } */
+.datastore-status-indicator{
+	height: 2.2rem; 
+	min-width:2.8rem;
+}
+#project_controls{
+	overflow: hidden;
+	height: 0rem; 
+	transition: height var(--transition-time) var(--swoop);
+	margin: 0;
+	overflow: hidden;
+}
+#project_controls.show{
+	height: 2.2rem;
+}
 
+#app_center_container{
+	display: flex;
+    overflow: hidden;
+    position: relative;
+
+	height: 0rem; 
+	transition: height var(--transition-time) var(--swoop);
+	margin: 0;
+	overflow: hidden;
+}
+#app_center_container.show{
+	height: 2.2rem;
+}
 #app_configurator_container {
 	display: flex;
     overflow: hidden;
