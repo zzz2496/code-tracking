@@ -2162,6 +2162,142 @@ export class Flow {
 					};
 				});
 
+				document.querySelectorAll('.app_project_controls').forEach(container => {
+					function popModal(flow) { 
+						let schema = {
+							"id": "form_new_poject",
+							"label": "Form Select Connection Type",
+							"type": "record",
+							"typeSelection": ["record","array"],
+							"icon": "<i class=\"fa-brands fa-wpforms\"></i>",
+							"order": 100,
+							"Dataset": {
+								"Layout": {
+									"Form": {},
+									"Properties": {
+										"FormEntry": {
+											"Show": 1,
+											"Label": "Form Select Connection Type",
+											"ShowLabel": 1
+										},
+										"Preview": {
+											"Show": 1,
+											"Label": "Form Select Connection Type",
+											"ShowLabel": 1
+										}
+									}
+								},
+								"Schema": [
+									{
+										"id": "nodeKind",
+										"label": "Node Kind",
+										"type": "select",
+										"value": ["A", "B", "C", "D"],
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "ulid",
+										"label": "ULID",
+										"type": "text",
+										"value": ParadigmREVOLUTION.SystemCore.Modules.ULID(),
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "name",
+										"label": "Name",
+										"type": "text",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "label",
+										"label": "Label",
+										"type": "text",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isShown",
+										"label": "Shown",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isLocked",
+										"label": "Locked",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isExecutable",
+										"label": "Executable",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									},
+									{
+										"id": "isDisabled",
+										"label": "Disabled",
+										"type": "checkbox",
+										"value": "",
+										"field_class":"is-selectable-box",
+										"form": 1
+									}
+								]
+							}
+						}
+						// console.log('flow :>> ', flow);
+						flow.Graph.Events.showSchemaModal('New Project', schema, {flow:flow}, (data, passedData) => {
+							function findKindObject(kindArray, targetKind) {
+								for (const option of kindArray) {
+									if (option.Kind === targetKind) {
+										return option; // Return the entire object
+									}
+									if (option.Items) {
+										const foundObject = findKindObject(option.Items, targetKind);
+										if (foundObject) {
+											return foundObject; // Return if found in nested structure
+										}
+									}
+								}
+								return null; // Return null if no match is found
+							}
+							
+							console.log('data :>> ', data);
+	
+						});
+					}
+
+					const flow = this;
+
+					const controlType = container.dataset.controltype;
+					switch (controlType) { 
+						case 'closeProject':
+							break;
+						case 'loadProject':
+							container.addEventListener('click', () => { 
+								popModal(flow);
+							});
+							break;
+						case 'changeProject':
+							break;
+						case 'newProject':
+							container.addEventListener('click', () => { 
+								popModal(flow);
+							});
+							break;
+					};
+				});
+
 				const tabsStr = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.map(tab => `<option data-tabtype="${tab.TabType}" value="${tab.TabType}">${tab.Label}</option>`).join('');
 				document.querySelector('#app_graph_container').querySelector('.page_change_selector').innerHTML = tabsStr;
 				document.querySelector('#app_graph_container').querySelector('.page_change_selector').addEventListener('change', (e) => {

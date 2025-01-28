@@ -44,10 +44,13 @@
 							{ "comment": "Menu button",   "tag": "button", "id": "object_collections_button", "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "title": "Open Collection", "innerHTML": "<li class=\"fa fa-bars\"></li>" },
 							{ "comment": "Graph button",  "tag": "button", "id": "app_graph_button",          "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "title": "Open Graph", "innerHTML": "<li class=\"fa fa-circle-nodes\"></li>" }
 						]},
-						{ "comment": "Project Controls", "tag": "div", "class": "buttons has-addons my-0 mx-2 show", "id": "project_controls", "innerHTML":"", "content":[
-							{ "comment": "New Project",   "tag": "button", "id":"app_new_project",   "title":"New Project",   "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "innerHTML":"<i class=\"fa-regular fa-plus\"></i>", "content": [] },
-							{ "comment": "Load Project",  "tag": "button", "id":"app_load_project",  "title":"Open Project",  "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "innerHTML":"<i class=\"fa-regular fa-folder-open\"></i>", "content": [] },
-							{ "comment": "Close Project", "tag": "button", "id":"app_close_project", "title":"Close Project", "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "innerHTML":"<i class=\"fa-solid fa-xmark\"></i>", "content": [] }
+						{ "comment": "Project Controls", "tag": "div", "class": "buttons has-addons my-0 mx-2 show app_project_controls_container ", "id": "project_controls", "innerHTML":"", "content":[
+							{ "comment": "Close Project", "tag": "button", "id": "app_close_project", "data":{"controltype":"closeProject"}, "title":"Close Project", "class":"app_project_controls button p-2 m-0 app_close_project", "style":"height: 2.2rem; width:2.5rem;",      "innerHTML":"<i class=\"fa-solid fa-xmark app_close_project\"></i>", "content": [] },
+							{ "comment": "Load Project",  "tag": "button", "id": "app_load_project",  "data":{"controltype":"loadProject"},  "title":"",              "class":"app_project_controls button px-3 m-0 app_load_project", "style":"height: 2.2rem; width:fit-content;", "innerHTML":"Active Project: ", "content": []},
+							{"tag": "div", "class":"select mx-0 my-0 pl-0 pr-0", "style":"height: 2.2rem; width:fit-content;", "content":[
+								{ "comment": "Project change", "id":"project_change_selector", "data":{"controltype":"changeProject"}, "tag": "select m-0 p-0", "class": "select project_change_selector app_project_controls", "title": "Active Project", "style":"height: 2.2rem; width:fit-content;", "innerHTML": "", "content": []}
+							]},
+							{ "comment": "New Project",   "tag": "button", "id":"app_new_project", "data":{"controltype":"newProject"}, "title":"New Project",  "class":"button p-2 m-0 app_new_project app_project_controls ", "style":"height: 2.2rem; width:2.5rem;", "innerHTML":"<i class=\"fa-regular fa-plus app_new_project\"></i>", "content": [] }
 						]}
 					]},
 					{"comment": "Left Container", "tag": "div", "id": "app_center_container", "innerHTML": "", "class": "show m-0 p-0", "content": [
