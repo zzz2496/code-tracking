@@ -284,9 +284,11 @@ export class Flow {
 
 				let aX, aY;
 				parentSet.graphCanvas.element.addEventListener("mousedown", (e) => { //NOTE - makeNodeDraggable mousedown
+					console.log('makeNodeDraggable mousedown');
 					// Check if the clicked element is the .card-header
-					const graphCanvasParent = e.target.closest('.app_configurator_containers');
-					const graphCanvasParentId = graphCanvasParent.id;
+					const graphCanvasParent = e.target.closest('.scroll_content');
+					// const graphCanvasParentId = graphCanvasParent.id;
+					console.log('graphCanvasParent', graphCanvasParent);
 
 					if (!e.target.closest('.card-header-icon')) return;
 					console.log('================================================================================================ MakeNodeDraggable mousedown start');
@@ -363,8 +365,8 @@ export class Flow {
 			
 				parentSet.graphCanvas.element.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
 					if (!isDragging || !draggedElement) return;
-					// console.log('MakeNodeDraggable mousemove');
-			
+					console.log('MakeNodeDraggable mousemove');
+''			
 					const parentScrollLeft = parent.scrollLeft;
 					const parentScrollTop = parent.scrollTop;
 
@@ -374,9 +376,12 @@ export class Flow {
 					// Access the live ScrollPosition dynamically
 					const { app_root_container, app_container } = this.ScrollPosition;
 			
-					let x = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-					let y = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-					
+					let tx = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+					let ty = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+
+					let x = tx > 0 ? 0 : tx;
+					let y = ty > 0 ? 0 : ty;
+
 					x = snapToGrid(x, 10);
 					y = snapToGrid(y, 10);
 

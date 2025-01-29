@@ -116,9 +116,6 @@
 				{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show app_configurator_groups", "innerHTML": "", "content": [
 					{
 						"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
-							{"tag": "div", "class":"graph_path node-background-frosted p-3", "innerHTML": "<li class='fa-solid fa-map'></li>", "title":"Path to Graph Nodes", "content":[
-								{"tag": "span", "class":"mx-3", "innerHTML": "/PATH/TO/NODES", "title":"Path to Graph Nodes"}
-							]},
 							{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-flex-direction-column is-justify-content-center node-background-frosted m-0 p-0", "content": [
 								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 									{ "comment": "Zoom controls",  "tag":"div", "class":"buttons has-addons p-0 m-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
