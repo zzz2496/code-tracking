@@ -268,7 +268,188 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
-			makeNodeDraggable: (draggableSelector, parent, parentSet) => { //SECTION - makeNodeDraggable
+			makeNodeDraggable: (parentSet) => {
+				let isDragging = false;
+				let offsetX, offsetY, draggedElement;
+				let relatedElements = [];
+				let dbedges = [];
+				let aX, aY, fx, fy;
+				let nodeID = "";
+				const parent = parentSet.graphCanvas.element;
+				const parentRect = parent.getBoundingClientRect();
+			
+				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
+			
+				ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener("mousedown", [
+					{
+						selector: ".card-header-icon",
+						callback: (e) => {
+							console.log('Node drag start');
+							isDragging = true;
+							draggedElement = e.target.closest(".node"); // Adjust selector to match your node elements
+							nodeID = draggedElement.id;
+			
+							// Fetch connections from the database
+							let qstr = document.querySelector('#graph_show_only_containers').checked
+								? `select * from Process where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}") `
+								: `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => option.Type).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
+			
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
+								dbedges = edges[0] || [];
+								dbedges.forEach(edge => {
+									this.Graph.Events.createGutterDotsAndConnect(
+										parent.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+										parent.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+										edge,
+										parentSet
+									);
+									this.Graph.Events.connectNodes(
+										edge,
+										parentSet.graphCanvas.graph_connection_surface,
+										parentSet.graphCanvas.graph_surface.parentElement
+									);
+								});
+							});
+			
+							// Fetch related elements
+							relatedElements = ParadigmREVOLUTION.Application.Cursor
+								.filter(cursor => cursor.id !== nodeID)
+								.map(cursor => {
+									const elem = document.getElementById(cursor.id);
+									if (!elem) return null;
+									const rect = elem.getBoundingClientRect();
+									return {
+										elem,
+										offsetX: rect.left - draggedElement.getBoundingClientRect().left,
+										offsetY: rect.top - draggedElement.getBoundingClientRect().top
+									};
+								})
+								.filter(item => item);
+			
+							const parentScrollLeft = parent.scrollLeft;
+							const parentScrollTop = parent.scrollTop;
+							const { app_root_container, app_container } = this.ScrollPosition;
+			
+							const rect = draggedElement.getBoundingClientRect();
+							offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
+							offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
+			
+							draggedElement.style.position = "absolute";
+							draggedElement.style.zIndex = 1000;
+			
+							aX = (e.clientX - offsetX - parentRect.left + parentScrollLeft * 2 + app_root_container.left * 2) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+							aY = (e.clientY - offsetY - parentRect.top + parentScrollTop * 2 + app_container.top * 2) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+						}
+					}
+				], parent);
+			
+				ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener("mousemove", [
+					{
+						selector: ".graphCanvas",
+						callback: (e) => {
+							if (!isDragging || !draggedElement) return;
+			
+							const parentScrollLeft = parent.scrollLeft;
+							const parentScrollTop = parent.scrollTop;
+							const { app_root_container, app_container } = this.ScrollPosition;
+			
+							let tx = (e.clientX - offsetX - parentRect.left + parentScrollLeft * 2 + app_root_container.left * 2) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+							let ty = (e.clientY - offsetY - parentRect.top + parentScrollTop * 2 + app_container.top * 2) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+			
+							let x = tx > 0 ? 0 : snapToGrid(tx, 10);
+							let y = ty > 0 ? 0 : snapToGrid(ty, 10);
+			
+							if (aX !== x || aY !== y) {
+								aX = x;
+								aY = y;
+			
+								draggedElement.style.left = `${aX}px`;
+								draggedElement.style.top = `${aY}px`;
+			
+								fx = aX;
+								fy = aY;
+			
+								dbedges.forEach(edge => {
+									this.Graph.Events.createGutterDotsAndConnect(
+										parent.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+										parent.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+										edge,
+										parentSet
+									);
+									this.Graph.Events.connectNodes(
+										edge,
+										parentSet.graphCanvas.graph_connection_surface,
+										parentSet.graphCanvas.graph_surface.parentElement
+									);
+								});
+			
+								relatedElements.forEach(({ elem, offsetX, offsetY }) => {
+									elem.style.left = `${(aX + offsetX) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
+									elem.style.top = `${(aY + offsetY) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
+								});
+							}
+						}
+					}
+				], parent);
+			
+				ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener("mouseup", [
+					{
+						selector: ".graphCanvas",
+						callback: (e) => {
+							if (isDragging) {
+								isDragging = false;
+								draggedElement.style.zIndex = "";
+								draggedElement = null;
+			
+								let graphCanvas = e.target.closest('.app_configurator_containers');
+								let tabtype = graphCanvas.dataset.tabtype;
+			
+								let coord = { x: fx, y: fy };
+								let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${nodeID}';`;
+			
+								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => {
+									if (!node[0] || node[0].length === 0) return;
+									node = node[0][0];
+									node.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;
+									if (node.id.id) node.id = node.id.id;
+			
+									qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+									ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
+								}).catch(error => {
+									console.error('Coordinate update failed', error);
+								});
+			
+								relatedElements.forEach(({ elem }) => {
+									const relatedId = elem.id;
+									const relatedCoord = { x: parseInt(elem.style.left, 10), y: parseInt(elem.style.top, 10) };
+									let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position.${tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
+									ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).catch(error => {
+										console.error('Coordinate update failed for related element', error);
+									});
+								});
+			
+								dbedges.forEach(edge => {
+									this.Graph.Events.createGutterDotsAndConnect(
+										parent.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+										parent.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+										edge,
+										parentSet
+									);
+									this.Graph.Events.connectNodes(
+										edge,
+										parentSet.graphCanvas.graph_connection_surface,
+										parentSet.graphCanvas.graph_surface.parentElement
+									);
+								});
+			
+								setTimeout(() => { this.DragSelect = false; }, 200);
+							}
+						}
+					}
+				], parent);
+			},
+			
+			makeNodeDraggableV1: (draggableSelector, parent, parentSet) => { //SECTION - makeNodeDraggable
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
 				let relatedElements = []; // To store related divs and their initial offsets

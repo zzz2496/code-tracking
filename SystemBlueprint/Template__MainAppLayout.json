@@ -191,16 +191,14 @@
 									{ "tag":"div", "innerHTML":"Display", "class":"is-size-7", "style":"width:fit-content; height:fit-content;"}
 								]}
 							]},
-							{
-								"tag": "div", "id": "containers_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-									{ "comment": "App Containers Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_container_content", "content": [
-										{"tag":"div", "class":"graph_node_surface ", "innerHTML":"<span>App Container Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
-										{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
-											{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
-										]}
-									] }
-								]
-							}
+							{"tag": "div", "id": "containers_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
+								{ "comment": "App Containers Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_container_content", "content": [
+									{"tag":"div", "class":"graph_node_surface ", "innerHTML":"<span>App Container Content</span>", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
+									{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
+										{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
+									]}
+								] }
+							]}
 						]
 					},
 					{
