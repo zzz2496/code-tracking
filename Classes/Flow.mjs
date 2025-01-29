@@ -1417,16 +1417,20 @@ export class Flow {
 				function onMouseDown(e) {
 					console.log('start mousedown on enableDragSelect')
 					if (e.button !== 0) return;
-			
 					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
 						isDragging = true;
-						startX = (e.clientX + container.scrollLeft);
-						startY = (e.clientY + container.scrollTop);
-			
+						startX = (e.clientX + container.scrollLeft) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
+						startY = (e.clientY + container.scrollTop) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
+						
+						console.log('zoom scale', self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale);
+						console.log('mouse', e.clientX, e.clientY);
+						console.log('coord', startX, startY);
+						console.log('scroll', container.scrollLeft, container.scrollTop);
+
 						selectedElements.clear(); // Reset selected elements
 			
 						if (!highlightBox) createHighlightBox();
-						updateHighlightBox(startX / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, startY / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, startX / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, startY / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale);
+						updateHighlightBox(startX , startY);
 					}
 					console.log('done mousedown on enableDragSelect')
 				}
@@ -1437,10 +1441,12 @@ export class Flow {
 			
 					self.DragSelect = true;
 			
-					const currentX = (e.clientX + container.scrollLeft);
-					const currentY = (e.clientY + container.scrollTop);
+					const currentX = (e.clientX + container.scrollLeft) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
+					const currentY = (e.clientY + container.scrollTop) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
+
+					console.log('mousemove', currentX, currentY);
 			
-					updateHighlightBox(startX / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, startY / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, currentX / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale, currentY / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale);
+					updateHighlightBox(startX, startY, currentX, currentY);
 			
 					const rect = container.getBoundingClientRect();
 					const dragArea = {
@@ -2146,7 +2152,7 @@ export class Flow {
 				document.querySelectorAll('.app_configurator_containers').forEach(container => { 
 					this.GraphCanvas[container.dataset.tabtype] = {
 						ZoomScale: 1,
-						ZoomStep: 0.05, // Zoom scale increment
+						ZoomStep: 0.1, // Zoom scale increment
 						MinZoomScale: 0.1, // Prevents zooming out too far
 						MaxZoomScale: 10, // Prevents zooming in too far
 						Element: container,
@@ -2160,6 +2166,11 @@ export class Flow {
 							);
 						}
 					};
+				});
+
+				document.querySelectorAll('.scroll_content').forEach(scrollContainer => {
+					scrollContainer.scrollLeft = 1000;
+					scrollContainer.scrollTop = 1000;
 				});
 
 				document.querySelectorAll('.app_project_controls').forEach(container => {
