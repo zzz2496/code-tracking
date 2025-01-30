@@ -269,7 +269,7 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
-			makeNodesDraggable: (() => {
+			makeNodesDraggableV1: (() => {
 				let isInitialized = false;
 				let eventCallbacks = [];
 				let isDragging = false;
@@ -353,8 +353,8 @@ export class Flow {
 							
 							console.log('coord >>>>>', x, y);
 
-							node.style.left = `${x}px`;
-							node.style.top = `${y}px`;
+							// node.style.left = `${x}px`;
+							// node.style.top = `${y}px`;
 						});
 					});
 			
@@ -389,7 +389,7 @@ export class Flow {
 				return { initialize, destroy };
 			})(),
 			
-			makeNodesDraggableV0: (() => {
+			makeNodesDraggable: (() => {
 				let isInitialized = false;  // Flag to prevent duplicate event listeners
 				let eventCallbacks = [];     // Store callbacks for removal
 				let isDragging = false;
@@ -399,6 +399,7 @@ export class Flow {
 				let fx, fy = 0;
 				let nodeID = "";
 				let flow = this;
+				let coord = {x: 0, y: 0};
 			
 				function initialize(parent, parentSet) {
 					console.log('start initialize makeNodesDraggable');
@@ -469,6 +470,7 @@ export class Flow {
 
 						draggedElement.style.left = `${x}px`;
 						draggedElement.style.top = `${y}px`;
+						coord = {x: x, y: y};
 						console.log('draggedElement.style', draggedElement.style.left, draggedElement.style.top);
 					});
 			
@@ -480,6 +482,28 @@ export class Flow {
 							isDragging = false;
 							if (draggedElement) draggedElement.style.zIndex = "";
 							draggedElement = null;
+
+							let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${nodeID}';`;
+							// console.log('qstr :>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
+								if (node[0].length == 0) return;
+								node = node[0][0];
+								console.log('tabType', parentSet.tab.tabType);
+								console.log(node.Presentation.Perspectives.GraphNode.Position);
+								console.log(node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]);
+								node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType] = coord;
+								// console.log('node.id after update coord :>>', node.id);
+
+								if (node.id.id) node.id = node.id.id;
+								// console.log('node after update coord :>> ', node);
+
+								qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+								// console.log('qstr :>> ', qstr);
+								
+								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
+							}).catch(error => {
+								console.error('Coordinate update failed', error);
+							});
 						}
 					});
 					console.log('done initialize makeNodesDraggable');
