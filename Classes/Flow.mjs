@@ -19,6 +19,7 @@ export class Flow {
 		this.Utility = utility;
 		this.DragSelect = false;
 		this.GraphCanvas = {};
+		this.moveSnap = 10;
 
 		this.CurrentActiveTab = {};
 		this.selectedNodesToConnect = {
@@ -268,188 +269,239 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
-			makeNodeDraggable: (parentSet) => {
+			makeNodesDraggable: (() => {
+				let isInitialized = false;
+				let eventCallbacks = [];
+				let isDragging = false;
+				let draggedElement = null;
+				let offsetMap = new Map(); // Store offsets for all focused elements
+				let parentRect;
+				let flow = this; // Reference to the main object
+				let parentSet;
+			
+				function initialize(parent, tparentSet) {
+					console.log("Initializing makeNodesDraggable...");
+					if (isInitialized) return;
+					isInitialized = true;
+					parentSet = tparentSet;
+					parentRect = parent.getBoundingClientRect();
+			
+					const snapToGrid = (value, gridSize = 10) => Math.round(value / gridSize) * gridSize;
+			
+					const globalEventHandler = (type, selector, callback) => {
+						const handler = (e) => {
+							const target = e.target.closest(selector);
+							if (target && parent.contains(target)) {
+								callback(e, target);
+							}
+						};
+						document.addEventListener(type, handler, true);
+						eventCallbacks.push({ type, handler });
+					};
+			
+					// Mousedown event
+					globalEventHandler("mousedown", ".card-header-icon", (e, target) => {
+						console.log("Node drag start");
+			
+						isDragging = true;
+						draggedElement = target.closest(".graph-node");
+			
+						const focusedNodes = Array.from(parent.querySelectorAll(".card.focused"));
+						offsetMap.clear();
+			
+						const { app_root_container, app_container } = flow.ScrollPosition;
+			
+						const parentScrollLeft = parent.scrollLeft;
+						const parentScrollTop = parent.scrollTop;
+			
+						focusedNodes.forEach((node) => {
+							const rect = node.getBoundingClientRect();
+							console.log('x', e.clientX, rect.left, parentScrollLeft, app_root_container.left);
+							console.log('y', e.clientX, rect.left, parentScrollLeft, app_root_container.left);
+							offsetMap.set(node, {
+								offsetX: e.clientX - rect.left + parentScrollLeft + app_root_container.left,
+								offsetY: e.clientY - rect.top + parentScrollTop + app_container.top
+							});
+			
+							// Ensure absolute positioning
+							node.style.position = "absolute";
+							node.style.zIndex = 1000;
+						});
+			
+						console.log("Dragging nodes:", focusedNodes.length, offsetMap);
+					});
+			
+					// Mousemove event
+					globalEventHandler("mousemove", ".graph_surfaces", (e) => {
+						if (!isDragging || offsetMap.size === 0) return;
+			
+						console.log("Dragging multiple nodes...");
+			
+						const parentScrollLeft = parent.scrollLeft;
+						const parentScrollTop = parent.scrollTop;
+						const { app_root_container, app_container } = flow.ScrollPosition;
+			
+						offsetMap.forEach((offsets, node) => {
+							let tx = (e.clientX - offsets.offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / parentSet.zoomProps.ZoomScale;
+							let ty = (e.clientY - offsets.offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / parentSet.zoomProps.ZoomScale;
+
+							console.log('>>>>>>>', e.clientX, offsets.offsetX, parentRect.left, (parentScrollLeft * 2), (app_root_container.left * 2), parentSet.zoomProps.ZoomScale);
+							console.log('>>>>>>>', e.clientY, offsets.offsetY, parentRect.top, (parentScrollTop * 2), (app_root_container.top * 2), parentSet.zoomProps.ZoomScale);
+
+							let x = snapToGrid(tx, flow.moveSnap);
+							let y = snapToGrid(ty, flow.moveSnap);
+							
+							console.log('coord >>>>>', x, y);
+
+							node.style.left = `${x}px`;
+							node.style.top = `${y}px`;
+						});
+					});
+			
+					// Mouseup event
+					globalEventHandler("mouseup", ".graph_surfaces", (e) => {
+						if (isDragging) {
+							console.log("Node drag end");
+							isDragging = false;
+							offsetMap.forEach((_, node) => {
+								node.style.zIndex = "";
+							});
+							offsetMap.clear();
+						}
+					});
+			
+					console.log("Done initializing makeNodesDraggable");
+				}
+			
+				function destroy() {
+					if (!isInitialized) return;
+					isInitialized = false;
+			
+					// Remove all event listeners
+					eventCallbacks.forEach(({ type, handler }) => {
+						document.removeEventListener(type, handler, true);
+					});
+			
+					eventCallbacks = [];
+					console.log("makeNodesDraggable destroyed");
+				}
+			
+				return { initialize, destroy };
+			})(),
+			
+			makeNodesDraggableV0: (() => {
+				let isInitialized = false;  // Flag to prevent duplicate event listeners
+				let eventCallbacks = [];     // Store callbacks for removal
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
 				let relatedElements = [];
 				let dbedges = [];
-				let aX, aY, fx, fy;
+				let fx, fy = 0;
 				let nodeID = "";
-				const parent = parentSet.graphCanvas.element;
-				const parentRect = parent.getBoundingClientRect();
+				let flow = this;
 			
-				const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
+				function initialize(parent, parentSet) {
+					console.log('start initialize makeNodesDraggable');
+					if (isInitialized) return; // Prevent multiple initializations
+					isInitialized = true;
 			
-				ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener("mousedown", [
-					{
-						selector: ".card-header-icon",
-						callback: (e) => {
-							console.log('Node drag start');
-							isDragging = true;
-							draggedElement = e.target.closest(".node"); // Adjust selector to match your node elements
-							nodeID = draggedElement.id;
+					const parentRect = parent.getBoundingClientRect();
 			
-							// Fetch connections from the database
-							let qstr = document.querySelector('#graph_show_only_containers').checked
-								? `select * from Process where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}") `
-								: `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => option.Type).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
+					const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
 			
-							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
-								dbedges = edges[0] || [];
-								dbedges.forEach(edge => {
-									this.Graph.Events.createGutterDotsAndConnect(
-										parent.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-										parent.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-										edge,
-										parentSet
-									);
-									this.Graph.Events.connectNodes(
-										edge,
-										parentSet.graphCanvas.graph_connection_surface,
-										parentSet.graphCanvas.graph_surface.parentElement
-									);
-								});
-							});
-			
-							// Fetch related elements
-							relatedElements = ParadigmREVOLUTION.Application.Cursor
-								.filter(cursor => cursor.id !== nodeID)
-								.map(cursor => {
-									const elem = document.getElementById(cursor.id);
-									if (!elem) return null;
-									const rect = elem.getBoundingClientRect();
-									return {
-										elem,
-										offsetX: rect.left - draggedElement.getBoundingClientRect().left,
-										offsetY: rect.top - draggedElement.getBoundingClientRect().top
-									};
-								})
-								.filter(item => item);
-			
-							const parentScrollLeft = parent.scrollLeft;
-							const parentScrollTop = parent.scrollTop;
-							const { app_root_container, app_container } = this.ScrollPosition;
-			
-							const rect = draggedElement.getBoundingClientRect();
-							offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
-							offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
-			
-							draggedElement.style.position = "absolute";
-							draggedElement.style.zIndex = 1000;
-			
-							aX = (e.clientX - offsetX - parentRect.left + parentScrollLeft * 2 + app_root_container.left * 2) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-							aY = (e.clientY - offsetY - parentRect.top + parentScrollTop * 2 + app_container.top * 2) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-						}
-					}
-				], parent);
-			
-				ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener("mousemove", [
-					{
-						selector: ".graphCanvas",
-						callback: (e) => {
-							if (!isDragging || !draggedElement) return;
-			
-							const parentScrollLeft = parent.scrollLeft;
-							const parentScrollTop = parent.scrollTop;
-							const { app_root_container, app_container } = this.ScrollPosition;
-			
-							let tx = (e.clientX - offsetX - parentRect.left + parentScrollLeft * 2 + app_root_container.left * 2) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-							let ty = (e.clientY - offsetY - parentRect.top + parentScrollTop * 2 + app_container.top * 2) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-			
-							let x = tx > 0 ? 0 : snapToGrid(tx, 10);
-							let y = ty > 0 ? 0 : snapToGrid(ty, 10);
-			
-							if (aX !== x || aY !== y) {
-								aX = x;
-								aY = y;
-			
-								draggedElement.style.left = `${aX}px`;
-								draggedElement.style.top = `${aY}px`;
-			
-								fx = aX;
-								fy = aY;
-			
-								dbedges.forEach(edge => {
-									this.Graph.Events.createGutterDotsAndConnect(
-										parent.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-										parent.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-										edge,
-										parentSet
-									);
-									this.Graph.Events.connectNodes(
-										edge,
-										parentSet.graphCanvas.graph_connection_surface,
-										parentSet.graphCanvas.graph_surface.parentElement
-									);
-								});
-			
-								relatedElements.forEach(({ elem, offsetX, offsetY }) => {
-									elem.style.left = `${(aX + offsetX) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
-									elem.style.top = `${(aY + offsetY) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale}px`;
-								});
+					const globalEventHandler = (type, selector, callback) => {
+						const handler = (e) => {
+							const target = e.target.closest(selector);
+							if (target && parent.contains(target)) {
+								callback(e, target);
 							}
+						};
+						document.addEventListener(type, handler, true);
+						eventCallbacks.push({ type, handler }); // Store for later removal
+					};
+			
+					// Mousedown event
+					globalEventHandler("mousedown", ".card-header-icon", (e, target) => {
+						console.log("Node drag start");
+						isDragging = true;
+						draggedElement = target.closest(".graph-node");
+						nodeID = draggedElement.id;
+						
+						console.log('what is FLOW', flow);
+						const { app_root_container, app_container } = flow.ScrollPosition;
+			
+						const parentScrollLeft = parent.scrollLeft;
+						const parentScrollTop = parent.scrollTop;
+			
+						const rect = draggedElement.getBoundingClientRect();
+						offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
+						offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
+			
+						console.log('offset', offsetX, offsetY);
+
+						draggedElement.style.position = "absolute";
+						draggedElement.style.zIndex = 1000;
+					});
+			
+					// Mousemove event
+					globalEventHandler("mousemove", ".graph_surfaces", (e) => {
+						if (!isDragging || !draggedElement) return;
+			
+						console.log("Dragging node...");
+						const parentScrollLeft = parent.scrollLeft;
+						const parentScrollTop = parent.scrollTop;
+			
+						const { app_root_container, app_container } = flow.ScrollPosition;
+
+						console.log('app_root_container', app_root_container);
+						console.log('app_container', app_container);
+			
+						let tx = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / parentSet.zoomProps.ZoomScale;
+						let ty = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / parentSet.zoomProps.ZoomScale;
+						
+						console.log('parentSet :>> ', parentSet);
+						console.log('>>>>>>>', e.clientX, offsetX, parentRect.left, (parentScrollLeft * 2), (app_root_container.left * 2), parentSet.zoomProps.ZoomScale);
+
+						let x = snapToGrid(tx, 10);
+						let y = snapToGrid(ty, 10);
+			
+						console.log('coord', tx, ty, x, y);
+
+						draggedElement.style.left = `${x}px`;
+						draggedElement.style.top = `${y}px`;
+						console.log('draggedElement.style', draggedElement.style.left, draggedElement.style.top);
+					});
+			
+					// Mouseup event
+					globalEventHandler("mouseup", ".graph_surfaces", (e) => {
+						if (isDragging) {
+							console.log("Node drag end");
+			
+							isDragging = false;
+							if (draggedElement) draggedElement.style.zIndex = "";
+							draggedElement = null;
 						}
-					}
-				], parent);
+					});
+					console.log('done initialize makeNodesDraggable');
+				}
 			
-				ParadigmREVOLUTION.Flow.Form.Events.addGlobalEventListener("mouseup", [
-					{
-						selector: ".graphCanvas",
-						callback: (e) => {
-							if (isDragging) {
-								isDragging = false;
-								draggedElement.style.zIndex = "";
-								draggedElement = null;
+				function destroy() {
+					if (!isInitialized) return;
+					isInitialized = false;
 			
-								let graphCanvas = e.target.closest('.app_configurator_containers');
-								let tabtype = graphCanvas.dataset.tabtype;
+					// Remove all event listeners
+					eventCallbacks.forEach(({ type, handler }) => {
+						document.removeEventListener(type, handler, true);
+					});
 			
-								let coord = { x: fx, y: fy };
-								let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${nodeID}';`;
+					eventCallbacks = []; // Clear stored callbacks
+					console.log("makeNodesDraggable destroyed");
+				}
 			
-								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => {
-									if (!node[0] || node[0].length === 0) return;
-									node = node[0][0];
-									node.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;
-									if (node.id.id) node.id = node.id.id;
-			
-									qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
-									ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
-								}).catch(error => {
-									console.error('Coordinate update failed', error);
-								});
-			
-								relatedElements.forEach(({ elem }) => {
-									const relatedId = elem.id;
-									const relatedCoord = { x: parseInt(elem.style.left, 10), y: parseInt(elem.style.top, 10) };
-									let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position.${tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
-									ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).catch(error => {
-										console.error('Coordinate update failed for related element', error);
-									});
-								});
-			
-								dbedges.forEach(edge => {
-									this.Graph.Events.createGutterDotsAndConnect(
-										parent.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
-										parent.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
-										edge,
-										parentSet
-									);
-									this.Graph.Events.connectNodes(
-										edge,
-										parentSet.graphCanvas.graph_connection_surface,
-										parentSet.graphCanvas.graph_surface.parentElement
-									);
-								});
-			
-								setTimeout(() => { this.DragSelect = false; }, 200);
-							}
-						}
-					}
-				], parent);
-			},
-			
-			makeNodeDraggableV1: (draggableSelector, parent, parentSet) => { //SECTION - makeNodeDraggable
+				return { initialize, destroy };
+			})(),
+	
+			makeNodeDraggable: (draggableSelector, parent, parentSet) => { //SECTION - makeNodeDraggable
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
 				let relatedElements = []; // To store related divs and their initial offsets
@@ -529,6 +581,7 @@ export class Flow {
 					const parentScrollTop = parent.scrollTop;
 		
 					// Access the live ScrollPosition dynamically
+					console.log('what is THIS', this);
 					const { app_root_container, app_container } = this.ScrollPosition;
 		
 					const rect = draggedElement.getBoundingClientRect();
@@ -752,7 +805,9 @@ export class Flow {
 				});
 				// console.log('done foreach nodes ===========>');
 				
-				this.Graph.Events.makeNodeDraggable(".graph-node", parentSet.graphCanvas.graph_surface.parentElement, parentSet);
+				// this.Graph.Events.makeNodeDraggable(".graph-node", parentSet.graphCanvas.graph_surface.parentElement, parentSet);
+				console.log('parentSet', parentSet);
+				this.Graph.Events.makeNodesDraggable.initialize(parentSet.graphCanvas.element.querySelector('.scroll_content'), parentSet); //NOTE - makeNodeDraggable CALLEE
 
 				console.log('================= Done Render Nodes');
 				console.log('=================Start Render Edges');
