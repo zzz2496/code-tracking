@@ -269,7 +269,7 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
-			makeNodesDraggableV1: (() => {
+			makeNodesDraggableFocused: (() => {
 				let isInitialized = false;
 				let eventCallbacks = [];
 				let isDragging = false;
@@ -397,17 +397,22 @@ export class Flow {
 				let relatedElements = [];
 				let dbedges = [];
 				let fx, fy = 0;
-				let nodeID = "";
+				let nodeID = [];
 				let flow = this;
-				let coord = {x: 0, y: 0};
+				let offsetMap = new Map(); // Store offsets for all focused elements
+				let parentSet;
+				let coord = [];
+				let defaultCoord = [];
 			
-				function initialize(parent, parentSet) {
+				function initialize(parent, tparentSet) {
 					console.log('start initialize makeNodesDraggable');
 					if (isInitialized) return; // Prevent multiple initializations
 					isInitialized = true;
-			
+
+					parentSet = tparentSet;
+					nodeID = [];
+					coord = [];
 					const parentRect = parent.getBoundingClientRect();
-			
 					const snapToGrid = (value, gridSize = 20) => Math.round(value / gridSize) * gridSize;
 			
 					const globalEventHandler = (type, selector, callback) => {
@@ -426,52 +431,70 @@ export class Flow {
 						console.log("Node drag start");
 						isDragging = true;
 						draggedElement = target.closest(".graph-node");
-						nodeID = draggedElement.id;
+						nodeID = [];
+						coord = [];
 						
-						console.log('what is FLOW', flow);
 						const { app_root_container, app_container } = flow.ScrollPosition;
 			
 						const parentScrollLeft = parent.scrollLeft;
 						const parentScrollTop = parent.scrollTop;
 			
-						const rect = draggedElement.getBoundingClientRect();
-						offsetX = e.clientX - rect.left + parentScrollLeft + app_root_container.left;
-						offsetY = e.clientY - rect.top + parentScrollTop + app_container.top;
-			
-						console.log('offset', offsetX, offsetY);
+						//----------------------------
+						const focusedNodes = Array.from(parent.querySelectorAll(".card.focused"));
+						offsetMap.clear();
+						
+						focusedNodes.forEach((node) => {
+							const graphNode = node.closest(".graph-node");
+							const rect = graphNode.getBoundingClientRect();
 
-						draggedElement.style.position = "absolute";
-						draggedElement.style.zIndex = 1000;
+							offsetMap.set(graphNode, {
+								offsetX: e.clientX - rect.left + parentScrollLeft + app_root_container.left,
+								offsetY: e.clientY - rect.top + parentScrollTop + app_container.top
+							});
+							
+							// Ensure absolute positioning
+							graphNode.style.position = "absolute";
+							graphNode.style.zIndex = 1000;
+
+							nodeID.push(graphNode.id);
+							coord.push({x: rect.left + parentScrollLeft + app_root_container.left, y: rect.top + parentScrollTop + app_container.top});
+						});
+						
+						console.log('defaultCoord :>>', coord);
 					});
 			
 					// Mousemove event
 					globalEventHandler("mousemove", ".graph_surfaces", (e) => {
 						if (!isDragging || !draggedElement) return;
 			
-						console.log("Dragging node...");
+						// console.8log("Dragging node...");
+						coord = [];
 						const parentScrollLeft = parent.scrollLeft;
 						const parentScrollTop = parent.scrollTop;
 			
 						const { app_root_container, app_container } = flow.ScrollPosition;
 
-						console.log('app_root_container', app_root_container);
-						console.log('app_container', app_container);
-			
-						let tx = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / parentSet.zoomProps.ZoomScale;
-						let ty = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / parentSet.zoomProps.ZoomScale;
-						
-						console.log('parentSet :>> ', parentSet);
-						console.log('>>>>>>>', e.clientX, offsetX, parentRect.left, (parentScrollLeft * 2), (app_root_container.left * 2), parentSet.zoomProps.ZoomScale);
+						offsetMap.forEach((offsets, node) => {
+							const graphNode = node.closest(".graph-node");
 
-						let x = snapToGrid(tx, 10);
-						let y = snapToGrid(ty, 10);
-			
-						console.log('coord', tx, ty, x, y);
+							let tx = (e.clientX - offsets.offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / parentSet.zoomProps.ZoomScale;
+							let ty = (e.clientY - offsets.offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / parentSet.zoomProps.ZoomScale;
 
-						draggedElement.style.left = `${x}px`;
-						draggedElement.style.top = `${y}px`;
-						coord = {x: x, y: y};
-						console.log('draggedElement.style', draggedElement.style.left, draggedElement.style.top);
+							let x = snapToGrid(tx, flow.moveSnap);
+							let y = snapToGrid(ty, flow.moveSnap);
+							
+							graphNode.style.left = `${x}px`;
+							graphNode.style.top = `${y}px`;
+							
+							coord.push({ x: x, y: y });
+							
+							flow.Graph.Events.connectNodes(
+								edge,
+								parentSet.graphCanvas.graph_connection_surface,
+								parentSet.graphCanvas.graph_surface.parentElement
+							);
+
+						});
 					});
 			
 					// Mouseup event
@@ -480,29 +503,45 @@ export class Flow {
 							console.log("Node drag end");
 			
 							isDragging = false;
-							if (draggedElement) draggedElement.style.zIndex = "";
-							draggedElement = null;
 
-							let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${nodeID}';`;
-							// console.log('qstr :>> ', qstr);
-							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
-								if (node[0].length == 0) return;
-								node = node[0][0];
-								console.log('tabType', parentSet.tab.tabType);
-								console.log(node.Presentation.Perspectives.GraphNode.Position);
-								console.log(node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]);
-								node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType] = coord;
-								// console.log('node.id after update coord :>>', node.id);
+							const ArrOffsetMap = Array.from(offsetMap);
 
-								if (node.id.id) node.id = node.id.id;
-								// console.log('node after update coord :>> ', node);
+							let qstrUpdate = "";
+							let promises = [];
+							ArrOffsetMap.forEach((Tnode, idx) => {
+								console.log(idx, Tnode);
+								console.log('nodeID', nodeID[idx]);
+								console.log('coord', coord[idx]);
 
-								qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
-								// console.log('qstr :>> ', qstr);
-								
-								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
+								let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${nodeID[idx]}';`;
+								console.log('qstr :>> ', qstr);
+								let promise = ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
+									if (node[0].length == 0) return;
+									node = node[0][0];
+									console.log('node', node);
+									node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType] = coord[idx];
+									console.log('node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]', parentSet.tab.tabType, node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]);
+
+									
+									if (node.id.id) node.id = node.id.id;
+
+									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};\n\n`;
+								}).catch(error => {
+									console.error('Coordinate update failed', error);
+								});
+								promises.push(promise);
+							});
+							Promise.all(promises).then(() => {
+								console.log('completed qstrUpdate :>> ', qstrUpdate);
+								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstrUpdate)
+								.then(() => { 
+									console.log(`Coordinate UPDATED!`);
+								})
+								.catch(error => { 
+									console.error(`Coordinate update FAILED!`, error);
+								});
 							}).catch(error => {
-								console.error('Coordinate update failed', error);
+								console.error('Promises FAILED', error);
 							});
 						}
 					});
@@ -3039,8 +3078,9 @@ export class Flow {
 								x: tx > 0 ? tx : 0,
 								y: ty > 0 ? ty : 0
 							}
-							Object.entries(passedData.flow.GraphCanvas).forEach((key, value) => {
-								newNode.Presentation.Perspectives.GraphNode.Position[key] = coord;
+							Object.entries(passedData.flow.GraphCanvas).forEach((value, key) => {
+								console.log('value of passedData.flow.GraphCanvas :>> ', value);
+								newNode.Presentation.Perspectives.GraphNode.Position[value[0]] = coord;
 							});
 							
 							newNode.Presentation.Perspectives.GraphNode.Position[tabtype] = coord;

@@ -1,0 +1,8 @@
+Proses bisnis MJB
+Proses Penerimaan PO
+	Terima PO dan Faktur dari Dealer (cek kelengkapan, bisa di retur langsung ditempat, perlu dicatat di system)
+	Entry PO dan faktur di system
+	Print Barcode untuk entry SAMSAT
+	
+
+

@@ -655,6 +655,7 @@
 }
 .is-selectable-box.focused {
 	border: 2px solid var(--bulma-primary);
+	width: fit-content !important;
 }
 #app_graph_tabs{
 	overflow-x: auto;
