@@ -460,6 +460,33 @@ export class Flow {
 							coord.push({x: rect.left + parentScrollLeft + app_root_container.left, y: rect.top + parentScrollTop + app_container.top});
 						});
 						
+						let qstr = ''; 
+						if (document.querySelector('#graph_show_only_containers').checked) { 
+							qstr = `select * from Process where (in.id.ID IN [${nodeID.map(option => `"${option}"`).join(', ')}] or out.id.ID IN [${nodeID.map(option => `"${option}"`).join(', ')}]) `;
+						} else {
+							qstr = `select *  from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
+						}
+						console.log('qstr for dbedges on mousedown:>> ', qstr);
+						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
+							dbedges = edges[0];
+							console.log('dbedges :>> ', dbedges);
+							// if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
+							// 	this.Graph.Events.createGutterDotsAndConnect(
+							// 		parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+							// 		parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+							// 		edge,
+							// 		parentSet
+							// 	);
+							// });
+							// if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
+							// 	console.log('edge >>>>>>>>>>>>>>>>>>> :>> ', edge);
+							// 	this.Graph.Events.connectNodes(
+							// 		edge,
+							// 		parentSet.graphCanvas.graph_connection_surface,
+							// 		parentSet.graphCanvas.graph_surface.parentElement
+							// 	);
+							// });
+						});
 						console.log('defaultCoord :>>', coord);
 					});
 			
@@ -487,13 +514,13 @@ export class Flow {
 							graphNode.style.top = `${y}px`;
 							
 							coord.push({ x: x, y: y });
-							
-							flow.Graph.Events.connectNodes(
-								edge,
-								parentSet.graphCanvas.graph_connection_surface,
-								parentSet.graphCanvas.graph_surface.parentElement
-							);
-
+							dbedges.forEach((edge, edgeIndex) => {
+								flow.Graph.Events.connectNodes(
+									edge,
+									parentSet.graphCanvas.graph_connection_surface,
+									parentSet.graphCanvas.graph_surface.parentElement
+								);
+							});
 						});
 					});
 			
