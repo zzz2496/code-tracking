@@ -515,6 +515,14 @@ export class Flow {
 							
 							coord.push({ x: x, y: y });
 							dbedges.forEach((edge, edgeIndex) => {
+								flow.Graph.Events.createGutterDotsAndConnect(
+									parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
+									parentSet.graphCanvas.element.querySelector(`div[id="${edge.InputPin.nodeID}"]`),
+									edge,
+									parentSet
+								);
+							});
+							dbedges.forEach((edge, edgeIndex) => {
 								flow.Graph.Events.connectNodes(
 									edge,
 									parentSet.graphCanvas.graph_connection_surface,
@@ -1750,6 +1758,8 @@ export class Flow {
 					if (e.button !== 0) return;
 					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
 						isDragging = true;
+						console.log('container', container.scrollLeft, container.scrollTop, container);
+
 						startX = (e.clientX + container.scrollLeft) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
 						startY = (e.clientY + container.scrollTop) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
 						
@@ -1775,7 +1785,7 @@ export class Flow {
 					const currentX = (e.clientX + container.scrollLeft) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
 					const currentY = (e.clientY + container.scrollTop) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
 
-					console.log('mousemove', currentX, currentY);
+					// console.log('mousemove', currentX, currentY);
 			
 					updateHighlightBox(startX, startY, currentX, currentY);
 			
