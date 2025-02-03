@@ -269,129 +269,9 @@ export class Flow {
 			},
 		},
 		Events: { //SECTION - Events
-			makeNodesDraggableFocused: (() => {
+			makeNodesDraggable: (() => {
 				let isInitialized = false;
 				let eventCallbacks = [];
-				let isDragging = false;
-				let draggedElement = null;
-				let offsetMap = new Map(); // Store offsets for all focused elements
-				let parentRect;
-				let flow = this; // Reference to the main object
-				let parentSet;
-			
-				function initialize(parent, tparentSet) {
-					console.log("Initializing makeNodesDraggable...");
-					if (isInitialized) return;
-					isInitialized = true;
-					parentSet = tparentSet;
-					parentRect = parent.getBoundingClientRect();
-			
-					const snapToGrid = (value, gridSize = 10) => Math.round(value / gridSize) * gridSize;
-			
-					const globalEventHandler = (type, selector, callback) => {
-						const handler = (e) => {
-							const target = e.target.closest(selector);
-							if (target && parent.contains(target)) {
-								callback(e, target);
-							}
-						};
-						document.addEventListener(type, handler, true);
-						eventCallbacks.push({ type, handler });
-					};
-			
-					// Mousedown event
-					globalEventHandler("mousedown", ".card-header-icon", (e, target) => {
-						console.log("Node drag start");
-			
-						isDragging = true;
-						draggedElement = target.closest(".graph-node");
-			
-						const focusedNodes = Array.from(parent.querySelectorAll(".card.focused"));
-						offsetMap.clear();
-			
-						const { app_root_container, app_container } = flow.ScrollPosition;
-			
-						const parentScrollLeft = parent.scrollLeft;
-						const parentScrollTop = parent.scrollTop;
-			
-						focusedNodes.forEach((node) => {
-							const rect = node.getBoundingClientRect();
-							console.log('x', e.clientX, rect.left, parentScrollLeft, app_root_container.left);
-							console.log('y', e.clientX, rect.left, parentScrollLeft, app_root_container.left);
-							offsetMap.set(node, {
-								offsetX: e.clientX - rect.left + parentScrollLeft + app_root_container.left,
-								offsetY: e.clientY - rect.top + parentScrollTop + app_container.top
-							});
-			
-							// Ensure absolute positioning
-							node.style.position = "absolute";
-							node.style.zIndex = 1000;
-						});
-			
-						console.log("Dragging nodes:", focusedNodes.length, offsetMap);
-					});
-			
-					// Mousemove event
-					globalEventHandler("mousemove", ".graph_surfaces", (e) => {
-						if (!isDragging || offsetMap.size === 0) return;
-			
-						console.log("Dragging multiple nodes...");
-			
-						const parentScrollLeft = parent.scrollLeft;
-						const parentScrollTop = parent.scrollTop;
-						const { app_root_container, app_container } = flow.ScrollPosition;
-			
-						offsetMap.forEach((offsets, node) => {
-							let tx = (e.clientX - offsets.offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / parentSet.zoomProps.ZoomScale;
-							let ty = (e.clientY - offsets.offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / parentSet.zoomProps.ZoomScale;
-
-							console.log('>>>>>>>', e.clientX, offsets.offsetX, parentRect.left, (parentScrollLeft * 2), (app_root_container.left * 2), parentSet.zoomProps.ZoomScale);
-							console.log('>>>>>>>', e.clientY, offsets.offsetY, parentRect.top, (parentScrollTop * 2), (app_root_container.top * 2), parentSet.zoomProps.ZoomScale);
-
-							let x = snapToGrid(tx, flow.moveSnap);
-							let y = snapToGrid(ty, flow.moveSnap);
-							
-							console.log('coord >>>>>', x, y);
-
-							// node.style.left = `${x}px`;
-							// node.style.top = `${y}px`;
-						});
-					});
-			
-					// Mouseup event
-					globalEventHandler("mouseup", ".graph_surfaces", (e) => {
-						if (isDragging) {
-							console.log("Node drag end");
-							isDragging = false;
-							offsetMap.forEach((_, node) => {
-								node.style.zIndex = "";
-							});
-							offsetMap.clear();
-						}
-					});
-			
-					console.log("Done initializing makeNodesDraggable");
-				}
-			
-				function destroy() {
-					if (!isInitialized) return;
-					isInitialized = false;
-			
-					// Remove all event listeners
-					eventCallbacks.forEach(({ type, handler }) => {
-						document.removeEventListener(type, handler, true);
-					});
-			
-					eventCallbacks = [];
-					console.log("makeNodesDraggable destroyed");
-				}
-			
-				return { initialize, destroy };
-			})(),
-			
-			makeNodesDraggable: (() => {
-				let isInitialized = false;  // Flag to prevent duplicate event listeners
-				let eventCallbacks = [];     // Store callbacks for removal
 				let isDragging = false;
 				let offsetX, offsetY, draggedElement;
 				let relatedElements = [];
@@ -399,7 +279,7 @@ export class Flow {
 				let fx, fy = 0;
 				let nodeID = [];
 				let flow = this;
-				let offsetMap = new Map(); // Store offsets for all focused elements
+				let offsetMap = new Map();
 				let parentSet;
 				let coord = [];
 				let defaultCoord = [];
@@ -1710,19 +1590,175 @@ export class Flow {
 					return [edge, gutterDot1, gutterDot2, direction];
 				}
 			},
-			enableDragSelect: ((selector, parentSet) => {
-				console.log('Start enableDragSelect :>> ', typeof selector, selector);
-				let container;
-				if (typeof selector === 'string') {
-					container = document.querySelector(selector);
-				} else {
-					container = selector;
+			enableDragSelect: (parentSet) => { 
+				let isSelecting = false;
+				let startX, startY, currentX, currentY;
+				let selectionBox;
+				const scrollContent = parentSet.graphCanvas.graph_surface.parentElement;
+				const appGraphContent = parentSet.graphCanvas.graph_surface;
+				let ZoomScale = this.GraphCanvas['Graph'].ZoomScale; // Make sure to update this variable when zoom changes
+
+				function handleMouseDown(e) {
+					if (e.target.closest('.graph-node')) return;
+				
+					isSelecting = true;
+					const rect = scrollContent.getBoundingClientRect();
+					
+					// Corrected calculation (removed /2 division)
+					startX = scrollContent.scrollLeft + (e.clientX - rect.left) / ZoomScale;
+					startY = scrollContent.scrollTop + (e.clientY - rect.top) / ZoomScale;
+					
+					currentX = startX;
+					currentY = startY;
+				
+					// Create selection box
+					selectionBox = document.createElement('div');
+					selectionBox.style.position = 'absolute';
+					selectionBox.style.backgroundColor = 'rgba(0, 123, 255, 0.3)';
+					selectionBox.style.border = '1px dashed rgb(0, 123, 255)';
+					selectionBox.style.borderRadius = '10px';
+					selectionBox.style.pointerEvents = 'none';
+					selectionBox.style.zIndex = '1000';
+					scrollContent.appendChild(selectionBox);
+				
+					updateSelectionBox();
 				}
+
+				function handleMouseMove(e) {
+					if (!isSelecting) return;
+				
+					const rect = scrollContent.getBoundingClientRect();
+					
+					// Update current coordinates
+					currentX = scrollContent.scrollLeft + (e.clientX - rect.left) / ZoomScale;
+					currentY = scrollContent.scrollTop + (e.clientY - rect.top) / ZoomScale;
+				
+					updateSelectionBox();
+					checkSelection();
+				}
+
+				function handleMouseUp() {
+					if (!isSelecting) return;
+					
+					console.log('handleMouseUp');
+					isSelecting = false;
+					selectionBox.remove();
+					selectionBox = null;
+					
+					// Handle selected elements here
+					// const selected = document.querySelectorAll('.graph-node.selected');
+					// selected.forEach(node => node.classList.remove('selected'));
+				}
+
+				function updateSelectionBox() {
+					// Convert to viewport coordinates
+					const viewportLeft = (Math.min(startX, currentX) - scrollContent.scrollLeft) * ZoomScale;
+					const viewportTop = (Math.min(startY, currentY) - scrollContent.scrollTop) * ZoomScale;
+					const width = Math.abs(currentX - startX) * ZoomScale;
+					const height = Math.abs(currentY - startY) * ZoomScale;
+			
+					selectionBox.style.left = `${viewportLeft}px`;
+					selectionBox.style.top = `${viewportTop}px`;
+					selectionBox.style.width = `${width}px`;
+					selectionBox.style.height = `${height}px`;
+				}
+
+				function checkSelection() {
+					console.log('checkSelection');
+					const selLeft = Math.min(startX, currentX);
+					const selRight = Math.max(startX, currentX);
+					const selTop = Math.min(startY, currentY);
+					const selBottom = Math.max(startY, currentY);
+
+					document.querySelectorAll('.graph-node, svg path').forEach(node => {
+						const nodeLeft = parseFloat(node.style.left);
+						const nodeTop = parseFloat(node.style.top);
+						const nodeRight = nodeLeft + node.offsetWidth;
+						const nodeBottom = nodeTop + node.offsetHeight;
+
+						const overlap = !(selRight < nodeLeft || 
+										selLeft > nodeRight || 
+										selBottom < nodeTop || 
+										selTop > nodeBottom);
+
+						node.classList.toggle('focused', overlap);
+					});
+
+					// const dragArea = {
+					// 	x1: Math.min(startX, currentX),
+					// 	y1: Math.min(startY, currentY),
+					// 	x2: Math.max(startX, currentX),
+					// 	y2: Math.max(startY, currentY),
+					// };
+
+
+					// container.querySelectorAll('.graph-node, svg path').forEach(element => {
+					// 	const elementRect = element.getBoundingClientRect();
+					// 	const isInside =
+					// 		elementRect.left / ZoomScale >= dragArea.x1 &&
+					// 		elementRect.top / ZoomScale >= dragArea.y1 &&
+					// 		elementRect.right / ZoomScale <= dragArea.x2 &&
+					// 		elementRect.bottom / ZoomScale <= dragArea.y2;
+			
+					// 	if (isInside) {
+					// 		if (!selectedElements.has(element)) {
+					// 			if (element.tagName === 'path') {
+					// 				element.classList.add('focused');
+					// 				selectedElements.add(element);
+					// 			} else {
+					// 				const elmnt = element.querySelector('.is-selectable-box');
+					// 				if (elmnt) {
+					// 					elmnt.classList.add('focused');
+					// 					selectedElements.add(element);
+					// 				}
+					// 			}
+					// 		}
+					// 	} else if (selectedElements.has(element)) {
+					// 		if (element.tagName === 'path') {
+					// 			element.classList.remove('focused');
+					// 			selectedElements.delete(element);
+					// 		} else {
+					// 			const elmnt = element.querySelector('.is-selectable-box');
+					// 			if (elmnt) {
+					// 				elmnt.classList.remove('focused');
+					// 				selectedElements.delete(element);
+					// 			}
+					// 		}
+					// 	}
+					// });
+
+				}
+
+				// Event Listeners
+				scrollContent.addEventListener('mousedown', handleMouseDown);
+				document.addEventListener('mousemove', handleMouseMove);
+				document.addEventListener('mouseup', handleMouseUp);
+			},
+			enableDragSelectV0: ((parentSet) => {
+				console.log('Start enableDragSelect');
+				const container = parentSet.graphCanvas.graph_surface.closest(`.graph_surfaces`);
+				const containerRect = container.getBoundingClientRect();
+				const graphContainer = parentSet.graphCanvas.graph_surface.closest(`.app_configurator_groups`);
+				const graphContainerRect = graphContainer.getBoundingClientRect();
+				const scrollContainer = parentSet.graphCanvas.graph_surface.parentElement;
+				console.log('container', container);
+				console.log('containerRect', containerRect);
+	
+				// console.log('Start enableDragSelect :>> ', typeof selector, selector);
+				// let container;
+				// if (typeof selector === 'string') {
+				// 	container = document.querySelector(selector);
+				// } else {
+				// 	container = selector;
+				// }
 				
 				let self = this;
 				let isDragging = false;
 				let startX, startY;
-			
+				// const ZoomScale = this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
+				const ZoomScale = this.GraphCanvas['Graph'].ZoomScale;
+				console.log('ZoomScale', ZoomScale);
+				
 				const selectedElements = new Set(); // Using Set to prevent duplicates
 				let highlightBox = null;
 			
@@ -1740,7 +1776,7 @@ export class Flow {
 			
 				// Function to update the position and size of the highlight box
 				function updateHighlightBox(x1, y1, x2, y2) {
-					const rect = container.getBoundingClientRect();
+					const rect = scrollContainer.getBoundingClientRect();
 					const left = Math.min(x1, x2) - rect.left;
 					const top = Math.min(y1, y2) - rect.top;
 					const width = Math.abs(x2 - x1);
@@ -1755,15 +1791,16 @@ export class Flow {
 				// Function to handle mouse down event
 				function onMouseDown(e) {
 					console.log('start mousedown on enableDragSelect')
+					console.log('ZoomScale :>> ', ZoomScale);
 					if (e.button !== 0) return;
 					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
 						isDragging = true;
 						console.log('container', container.scrollLeft, container.scrollTop, container);
 
-						startX = (e.clientX + container.scrollLeft) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
-						startY = (e.clientY + container.scrollTop) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
+						startX = (e.clientX - scrollContainer.scrollLeft) / ZoomScale;
+						startY = (e.clientY - scrollContainer.scrollTop) / ZoomScale;
 						
-						console.log('zoom scale', self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale);
+						console.log('zoom scale', ZoomScale);
 						console.log('mouse', e.clientX, e.clientY);
 						console.log('coord', startX, startY);
 						console.log('scroll', container.scrollLeft, container.scrollTop);
@@ -1782,14 +1819,15 @@ export class Flow {
 			
 					self.DragSelect = true;
 			
-					const currentX = (e.clientX + container.scrollLeft) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
-					const currentY = (e.clientY + container.scrollTop) / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale;
-
+					// const rect = scrollContainer.getBoundingClientRect();
+					
+					const currentX = (e.clientX - scrollContainer.scrollLeft) / ZoomScale;
+					const currentY = (e.clientY - scrollContainer.scrollTop ) / ZoomScale;
 					// console.log('mousemove', currentX, currentY);
 			
 					updateHighlightBox(startX, startY, currentX, currentY);
 			
-					const rect = container.getBoundingClientRect();
+					// const rect = container.getBoundingClientRect();
 					const dragArea = {
 						x1: Math.min(startX, currentX),
 						y1: Math.min(startY, currentY),
@@ -1801,10 +1839,10 @@ export class Flow {
 					container.querySelectorAll('.graph-node, svg path').forEach(element => {
 						const elementRect = element.getBoundingClientRect();
 						const isInside =
-							elementRect.left / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale >= dragArea.x1 &&
-							elementRect.top / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale >= dragArea.y1 &&
-							elementRect.right / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale <= dragArea.x2 &&
-							elementRect.bottom / self.GraphCanvas[self.CurrentActiveTab.app_container].ZoomScale <= dragArea.y2;
+							elementRect.left / ZoomScale >= dragArea.x1 &&
+							elementRect.top / ZoomScale >= dragArea.y1 &&
+							elementRect.right / ZoomScale <= dragArea.x2 &&
+							elementRect.bottom / ZoomScale <= dragArea.y2;
 			
 						if (isInside) {
 							if (!selectedElements.has(element)) {
@@ -1839,10 +1877,10 @@ export class Flow {
 					if (isDragging) {
 						isDragging = false;
 			
-						if (highlightBox) {
-							container.removeChild(highlightBox);
-							highlightBox = null;
-						}
+						// if (highlightBox) {
+						// 	container.removeChild(highlightBox);
+						// 	highlightBox = null;
+						// }
 			
 						// Update global variable
 						ParadigmREVOLUTION.Application.Cursor.length = 0;
@@ -2510,8 +2548,10 @@ export class Flow {
 				});
 
 				document.querySelectorAll('.scroll_content').forEach(scrollContainer => {
-					scrollContainer.scrollLeft = 1000;
-					scrollContainer.scrollTop = 1000;
+					// scrollContainer.scrollLeft = 1000;
+					// scrollContainer.scrollTop = 1000;
+					scrollContainer.scrollLeft = 0;
+					scrollContainer.scrollTop = 0;
 				});
 
 				document.querySelectorAll('.app_project_controls').forEach(container => {
@@ -2687,8 +2727,9 @@ export class Flow {
 						},
 						zoomProps: this.GraphCanvas[tabType]
 					};
-					console.log('parentSet :>> ', parentSet);
-					this.Graph.Events.enableDragSelect(surface, parentSet);
+					// console.log('parentSet :>> ', parentSet);
+					// console.log('surface', surface);
+					this.Graph.Events.enableDragSelect(parentSet);
 				});
 
 				// Initialize the scroll snap functionality
@@ -3252,23 +3293,23 @@ export class Flow {
 					selector: '.is-selectable-parent',
 					callback: (e) => {
 						console.log('is-selectable-parent CLICK');
-						if (e.target.classList.contains('is-selectable')) return;
-						console.log('this.DragSelect', this.DragSelect);
-						if (this.DragSelect) return;
-						console.log('is-selectable-parent GOOOO');
-						const selectableParent = e.target.closest('.is-selectable-parent');
-						ParadigmREVOLUTION.Application.Cursor = [];
-						selectableParent.querySelectorAll('.focused').forEach((item) => {
-							console.log('item', item);
-							if (item.tagName == 'path') {
-								item.classList.remove('focused');
-							} else { 
-								item.style.removeProperty('width');
-								item.classList.remove('box', 'focused', 'm-2');
-								item.classList.remove('m-2');
+						// if (e.target.classList.contains('is-selectable')) return;
+						// console.log('this.DragSelect', this.DragSelect);
+						// if (this.DragSelect) return;
+						// console.log('is-selectable-parent GOOOO');
+						// const selectableParent = e.target.closest('.is-selectable-parent');
+						// ParadigmREVOLUTION.Application.Cursor = [];
+						// selectableParent.querySelectorAll('.focused').forEach((item) => {
+						// 	console.log('item', item);
+						// 	if (item.tagName == 'path') {
+						// 		item.classList.remove('focused');
+						// 	} else { 
+						// 		item.style.removeProperty('width');
+						// 		item.classList.remove('box', 'focused', 'm-2');
+						// 		item.classList.remove('m-2');
 								
-							}
-						})
+						// 	}
+						// })
 					}
 				}
 				], document.querySelector('#app_graph_container'));
