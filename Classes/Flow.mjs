@@ -1597,6 +1597,7 @@ export class Flow {
 				const scrollContent = parentSet.graphCanvas.graph_surface.parentElement;
 				const appGraphContent = parentSet.graphCanvas.graph_surface;
 				let ZoomScale = this.GraphCanvas['Graph'].ZoomScale; // Make sure to update this variable when zoom changes
+				const selectedElements = new Set(); // Using Set to prevent duplicates
 
 				function handleMouseDown(e) {
 					if (e.target.closest('.graph-node')) return;
@@ -1664,68 +1665,49 @@ export class Flow {
 				}
 
 				function checkSelection() {
-					console.log('checkSelection');
-					const selLeft = Math.min(startX, currentX);
-					const selRight = Math.max(startX, currentX);
-					const selTop = Math.min(startY, currentY);
-					const selBottom = Math.max(startY, currentY);
+					// console.log('checkSelection');
+				
+					const dragArea = {
+						x1: Math.min(startX, currentX),
+						y1: Math.min(startY, currentY),
+						x2: Math.max(startX, currentX),
+						y2: Math.max(startY, currentY),
+					};
 
-					document.querySelectorAll('.graph-node, svg path').forEach(node => {
-						const nodeLeft = parseFloat(node.style.left);
-						const nodeTop = parseFloat(node.style.top);
-						const nodeRight = nodeLeft + node.offsetWidth;
-						const nodeBottom = nodeTop + node.offsetHeight;
-
-						const overlap = !(selRight < nodeLeft || 
-										selLeft > nodeRight || 
-										selBottom < nodeTop || 
-										selTop > nodeBottom);
-
-						node.classList.toggle('focused', overlap);
+					scrollContent.querySelectorAll('.graph-node, svg path').forEach(element => {
+						const elementRect = element.getBoundingClientRect();
+						const isInside =
+							elementRect.left / ZoomScale >= dragArea.x1 &&
+							elementRect.top / ZoomScale >= dragArea.y1 &&
+							elementRect.right / ZoomScale <= dragArea.x2 &&
+							elementRect.bottom / ZoomScale <= dragArea.y2;
+						console.log('isInside', isInside);
+						if (isInside) {
+							if (!selectedElements.has(element)) {
+								if (element.tagName === 'path') {
+									element.classList.add('focused');
+									selectedElements.add(element);
+								} else {
+									const elmnt = element.querySelector('.is-selectable-box');
+									if (elmnt) {
+										elmnt.classList.add('focused');
+										selectedElements.add(element);
+									}
+								}
+							}
+						} else if (selectedElements.has(element)) {
+							if (element.tagName === 'path') {
+								element.classList.remove('focused');
+								selectedElements.delete(element);
+							} else {
+								const elmnt = element.querySelector('.is-selectable-box');
+								if (elmnt) {
+									elmnt.classList.remove('focused');
+									selectedElements.delete(element);
+								}
+							}
+						}
 					});
-
-					// const dragArea = {
-					// 	x1: Math.min(startX, currentX),
-					// 	y1: Math.min(startY, currentY),
-					// 	x2: Math.max(startX, currentX),
-					// 	y2: Math.max(startY, currentY),
-					// };
-
-
-					// container.querySelectorAll('.graph-node, svg path').forEach(element => {
-					// 	const elementRect = element.getBoundingClientRect();
-					// 	const isInside =
-					// 		elementRect.left / ZoomScale >= dragArea.x1 &&
-					// 		elementRect.top / ZoomScale >= dragArea.y1 &&
-					// 		elementRect.right / ZoomScale <= dragArea.x2 &&
-					// 		elementRect.bottom / ZoomScale <= dragArea.y2;
-			
-					// 	if (isInside) {
-					// 		if (!selectedElements.has(element)) {
-					// 			if (element.tagName === 'path') {
-					// 				element.classList.add('focused');
-					// 				selectedElements.add(element);
-					// 			} else {
-					// 				const elmnt = element.querySelector('.is-selectable-box');
-					// 				if (elmnt) {
-					// 					elmnt.classList.add('focused');
-					// 					selectedElements.add(element);
-					// 				}
-					// 			}
-					// 		}
-					// 	} else if (selectedElements.has(element)) {
-					// 		if (element.tagName === 'path') {
-					// 			element.classList.remove('focused');
-					// 			selectedElements.delete(element);
-					// 		} else {
-					// 			const elmnt = element.querySelector('.is-selectable-box');
-					// 			if (elmnt) {
-					// 				elmnt.classList.remove('focused');
-					// 				selectedElements.delete(element);
-					// 			}
-					// 		}
-					// 	}
-					// });
 
 				}
 
