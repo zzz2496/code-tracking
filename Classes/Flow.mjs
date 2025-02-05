@@ -415,10 +415,8 @@ export class Flow {
 					// Mouseup event
 					globalEventHandler("mouseup", ".graph_surfaces", (e) => {
 						if (isDragging) {
-							console.log("Node drag end");
-			
+							console.log("Node drag end");			
 							isDragging = false;
-
 							const ArrOffsetMap = Array.from(offsetMap);
 
 							let qstrUpdate = "";
@@ -451,6 +449,16 @@ export class Flow {
 								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstrUpdate)
 								.then(() => { 
 									console.log(`Coordinate UPDATED!`);
+									console.log('dbedges', dbedges);
+									setTimeout(() => { 
+										dbedges.forEach((edge, edgeIndex) => {
+											flow.Graph.Events.connectNodes(
+												edge,
+												parentSet.graphCanvas.graph_connection_surface,
+												parentSet.graphCanvas.graph_surface.parentElement
+											);
+										});
+									}, 400);
 								})
 								.catch(error => { 
 									console.error(`Coordinate update FAILED!`, error);
@@ -1598,6 +1606,7 @@ export class Flow {
 				const appGraphContent = parentSet.graphCanvas.graph_surface;
 				let ZoomScale = this.GraphCanvas['Graph'].ZoomScale; // Make sure to update this variable when zoom changes
 				const selectedElements = new Set(); // Using Set to prevent duplicates
+				const self = this;
 
 				function handleMouseDown(e) {
 					if (e.target.closest('.graph-node')) return;
@@ -1627,6 +1636,7 @@ export class Flow {
 
 				function handleMouseMove(e) {
 					if (!isSelecting) return;
+					self.DragSelect = true;
 				
 					const rect = scrollContent.getBoundingClientRect();
 					
@@ -1649,6 +1659,23 @@ export class Flow {
 					// Handle selected elements here
 					// const selected = document.querySelectorAll('.graph-node.selected');
 					// selected.forEach(node => node.classList.remove('selected'));
+					ParadigmREVOLUTION.Application.Cursor.length = 0;
+			
+					for (const element of selectedElements) {
+						if (element.tagName === 'path') {
+							ParadigmREVOLUTION.Application.Cursor.push({ table: element.dataset.table, id: element.id });
+						} else {
+							ParadigmREVOLUTION.Application.Cursor.push({
+								table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name,
+								id: element.id,
+							});
+						}
+					}
+		
+					console.log('ParadigmREVOLUTION.Application.Cursor', ParadigmREVOLUTION.Application.Cursor);
+					setTimeout(() => {
+						self.DragSelect = false;
+					}, 300);
 				}
 
 				function updateSelectionBox() {
@@ -1665,6 +1692,66 @@ export class Flow {
 				}
 
 				function checkSelection() {
+					const dragArea = {
+						x1: Math.min(startX, currentX),
+						y1: Math.min(startY, currentY),
+						x2: Math.max(startX, currentX),
+						y2: Math.max(startY, currentY),
+					};
+				
+					scrollContent.querySelectorAll('.graph-node, svg path').forEach(element => {
+						const elementRect = element.getBoundingClientRect();
+						const scrollLeft = scrollContent.scrollLeft;
+						const scrollTop = scrollContent.scrollTop;
+						
+						// Convert element position to original coordinate space
+						const elementX1 = (elementRect.left + scrollLeft) / ZoomScale;
+						const elementY1 = (elementRect.top + scrollTop) / ZoomScale;
+						const elementX2 = (elementRect.right + scrollLeft) / ZoomScale;
+						const elementY2 = (elementRect.bottom + scrollTop) / ZoomScale;
+				
+						// Check for any overlap (not just full containment)
+						const isOverlapping = !(
+							dragArea.x2 < elementX1 ||
+							dragArea.x1 > elementX2 ||
+							dragArea.y2 < elementY1 ||
+							dragArea.y1 > elementY2
+						);
+				
+						if (isOverlapping) {
+							if (!selectedElements.has(element)) {
+								if (element.tagName === 'path') {
+									element.classList.add('focused');
+									selectedElements.add(element);
+								} else {
+									const elmnt = element.querySelector('.is-selectable-box');
+									if (elmnt) {
+										elmnt.classList.add('focused');
+										elmnt.querySelectorAll(`.card-footer`).forEach((footer) => {
+											footer.classList.add('show')
+										});
+										selectedElements.add(element);
+									}
+								}
+							}
+						} else if (selectedElements.has(element)) {
+							if (element.tagName === 'path') {
+								element.classList.remove('focused');
+								selectedElements.delete(element);
+							} else {
+								const elmnt = element.querySelector('.is-selectable-box');
+								if (elmnt) {
+									elmnt.classList.remove('focused');
+									elmnt.querySelectorAll(`.card-footer`).forEach(footer => {
+										if (footer.classList.contains('show')) footer.classList.remove('show')
+									});
+									selectedElements.delete(element);
+								}
+							}
+						}
+					});
+				}
+				function checkSelectionV0() {
 					// console.log('checkSelection');
 				
 					const dragArea = {
@@ -2513,7 +2600,7 @@ export class Flow {
 				document.querySelectorAll('.app_configurator_containers').forEach(container => { 
 					this.GraphCanvas[container.dataset.tabtype] = {
 						ZoomScale: 1,
-						ZoomStep: 0.1, // Zoom scale increment
+						ZoomStep: 0.05, // Zoom scale increment
 						MinZoomScale: 0.1, // Prevents zooming out too far
 						MaxZoomScale: 10, // Prevents zooming in too far
 						Element: container,
@@ -2530,11 +2617,37 @@ export class Flow {
 				});
 
 				document.querySelectorAll('.scroll_content').forEach(scrollContainer => {
-					// scrollContainer.scrollLeft = 1000;
-					// scrollContainer.scrollTop = 1000;
-					scrollContainer.scrollLeft = 0;
-					scrollContainer.scrollTop = 0;
+					scrollContainer.scrollLeft = 1000;
+					scrollContainer.scrollTop = 1000;
+					// scrollContainer.scrollLeft = 0;
+					// scrollContainer.scrollTop = 0;
 				});
+
+				// const mutationObserver = new MutationObserver(mutations => {
+				// 	mutations.forEach(mutation => {
+				// 		if (mutation.attributeName === "style") {
+				// 			const gutterDot = mutation.target;
+				// 			const rEdge = gutterDot.dataset.edge;
+				// 			if (!rEdge) return;
+				
+				// 			const svgContainer = document.querySelector("svg");
+				// 			const parentSelector = document.querySelector(".your-parent-container");
+				
+				// 			connectNodes(rEdge, svgContainer, parentSelector);
+				// 		}
+				// 	});
+				// });
+
+				// this.Form.Events.addGlobalEventListener("DOMNodeInserted", [{
+				// 	selector: ".gutter-dot",
+				// 	callback: (e) => {
+				// 		const newGutterDot = e.target.closest(".gutter-dot");
+				// 		if (newGutterDot) {
+				// 			console.log('new gutter dots event init');
+				// 			observer.observe(newGutterDot);
+				// 		}
+				// 	}
+				// }]);
 
 				document.querySelectorAll('.app_project_controls').forEach(container => {
 					function popModal(flow) { 
@@ -2906,12 +3019,20 @@ export class Flow {
 				}, {
 					selector: '.graph-edge',
 					callback: (e) => {
-						console.log('graph-edge CLICK');
+						console.log('graph-edge CLICK >>>>>>>>');
+						this.DragSelect = true;
 						console.log('e target', e.target);
 						const id = e.target.id;
 						const table = e.target.dataset.table;
+						e.target.closest('.scroll_content').querySelectorAll('.graph-edge').forEach(edge => { 
+							edge.classList.remove('focused');
+						});
 						ParadigmREVOLUTION.Application.Cursor.push({table:table, id:id});
 						e.target.classList.add('focused');
+						console.log('graph-edge CLICK <<<<<<<<');
+						setTimeout(() => {
+							this.DragSelect = false;
+						}, 100);
 					}
 				}, {
 					selector: '.graph_addnode_button', //NOTE - addnode-button
@@ -3034,7 +3155,6 @@ export class Flow {
 							}
 						}
 						let flow = this;
-						// console.log('flow :>> ', flow);
 						this.Graph.Events.showSchemaModal('New Node', schema, {graphCanvas:graphCanvas, flow:flow}, (data, passedData) => {
 							function findKindObject(kindArray, targetKind) {
 								for (const option of kindArray) {
@@ -3051,8 +3171,6 @@ export class Flow {
 								return null; // Return null if no match is found
 							}
 							
-							console.log('data :>> ', data);
-
 							const name = data.name;
 							const label = data.label;
 							const ulid = data.ulid;
@@ -3062,10 +3180,7 @@ export class Flow {
 	
 							const parent = document.querySelector('#graph_scroll_content'); // NOTE - NOW
 							const parentRect = parent.getBoundingClientRect();
-	
-							console.log('parent', parent);
-							console.log('parentRect', parentRect);
-			
+
 							//CALCULATE COORDINATE
 							const parentScrollLeft = parent.scrollLeft;
 							const parentScrollTop = parent.scrollTop;
@@ -3074,10 +3189,8 @@ export class Flow {
 						
 							let dx = parentRect.left + parentScrollLeft; //+ parentScrollLeft;
 							let dy = parentRect.top + parentScrollTop;
-					
-							console.log('dxy :>> ', dx, dy);
+
 							//CALCULATE COORDINATE
-	
 							// Extract custom data attributes from the selected option
 							const ULID = ParadigmREVOLUTION.Utility.Time.TStoYMDHISMS(Date.now());
 							const Fdate = ParadigmREVOLUTION.Utility.Time.FTStoYMDHISMS(Date.now());
@@ -3088,36 +3201,32 @@ export class Flow {
 							
 							const futureTimestamp = ParadigmREVOLUTION.Utility.Time.addDate(100, 'years', tstmp);
 							// console.log('futureTimestamp', new Date(futureTimestamp));
-							const newNodeID = {
-								ID: nodeKind+'/'+ULID+'/'+name,
-								Table: "Yggdrasil",
-								ULID: tULID,
-								Node: {
-									Realm: "Universe",
-									Kind: nodeKind,
-									Type: "",
-									Class: "",
-									Group: "",
-									Category: "",
-									Icon: icon
-								},
-								Type: "",
-								Status: "Active",
-								Timestamp: tstmp,
-								ETL: tstmp,
-								ETD: futureTimestamp,
-								Version: {
-									Number: 1,
-									VersionID: ULID,
-									ULID: ULID,
-									Timestamp: tstmp,
-								},
-								Link: {
-									Head: false,
-									ID: 'LINK-' + tULID,
-									Segment: "",
-								}
-							};
+							const tablestore = "Yggdrasil";
+							function newNodeIDGen(nodeKind, name, tablestore = `Yggdrasil`, tULID, icon, etdLead = 3) { 
+								return `{
+									ID: "${nodeKind + '/' + ULID + '/' + name}",
+									Table: "${tablestore}",
+									ULID: "${tULID}",
+									Node: {
+										Realm: "Universe",
+										Kind: "${nodeKind}",
+										Type: "",
+										Class: "",
+										Group: "",
+										Category: "",
+										Icon: "${icon}"
+									},
+									Timestamp: time::now(),
+									ETL: time::now(),
+									ETD: time::now() + ${etdLead}d,
+									Version: {
+										Number: 1,
+										VersionID: ULID,
+										ULID: ULID
+									}
+								}`;
+							}
+							const newNodeID = newNodeIDGen(nodeKind, name, `Yggdrasil`, tULID, icon, 3);
 							const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 
 							// newNode.id = newNodeID;
@@ -3127,8 +3236,6 @@ export class Flow {
 							newNode.Properties.isShown = data.isShown;
 							newNode.Properties.isEnableExecute = data.isExecutable;
 							newNode.Properties.isDisabled = data.isDisabled;
-
-							// console.log('newNode :>> ', newNode);
 	
 							if (newTabCounter > 20) newTabCounter = 0;
 							let tx = 30 + (dx + (newTabCounter * 40));
@@ -3153,9 +3260,14 @@ export class Flow {
 								return;
 							}
 							// NOTE - SurrealDB create/insert/upsert
+							// let qstr = `
+							// 	upsert
+							// 		${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(newNodeID)} 
+							// 	content
+							// 		${JSON.stringify(newNode)};`;
 							let qstr = `
 								upsert
-									${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(newNodeID)} 
+									${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${newNodeID} 
 								content
 									${JSON.stringify(newNode)};`;
 							console.log('qstr :>> ', qstr);
@@ -3219,14 +3331,12 @@ export class Flow {
 					callback: (e) => {
 						console.log('is-selectable CLICK');
 						
+						ParadigmREVOLUTION.Application.Cursor.length = 0;
 						ParadigmREVOLUTION.Application.Cursor = [];
 						
 						this.DragSelect = true;
-						// console.log('e target', e.target);
-						// console.log('e currentTarget', e.currentTarget);
 						const selectableParent = e.target.closest('.is-selectable-parent');
 						const selectableBox = e.target.closest('.is-selectable-box');
-						console.log('selectables', selectableParent, selectableBox);
 				
 						if (!selectableParent || !selectableBox) return; // Guard clause
 				
@@ -3234,17 +3344,8 @@ export class Flow {
 						const datasetEntries = Object.entries(dataset);
 
 						if (datasetEntries.length > 0) {
-							// console.log('dataset is not empty');
-							// console.log('dataset :>> ', dataset);
-
 							if (dataset.template) {
 								console.log('template: ', dataset.template);
-								// if (e.target.classList.contains('graph_node_surface')) { 
-								// 	this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
-								// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
-								// 		return this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
-								// 	});
-								// }
 							} else if (dataset.schema) {
 								console.log('schema: ', dataset.schema);
 								this.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
@@ -3258,7 +3359,6 @@ export class Flow {
 							}, 300);
 						}
 
-						console.log('selectable box or selectable parent exists!');
 						selectableParent.querySelectorAll('.is-selectable-box').forEach((item) => {
 							item.style.removeProperty('width');
 							item.classList.remove('box', 'focused', 'm-2');
@@ -3269,29 +3369,34 @@ export class Flow {
 						} else {
 							selectableBox.style.width = 'fit-content;';
 						}
-						selectableBox.classList.add('box', 'focused', 'mx-0'); //NOTE - NOW
+						selectableBox.classList.add('box', 'focused', 'mx-0');
+						selectableBox.querySelectorAll('.card-footer').forEach((item) => {
+							item.classList.add('show');
+						});
 					}
 				}, {
 					selector: '.is-selectable-parent',
 					callback: (e) => {
+						if (e.target.classList.contains('is-selectable')) return;
+						if (this.DragSelect) return;
 						console.log('is-selectable-parent CLICK');
-						// if (e.target.classList.contains('is-selectable')) return;
-						// console.log('this.DragSelect', this.DragSelect);
-						// if (this.DragSelect) return;
-						// console.log('is-selectable-parent GOOOO');
-						// const selectableParent = e.target.closest('.is-selectable-parent');
-						// ParadigmREVOLUTION.Application.Cursor = [];
-						// selectableParent.querySelectorAll('.focused').forEach((item) => {
-						// 	console.log('item', item);
-						// 	if (item.tagName == 'path') {
-						// 		item.classList.remove('focused');
-						// 	} else { 
-						// 		item.style.removeProperty('width');
-						// 		item.classList.remove('box', 'focused', 'm-2');
-						// 		item.classList.remove('m-2');
-								
-						// 	}
-						// })
+						console.log('this.DragSelect', this.DragSelect);
+						console.log('is-selectable-parent GOOOO');
+						const selectableParent = e.target.closest('.is-selectable-parent');
+						ParadigmREVOLUTION.Application.Cursor = [];
+						selectableParent.querySelectorAll('.focused').forEach((item) => {
+							console.log('item', item);
+							if (item.tagName == 'path') {
+								item.classList.remove('focused');
+							} else { 
+								item.style.removeProperty('width');
+								item.classList.remove('box', 'focused', 'm-2');
+								item.classList.remove('m-2');
+								item.querySelectorAll('.card-footer').forEach((item) => {
+									if (item.classList.contains('show')) item.classList.remove('show');
+								});
+							}
+						})
 					}
 				}
 				], document.querySelector('#app_graph_container'));

@@ -819,9 +819,16 @@
 	display: flex;
 	align-items: center;
 	border-radius: 10px; /* Rounded corners for aesthetic effect */
-	padding: 0.25rem; /* Add some spacing inside the container */
+	padding: 0rem; /* Add some spacing inside the container */
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
 	border: solid 1px var(--bulma-border-weak); /* Add a border for contrast */
+	transition: opacity 0.3s ease-in-out;
+	user-select: none;
+	pointer-events: auto;
+}
+.graph_path:hover {
+	opacity: 0;
+	pointer-events: none;
 }
 
 .graph_controls {
@@ -945,4 +952,12 @@
 }
 .addremove-control-container{
 	padding-left: 0.1rem;
+}
+.card-footer{
+	height: 0rem;
+	overflow: hidden;
+	transition: height var(--transition-time) var(--swoop);
+}
+.card-footer.show{
+	height: 2.8rem;
 }
