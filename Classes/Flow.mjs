@@ -483,8 +483,9 @@ export class Flow {
 								.then(() => { 
 									console.log(`Coordinate UPDATED!`);
 									// console.log('flow.DragSelect on promise done', flow.DragSelect);
-									console.log('dbedges', dbedges);
+									// console.log('dbedges', dbedges);
 									setTimeout(() => { 
+										console.log('reflow edge connections');
 										dbedges.forEach((edge, edgeIndex) => {
 											flow.Graph.Events.connectNodes(
 												edge,
@@ -3404,19 +3405,46 @@ export class Flow {
 						console.log('is-selectable-parent GOOOO');
 						const selectableParent = e.target.closest('.is-selectable-parent');
 						ParadigmREVOLUTION.Application.Cursor = [];
+						const flow = this;
+
+						let nodeIDs = [];
 						selectableParent.querySelectorAll('.focused').forEach((item) => {
 							console.log('item', item);
 							if (item.tagName == 'path') {
 								item.classList.remove('focused');
-							} else { 
+							} else {
 								item.style.removeProperty('width');
 								item.classList.remove('box', 'focused', 'm-2');
 								item.classList.remove('m-2');
 								item.querySelectorAll('.card-footer').forEach((item) => {
 									if (item.classList.contains('show')) item.classList.remove('show');
 								});
+								nodeIDs.push(item.dataset.id.replace('node-', ''));
 							}
-						})
+						});
+						console.log('nodeIDs', nodeIDs);
+
+						if (nodeIDs.length > 0) {
+							const qstr = `select *  from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID in [${nodeIDs.map(nodeID => `"${nodeID}"`).join(', ')}] or out.id.ID in [${nodeIDs.map(nodeID => `"${nodeID}"`).join(', ')}])`;
+							console.log('qstr sebelum unselect:>> ', qstr);
+							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
+								const dbedges = edges[0];
+								const parentSet = flow.getActiveTab('tab-graph-selector-container');
+
+								console.log('reflow edge connections', parentSet, dbedges);
+								setTimeout(() => {
+									dbedges.forEach((edge, edgeIndex) => {
+										flow.Graph.Events.connectNodes(
+											edge,
+											parentSet.graphCanvas.graph_connection_surface,
+											parentSet.graphCanvas.graph_surface.parentElement
+										);
+									});
+								}, 400);
+							}).catch((error) => { 
+								console.log('error', error);
+							});
+						}
 					}
 				}
 				], document.querySelector('#app_graph_container'));

@@ -12,7 +12,7 @@
 			"Name": "ParadigmREVOLUTION",
 			"Databases": {
 				"SystemDB": {
-					"Name": "ParadigmREVOLUTION__SystemDB",
+					"Name": "SystemDB",
 					"Description": "ParadigmREVOLUTION internal system database, core application graphs, definitions, and blueprints are stored in here",
 					"Blueprint": "",
 					"Tables":{
