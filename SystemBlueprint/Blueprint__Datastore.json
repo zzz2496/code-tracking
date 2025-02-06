@@ -3,7 +3,7 @@
 		"Username": "damir",
 		"Password": "Zenith2001"
 	},
-	"TestServer": "http://10.26.0.26:8080",
+	"TestServer": "https://127.0.0.1:8080",
 	"ProductionServer": "http://localhost:8080",
 	"BackupServer": "http://localhost:8080",
 	"PrimaryServer": "TestServer",
@@ -12,7 +12,7 @@
 			"Name": "ParadigmREVOLUTION",
 			"Databases": {
 				"SystemDB": {
-					"Name": "SystemDB",
+					"Name": "ParadigmREVOLUTION__SystemDB",
 					"Description": "ParadigmREVOLUTION internal system database, core application graphs, definitions, and blueprints are stored in here",
 					"Blueprint": "",
 					"Tables":{

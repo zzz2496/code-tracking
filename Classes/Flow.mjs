@@ -226,6 +226,30 @@ export class Flow {
 	};
 	Graph = {
 		Elements: {
+			newNodeIDGenerator: (nodeKind, name, tablestore = `Yggdrasil`, ULID, tULID, icon, etdLead = 3) => { 
+				return `{
+					ID: "${nodeKind + '/' + ULID + '/' + name}",
+					Table: "${tablestore}",
+					ULID: "${tULID}",
+					Node: {
+						Realm: "Universe",
+						Kind: "${nodeKind}",
+						Type: "",
+						Class: "",
+						Group: "",
+						Category: "",
+						Icon: "${icon}"
+					},
+					Timestamp: time::now(),
+					ETL: time::now(),
+					ETD: time::now() + ${etdLead}d,
+					Version: {
+						Number: 1,
+						VersionID: ULID,
+						ULID: ULID
+					}
+				}`;
+			},
 			MakeDraggableNode: function (nodes, node, objclass, content, graphCanvas) {
 				console.log('================================== Start MakeDraggableNode');
 				// console.log('node :>> ', node);
@@ -273,16 +297,17 @@ export class Flow {
 				let isInitialized = false;
 				let eventCallbacks = [];
 				let isDragging = false;
-				let offsetX, offsetY, draggedElement;
-				let relatedElements = [];
+				// let offsetX, offsetY;
+				let draggedElement;
+				// let relatedElements = [];
 				let dbedges = [];
-				let fx, fy = 0;
+				// let fx, fy = 0;
 				let nodeID = [];
 				let flow = this;
 				let offsetMap = new Map();
 				let parentSet;
 				let coord = [];
-				let defaultCoord = [];
+				// let defaultCoord = [];
 			
 				function initialize(parent, tparentSet) {
 					console.log('start initialize makeNodesDraggable');
@@ -415,7 +440,11 @@ export class Flow {
 					// Mouseup event
 					globalEventHandler("mouseup", ".graph_surfaces", (e) => {
 						if (isDragging) {
-							console.log("Node drag end");			
+							console.log("Node drag end");
+
+							// console.log('flow.DragSelect before set to true', flow.DragSelect);
+							flow.DragSelect = true;
+							// console.log('flow.DragSelect after set to true', flow.DragSelect);
 							isDragging = false;
 							const ArrOffsetMap = Array.from(offsetMap);
 
@@ -435,10 +464,14 @@ export class Flow {
 									node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType] = coord[idx];
 									console.log('node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]', parentSet.tab.tabType, node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]);
 
-									
 									if (node.id.id) node.id = node.id.id;
+									console.log('node.id :>> ', node.id);
 
-									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};\n\n`;
+									let tnode = JSON.parse(JSON.stringify(node));
+									delete tnode.id;
+									console.log('tnode :>> ', tnode);
+									
+									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
 								}).catch(error => {
 									console.error('Coordinate update failed', error);
 								});
@@ -449,6 +482,7 @@ export class Flow {
 								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstrUpdate)
 								.then(() => { 
 									console.log(`Coordinate UPDATED!`);
+									// console.log('flow.DragSelect on promise done', flow.DragSelect);
 									console.log('dbedges', dbedges);
 									setTimeout(() => { 
 										dbedges.forEach((edge, edgeIndex) => {
@@ -458,6 +492,9 @@ export class Flow {
 												parentSet.graphCanvas.graph_surface.parentElement
 											);
 										});
+										// console.log('flow.DragSelect after 400ms', flow.DragSelect);
+										flow.DragSelect = false;
+										// console.log('flow.DragSelect after 400ms', flow.DragSelect);
 									}, 400);
 								})
 								.catch(error => { 
@@ -997,7 +1034,7 @@ export class Flow {
 				const modalHTML = `
 					<div id="connectionModal" class="modal is-active fade-in">
 						<div class="modal-background"></div>
-						<div class="modal-card">
+						<div class="modal-card" style="width: 60rem;">
 							<header class="modal-card-head">
 								<p class="modal-card-title">${modal_title}</p>
 								<button class="delete" aria-label="close" id="cancelButton"></button>
@@ -3202,31 +3239,9 @@ export class Flow {
 							const futureTimestamp = ParadigmREVOLUTION.Utility.Time.addDate(100, 'years', tstmp);
 							// console.log('futureTimestamp', new Date(futureTimestamp));
 							const tablestore = "Yggdrasil";
-							function newNodeIDGen(nodeKind, name, tablestore = `Yggdrasil`, tULID, icon, etdLead = 3) { 
-								return `{
-									ID: "${nodeKind + '/' + ULID + '/' + name}",
-									Table: "${tablestore}",
-									ULID: "${tULID}",
-									Node: {
-										Realm: "Universe",
-										Kind: "${nodeKind}",
-										Type: "",
-										Class: "",
-										Group: "",
-										Category: "",
-										Icon: "${icon}"
-									},
-									Timestamp: time::now(),
-									ETL: time::now(),
-									ETD: time::now() + ${etdLead}d,
-									Version: {
-										Number: 1,
-										VersionID: ULID,
-										ULID: ULID
-									}
-								}`;
-							}
-							const newNodeID = newNodeIDGen(nodeKind, name, `Yggdrasil`, tULID, icon, 3);
+							
+							console.log('flow', flow);
+							const newNodeID = flow.Graph.Elements.newNodeIDGenerator(nodeKind, name, `Yggdrasil`, ULID, tULID, icon, 3);
 							const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 
 							// newNode.id = newNodeID;
@@ -3363,6 +3378,11 @@ export class Flow {
 							item.style.removeProperty('width');
 							item.classList.remove('box', 'focused', 'm-2');
 							item.classList.remove('m-2');
+
+							item.querySelectorAll('.card-footer').forEach((item) => {
+								if (item.classList.contains('show')) item.classList.remove('show');
+							});
+
 						});
 						if (selectableBox.classList.contains('field')) {
 							selectableBox.style.width = '100%;';

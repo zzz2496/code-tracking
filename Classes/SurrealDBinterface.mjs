@@ -58,7 +58,7 @@ export class SurrealDBinterface {
 			default:
 				try {
 					//Initiate TESTSERVER
-					if (cr) console.info('Start SurrealDB.TestServer connection...');
+					if (cr) console.info(`Start SurrealDB.${mode} connection...`);
 					if (Connect) {
 						// Initialize SurrealDB Server Connection subsystem if UNDEFINED
 						if (typeof SurrealDB[mode] == "undefined") {
