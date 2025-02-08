@@ -480,8 +480,8 @@ export class Flow {
 							Promise.all(promises).then(() => {
 								console.log('completed qstrUpdate :>> ', qstrUpdate);
 								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstrUpdate)
-								.then(() => { 
-									console.log(`Coordinate UPDATED!`);
+								.then((result) => { 
+									console.log(`Coordinate UPDATED!`, result);
 									// console.log('flow.DragSelect on promise done', flow.DragSelect);
 									// console.log('dbedges', dbedges);
 									setTimeout(() => { 
