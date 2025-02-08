@@ -62,7 +62,6 @@ export class SurrealDBinterface {
 					if (Connect) {
 						// Initialize SurrealDB Server Connection subsystem if UNDEFINED
 						if (typeof SurrealDB[mode] == "undefined") {
-
 							SurrealDB[mode] = {
 								"Metadata": {
 									"Name": mode,
@@ -101,6 +100,7 @@ export class SurrealDBinterface {
 							username: BlueprintsDATA.Datastore.DefaultUser.Username,
 							password: BlueprintsDATA.Datastore.DefaultUser.Password,
 						});
+						if (callback) callback();
 					} else {
 						SurrealDB[mode] = {
 							"Metadata": {

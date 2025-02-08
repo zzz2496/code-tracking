@@ -12,7 +12,7 @@
 			"Name": "ParadigmREVOLUTION",
 			"Databases": {
 				"SystemDB": {
-					"Name": "SystemDB",
+					"Name": "ParadigmREVOLUTION__SystemDB",
 					"Description": "ParadigmREVOLUTION internal system database, core application graphs, definitions, and blueprints are stored in here",
 					"Blueprint": "",
 					"Tables":{
@@ -26,17 +26,32 @@
 								{"Schema": "Blueprints__SchemaElements.json"}
 							]
 						},
-						"Yggdrasil": {
-							"Name": "Yggdrasil",
+						"Graph": {
+							"Name": "Graph",
 							"Description": "Contains all the defined System Graphs",
+							"Contains": {}
+						},
+						"Tasks": {
+							"Name": "Tasks",
+							"Description": "Contains all the defined Tasks (in old terms, this is the module)",
+							"Contains": {}
+						},
+						"PageLayout": {
+							"Name": "PageLayout",
+							"Description": "Contains all the defined PageLayout within a Task(in old terms, this is the program.php)",
+							"Contains": {}
+						},
+						"Form": {
+							"Name": "Form",
+							"Description": "Contains all the defined Forms for a specific PageLayout within a Task(in old terms, this is part of the forms.json)",
+							"Contains": {}
+						},
+						"Schema": {
+							"Name": "Schema",
+							"Description": "Contains all the defined Schemas for the given Form within a Task(in old terms, this is the other part of the forms.json)",
 							"Contains": {}
 						}
 					}
-				},
-				"DatastoreDB": {
-					"Name": "DatastoreDB",
-					"Description": "System",
-					"Blueprint": ""
 				}
 			}
 		}

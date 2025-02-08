@@ -226,7 +226,7 @@ export class Flow {
 	};
 	Graph = {
 		Elements: {
-			newNodeIDGenerator: (nodeKind, name, tablestore = `Yggdrasil`, ULID, tULID, icon, etdLead = 3) => { 
+			newNodeIDGenerator: (nodeKind, name, tablestore = `Graph`, ULID, tULID, icon, etdLead = 3) => { 
 				return `{
 					ID: "${nodeKind + '/' + ULID + '/' + name}",
 					Table: "${tablestore}",
@@ -455,7 +455,7 @@ export class Flow {
 								console.log('nodeID', nodeID[idx]);
 								console.log('coord', coord[idx]);
 
-								let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${nodeID[idx]}';`;
+								let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} where id.ID = '${nodeID[idx]}';`;
 								console.log('qstr :>> ', qstr);
 								let promise = ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
 									if (node[0].length == 0) return;
@@ -471,7 +471,7 @@ export class Flow {
 									delete tnode.id;
 									console.log('tnode :>> ', tnode);
 									
-									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
+									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
 								}).catch(error => {
 									console.error('Coordinate update failed', error);
 								});
@@ -699,7 +699,7 @@ export class Flow {
 							x: fx,
 							y: fy
 						};
-						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${id}';`;
+						let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} where id.ID = '${id}';`;
 						// console.log('qstr :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
 							if (node[0].length == 0) return;
@@ -710,7 +710,7 @@ export class Flow {
 							if (node.id.id) node.id = node.id.id;
 							// console.log('node after update coord :>> ', node);
 
-							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
 							// console.log('qstr :>> ', qstr);
 							
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
@@ -725,7 +725,7 @@ export class Flow {
 								x: parseInt(elem.style.left, 10),
 								y: parseInt(elem.style.top, 10)
 							};
-							let qstr = `update Yggdrasil set Presentation.Perspectives.GraphNode.Position.${graphCanvas.dataset.tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
+							let qstr = `update Graph set Presentation.Perspectives.GraphNode.Position.${graphCanvas.dataset.tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
 							// console.log('qstr :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).catch(error => {
 								console.error('Coordinate update failed for related element', error);
@@ -1704,7 +1704,7 @@ export class Flow {
 							ParadigmREVOLUTION.Application.Cursor.push({ table: element.dataset.table, id: element.id });
 						} else {
 							ParadigmREVOLUTION.Application.Cursor.push({
-								table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name,
+								table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name,
 								id: element.id,
 							});
 						}
@@ -1997,7 +1997,7 @@ export class Flow {
 								ParadigmREVOLUTION.Application.Cursor.push({ table: element.dataset.table, id: element.id });
 							} else {
 								ParadigmREVOLUTION.Application.Cursor.push({
-									table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name,
+									table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name,
 									id: element.id,
 								});
 							}
@@ -3026,7 +3026,7 @@ export class Flow {
 								break;
 							case 'deleteNode':
 								const id = e.target.dataset.id;
-								const table = "Yggdrasil";
+								const table = "Graph";
 								if (confirm(`Apakah anda ingin menghapus dokumen ${table}:${id}?`)) {
 									let qstr = `SELECT id FROM ONLY ${table} where id:{ID:"${id}"}.. limit 1 ;`;
 									console.log('qstr :>> ', qstr);
@@ -3239,10 +3239,10 @@ export class Flow {
 							
 							const futureTimestamp = ParadigmREVOLUTION.Utility.Time.addDate(100, 'years', tstmp);
 							// console.log('futureTimestamp', new Date(futureTimestamp));
-							const tablestore = "Yggdrasil";
+							const tablestore = "Graph";
 							
 							console.log('flow', flow);
-							const newNodeID = flow.Graph.Elements.newNodeIDGenerator(nodeKind, name, `Yggdrasil`, ULID, tULID, icon, 3);
+							const newNodeID = flow.Graph.Elements.newNodeIDGenerator(nodeKind, name, `Graph`, ULID, tULID, icon, 3);
 							const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 
 							// newNode.id = newNodeID;
@@ -3278,12 +3278,12 @@ export class Flow {
 							// NOTE - SurrealDB create/insert/upsert
 							// let qstr = `
 							// 	upsert
-							// 		${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(newNodeID)} 
+							// 		${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(newNodeID)} 
 							// 	content
 							// 		${JSON.stringify(newNode)};`;
 							let qstr = `
 								upsert
-									${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${newNodeID} 
+									${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${newNodeID} 
 								content
 									${JSON.stringify(newNode)};`;
 							console.log('qstr :>> ', qstr);
@@ -3369,7 +3369,7 @@ export class Flow {
 									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
 								});
 							}
-							if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id: dataset.id });
+							if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name, id: dataset.id });
 							setTimeout(() => { 
 								this.DragSelect = false;
 							}, 300);
@@ -3487,7 +3487,7 @@ export class Flow {
 									return this.Form.Render.traverseDOMProxyOBJ(schemacanvas);
 								});
 							}
-							if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name, id: dataset.id });
+							if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name, id: dataset.id });
 							setTimeout(() => { 
 								this.DragSelect = false;
 							}, 300);
@@ -3831,20 +3831,20 @@ export class Flow {
 	
 						switch (parentGraphID) {
 							case 'app_datastorage_container':
-								qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.Node.Kind = 'Datastore';`;
+								qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} where id.Node.Kind = 'Datastore';`;
 								break;
 							case 'app_graph_container':
 								if (onlyContainers.checked) {
-									qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.Node.Kind = 'Container';`;
+									qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} where id.Node.Kind = 'Container';`;
 								} else {
-									qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`;
+									qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name};`;
 								}	
 								break;
 							case 'app_containers_container':
-								qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.Node.Kind != 'Container';-- and id.Node.;`;
+								qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} where id.Node.Kind != 'Container';-- and id.Node.;`;
 								break;
 						}
-						console.log('qstr Yggdrasil :>> ', qstr);
+						console.log('qstr Graph :>> ', qstr);
 						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(nodes => {
 							// console.log('nodes :>> ', nodes);
 							qstr = '';
@@ -4000,13 +4000,13 @@ export class Flow {
 
 						if (confirm(`Anda akan melakukan sinkronisasi GRAPH DATA dari ${storage}. Apakah anda yakin?`)) { 
 							// GET NODES from server/storage
-							ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`).then(result => {
+							ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name};`).then(result => {
 								// ParadigmREVOLUTION.Application.GraphNodes = result[0];
 								let TGraphNodes = result[0];
 								let qstr = "";
 								TGraphNodes.forEach(node => {
 									node.id = node.id.id;
-									qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} content ${JSON.stringify(node)};`;
+									qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} content ${JSON.stringify(node)};`;
 								});
 								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
 			
@@ -4065,7 +4065,7 @@ export class Flow {
 						let qstr = '';
 						if (confirm(`Anda akan melakukan sinkronisasi GRAPH DATA dari CLIENT ke ${storage}. Apakah anda yakin?`)) { 
 							// Sync Nodes data
-							qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name};`;
+							qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name};`;
 							console.log('qstr :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(results => {
 								// ParadigmREVOLUTION.Application.GraphNodes = result[0];
@@ -4074,7 +4074,7 @@ export class Flow {
 								let qstr = "";
 								TGraphNodes.forEach(node => {
 									node.id = node.id.id;
-									qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+									qstr += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
 									qstr += `\n\n`;
 								});
 								console.log('qstr', qstr);
@@ -4138,7 +4138,7 @@ export class Flow {
 						const confirmString = 'a';
 						if (confirm(`Anda akan melakukan penghapusan GRAPH DATA di ${storage}. Apakah anda yakin?`))
 						if (prompt(`DATA YANG DIHAPUS TIDAK BISA DIKEMBALIKAN. Apakah anda yakin? Ketik [${confirmString}] untuk melanjutkan`) == confirmString)
-						ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}`).then(result => {
+						ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`delete from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}`).then(result => {
 							// ParadigmREVOLUTION.Application.GraphNodes = [];
 							ParadigmREVOLUTION.Datastores.SurrealDB[storage].Instance.query(`delete from next_process;`);
 							
@@ -4356,16 +4356,16 @@ export class Flow {
 												parentSet.graphCanvas.graph_surface.parentElement
 											);
 		
-											let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
+											let qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} where id.ID = '${edge.OutputPin.nodeID}'`;
 											// console.log(qstr);
 											ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(result => {
 												let outid = result[0][0].id.id;
-												qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name} where id.ID = '${edge.InputPin.nodeID}'`;
+												qstr = `select id from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} where id.ID = '${edge.InputPin.nodeID}'`;
 												console.log('qstr', qstr);
 												ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(result => {
 													let inid = result[0][0].id.id;
 													console.log('edge sebelum insert:>> ', edge);
-													qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(outid)}\n-> ${selectedType.Type} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Yggdrasil.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
+													qstr = `relate \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(outid)}\n-> ${selectedType.Type} -> \n${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(inid)} \n content \n${JSON.stringify(edge)}`;
 													console.log(qstr);
 													ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((result) => { 
 														console.log('Edge creation SUCCESS', result);
