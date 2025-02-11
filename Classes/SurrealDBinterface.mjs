@@ -28,24 +28,51 @@ export class SurrealDBinterface {
 					if (callbackfailed) callbackfailed("ERROR SurrealDB.Memory on initialization, ", e);
 				}
 				break;
-			case 'IndexedDB':
+			case 'LocalSystemStorage':
 				try {
 					//Initiate INDEXEDDB
 					if (cr) console.info('Start SurrealDB.IndexedDB connection...');
 					if (Connect) {
 						// Connect to the database
-						SurrealDB.IndexedDB.Metadata = {
+						SurrealDB.LocalSystemStorage.Metadata = {
 							"Name": mode,
 							"Label": Label,
 							"ShortLabel": ShortLabel,
 							"Connect": Connect
 						}
-						await SurrealDB.IndexedDB.Instance.connect(`indxdb://${BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name}`, { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
+						await SurrealDB.LocalSystemStorage.Instance.connect(`indxdb://${BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name}`, { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
 
 						// Select a specific namespace / database
-						await SurrealDB.IndexedDB.Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
+						await SurrealDB.LocalSystemStorage.Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Name });
 					} else {
-						SurrealDB.IndexedDB.Instance = false;
+						SurrealDB.LocalSystemStorage.Instance = false;
+						if (callbackfailed) callbackfailed('Cannot connect to SurrealDB.IndexedDB');
+
+					}
+					if (cr) console.info('Done SurrealDB.IndexedDB connection...');
+				} catch (e) {
+					console.error("ERROR SurrealDB.IndexedDB on initialization, ", e);
+					if (callbackfailed) callbackfailed("ERROR SurrealDB.IndexedDB on initialization, ", e);
+				}
+				break;
+			case 'LocalDataStorage':
+				try {
+					//Initiate INDEXEDDB
+					if (cr) console.info('Start SurrealDB.IndexedDB connection...');
+					if (Connect) {
+						// Connect to the database
+						SurrealDB.LocalDataStorage.Metadata = {
+							"Name": mode,
+							"Label": Label,
+							"ShortLabel": ShortLabel,
+							"Connect": Connect
+						}
+						await SurrealDB.LocalDataStorage.Instance.connect(`indxdb://${BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name}`, { user: { username: BlueprintsDATA.Datastore.DefaultUser.Username, password: BlueprintsDATA.Datastore.DefaultUser.Password } });
+
+						// Select a specific namespace / database
+						await SurrealDB.LocalDataStorage.Instance.use({ namespace: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Name, database: BlueprintsDATA.Datastore.Namespaces.ParadigmREVOLUTION.Databases.DataDB.Name });
+					} else {
+						SurrealDB.LocalDataStorage.Instance = false;
 						if (callbackfailed) callbackfailed('Cannot connect to SurrealDB.IndexedDB');
 
 					}

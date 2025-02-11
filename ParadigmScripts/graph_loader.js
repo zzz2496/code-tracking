@@ -136,8 +136,8 @@ document.addEventListener('SurrealDBLoaded', async () => {
 	ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.live('Yggdrasil', (action, result) => {
 		ParadigmREVOLUTION.SurrealDBinterface.InitializeLiveQuery('Memory', action, result, () => { });
 	});
-	ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB.Instance.live('Yggdrasil', (action, result)=>{
-		ParadigmREVOLUTION.SurrealDBinterface.InitializeLiveQuery('IndexedDB', action, result, () => { });
+	ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemStorage.Instance.live('Yggdrasil', (action, result)=>{
+		ParadigmREVOLUTION.SurrealDBinterface.InitializeLiveQuery('LocalSystemStorage', action, result, () => { });
 	});
 	// ParadigmREVOLUTION.Datastores.SurrealDB.TestServer.Instance.live('Yggdrasil', (action, result)=>{
 	// 	ParadigmREVOLUTION.SurrealDBinterface.InitializeLiveQuery('TestServer', action, result, () => { });

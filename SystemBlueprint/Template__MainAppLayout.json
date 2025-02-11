@@ -79,9 +79,9 @@
 						]},
 						{"tag":"div", "class":"show", "innerHTML":"", "content":[
 							{ "comment": "", "tag":"div", "class":"buttons has-addons p-0 mr-1 ml-0 my-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
-								{ "comment": "Load Document button",           "tag": "button", "class": "button document-saveload is-outlined is-info graph_load_local_data_button graph_load_data_button", "data":{"storage":"IndexedDB"}, "title": "Load Graph from Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-arrow-down\"></i>" },
-								{ "comment": "Clear Document button",          "tag": "button", "class": "button document-saveload is-outlined is-danger graph_clear_local_data_button graph_clear_data_button", "data":{"storage":"IndexedDB"}, "title": "Clear Graph from Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-excel\"></i>" },
-								{ "comment": "Save Document button",           "tag": "button", "class": "button document-saveload is-outlined is-success graph_save_local_data_button graph_save_data_button ", "data":{"storage":"IndexedDB"}, "title": "Save Graph to Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-arrow-up\"></i>" }
+								{ "comment": "Load Document button",           "tag": "button", "class": "button document-saveload is-outlined is-info graph_load_local_data_button graph_load_data_button", "data":{"storage":"LocalSystemStorage"}, "title": "Load Graph from Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-arrow-down\"></i>" },
+								{ "comment": "Clear Document button",          "tag": "button", "class": "button document-saveload is-outlined is-danger graph_clear_local_data_button graph_clear_data_button", "data":{"storage":"LocalSystemStorage"}, "title": "Clear Graph from Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-excel\"></i>" },
+								{ "comment": "Save Document button",           "tag": "button", "class": "button document-saveload is-outlined is-success graph_save_local_data_button graph_save_data_button ", "data":{"storage":"LocalSystemStorage"}, "title": "Save Graph to Local Storage", "innerHTML": "<i class=\"fa-solid fa-database mr-2\"></i><i class=\"fa-solid fa-file-arrow-up\"></i>" }
 							]}
 						]},
 						{"tag":"div", "class":"show", "innerHTML":"", "content":[
@@ -296,7 +296,8 @@
 					{ "comment": "SuQL", "tag": "textarea", "id":"console_suql_input", "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:fit-content;", "innerHTML": ""},								{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
 						{"tag": "select", "type":"select", "class":"select", "id":"console_datastorage_select", "content":[
 							{ "tag": "option", "value": "Memory", "innerHTML": "Memory" },
-							{ "tag": "option", "value": "IndexedDB", "innerHTML": "IndexedDB" },
+							{ "tag": "option", "value": "LocalSystemStorage", "innerHTML": "LocalSystemStorage" },
+							{ "tag": "option", "value": "LocalDataStorage", "innerHTML": "LocalDataStorage" },
 							{ "tag": "option", "value": "TestServer", "innerHTML": "TestServer" }
 						]}
 					]},

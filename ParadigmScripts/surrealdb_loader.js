@@ -24,7 +24,11 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			"Metadata":{},
 			"Instance": null
 		},
-		"IndexedDB": {
+		"LocalSystemStorage": {
+			"Metadata":{},
+			"Instance": null
+		},
+		"LocalDataStorage": {
 			"Metadata":{},
 			"Instance": null
 		}
@@ -40,7 +44,13 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
 			})
 		},
-		"IndexedDB": {
+		"LocalSystemStorage": {
+			"Metadata": {},
+			"Instance": new window.ParadigmREVOLUTION.SystemCore.Modules.Surreal({
+				engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
+			})
+		},
+		"LocalDataStorage": {
 			"Metadata": {},
 			"Instance": new window.ParadigmREVOLUTION.SystemCore.Modules.Surreal({
 				engines: window.ParadigmREVOLUTION.SystemCore.Modules.surrealdbWasmEngines()
@@ -51,7 +61,8 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	 // NOTE: SURREALDB SUBSECTION - MEMORY INITIALIZATION
 	 const initConfigs = [
         { name: 'Memory', label:'Memory Datastore', shortlabel:'MEMD', connect:1, instance: SurrealDB },
-        { name: 'IndexedDB', label:'IndexedDB Datastore', shortlabel:'IDXD', connect:1, instance: SurrealDB },
+        { name: 'LocalSystemStorage', label:'Local System IndexedDB Datastore', shortlabel:'LSD', connect:1, instance: SurrealDB },
+        { name: 'LocalDataStorage', label:'Local Data IndexedDB Datastore', shortlabel:'LDD', connect:1, instance: SurrealDB },
         { name: 'TestServer', label:'TestServer Datastore', shortlabel:'TEST', connect:1, instance: SurrealDB },
         // { name: 'BackupServer', label:'BackupServer Datastore', shortlabel:'BCKP', connect:0, instance: SurrealDB },
         // { name: 'ProductionServer', label:'ProductionServer Datastore', shortlabel:'PROD', connect:0, instance: SurrealDB }

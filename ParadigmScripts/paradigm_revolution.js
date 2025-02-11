@@ -65,11 +65,13 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	window.chain = chain;
 
 	let ram_db = ParadigmREVOLUTION.Datastores.SurrealDB.Memory;
-	let local_db = ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB;
+	let local_systemdb = ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemDB;
+	let local_datadb = ParadigmREVOLUTION.Datastores.SurrealDB.LocalDataDB;
 	let test_db = ParadigmREVOLUTION.Datastores.SurrealDB.TestServer;
 
 	window.ram_db = ram_db;
-	window.local_db = local_db;
+	window.local_systemdb = local_systemdb;
+	window.local_datadb = local_datadb;
 	window.test_db = test_db;
 
 	let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(
