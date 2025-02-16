@@ -259,6 +259,7 @@ export class Flow {
 				
 				newElement.id = nodeID;
 				newElement.className = objclass;
+				console.log('graphCanvas', graphCanvas, node.Presentation.Perspectives.GraphNode.Position[graphCanvas]);
 				newElement.style.top = `${node.Presentation.Perspectives.GraphNode.Position[graphCanvas]? node.Presentation.Perspectives.GraphNode.Position[graphCanvas].y : 30}px`;
 				newElement.style.left = `${node.Presentation.Perspectives.GraphNode.Position[graphCanvas] ? node.Presentation.Perspectives.GraphNode.Position[graphCanvas].x : 30}px`;
 				console.log(graphCanvas, node.Presentation.Perspectives.GraphNode.Position);
@@ -471,7 +472,10 @@ export class Flow {
 									delete tnode.id;
 									console.log('tnode :>> ', tnode);
 									
-									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
+									// qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
+									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} content ${JSON.stringify(tnode)} where id.ID = '${node.id.ID}';\n\n`;
+									console.log('qstrUpdate --------------:>> ', qstrUpdate);
+									// qstrUpdate += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
 								}).catch(error => {
 									console.error('Coordinate update failed', error);
 								});
@@ -711,6 +715,7 @@ export class Flow {
 							// console.log('node after update coord :>> ', node);
 
 							qstr = `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
+							// qstr = `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(node)};`;
 							// console.log('qstr :>> ', qstr);
 							
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr);
@@ -726,6 +731,7 @@ export class Flow {
 								y: parseInt(elem.style.top, 10)
 							};
 							let qstr = `update Graph set Presentation.Perspectives.GraphNode.Position.${graphCanvas.dataset.tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
+							// let qstr = `upsert Graph set Presentation.Perspectives.GraphNode.Position.${graphCanvas.dataset.tabtype} = ${JSON.stringify(relatedCoord)} where id.ID = '${relatedId}';`;
 							// console.log('qstr :>> ', qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).catch(error => {
 								console.error('Coordinate update failed for related element', error);
@@ -845,7 +851,7 @@ export class Flow {
 						}
 					});
 				}
-
+				console.log('edges :>> ', edges, edges.length);
 				if (edges) if (Array.isArray(edges)) if (edges.length > 0) edges.forEach((rEdge, edgeIndex) => {
 					this.Graph.Events.createGutterDotsAndConnect(
 						parentSet.graphCanvas.element.querySelector(`div[id="${rEdge.OutputPin.nodeID}"]`),
