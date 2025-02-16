@@ -472,8 +472,8 @@ export class Flow {
 									delete tnode.id;
 									console.log('tnode :>> ', tnode);
 									
-									// qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
-									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} content ${JSON.stringify(tnode)} where id.ID = '${node.id.ID}';\n\n`;
+									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
+									// qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} content ${JSON.stringify(tnode)} where id.ID = '${node.id.ID}';\n\n`;
 									console.log('qstrUpdate --------------:>> ', qstrUpdate);
 									// qstrUpdate += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
 								}).catch(error => {
