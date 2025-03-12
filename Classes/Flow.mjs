@@ -3905,7 +3905,7 @@ export class Flow {
 				});	
 				
 				let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data['GraphCanvas']));
-				document.querySelector('#app_content').innerHTML += this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
+				// document.querySelector('#app_content').innerHTML += this.Form.Render.traverseDOMProxyOBJ(graphcanvas);
 			
 				document.querySelector('#app_content').innerHTML += `
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>

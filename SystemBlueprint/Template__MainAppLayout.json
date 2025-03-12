@@ -42,7 +42,7 @@
 					{"comment": "Left Container", "tag": "div", "id": "app_left_container", "innerHTML": "", "class": "is-flex", "content": [
 						{ "comment": "App controls", "tag": "div", "class": "buttons has-addons my-0 mr-2 ", "content":[
 							{ "comment": "Menu button",   "tag": "button", "id": "object_collections_button", "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "title": "Open Collection", "innerHTML": "<li class=\"fa fa-bars\"></li>" },
-							{ "comment": "Graph button",  "tag": "button", "id": "app_graph_button",          "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "title": "Open Graph", "innerHTML": "<li class=\"fa fa-circle-nodes\"></li>" }
+							{ "comment": "Graph button",  "tag": "button", "id": "app_graph_button",          "class":"button p-2 m-0", "style":"height: 2.2rem; width:2.5rem;", "title": "Open Developer Mode", "innerHTML": "<li class=\"fa-solid fa-code\"></li>" }
 						]},
 						{ "comment": "Project Controls", "tag": "div", "class": "buttons has-addons my-0 mx-2 show app_project_controls_container ", "id": "project_controls", "innerHTML":"", "content":[
 							{ "comment": "Close Project", "tag": "button", "id": "app_close_project", "data":{"controltype":"closeProject"}, "title":"Close Project", "class":"app_project_controls button p-2 m-0 app_close_project", "style":"height: 2.2rem; width:2.5rem;",      "innerHTML":"<i class=\"fa-solid fa-xmark app_close_project\"></i>", "content": [] },
@@ -269,18 +269,35 @@
 						]
 					}
 				] },
-				
-				{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [
-					{ "comment": "Add Node button", "tag":"div", "class":"field has-addons", "style":"", "content":[
-						{"tag":"div", "class":"control", "style":"", "content":[
-							{"tag":"div", "class":"select", "style":"", "content":[
-								{"tag":"select", "id":"", "class":"", "content":[]}
-							]}
-						]},
-						{"tag":"div", "class":"control", "style":"", "content":[
-							{"tag":"button", "class":"button mx-1 is-medium is-success graph_addnode_button", "id":"graph_addnode_button", "style":"", "innerHTML":"<li class='fa-solid fa-plus'></li>"}
+				{"comment":"Form Controls Tabs", "tag":"div", "id":"form_controls_tabs", "class":"is-flex is-justify-content-end", "content":[
+					{ "comment": "Tabs", "tag": "div", "id": "form_controls_tabs", "content": [
+						{ "tag": "div", "class": "tabs", "content": [
+							{ "tag": "ul", "id":"form-controls-tab-container", "class":"", "content": [
+								{ "tag": "li", "class":"show is-active", "content": [
+									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"LiveView"}, "innerHTML": "Live View" }
+								] },
+								{ "tag": "li", "class": "show", "content": [
+									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"DataProvider"}, "innerHTML": "Data Provider" }
+								] },
+								{ "tag": "li", "class": "show ", "content": [
+									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"DataSource"}, "innerHTML": "Data Source" }
+								] },
+								{ "tag": "li", "class": "show ", "content": [
+									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"PageLayout"}, "innerHTML": "Page Layout" }
+								] },
+								{ "tag": "li", "class": "show", "content": [
+									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
+								] },
+								{ "tag": "li", "class":"show", "content": [
+									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
+								] }
+							] }
 						]}
 					]}
+				]},
+
+				{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [
+					
 				] }
 			]
 		},
