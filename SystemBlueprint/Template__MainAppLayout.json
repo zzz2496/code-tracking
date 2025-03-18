@@ -28,11 +28,11 @@
 					]}
 				]},
 				{"comment":"Object Collections Content", "id": "object-collections-container", "tag":"div", "class":"container", "content":[
-					{"comment":"Object collection space, every created object will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers show ",                   "data":{"tabtype":"Collection"}, "id":"object_collection_collection", "innerHTML":"Object collection space, every created object will be listed here", "content":[]},
-					{"comment":"Runtime State, any action that is done to the system will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                 "data":{"tabtype":"RuntimeState"}, "id":"object_collection_state", "innerHTML":"Runtime State, any action that is done to the system will be listed here", "content":[]},
-					{"comment":"Data Storage, any database server/data storage will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                       "data":{"tabtype":"DataStorage"}, "id":"object_collection_datastore", "innerHTML":"Data Storage, any database server/data storage will be listed here", "content":[]},
-					{"comment":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers", "data":{"tabtype":"ComponentGallery"}, "id":"object_collection_gallery", "innerHTML":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "content":[]},
-					{"comment":"Templates, pre-made object sets made in Object collection can be saved and listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",   "data":{"tabtype":"Templates"}, "id":"object_collection_templates", "innerHTML":"Templates, pre-made object sets made in Object collection can be saved and listed here", "content":[]}
+					{"comment":"Object collection space, every created object will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers show ",                  "data":{"tabtype":"Collection"},       "id":"object_collection_collection", "innerHTML":"Object collection space, every created object will be listed here",                        "content":[]},
+					{"comment":"Runtime State, any action that is done to the system will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                 "data":{"tabtype":"RuntimeState"},     "id":"object_collection_state",      "innerHTML":"Runtime State, any action that is done to the system will be listed here",                 "content":[]},
+					{"comment":"Data Storage, any database server/data storage will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                       "data":{"tabtype":"DataStorage"},      "id":"object_collection_datastore",  "innerHTML":"Data Storage, any database server/data storage will be listed here",                       "content":[]},
+					{"comment":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers", "data":{"tabtype":"ComponentGallery"}, "id":"object_collection_gallery",    "innerHTML":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "content":[]},
+					{"comment":"Templates, pre-made object sets made in Object collection can be saved and listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",   "data":{"tabtype":"Templates"},        "id":"object_collection_templates",  "innerHTML":"Templates, pre-made object sets made in Object collection can be saved and listed here",   "content":[]}
 				]}
 			] }
 		]},
@@ -242,31 +242,6 @@
 								]
 							}
 						]
-					},
-					{
-						"comment": "App DataProvider Container", "tag": "div", "class": " m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"DataProvider"}, "id": "app_dataprovider_container", "content": [
-							{ "comment": "App DataProvider Content", "tag": "div", "innerHTML": "App DataProvider Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_dataprovider_content", "content": [] }
-						]
-					},
-					{
-						"comment": "App Datasource Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Datasource"}, "id": "app_datasource_container", "content": [
-							{ "comment": "App Datasource Content", "tag": "div", "innerHTML": "App Datasource Content", "class": "columns is-gapless is-mobile  p-3",  "id": "app_datasource_content", "style":"width:100%; height:100%;", "content": [] }
-						]
-					},
-					{
-						"comment": "App Page Layout Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"PageLayout"}, "id": "app_page_layout_container", "content": [
-							{ "comment": "App Page Layout Content", "tag": "div", "innerHTML": "App Page Layout Content", "class": "columns is-gapless is-mobile  p-3",  "id": "app_page_layout_content", "style":"width:100%; height:100%;", "content": [] }
-						]
-					},
-					{
-						"comment": "App Schema Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Schema"}, "id": "app_schema_container", "content": [
-							{ "comment": "App Schema Content", "tag": "div", "innerHTML": "App Schema Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_schema_content", "content": [] }
-						]
-					},
-					{
-						"comment": "App Form Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers", "data":{"tabtype":"Forms"}, "id": "app_form_container", "content": [
-							{ "comment": "App Form Content", "tag": "div", "innerHTML": "App Form Content", "class": "columns is-gapless is-mobile  p-3", "style":"width:100%; height:100%;", "id": "app_form_content", "content": [] }
-						]
 					}
 				] },
 				{"comment":"Form Controls Tabs", "tag":"div", "id":"form_controls_tabs", "class":"is-flex is-justify-content-end", "content":[
@@ -274,31 +249,35 @@
 						{ "tag": "div", "class": "tabs", "content": [
 							{ "tag": "ul", "id":"form-controls-tab-container", "class":"", "content": [
 								{ "tag": "li", "class":"show is-active", "content": [
-									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"LiveView"}, "innerHTML": "Live View" }
+									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"AppContent"}, "innerHTML": "Application Content" }
 								] },
 								{ "tag": "li", "class": "show", "content": [
-									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"DataProvider"}, "innerHTML": "Data Provider" }
+									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"DataProvider"}, "innerHTML": "Data Provider" }
 								] },
 								{ "tag": "li", "class": "show ", "content": [
-									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"DataSource"}, "innerHTML": "Data Source" }
+									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"DataSource"}, "innerHTML": "Data Source" }
 								] },
 								{ "tag": "li", "class": "show ", "content": [
-									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"PageLayout"}, "innerHTML": "Page Layout" }
+									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"PageLayout"}, "innerHTML": "Page Layout" }
 								] },
 								{ "tag": "li", "class": "show", "content": [
-									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
+									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"Schema"}, "innerHTML": "Schema" }
 								] },
 								{ "tag": "li", "class":"show", "content": [
-									{ "tag": "a", "class":"tab-form-controls ", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
+									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
 								] }
 							] }
 						]}
 					]}
 				]},
-
-				{ "comment": "App Content", "tag": "div", "innerHTML": "", "id": "app_content", "content": [
-					
-				] }
+				{"comment":"App Content Container", "id": "app-content-container", "tag":"div", "class":"app_content m-0 p-0 show is-selectable-parent app_configurator_containers", "content":[
+					{ "comment": "App Content",              "tag": "div", "innerHTML": "Blah blah",                "class": "tab-content-container is-gapless is-mobile p-3 show", "style":"width:100%; height:100%;", "id": "app_content",              "content": [] },
+					{ "comment": "App DataProvider Content", "tag": "div", "innerHTML": "App DataProvider Content", "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_dataprovider_content", "content": [] },
+					{ "comment": "App Datasource Content",   "tag": "div", "innerHTML": "App Datasource Content",   "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_datasource_content",   "content": [] },
+					{ "comment": "App Page Layout Content",  "tag": "div", "innerHTML": "App Page Layout Content",  "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_page_layout_content",  "content": [] },
+					{ "comment": "App Schema Content",       "tag": "div", "innerHTML": "App Schema Content",       "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_schema_content", "content": [] },
+					{ "comment": "App Form Content",         "tag": "div", "innerHTML": "App Form Content",         "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_form_content", "content": [] }
+				]}
 			]
 		},
 		{ "comment": "App helper", "tag": "div", "id": "app_data_preparation_area", "class": "application_divisions is-flex is-flex-direction-column", "innerHTML": "", "content": [] },
