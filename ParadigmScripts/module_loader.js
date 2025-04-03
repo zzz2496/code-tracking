@@ -209,7 +209,7 @@ if (typeof finder !== 'undefined') {
 				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Schema.URL, function (results) {
 					window.ParadigmREVOLUTION.SystemCore.Schema.Data = results;
 					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Schema = "LOADED";
-					console.log('window.ParadigmREVOLUTION.SystemCore.Schema.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Schema.Data);
+					// console.log('window.ParadigmREVOLUTION.SystemCore.Schema.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Schema.Data);
 
 					document.dispatchEvent(new Event('SchemaLoaded'));
 					if (cr) console.log('>>> ||| Schema Loader | SUCCESS');
@@ -222,7 +222,7 @@ if (typeof finder !== 'undefined') {
 				SysUtil.Objects.fetchData(window.ParadigmREVOLUTION.SystemCore.Template.URL, function (results) {
 					window.ParadigmREVOLUTION.SystemCore.Template.Data = results;
 					window.ParadigmREVOLUTION.SystemCore.CoreStatus.Template = "LOADED";
-					console.log('window.ParadigmREVOLUTION.SystemCore.Template.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Template.Data);
+					// console.log('window.ParadigmREVOLUTION.SystemCore.Template.Data :>> ', window.ParadigmREVOLUTION.SystemCore.Template.Data);
 
 					document.dispatchEvent(new Event('SchemaLoaded'));
 					if (cr) console.log('>>> ||| Template Loader | SUCCESS');

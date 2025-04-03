@@ -28,11 +28,11 @@
 					]}
 				]},
 				{"comment":"Object Collections Content", "id": "object-collections-container", "tag":"div", "class":"container", "content":[
-					{"comment":"Object collection space, every created object will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers show ",                  "data":{"tabtype":"Collection"},       "id":"object_collection_collection", "innerHTML":"Object collection space, every created object will be listed here",                        "content":[]},
-					{"comment":"Runtime State, any action that is done to the system will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                 "data":{"tabtype":"RuntimeState"},     "id":"object_collection_state",      "innerHTML":"Runtime State, any action that is done to the system will be listed here",                 "content":[]},
-					{"comment":"Data Storage, any database server/data storage will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",                       "data":{"tabtype":"DataStorage"},      "id":"object_collection_datastore",  "innerHTML":"Data Storage, any database server/data storage will be listed here",                       "content":[]},
-					{"comment":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "tag":"div", "class":"container grid2020-background object-collections-containers", "data":{"tabtype":"ComponentGallery"}, "id":"object_collection_gallery",    "innerHTML":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "content":[]},
-					{"comment":"Templates, pre-made object sets made in Object collection can be saved and listed here", "tag":"div", "class":"container grid2020-background object-collections-containers",   "data":{"tabtype":"Templates"},        "id":"object_collection_templates",  "innerHTML":"Templates, pre-made object sets made in Object collection can be saved and listed here",   "content":[]}
+					{"comment":"Object collection space, every created object will be listed here", "tag":"div", "class":"container object-collections-containers show tab-content-container ",                  "data":{"tabtype":"Collection"},       "id":"object_collection_collection", "innerHTML":"Object collection space, every created object will be listed here",                        "style":"height:100%;",  "content":[]},
+					{"comment":"Runtime State, any action that is done to the system will be listed here", "tag":"div", "class":"container object-collections-containers tab-content-container",                 "data":{"tabtype":"RuntimeState"},     "id":"object_collection_state",      "innerHTML":"Runtime State, any action that is done to the system will be listed here",                 "style":"height:100%;",  "content":[]},
+					{"comment":"Data Storage, any database server/data storage will be listed here", "tag":"div", "class":"container object-collections-containers tab-content-container",                       "data":{"tabtype":"DataStorage"},      "id":"object_collection_datastore",  "innerHTML":"Data Storage, any database server/data storage will be listed here",                       "style":"height:100%;",  "content":[]},
+					{"comment":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "tag":"div", "class":"container object-collections-containers tab-content-container", "data":{"tabtype":"ComponentGallery"}, "id":"object_collection_gallery",    "innerHTML":"Component Gallery, system/user made components (box, fom, hero, etc) will be listed here", "style":"height:100%;",  "content":[]},
+					{"comment":"Templates, pre-made object sets made in Object collection can be saved and listed here", "tag":"div", "class":"container object-collections-containers tab-content-container",   "data":{"tabtype":"Templates"},        "id":"object_collection_templates",  "innerHTML":"Templates, pre-made object sets made in Object collection can be saved and listed here",   "style":"height:100%;",  "content":[]}
 				]}
 			] }
 		]},
@@ -48,7 +48,14 @@
 							{ "comment": "Close Project", "tag": "button", "id": "app_close_project", "data":{"controltype":"closeProject"}, "title":"Close Project", "class":"app_project_controls button p-2 m-0 app_close_project", "style":"height: 2.2rem; width:2.5rem;",      "innerHTML":"<i class=\"fa-solid fa-xmark app_close_project\"></i>", "content": [] },
 							{ "comment": "Load Project",  "tag": "button", "id": "app_load_project",  "data":{"controltype":"loadProject"},  "title":"",              "class":"app_project_controls button px-3 m-0 app_load_project", "style":"height: 2.2rem; width:fit-content;", "innerHTML":"Active Project: ", "content": []},
 							{"tag": "div", "class":"select mx-0 my-0 pl-0 pr-0", "style":"height: 2.2rem; width:fit-content;", "content":[
-								{ "comment": "Project change", "id":"project_change_selector", "data":{"controltype":"changeProject"}, "tag": "select m-0 p-0", "class": "select project_change_selector app_project_controls", "title": "Active Project", "style":"height: 2.2rem; width:fit-content;", "innerHTML": "", "content": []}
+								{ "comment": "Project change", "id":"project_change_selector", "data":{"controltype":"changeProject"}, "tag": "select m-0 p-0", "class": "select project_change_selector app_project_controls", "title": "Active Project", "style":"height: 2.2rem; width:fit-content;", "innerHTML": "", "content": [
+									{"tag": "option", "value": "", "innerHTML": "" },
+									{"tag": "option", "value": "Project A", "innerHTML": "Project A" },
+									{"tag": "option", "value": "Project B", "innerHTML": "Project B" },
+									{"tag": "option", "value": "Project C", "innerHTML": "Project C" },
+									{"tag": "option", "value": "Project D", "innerHTML": "Project D" },
+									{"tag": "option", "value": "Project E", "innerHTML": "Project E" }
+								]}
 							]},
 							{ "comment": "New Project",   "tag": "button", "id":"app_new_project", "data":{"controltype":"newProject"}, "title":"New Project",  "class":"button p-2 m-0 app_new_project app_project_controls ", "style":"height: 2.2rem; width:2.5rem;", "innerHTML":"<i class=\"fa-regular fa-plus app_new_project\"></i>", "content": [] }
 						]}
@@ -115,7 +122,7 @@
 
 				{ "comment": "App Configurator Container", "tag": "div", "id": "app_configurator_container", "class": "show app_configurator_groups", "innerHTML": "", "content": [
 					{
-						"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
+						"comment": "App Graph Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers  show", "data":{"tabtype":"Graph"}, "id": "app_graph_container", "content": [
 							{"tag": "div", "class":"graph_path node-background-frosted p-3", "innerHTML": "<li class='fa-solid fa-map'></li>", "title":"Path to Graph Nodes", "content":[
 								{"tag": "span", "class":"mx-3", "innerHTML": "/PATH/TO/NODES", "title":"Path to Graph Nodes"}
 							]},
@@ -156,8 +163,8 @@
 								]}
 							]},
 							{
-								"tag": "div", "id": "graph_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;", "content": [
-									{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; width:20000px; height:20000px;", "id": "app_graph_content", "content": [
+								"tag": "div", "id": "graph_scroll_content", "class":"scroll_content", "style": "width:100%;height:100%;overflow:scroll;white-space:nowrap;", "content": [
+									{ "comment": "App Graph Content", "tag": "div", "innerHTML": "", "class": "graph_surfaces is-gapless is-mobile grid2020-background p-3", "style": "padding:20px; min-width:20000px; min-height:20000px;", "id": "app_graph_content", "content": [
 										{"tag":"div", "class":"graph_node_surface ", "innerHTML":"", "style":"position:relative;", "data":{"template":"GraphCanvas"}},
 										{"tag":"svg", "class":"graph_connection_surface", "innerHTML":"", "content":[
 											{"tag":"defs", "innerHTML":"<marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"3\" markerHeight=\"3\" orient=\"auto-start-reverse\"><path class=\"arrowhead-path\" d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#FFF\"/></marker>"}
@@ -168,7 +175,7 @@
 						]
 					},
 					{
-						"comment": "App Containers Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers show", "data":{"tabtype":"Containers"}, "id": "app_containers_container", "content": [
+						"comment": "App Containers Container", "tag": "div", "class": "m-0 p-0 is-selectable-parent app_configurator_containers  show", "data":{"tabtype":"Containers"}, "id": "app_containers_container", "content": [
 							{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
 								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 									{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
@@ -205,7 +212,7 @@
 						]
 					},
 					{
-						"comment": "App Tasks Container", "tag": "div", "class": "m-0 p-0 show is-selectable-parent app_configurator_containers", "data":{"tabtype":"Tasks"}, "id": "app_tasks_container", "content": [
+						"comment": "App Tasks Container", "tag": "div", "class": "m-0 p-0 show is-selectable-parent app_configurator_containers ", "data":{"tabtype":"Tasks"}, "id": "app_tasks_container", "content": [
 							{"tag": "div", "class":"graph_controls is-flex is-flex-wrap-wrap is-justify-content-center node-background-frosted m-0 p-0", "content": [
 								{"tag": "div", "class":"is-flex is-flex-direction-column is-align-items-center", "style": "overflow:scroll;scrollbar-width: none;-ms-overflow-style: none;","content":[
 									{ "comment": "Zoom controls", "tag":"div", "class":"buttons has-addons p-0 mr-2 my-0 ml-0", "style":"height: 2.7rem; /*min-width:138px;*/", "content":[
@@ -248,9 +255,6 @@
 					{ "comment": "Tabs", "tag": "div", "id": "form_controls_tabs", "content": [
 						{ "tag": "div", "class": "tabs", "content": [
 							{ "tag": "ul", "id":"form-controls-tab-container", "class":"", "content": [
-								{ "tag": "li", "class":"show is-active", "content": [
-									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"AppContent"}, "innerHTML": "Application Content" }
-								] },
 								{ "tag": "li", "class": "show", "content": [
 									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"DataProvider"}, "innerHTML": "Data Provider" }
 								] },
@@ -265,18 +269,25 @@
 								] },
 								{ "tag": "li", "class":"show", "content": [
 									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"Forms"}, "innerHTML": "Forms" }
+								] },
+								{ "tag": "li", "class":"show", "content": [
+									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"FlowchartGraph"}, "innerHTML": "Flowchart Graph" }
+								] },
+								{ "tag": "li", "class":"show is-active", "content": [
+									{ "tag": "a", "class":"tab-appcontent-controls ", "data":{"tabtype":"AppContent"}, "innerHTML": "Application Content" }
 								] }
 							] }
 						]}
 					]}
 				]},
-				{"comment":"App Content Container", "id": "app-content-container", "tag":"div", "class":"app_content m-0 p-0 show is-selectable-parent app_configurator_containers", "content":[
-					{ "comment": "App Content",              "tag": "div", "innerHTML": "Blah blah",                "class": "tab-content-container is-gapless is-mobile p-3 show", "style":"width:100%; height:100%;", "id": "app_content",              "content": [] },
-					{ "comment": "App DataProvider Content", "tag": "div", "innerHTML": "App DataProvider Content", "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_dataprovider_content", "content": [] },
-					{ "comment": "App Datasource Content",   "tag": "div", "innerHTML": "App Datasource Content",   "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_datasource_content",   "content": [] },
-					{ "comment": "App Page Layout Content",  "tag": "div", "innerHTML": "App Page Layout Content",  "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_page_layout_content",  "content": [] },
-					{ "comment": "App Schema Content",       "tag": "div", "innerHTML": "App Schema Content",       "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_schema_content", "content": [] },
-					{ "comment": "App Form Content",         "tag": "div", "innerHTML": "App Form Content",         "class": "tab-content-container is-gapless is-mobile p-3",      "style":"width:100%; height:100%;", "id": "app_form_content", "content": [] }
+				{"comment":"Application Content Container", "id": "app_content_container", "tag":"div", "class":"app_content", "content":[
+					{ "comment": "Application DataProvider Content", "tag": "div", "innerHTML": "Data Provider Content",   "data":{"tabtype":"DataProvider"},   "class": "tab-content-container p-3",      "id": "app_dataprovider_content",   "content": [] },
+					{ "comment": "Application Datasource Content",   "tag": "div", "innerHTML": "Data Source Content",     "data":{"tabtype":"DataSource"},     "class": "tab-content-container p-3",      "id": "app_datasource_content",     "content": [] },
+					{ "comment": "Application Page Layout Content",  "tag": "div", "innerHTML": "Page Layout Content",     "data":{"tabtype":"PageLayout"},     "class": "tab-content-container p-3",      "id": "app_pagelayout_content",     "content": [] },
+					{ "comment": "Application Schema Content",       "tag": "div", "innerHTML": "Schema Content",		   "data":{"tabtype":"Schema"},		    "class": "tab-content-container p-3",      "id": "app_schema_content",	     "content": [] },
+					{ "comment": "Application Forms Content",        "tag": "div", "innerHTML": "Forms Content",		   "data":{"tabtype":"Forms"},		    "class": "tab-content-container p-3",      "id": "app_forms_content",		     "content": [] },
+					{ "comment": "Application Flow Graph Content",   "tag": "div", "innerHTML": "Flowchart Graph Content", "data":{"tabtype":"FlowchartGraph"}, "class": "tab-content-container p-3",      "id": "app_flowchartgraph_content", "content": [] },
+					{ "comment": "Application Content",              "tag": "div", "innerHTML": "Application Content",     "data":{"tabtype":"AppContent"},     "class": "tab-content-container p-3 show", "id": "app_content",			     "content": [] }
 				]}
 			]
 		},

@@ -17,8 +17,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	document.querySelector('#Loader_container').classList.add('hide');
 	document.querySelector('#Loader_container').remove();
 	console.log('>>> >>> >>> >>> ||| STARTING YGGDRASIL INITIALIZATION');
-		
-
+			
 	let CurrentDocument = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 	window.CurrentDocument = CurrentDocument;
 	// NOTE - Initialize Main Form (App_menu, App_Container, App_Helper, App_console)
@@ -90,7 +89,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
 
 	ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.forEach((tab) => { 
-		console.log('tab :>> ', tab);
+		// console.log('tab :>> ', tab);
 		let temp = `
 			<li class="${tab.LinkClass}">
 				<a class="${tab.AnchorClass}" data-tabtype="${tab.TabType}">${tab.Label}</a>
@@ -114,8 +113,8 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	Flow.Forms = CurrentDocument.Dataset.Forms;
 
 	//Flow.Form.Events.InitializeFormControls();
-	function InitializeFormControls(flow) {
-		flow.SnapScroll = true; // Flag to enable/disable snapping
+	function InitializeFormControls(oFlow) {
+		oFlow.SnapScroll = true; // Flag to enable/disable snapping
 		const scrollContainer = document.querySelector('#app_root_container');
 		const snapRange = 90;
 		const sensitivity = 0.1;
@@ -123,7 +122,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 
 		// NOTE - Initialize GraphCanvas tabs
 		document.querySelectorAll('.app_configurator_containers').forEach(container => { 
-			flow.GraphCanvas[container.dataset.tabtype] = {
+			oFlow.GraphCanvas[container.dataset.tabtype] = {
 				ZoomScale: 1,
 				ZoomStep: 0.05, // Zoom scale increment
 				MinZoomScale: 0.1, // Prevents zooming out too far
@@ -242,7 +241,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					}
 				}
 				// console.log('flow :>> ', flow);
-				flow.Graph.Events.showSchemaModal('New Project', schema, {flow:flow}, (data, passedData) => {
+				oFlow.Graph.Events.showSchemaModal('New Project', schema, {flow:flow}, (data, passedData) => {
 					function findKindObject(kindArray, targetKind) {
 						for (const option of kindArray) {
 							if (option.Kind === targetKind) {
@@ -283,7 +282,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		});
 
 		const tabsStr = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.map(tab => `<option data-tabtype="${tab.TabType}" value="${tab.TabType}">${tab.Label}</option>`).join('');
-		console.log('tabsStr :>> ', tabsStr);
+		// console.log('tabsStr :>> ', tabsStr);
 		document.querySelector('#app_graph_container').querySelector('.page_change_selector').innerHTML = tabsStr;
 		document.querySelector('#app_graph_container').querySelector('.page_change_selector').addEventListener('change', (e) => {
 			const tabType = e.target.value;
@@ -292,8 +291,6 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		});
 	
 		document.querySelectorAll('.graph_surfaces').forEach(surface => { 
-			console.log('surface :>> ', surface);
-
 			const tabType = surface.closest(`.app_configurator_containers`).dataset.tabtype;
 			const element = surface.closest(`.application_divisions`).querySelector(`a[data-tabtype="${tabType}"]`);
 			const label = element.innerHTML;
@@ -318,20 +315,20 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					graph_node_surface: graphCanvas.querySelector('.graph_node_surface'),
 					graph_connection_surface: graphCanvas.querySelector('.graph_connection_surface')
 				},
-				zoomProps: flow.GraphCanvas[tabType]
+				zoomProps: oFlow.GraphCanvas[tabType]
 			};
 			// console.log('parentSet :>> ', parentSet);
 			// console.log('surface', surface);
-			flow.Graph.Events.enableDragSelect(parentSet);
+			oFlow.Graph.Events.enableDragSelect(parentSet);
 		});
 
 		// Initialize the scroll snap functionality
-		flow.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);
+		oFlow.Form.Events.initializeScrollSnap(scrollContainer, snapRange, sensitivity);
 
 		document.querySelector('#object_collections_button').addEventListener('click', () => {
 			document.querySelector('#object_collections').classList.toggle('show');
 			setTimeout(()=> {
-				flow.Areas.object_collections.width = document.querySelector('#object_collections').offsetWidth;
+				oFlow.Areas.object_collections.width = document.querySelector('#object_collections').offsetWidth;
 			}, 650);
 		});
 
@@ -345,7 +342,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 
 		document.querySelector('#app_data_preparation_area_button').addEventListener('click', () => {
 			document.querySelector('#app_data_preparation_area').classList.toggle('show');
-			flow.SnapScroll = false;
+			oFlow.SnapScroll = false;
 			setTimeout(() => {
 				document.querySelector('#app_root_container').scrollTo({
 					left: document.querySelector('#app_root_container').scrollWidth,
@@ -353,43 +350,43 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				});
 			}, 300);
 			setTimeout(() => {
-				flow.SnapScroll = true;
+				oFlow.SnapScroll = true;
 			}, 500);
 		});
 
 		document.querySelector('#graph_adddatastore_button').addEventListener('click', () => {
-			flow.Form.Events.addDataPreparationComponent('datastore_container_' + Date.now(), 'Datastore', (num, container_id) => {
-				return flow.Form.Initialize.FormCard(`New_DATASTORE___${num}`, flow.Forms[0], 0, 1, 100, container_id);
+			oFlow.Form.Events.addDataPreparationComponent('datastore_container_' + Date.now(), 'Datastore', (num, container_id) => {
+				return oFlow.Form.Initialize.FormCard(`New_DATASTORE___${num}`, oFlow.Forms[0], 0, 1, 100, container_id);
 			});
 		});
 
 		document.querySelector('#graph_adddatasource_button').addEventListener('click', () => {
-			flow.Form.Events.addDataPreparationComponent('datasource_container_' + Date.now(), 'Datasource', (num, container_id) => {
-				return flow.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, flow.Forms[0], 0, 1, 100, container_id);
+			oFlow.Form.Events.addDataPreparationComponent('datasource_container_' + Date.now(), 'Datasource', (num, container_id) => {
+				return oFlow.Form.Initialize.FormCard(`New_DATASOURCE___${num}`, oFlow.Forms[0], 0, 1, 100, container_id);
 			});
 		});
 
 		document.querySelector('#graph_addlayout_button').addEventListener('click', () => {
-			flow.Form.Events.addDataPreparationComponent('layout_container_' + Date.now(), 'Layout', (num, container_id) => {
-				return flow.Form.Initialize.FormCard(`New_LAYOUT___${num}`, flow.Forms[0], 0, 1, 100, container_id);
+			oFlow.Form.Events.addDataPreparationComponent('layout_container_' + Date.now(), 'Layout', (num, container_id) => {
+				return oFlow.Form.Initialize.FormCard(`New_LAYOUT___${num}`, oFlow.Forms[0], 0, 1, 100, container_id);
 			});
 		});
 		
 		document.querySelector('#graph_addschema_button').addEventListener('click', () => {
-			flow.Form.Events.addDataPreparationComponent('schema_container_' + Date.now(), 'Schema', (num, container_id) => {
-				return flow.Form.Initialize.FormCard(`New_SCHEMA___${num}`, flow.Forms[0], 0, 1, 100, container_id);
+			oFlow.Form.Events.addDataPreparationComponent('schema_container_' + Date.now(), 'Schema', (num, container_id) => {
+				return oFlow.Form.Initialize.FormCard(`New_SCHEMA___${num}`, oFlow.Forms[0], 0, 1, 100, container_id);
 			});
 		});
 		
 		document.querySelector('#graph_addform_button').addEventListener('click', () => {
-			flow.Form.Events.addDataPreparationComponent('form_container_' + Date.now(), 'Form', (num, container_id) => {
-				return flow.Form.Initialize.FormCard(`New_FORM___${num}`, flow.Forms[0], 0, 1, 100, container_id);
+			oFlow.Form.Events.addDataPreparationComponent('form_container_' + Date.now(), 'Form', (num, container_id) => {
+				return oFlow.Form.Initialize.FormCard(`New_FORM___${num}`, oFlow.Forms[0], 0, 1, 100, container_id);
 			});
 		});
 		// document.querySelector('#graph_addnode_select').innerHTML = ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.KindArray.map(option => `<option value="${option.Kind}" data-nodetype="${option.Kind}Node" data-nodeicon="${option.Icon}">${option.Kind}</option>`).join('');
 
 		//NOTE - addGlobalEventListener CLICK
-		flow.Form.Events.addGlobalEventListener('click', [
+		oFlow.Form.Events.addGlobalEventListener('click', [
 			{
 				selector: '.datastore-status-indicator',
 				callback: async (e) => {
@@ -453,7 +450,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			}
 		], document.querySelector('#app_top_menu_container'));
 
-		flow.Form.Events.addGlobalEventListener('click', [{
+		oFlow.Form.Events.addGlobalEventListener('click', [{
 			selector: '.graph-node .node-controls',
 			callback: async (e) => {
 				console.log(e.target.classList, e.target.dataset, 'CLICKED!!!');
@@ -509,7 +506,6 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 								.catch(error => {
 									console.error(`Node ID ${id} NOT FOUND! ERROR message:`, error);
 								});
-							
 						}
 						break;
 				};
@@ -518,7 +514,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			selector: '.graph-edge',
 			callback: (e) => {
 				console.log('graph-edge CLICK >>>>>>>>');
-				flow.DragSelect = true;
+			ooFlow.DragSelect = true;
 				console.log('e target', e.target);
 				const id = e.target.id;
 				const table = e.target.dataset.table;
@@ -529,7 +525,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				e.target.classList.add('focused');
 				console.log('graph-edge CLICK <<<<<<<<');
 				setTimeout(() => {
-					flow.DragSelect = false;
+					oFlow.DragSelect = false;
 				}, 100);
 			}
 		}, {
@@ -653,7 +649,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					}
 				}
 				let flow = this;
-				flow.Graph.Events.showSchemaModal('New Node', schema, {graphCanvas:graphCanvas, flow:flow}, (data, passedData) => {
+				oFlow.Graph.Events.showSchemaModal('New Node', schema, {graphCanvas:graphCanvas, flow:oFlow}, (data, passedData) => {
 					function findKindObject(kindArray, targetKind) {
 						for (const option of kindArray) {
 							if (option.Kind === targetKind) {
@@ -702,7 +698,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					const tablestore = "Graph";
 					
 					console.log('flow', flow);
-					const newNodeID = flow.Graph.Elements.newNodeIDGenerator(nodeKind, name, `Graph`, ULID, tULID, icon, 3);
+					const newNodeID = oFlow.Graph.Elements.newNodeIDGenerator(nodeKind, name, `Graph`, ULID, tULID, icon, 3);
 					const newNode = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Blueprints.Data.Node));
 
 					// newNode.id = newNodeID;
@@ -731,7 +727,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 
 					console.log('newNode :>> ', newNode);
 					// ParadigmREVOLUTION.Application.GraphNodes.push(newNode);
-					if (!flow.storage) {
+					if (!oFlow.storage) {
 						console.error('No storage found.');
 						return;
 					}
@@ -810,7 +806,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				ParadigmREVOLUTION.Application.Cursor.length = 0;
 				ParadigmREVOLUTION.Application.Cursor = [];
 				
-				flow.DragSelect = true;
+				oFlow.DragSelect = true;
 				const selectableParent = e.target.closest('.is-selectable-parent');
 				const selectableBox = e.target.closest('.is-selectable-box');
 		
@@ -831,7 +827,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					}
 					if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name, id: dataset.id });
 					setTimeout(() => { 
-						flow.DragSelect = false;
+						oFlow.DragSelect = false;
 					}, 300);
 				}
 
@@ -840,7 +836,9 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					item.classList.remove('box', 'focused', 'm-2');
 					item.classList.remove('m-2');
 
-					item.querySelectorAll('.card-footer').forEach((item) => {
+					console.log(`item.closest('.node-top-container') :>> `, item.closest('.node-top-container'));
+					item.closest('.node-top-container').querySelectorAll('.card-footer').forEach((item) => {
+						console.log('item >>>>>>', item);
 						if (item.classList.contains('show')) item.classList.remove('show');
 					});
 
@@ -851,7 +849,9 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					selectableBox.style.width = 'fit-content;';
 				}
 				selectableBox.classList.add('box', 'focused', 'mx-0');
-				selectableBox.querySelectorAll('.card-footer').forEach((item) => {
+				
+				//NOTE - card footer for node controls
+				selectableBox.closest('.node-top-container').querySelectorAll('.card-footer').forEach((item) => {
 					item.classList.add('show');
 				});
 			}
@@ -859,9 +859,9 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			selector: '.is-selectable-parent',
 			callback: (e) => {
 				if (e.target.classList.contains('is-selectable')) return;
-				if (flow.DragSelect) return;
+				if (oFlow.DragSelect) return;
 				console.log('is-selectable-parent CLICK');
-				console.log('flow.DragSelect', flow.DragSelect);
+				console.log('oFlow.DragSelect', oFlow.DragSelect);
 				console.log('is-selectable-parent GOOOO');
 				const selectableParent = e.target.closest('.is-selectable-parent');
 				ParadigmREVOLUTION.Application.Cursor = [];
@@ -894,7 +894,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 						console.log('reflow edge connections', parentSet, dbedges);
 						setTimeout(() => {
 							dbedges.forEach((edge, edgeIndex) => {
-								flow.Graph.Events.connectNodes(
+								oFlow.Graph.Events.connectNodes(
 									edge,
 									parentSet.graphCanvas.graph_connection_surface,
 									parentSet.graphCanvas.graph_surface.parentElement
@@ -909,14 +909,14 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		}
 		], document.querySelector('#app_graph_container'));
 
-		flow.Form.Events.addGlobalEventListener('click', [{
+		oFlow.Form.Events.addGlobalEventListener('click', [{
 			selector: '.is-selectable',
 			callback: (e) => {
 				console.log('is-selectable CLICK');
 				
 				ParadigmREVOLUTION.Application.Cursor = [];
 				
-				flow.DragSelect = true;
+				oFlow.DragSelect = true;
 				// console.log('e target', e.target);
 				// console.log('e currentTarget', e.currentTarget);
 				const selectableParent = e.target.closest('.is-selectable-parent');
@@ -933,7 +933,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					// console.log('dataset :>> ', dataset);
 
 					if (dataset.template) {
-						console.log('template: ', dataset.template);
+						// console.log('template: ', dataset.template);
 						// if (e.target.classList.contains('graph_node_surface')) { 
 						// 	flow.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
 						// 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data[dataset.template]));
@@ -942,14 +942,14 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 						// }
 					} else if (dataset.schema) {
 						console.log('schema: ', dataset.schema);
-						flow.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
+						oFlow.Form.Events.addDataPreparationComponent('graphnode_container_' + Date.now(), 'Graph', (num, container_id) => {
 							let schemacanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Schema.Data[dataset.template]));
-							return flow.Form.Render.traverseDOMProxyOBJ(schemacanvas);
+							return oFlow.Form.Render.traverseDOMProxyOBJ(schemacanvas);
 						});
 					}
 					if (dataset.id) ParadigmREVOLUTION.Application.Cursor.push({ table: ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name, id: dataset.id });
 					setTimeout(() => { 
-						flow.DragSelect = false;
+						oFlow.DragSelect = false;
 					}, 300);
 				}
 
@@ -971,8 +971,8 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			callback: (e) => {
 				console.log('is-selectable-parent CLICK');
 				if (e.target.classList.contains('is-selectable')) return;
-				console.log('flow.DragSelect', flow.DragSelect);
-				if (flow.DragSelect) return;
+				console.log('oFlow.DragSelect', oFlow.DragSelect);
+				if (oFlow.DragSelect) return;
 				console.log('is-selectable-parent GOOOO');
 				const selectableParent = e.target.closest('.is-selectable-parent');
 				ParadigmREVOLUTION.Application.Cursor = [];
@@ -1224,7 +1224,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		document.querySelector('#app_console_button').addEventListener('click', () => {
 			document.querySelector('#app_console').classList.toggle('show');
 		});
-		flow.Form.Events.setupTabSwitcher({
+		oFlow.Form.Events.setupTabSwitcher({
 			tabSelector: '.tab-graph-selector',
 			contentContainerSelector: '.app_configurator_containers, .addremove-control-container'
 		}, () => {
@@ -1232,9 +1232,9 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			// console.log('done on callback!');
 		});
 
-		// flow.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers');
+		// oFlow.Form.Events.setupTabSwitcher('.tab-graph-selector', '.app_configurator_containers');
 		document.querySelector('.tab-graph-selector[data-tabtype="Graph"]').click();
-		flow.Form.Events.setupTabSwitcher({
+		oFlow.Form.Events.setupTabSwitcher({
 			tabSelector: '.tab-object-collections',
 			contentContainerSelector: '.object-collections-containers'
 		}, () => {
@@ -1243,7 +1243,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		});
 		document.querySelector('.tab-object-collections[data-tabtype="Collection"]').click();
 
-		flow.Form.Events.setupTabSwitcher({
+		oFlow.Form.Events.setupTabSwitcher({
 			tabSelector: '.tab-appcontent-controls',
 			contentContainerSelector: '.tab-content-container'
 		}, () => {
@@ -1332,7 +1332,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					}
 					console.log('qstr edges :>> ', qstr);
 					ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(edges => {
-						flow.Graph.Events.renderNodes(nodes[0], edges[0], flow.getActiveTab('tab-graph-selector-container'), () => {
+						oFlow.Graph.Events.renderNodes(nodes[0], edges[0], oFlow.getActiveTab('tab-graph-selector-container'), () => {
 							// console.log('Nodes and Edges rendered, callback called');
 						});
 					}).catch(err => {
@@ -1344,7 +1344,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			});
 		});
 		
-		console.log('Set default theme to SYSTEM');
+		// console.log('Set default theme to SYSTEM');
 		const root = document.documentElement;
 	
 		root.dataset.theme = 'system'; // Default theme
@@ -1370,41 +1370,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		
 		let graphcanvas = JSON.parse(JSON.stringify(window.ParadigmREVOLUTION.SystemCore.Template.Data['GraphCanvas']));
 		// document.querySelector('#app_content').innerHTML += flow.Form.Render.traverseDOMProxyOBJ(graphcanvas);
-	
-		document.querySelector('#app_content').innerHTML += `
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae accusantium ut suscipit qui quam laboriosam magnam dolor odit minima corrupti veritatis iste impedit obcaecati, dicta provident doloremque amet facere laborum?<br><br>
-		`;
-		function findScrollableElements() {
+			function findScrollableElements() {
 			const scrollableElements = {
 				vertical: [],
 				horizontal: [],
@@ -1620,14 +1586,14 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				});
 			});
 		});
-		flow.Graph.Events.enableMiddleClickScroll(document.querySelector('#app_root_container'));
+		oFlow.Graph.Events.enableMiddleClickScroll(document.querySelector('#app_root_container'));
 		document.querySelectorAll('.scroll_content').forEach(element => { 
-			flow.Graph.Events.enableMiddleClickScroll(element);
+			oFlow.Graph.Events.enableMiddleClickScroll(element);
 		});
-		flow.Graph.Events.enableMiddleClickScroll(document.querySelector('#app_data_preparation_area'));
+		oFlow.Graph.Events.enableMiddleClickScroll(document.querySelector('#app_data_preparation_area'));
 
 		// NOTE - CONNECT NODES!
-		flow.Form.Events.addGlobalEventListener('mousedown', [
+		oFlow.Form.Events.addGlobalEventListener('mousedown', [
 			{
 				selector: '.graph-node .card-header-title', // Select .card-content within .graph-node
 				callback: (e) => {
@@ -1644,20 +1610,20 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 								graphSurface.style.userSelect = 'none';
 							}
 							
-							console.log('graphNode', graphNode);
+							// console.log('graphNode', graphNode);
 							// Set the starting node
-							flow.selectedNodesToConnect.Start = graphNode;
-							flow.selectedNodesToConnect.StartParam = {
+							oFlow.selectedNodesToConnect.Start = graphNode;
+							oFlow.selectedNodesToConnect.StartParam = {
 								id: graphNode.id,
 								class: 'graph-node',
 								name: graphNode.dataset.nodename,
 								label: graphNode.dataset.nodelabel
 							};
-							console.log('flow.selectedNodesToConnect.Start :>> ', flow.selectedNodesToConnect.Start);
+							console.log('oFlow.selectedNodesToConnect.Start :>> ', oFlow.selectedNodesToConnect.Start);
 
 							// Add breathing to card-header-title
 							document.querySelectorAll('.graph-node .card-header-title').forEach(node => {
-								if (node !== flow.selectedNodesToConnect.Start) {
+								if (node !== oFlow.selectedNodesToConnect.Start) {
 									node.classList.add('breathing-text');
 								}
 							})
@@ -1667,13 +1633,13 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			}
 		]);
 		
-		flow.Form.Events.addGlobalEventListener('mouseup', [
+		oFlow.Form.Events.addGlobalEventListener('mouseup', [
 			{
 				selector: '.graph_node_surface', 
 				callback: (e) => { 
 					// Reset breathing to card-header-title
 					document.querySelectorAll('.graph-node .card-header-title').forEach(node => {
-						if (node !== flow.selectedNodesToConnect.Start) {
+						if (node !== oFlow.selectedNodesToConnect.Start) {
 							node.classList.remove('breathing-text');
 						}
 					});
@@ -1682,14 +1648,14 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			{
 				selector: '.graph-node .card-header-title', // Mouse up can be on any .graph-node
 				callback: (e) => {
-					if (e.button === 0 && flow.selectedNodesToConnect.Start) { // Left mouse button
+					if (e.button === 0 && oFlow.selectedNodesToConnect.Start) { // Left mouse button
 						console.log('Mouse up on .graph-node');
 		
 						let parentGraphID = e.target.closest('.app_configurator_containers').id;
 
 						// Reset breathing to card-header-title
 						document.querySelectorAll('.graph-node .card-header-title').forEach(node => {
-							if (node !== flow.selectedNodesToConnect.Start) {
+							if (node !== oFlow.selectedNodesToConnect.Start) {
 								node.classList.remove('breathing-text');
 							}
 						});
@@ -1702,19 +1668,19 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 		
 						// Set the ending node
 						const graphNode = e.target.closest('.graph-node');
-						flow.selectedNodesToConnect.End = graphNode;
-						flow.selectedNodesToConnect.EndParam = {
+						oFlow.selectedNodesToConnect.End = graphNode;
+						oFlow.selectedNodesToConnect.EndParam = {
 							id: graphNode.id,
 							class: 'graph-node',
 							name: graphNode.dataset.nodename,
 							label: graphNode.dataset.nodelabel
 						};
 
-						let selectedNodes = flow.selectedNodesToConnect;
+						let selectedNodes = oFlow.selectedNodesToConnect;
 
-						if (flow.selectedNodesToConnect.Start !== flow.selectedNodesToConnect.End) {
+						if (oFlow.selectedNodesToConnect.Start !== oFlow.selectedNodesToConnect.End) {
 							
-							let qstr = `select * from Process, Version, Contains, Workflow, DataInput, DataOutput where OutputPin.nodeID = "${flow.selectedNodesToConnect.StartParam.id}" and InputPin.nodeID = "${flow.selectedNodesToConnect.EndParam.id}";`;
+							let qstr = `select * from Process, Version, Contains, Workflow, DataInput, DataOutput where OutputPin.nodeID = "${oFlow.selectedNodesToConnect.StartParam.id}" and InputPin.nodeID = "${oFlow.selectedNodesToConnect.EndParam.id}";`;
 							// console.log(qstr);
 							ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(result => {
 								let edges = result[0];
@@ -1783,7 +1749,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 									</div>
 								`;
 
-								flow.Graph.Events.showSchemaModal(connectionMessage, schema, { selectedNodes: selectedNodes, FlowGraph: this, edges: edges }, (data, passedData) => {
+								oFlow.Graph.Events.showSchemaModal(connectionMessage, schema, { selectedNodes: selectedNodes, FlowGraph: oFlow, edges: edges }, (data, passedData) => {
 									console.log(edges.findIndex(item => item.Connection.Type === data.connectionType));
 
 									let newEdge = JSON.parse(JSON.stringify(ParadigmREVOLUTION.SystemCore.Blueprints.Data.Edge));
@@ -1806,9 +1772,10 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 									selectedNodes.Start = document.querySelector(`div[id="${selectedNodes.StartParam.id}"][class="${selectedNodes.StartParam.class}"]`);
 									selectedNodes.End = document.querySelector(`div[id="${selectedNodes.EndParam.id}"][class="${selectedNodes.EndParam.class}"]`);
 
+									console.log('passedData :>> ', passedData);
 									const parentSet = passedData.FlowGraph.getActiveTab('tab-graph-selector-container');
 									
-									const [edge, pinOut, pinIn, direction] = flow.Graph.Events.createGutterDotsAndConnect(
+									const [edge, pinOut, pinIn, direction] = oFlow.Graph.Events.createGutterDotsAndConnect(
 										selectedNodes.Start,
 										selectedNodes.End,
 										newEdge,
@@ -1865,8 +1832,8 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 							});
 						}
 						// Reset the selected nodes
-						flow.selectedNodesToConnect.Start = null;
-						flow.selectedNodesToConnect.End = null;
+						oFlow.selectedNodesToConnect.Start = null;
+						oFlow.selectedNodesToConnect.End = null;
 					}
 				}
 			}
@@ -1880,7 +1847,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			const zoomResetButton = document.querySelectorAll('.zoom_reset_button');
 			const zoomOutButton = document.querySelectorAll('.zoom_out_button');
 
-			console.log('zoom controls', zoomInButton, zoomResetButton, zoomOutButton);
+			// console.log('zoom controls', zoomInButton, zoomResetButton, zoomOutButton);
 			let newScrollLeft;
 			let newScrollTop;
 			let clickCount = 0;
@@ -1966,9 +1933,9 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					const container = graphContent.parentElement; // Assuming parent is the scrollable container
 					console.log(graphCanvas, graphContent, container);
 
-					if (flow.GraphCanvas[graphCanvas].ZoomScale < flow.GraphCanvas[graphCanvas].MaxZoomScale) {
-						const zoomlv = ParadigmREVOLUTION.Utility.Numbers.Round2(flow.GraphCanvas[graphCanvas].ZoomScale + flow.GraphCanvas[graphCanvas].ZoomStep);
-						applyZoom(zoomlv, container, graphContent, flow.GraphCanvas[graphCanvas]);
+					if (oFlow.GraphCanvas[graphCanvas].ZoomScale < oFlow.GraphCanvas[graphCanvas].MaxZoomScale) {
+						const zoomlv = ParadigmREVOLUTION.Utility.Numbers.Round2(oFlow.GraphCanvas[graphCanvas].ZoomScale + oFlow.GraphCanvas[graphCanvas].ZoomStep);
+						applyZoom(zoomlv, container, graphContent, oFlow.GraphCanvas[graphCanvas]);
 						zoomResetButton.forEach((btn) => {
 							btn.parentElement.querySelector('.zoomLevel').innerHTML = zoomlv;
 						});
@@ -1984,7 +1951,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					const graphCanvas = e.target.closest('.app_configurator_containers').dataset.tabtype;
 					const graphContent = e.target.closest('.app_configurator_containers').querySelector('.graph_surfaces');
 					const container = graphContent.parentElement; // Assuming parent is the scrollable container
-					applyZoom(1, container, graphContent, flow.GraphCanvas[graphCanvas]);
+					applyZoom(1, container, graphContent, oFlow.GraphCanvas[graphCanvas]);
 					zoomResetButton.forEach((btn) => {
 						btn.parentElement.querySelector('.zoomLevel').innerHTML = 1;
 					});
@@ -2001,9 +1968,9 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					const container = graphContent.parentElement; // Assuming parent is the scrollable container
 
 	
-					if (flow.GraphCanvas[graphCanvas].ZoomScale < flow.GraphCanvas[graphCanvas].MaxZoomScale) {
-						const zoomlv = ParadigmREVOLUTION.Utility.Numbers.Round2(flow.GraphCanvas[graphCanvas].ZoomScale - flow.GraphCanvas[graphCanvas].ZoomStep);
-						applyZoom(zoomlv, container, graphContent, flow.GraphCanvas[graphCanvas]);
+					if (oFlow.GraphCanvas[graphCanvas].ZoomScale < oFlow.GraphCanvas[graphCanvas].MaxZoomScale) {
+						const zoomlv = ParadigmREVOLUTION.Utility.Numbers.Round2(oFlow.GraphCanvas[graphCanvas].ZoomScale - oFlow.GraphCanvas[graphCanvas].ZoomStep);
+						applyZoom(zoomlv, container, graphContent, oFlow.GraphCanvas[graphCanvas]);
 						zoomResetButton.forEach((btn) => {
 							btn.parentElement.querySelector('.zoomLevel').innerHTML = zoomlv;
 						});
@@ -2022,7 +1989,7 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				// console.log('rectAppConfiguratorContainer :>> ', rectAppConfiguratorContainer);
 				appConfiguratorContainer.classList.toggle('fullscreen');
 				const fullscreen = appConfiguratorContainer.classList.contains('fullscreen')? true : false;
-				flow.toggleFullscreen();
+				oFlow.toggleFullscreen();
 				if (fullscreen) {
 					document.querySelector('#app_top_menu_container').classList.toggle('hide');
 					document.querySelector('#app_graph_tabs_container').classList.toggle('show');
