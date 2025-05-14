@@ -10,6 +10,16 @@
 	"Namespaces": {
 		"ParadigmREVOLUTION":{
 			"Name": "ParadigmREVOLUTION",
+			"Core": {
+				"Tenants":{
+					"Name": "Tenants",
+					"Description": "Tenants within in ParadigmREVOLUTION"
+				},
+				"Projects": {
+					"Name": "Projects",
+					"Description": "Tenant's Projects defined in ParadigmREVOLUTION"
+				}
+			},
 			"Databases": {
 				"SystemDB": {
 					"Name": "SystemDB",
@@ -20,10 +30,10 @@
 							"Name": "Blueprints",
 							"Description": "Contains all the defined blueprints",
 							"Contains":[
-								{"Node": "Blueprints__Node.json"},
+								{"Node": 		 "Blueprints__Node.json"},
 								{"NodeMetadata": "Blueprints__Node__Metadata.json"},
-								{"Edge": "Blueprints__Edge.json"},
-								{"Schema": "Blueprints__SchemaElements.json"}
+								{"Edge": 		 "Blueprints__Edge.json"},
+								{"Schema": 		 "Blueprints__SchemaElements.json"}
 							]
 						},
 						"Graph": {
@@ -39,10 +49,10 @@
 						"PageLayout": {
 							"Name": "PageLayout",
 							"Description": "Contains all the defined PageLayout within a Task(in old terms, this is the program.php)",
-							"Contains": {}
+							"Contains": {} 
 						},
-						"Form": {
-							"Name": "Form",
+						"Forms": {
+							"Name": "Forms",
 							"Description": "Contains all the defined Forms for a specific PageLayout within a Task(in old terms, this is part of the forms.json)",
 							"Contains": {}
 						},

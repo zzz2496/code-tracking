@@ -1782,9 +1782,9 @@ export class Flow {
 				document.addEventListener('mousemove', handleMove);
 				document.addEventListener('mouseup', handleEnd);
 				
-				scrollContent.addEventListener('touchstart', handleStart, { passive: false });
-				document.addEventListener('touchmove', handleMove, { passive: false });
-				document.addEventListener('touchend', handleEnd);
+				// scrollContent.addEventListener('touchstart', handleStart, { passive: false });
+				// document.addEventListener('touchmove', handleMove, { passive: false });
+				// document.addEventListener('touchend', handleEnd);
 			},
 			enableDragSelectV1: (parentSet) => { 
 				let isSelecting = false;
