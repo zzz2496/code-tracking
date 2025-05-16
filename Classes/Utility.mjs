@@ -3095,11 +3095,373 @@ export class Utility {
 			return true;
 		}
 	};
-	DOMComponents = {
-		
-	};
 	// NOTE - DOMElements related methods
-	DOMElements = {
+	DOMUtilities = {
+		GenerateSchemaToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
+			// console.log('generateSchemaToParadigmJSON', form_container);
+			function makeFieldParadigmJSON($id, field, utilily, form_container) {
+				// console.log('makeFieldParadigmJSON', form_container);
+				const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
+				let inputField = {};
+				switch (type) {
+					case 'action':
+						inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button form-action-button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+						break;
+					case 'button':
+						inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button paradigm-form-element in-form-button is-fullwidth ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+						break;
+					case 'separator':
+						inputField = { comment: "HR", tag: "hr" };
+						break;
+					case 'checkbox':
+						inputField = {
+							comment: "label", tag: "label", class: "checkbox  mt-2", content: [
+								{
+									comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `paradigm-form-element ${d_class}`, value: value, readonly: readonly, type: 'checkbox', content: [
+										{tag:"label", class:"m-1" } //innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))
+								] }
+							]
+						};
+						break;
+					case 'number':
+						inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `input paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), autocomplete: 'off'};
+						break;
+					case 'textarea':
+						inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `textarea paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), autocomplete: 'off'};
+						break;
+					case 'select':
+						inputField = {
+							comment: "Select container", tag: "div", class: "select is-link is-fullwidth ", content: [
+								{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `select_input paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : value}` }
+							]
+						};
+						break;
+					case 'text_select':
+						inputField = { comment: "Searchable textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, data: {form_container: form_container}, class: `input paradigm-form-element text_select is-link ${d_class} `, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container } };
+						break;
+					case 'password':
+						inputField = { comment: "Password", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${d_class} `, value: value, readonly: readonly, type: 'password', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container }};
+						break;
+					default:
+						inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container }};
+						break;
+				}
+				// Handle $head and $tail cases
+				if (!head && !tail) {
+					return { comment: "Container inputbox", tag: "div", class:`control ${field.type == 'action' ? '' : 'is-expanded'}   ${type == 'boolean' ? 'mt-2' : ''}`, content: [inputField] };
+				}
+
+				if (head && !tail) {
+					switch (head.type) {
+						case 'button':
+							return [{
+								comment: "Container form", tag: "p", class: "control ", content: [
+									{ comment: "Label button", tag: "button", class: "button in-head-button is-primary head-paradigm-form-element", innerHTML: Array.isArray(head.value) ? head.value[0] : head.value },
+								]
+							}, { comment: "Container form", tag: "p", class: "control is-expanded ", content: [inputField] }];
+							break;
+						case 'label':
+							return [{
+								comment: "Container form", tag: "p", class: "control ", content: [
+									{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(head.value) ? head.value.join(', ') : head.value },
+
+								]
+							}, { comment: "Container form", tag: "p", class: "control is-expanded ", content: [inputField] }];
+							break;
+						case 'input':
+							return [{
+								comment: "Container form", tag: "p", class: "control ", content: [
+									{ comment: "Head input", tag: "input", type: "text", class: "input head_input head-paradigm-form-element", placeholder: head.value, readonly: readonly }
+								]
+							}, { comment: "Container form", tag: "p", class: "control is-expanded ", content: [inputField] }];
+							break;
+						case 'select':
+							return [{
+								comment: "Container form", tag: "p", class: "control ", content: [
+									{
+										comment: "Container form", tag: "div", class: "select", content: [
+											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${head.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input head-paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+										]
+									}
+								]
+							}, { comment: "Container form", tag: "p", class: "control is-expanded ", content: [inputField] }];
+							break;
+					}
+				}
+				if (!head && tail) {
+					switch (tail.type) {
+						case 'button':
+							return [
+								{ comment: "Container form", tag: "p", class: "control is-expanded ", content: [inputField] },
+								{
+								comment: "Container form", tag: "p", class: "control ", content: [
+										{ comment: "Label button", tag: "button", class: "button tail-paradigm-form-element in-tail-button is-link", data: {form_container: form_container}, innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value },
+								]
+							}];
+							break
+						case 'label':
+							return [
+								{ comment: "Container form", tag: "p", class: "control is-expanded ", content: [inputField] },
+								{
+									comment: "Container form", tag: "p", class: "control ", content: [
+										{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value }
+									]
+								}
+							];
+							break;
+						case 'input':
+							return [
+								{ comment: "Container form", tag: "p", class: "control is-expanded ", content: [inputField] },
+								{
+									comment: "Container form", tag: "p", class: "control ", content: [
+										{ comment: "Tail input", tag: "input", type: "text", class: "input tail-paradigm-form-element tail_input", placeholder: Array.isArray(tail.value) ? tail.value[0] : tail.value, readonly: readonly }
+									]
+								}];
+							break;
+							break;
+						case 'select':
+							return [
+								{ comment: "Container form", tag: "p", class: "control is-expanded ", content: [inputField] },
+								{
+									comment: "Container form", tag: "p", class: "control ", content: [
+										{
+											comment: "Container form", tag: "div", class: "select", content: [
+												{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${tail.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input tail-paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+											]
+										}
+									]
+								}];
+							break;
+					}
+				}
+				if (head && tail) {
+					let tObj = [];
+					switch (head.type) {
+						case 'button':
+							tObj.push({
+								comment: "Container form", tag: "p", class: "control", content: [
+									{ comment: "Label button", tag: "button", class: "button in-head-button is-primary head-paradigm-form-element ", innerHTML: Array.isArray(head.value) ? head.value[0] : head.value },
+								]
+							});
+							break;
+						case 'label':
+							tObj.push({
+								comment: "Container form", tag: "p", class: "control", content: [
+									{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(head.value) ? head.value.join(', ') : head.value },
+								]
+							});
+							break;
+						case 'input':
+							tObj.push({
+								comment: "Container form", tag: "p", class: "control", content: [
+									{ comment: "Head input", tag: "input", type: "text", class: "input head_input head-paradigm-form-element ", placeholder: head.value, readonly: readonly }
+								]
+							});
+							break;
+						case 'select':
+							tObj.push({
+								comment: "Container form", tag: "p", class: "control", content: [
+									{
+										comment: "Container form", tag: "div", class: "select", content: [
+											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${head.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input head-paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+										]
+									}
+								]
+							})
+							break;
+					}
+					tObj.push({comment: "Container form", tag: "p", class: "control is-expanded", content: [inputField]});
+					switch (tail.type) {
+						case 'button':
+							tObj.push(
+								{
+									comment: "Container form", tag: "p", class: "control", content: [
+										{ comment: "Label button", tag: "button", class: "button in-tail-button is-link tail-paradigm-form-element ", data: {form_container: form_container}, innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value },
+									]
+								});
+							break;
+						case 'label':
+							tObj.push({
+								comment: "Container form", tag: "p", class: "control", content: [
+									{ comment: "Label", tag: "a", class: "button is-static", innerHTML: Array.isArray(tail.value) ? tail.value[0] : tail.value }
+								]
+							});
+							break;
+						case 'input':
+							tObj.push({
+								comment: "Container form", tag: "p", class: "control", content: [
+									{ comment: "Tail input", tag: "input", type: "text", class: "input tail_input tail-paradigm-form-element ", placeholder: Array.isArray(tail.value) ? tail.value[0] : tail.value, readonly: readonly }
+								]
+							});
+							break;
+						case 'select':
+							tObj.push({
+								comment: "Container form", tag: "p", class: "control", content: [
+									{
+										comment: "Container form", tag: "div", class: "select", content: [
+											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${tail.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input tail-paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+										]
+									}
+								]
+							});
+							break;
+					}
+					return tObj;
+				}
+			}
+			let Obj = { comment: "Paradigm Form", tag: "form", class: "paradigm-form", style: "", content: [] };
+			let tObj = {};
+			let tfield = {};
+			let Util = $util;
+			$schema.forEach((field, index) => {
+				const { id, label = '', form, field_class } = field;
+	
+				if (form === 1) {
+					if (label || field.type !== 'separator') {
+						tfield = {comment: "Field", tag: "div", class: `field ${field_class} ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
+
+						let tlabel = field.label || (field.type === 'action' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
+						if (is_horizontal) {
+							tObj = {
+								comment: "Field label", tag: "div", class: `field-label is-normal `, style: "", innerHTML: "", content: [
+									{ comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] }
+								]
+							};
+						} else {
+							tObj = { comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] };
+						}
+						tfield.content.push(tObj);
+					}
+					let temp = makeFieldParadigmJSON($id, field, $util, form_container);
+					if (Array.isArray(temp)) {
+						temp = [...temp];
+					} else {
+						temp = [temp];
+					}
+					tObj = {
+						comment: "Field body", tag: "div", class: `field-body`, style: "", innerHTML: "", content: [
+							{ comment: "Field", tag: "div", class: `field has-addons has-addons-centered `, style: "", innerHTML: "", content: temp }
+					] };
+					tfield.content.push(tObj);
+					Obj.content.push(tfield);
+				}
+			});
+			// Obj.content.push(tObj);
+			return Obj;
+		}).bind(this),
+		traverseDOMProxyOBJ: ((element, callback, cr=0) => {
+			let html = `<${element.tag}`;
+			if (element.class) html += ` class="${element.class}"`;
+			if (element.id) html += ` id="${element.id}"`;
+			if (element.style) html += ` style="${element.style}"`;
+			if (element.href) html += ` href="${element.href}"`;
+			if (element.type) html += ` type="${element.type}"`;
+			if (element.value) html += ` value="${element.value}"`;
+			if (element.title) html += ` title="${element.title}"`;
+			if (element.readonly) html += ` readonly="${element.readonly}"`;
+			if (element.placeholder) html += ` placeholder="${element.placeholder}"`;
+			if (element.checked) html += ` checked`;
+			if (element.autocomplete) html += ` autocomplete="${element.autocomplete}"`;
+
+			if (element.data) {
+				for (let [key, value] of Object.entries(element.data)) {
+					html += ` data-${key}="${value}"`;
+				}
+			}
+			if (element.aria) {
+				for (let [key, value] of Object.entries(element.aria)) {
+					html += ` aria-${key}="${value}"`;
+				}
+			}
+
+			html += ">";
+			if (element.innerHTML) html += element.innerHTML;
+			if (element.content && Array.isArray(element.content)) {
+				for (let child of element.content) {
+					html += this.DOMUtilities.traverseDOMProxyOBJ(child); // Recursively generate HTML for child elements
+				}
+			}
+
+			html += `</${element.tag}>`;
+
+			if (callback) callback();
+			return html;
+		}),
+		showSchemaModal: (schema, passedData, callback, buttons = {cancel: 'Cancel', confirm: 'Confirm', close:1 }) => {
+			// Create modal HTML as a string with animation classes
+			let schemastr = this.DOMUtilities.traverseDOMProxyOBJ(this.DOMUtilities.GenerateSchemaToParadigmJSON('id_modal_connection_type', schema.Dataset.Schema, this, 1, ''));
+			let footer = '';
+			if (buttons) { 
+				footer = `
+						<footer class="modal-card-foot" style="${buttons.cancel && buttons.confirm ? 'justify-content: space-between;' : 'justify-content: center;'}; display: flex; gap: 20px;">
+							${buttons.cancel ? `<button class="button" id="cancelButtonFooter">${buttons.cancel}</button>` : ''}
+							${buttons.confirm ? `<button class="button is-success" id="confirmButton">${buttons.confirm}</button>` : ''}
+						</footer>
+				`;
+			}
+			const modalHTML = `
+				<div id="connectionModal" class="modal is-active fade-in">
+					<div class="modal-background"></div>
+					<div class="modal-card" style="width: 60rem;">
+						<header class="modal-card-head" style="display: flex; align-items: center; ${buttons.close ? 'justify-content: space-between;' : 'justify-content: center;'}">
+							<p class="modal-card-title" style="${buttons.close ? '' : 'flex-grow: 0;'} schema.style">${schema.label}</p>
+							${buttons.close ? `<button class="delete" aria-label="close" id="cancelButton"></button>` : ''}
+						</header>
+						<section class="modal-card-body modal-form">
+							${schemastr}
+						</section>
+						${footer}
+					</div>
+				</div>
+			`;
+		
+			// Insert modal HTML into the document body
+			const modalContainer = document.createElement('div');
+			modalContainer.innerHTML = modalHTML;
+			document.body.appendChild(modalContainer);
+		
+			// Get references to modal elements
+			const modal = modalContainer.querySelector('#connectionModal');
+			const dropdown = modalContainer.querySelector('#connectionTypeDropdown');
+			const confirmButton = modalContainer.querySelector('#confirmButton');
+			const cancelButton = modalContainer.querySelector('#cancelButton');
+			const cancelButtonFooter = modalContainer.querySelector('#cancelButtonFooter');
+		
+			// // Add CSS for animations
+			// const style = document.createElement('style');
+			// document.head.appendChild(style);
+		
+			// Function to clean up modal
+			function cleanUp() {
+				modal.classList.remove('fade-in');
+				modal.classList.add('fade-out');
+				setTimeout(() => {
+					modalContainer.remove(); // Remove the modal
+					// style.remove(); // Remove the style tag
+				}, 300); // Matches the animation duration
+			}
+		
+			// Handle confirm button click
+			confirmButton.onclick = () => {
+				let data = {};
+				document.querySelector('.modal-form').querySelectorAll('input, button, select, textarea').forEach(input => {
+					const key = input.id.split('___')[1];
+					switch (input.type) { 
+						case 'checkbox':
+							data[key] = input.checked;
+							break;
+						default:
+							data[key] = input.value;
+							break;
+					}
+				});
+				// cleanUp(); // Clean up modal
+				callback({ data: data, passedData: passedData }, {modal: modal, modalContainer: modalContainer}); // Execute the callback with the selected type	
+			};
+			// Handle cancel button clicks
+			if (buttons.close) cancelButton.onclick = cleanUp;
+			if (buttons.cancel) cancelButtonFooter.onclick = cleanUp;
+		},
 		"viewToggle": ((element, callback) => {
 			// Check if the element is currently hidden
 			const isHidden = element.classList.contains('hidden') || getComputedStyle(element).height === '0px' || getComputedStyle(element).opacity === '0';
@@ -3260,7 +3622,8 @@ export class Utility {
 				horizontal: hasHorizontalScrollbar,
 				vertical: hasVerticalScrollbar,
 			};
-		}, "initializeDragAndSelect": ((options = {}, selectedDivs) => {
+		},
+		"initializeDragAndSelect": ((options = {}, selectedDivs) => {
 			const { snapSize = 20, containerSelector = '.container', itemSelector = '.selectable' } = options;
 
 			const container = document.querySelector(containerSelector);

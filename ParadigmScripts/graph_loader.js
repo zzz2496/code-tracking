@@ -1,4 +1,5 @@
-let cr = false;
+// let cr = false;
+let cr = true;
 if (cr) console.log('>>> >>> >>> >>> Graph Loader');
 // document.addEventListener('BlueprintsLoaded', () => {
 // 	if (cr) console.log('>>> >>> >>> >>> >>> Start Blurprints Loaded')
@@ -91,7 +92,7 @@ if (cr) console.log('>>> >>> >>> >>> Graph Loader');
 // 	ParadigmREVOLUTION.Utility.DOMElements.enableDragAndDropGroup('.group-container');
 // 	if (cr) console.log('>>> >>> >>> >>> >>> Done Blurprints Loaded')
 // });
-document.addEventListener('SurrealDBLoaded', async () => {
+document.addEventListener('ParadigmREVOLUTIONLoginSuccess', async () => {
 	if (cr) console.log('>>> >>> >>> >>> >>> SurrealDB Loaded');
 	if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Core Status');
 

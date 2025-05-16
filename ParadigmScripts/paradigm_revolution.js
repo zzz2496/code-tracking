@@ -1993,71 +1993,114 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	window.test_db = test_db;
 
 	// NOTE - START LOGIN SEQUENCE
-	// let login = await ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.signin({});
-	let login = false;
-	if (login) {
-		// NOTE - IF LOGIN SUCCESS, THEN Render Main Form, get something on the screen
-		let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(
-			document.querySelector('#ParadigmREVOLUTION'),
-			ParadigmREVOLUTION.Utility,
-			ParadigmREVOLUTION.Utility.BasicMath,
-			chain,
-			{
-				ram_db: ParadigmREVOLUTION.Datastores.SurrealDB.Memory,
-				local_systemdb: ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemDB,
-				local_datadb: ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB,
-				test_db: ParadigmREVOLUTION.Datastores.SurrealDB.TestServer
-			}
-		);
-
-		Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
-		if (Flow.FormContainer.innerHTML != '') {
-			console.log('masuk ke init all');
-			ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.forEach((tab) => { 
-				// console.log('tab :>> ', tab);
-				let temp = `
-					<li class="${tab.LinkClass}">
-						<a class="${tab.AnchorClass}" data-tabtype="${tab.TabType}">${tab.Label}</a>
-					</li>
-				`;
-				Flow.FormContainer.querySelector('#tab-graph-selector-container').innerHTML += temp;
-			});
-
-			if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status in paradigm_revolution.js');
-			let datastore_status = '';
-			Object.entries(ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
-				datastore_status += `<button class="datastore-status-indicator button is-small p-2 m-0 mr-1" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
-			});
-			document.querySelector('#datastore_status').innerHTML = datastore_status;
-			if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status in paradigm_revolution.js');
-
-			Flow.FormContainer.classList.remove('hide');
-			Flow.FormContainer.classList.add('show');
-
-			CurrentDocument.Dataset.Forms = [ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypes, ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypeDefinition];
-			Flow.Forms = CurrentDocument.Dataset.Forms;
-
-			//Flow.Form.Events.InitializeFormControls();
-			
-			InitializeFormControls(Flow);
+	ParadigmREVOLUTION.Utility.DOMUtilities.showSchemaModal({
+		"id": "paradigmrevolution_login",
+		"label": `<span style="font-family: 'Rochester'; font-size:3rem;">Paradigm </span><span style="font-family: 'Bebas Neue'; font-weight: 100; font-style:italic; font-size:3.6rem;">REVOLUTION</span>`,
+		"style": "",
+		"type": "record",
+		"typeSelection": ["record", "array"],
+		"icon": "",
+		"order": 100,
+		"Dataset": {
+			"Layout": {
+				"Form": {},
+				"Properties": {
+					"FormEntry": {
+						"Show": 1,
+						"Label": "Form Select Connection Type",
+						"ShowLabel": 1
+					},
+					"Preview": {
+						"Show": 1,
+						"Label": "Form Select Connection Type",
+						"ShowLabel": 1
+					}
+				}
+			},
+			"Schema": [
+				{
+					"id": "username",
+					"label": "Nama",
+					"type": "text",
+					"field_class": "is-selectable-box",
+					"form": 1
+				},
+				{
+					"id": "password",
+					"label": "Password",
+					"type": "password",
+					"value": "",
+					"field_class": "is-selectable-box",
+					"form": 1
+				}
+			]
 		}
-	} else {
-		// NOTE  -IF LOGIN FAILED, THEN ...
-		alert('Login Failed');
-		console.log('Login Failed');
-	}
+	}, {}, (dataset, modal) => {
+		let data = dataset.data;
+		let passedData = dataset.passedData;
+		let login = false;
+		if (data.username == 'admin' && data.password == 'admin') {
+			// clean up
+			modal.modal.classList.remove('fade-in');
+			modal.modal.classList.add('fade-out');
+			setTimeout(() => {
+				modal.modalContainer.remove(); // Remove the modal
+			}, 300); // Matches the animation duration
+			// clean up
+			login = true;
+			// NOTE - IF LOGIN SUCCESS, THEN Render Main Form, get something on the screen
+			let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(
+				document.querySelector('#ParadigmREVOLUTION'),
+				ParadigmREVOLUTION.Utility,
+				ParadigmREVOLUTION.Utility.BasicMath,
+				chain,
+				{
+					ram_db: ParadigmREVOLUTION.Datastores.SurrealDB.Memory,
+					local_systemdb: ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemDB,
+					local_datadb: ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB,
+					test_db: ParadigmREVOLUTION.Datastores.SurrealDB.TestServer
+				}
+			);
+			window.Flow = Flow;
 
-	
-	
+			Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
+			if (Flow.FormContainer.innerHTML != '') {
+				console.log('masuk ke init all');
+				ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.forEach((tab) => { 
+					// console.log('tab :>> ', tab);
+					let temp = `
+						<li class="${tab.LinkClass}">
+							<a class="${tab.AnchorClass}" data-tabtype="${tab.TabType}">${tab.Label}</a>
+						</li>
+					`;
+					Flow.FormContainer.querySelector('#tab-graph-selector-container').innerHTML += temp;
+				});
 
+				if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status in paradigm_revolution.js');
+				let datastore_status = '';
+				Object.entries(ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
+					datastore_status += `<button class="datastore-status-indicator button is-small p-2 m-0 mr-1" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
+				});
+				document.querySelector('#datastore_status').innerHTML = datastore_status;
+				if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status in paradigm_revolution.js');
 
+				Flow.FormContainer.classList.remove('hide');
+				Flow.FormContainer.classList.add('show');
 
+				CurrentDocument.Dataset.Forms = [ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypes, ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypeDefinition];
+				Flow.Forms = CurrentDocument.Dataset.Forms;
 
-
-
-
-	window.Flow = Flow;
-	
-	//NOTE - Chain execution!
-	Flow.Form.Run.executeChain();
+				//Flow.Form.Events.InitializeFormControls();
+				
+				InitializeFormControls(Flow);
+				document.dispatchEvent(new Event('ParadigmREVOLUTIONLoginSuccess'));
+			}
+			//NOTE - Chain execution!
+			Flow.Form.Run.executeChain();		
+		} else {
+			// NOTE  -IF LOGIN FAILED, THEN ...
+			alert('Login Failed');
+			console.log('Login Failed');
+		}
+	}, { confirm: 'Masuk' });
 });
