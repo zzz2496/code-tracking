@@ -70,11 +70,11 @@ let ParadigmREVOLUTION = {
 				"Label": "FinderJS",
 				"ShortLabel": "FJS"
 			},
-			"MQTT": {
+			"mqtt": {
 				"Status": "NOT LOADED",
 				"Icon": "link",
-				"Label": "MQTT",
-				"ShortLabel": "MQTT"
+				"Label": "mqtt",
+				"ShortLabel": "mqtt"
 			},
 		},
 		"Modules": {
@@ -131,7 +131,8 @@ let ParadigmREVOLUTION = {
 		"Collections":[]
 	},
 	"Datastores": {},
-	"Initialization_Status": 0
+	"Initialization_Status": 0,
+	"MQTTclients": {}
 };
 window.ParadigmREVOLUTION = ParadigmREVOLUTION;
 let loader = document.querySelector('#ParadigmREVOLUTION_Loader');
@@ -166,6 +167,7 @@ if (typeof finder !== 'undefined') {
 	try {
 		const UIResult = await import("../node_modules/ulid/dist/index.esm.js");
 		const { ulid } = UIResult;
+		loader.value++;
 		ParadigmREVOLUTION.SystemCore.CoreStatus.ULID.Status = "LOADED";
 		ParadigmREVOLUTION.SystemCore.Modules.ULID = ulid;
 		document.querySelector('#ulid').classList.add('has-text-success');
@@ -177,6 +179,24 @@ if (typeof finder !== 'undefined') {
 		console.error("Failed to import ULID.");
 	}
 })();
+(async () => {
+	try {
+		const mqttModule = await import('../node_modules/mqtt/dist/mqtt.esm.js');
+		const mqtt = mqttModule.default; // Correctly get the default export
+		loader.value++;
+		ParadigmREVOLUTION.SystemCore.CoreStatus.mqtt.Status = "LOADED";
+		ParadigmREVOLUTION.SystemCore.Modules.mqtt = mqtt;
+
+		document.querySelector('#mqtt').classList.add('has-text-success');
+		document.querySelector('#mqtt_status').innerHTML = "<li class='fa fa-check'></li>";
+	} catch (error) {
+		document.querySelector('#mqtt').classList.add('has-text-danger');
+		document.querySelector('#mqtt_status').innerHTML = "<li class='fa fa-xmark'></li>";
+		ParadigmREVOLUTION.SystemCore.CoreStatus.mqtt.Status = "FAILED TO LOAD";
+		console.error("Failed to import mqtt:", error);
+	}
+})();
+
 (async () => {
 	try {
 		const UtilityResult = await import("../Classes/Utility.mjs");
@@ -317,9 +337,9 @@ if (typeof finder !== 'undefined') {
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Surreal.Status = "FAILED TO LOAD";
 				console.error("Failed to import Surreal.");
 			}
-		},
+		}//,
 		// {
-		// 	importPromise: import("../../node_modules/mqtt/dist/mqtt.min.js"),
+		// 	importPromise: import("../node_modules/mqtt/dist/mqtt.esm.js"),
 		// 	onSuccess: (module) => {
 		// 		const { mqtt } = module;
 		// 		if (cr) console.log(">>> ||| MQTT imported successfully.");

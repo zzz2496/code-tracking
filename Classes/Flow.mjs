@@ -259,10 +259,10 @@ export class Flow {
 				
 				newElement.id = nodeID;
 				newElement.className = objclass;
-				console.log('graphCanvas', graphCanvas, node.Presentation.Perspectives.GraphNode.Position[graphCanvas]);
+				// console.log('graphCanvas', graphCanvas, node.Presentation.Perspectives.GraphNode.Position[graphCanvas]);
 				newElement.style.top = `${node.Presentation.Perspectives.GraphNode.Position[graphCanvas]? node.Presentation.Perspectives.GraphNode.Position[graphCanvas].y : 30}px`;
 				newElement.style.left = `${node.Presentation.Perspectives.GraphNode.Position[graphCanvas] ? node.Presentation.Perspectives.GraphNode.Position[graphCanvas].x : 30}px`;
-				console.log(graphCanvas, node.Presentation.Perspectives.GraphNode.Position);
+				// console.log(graphCanvas, node.Presentation.Perspectives.GraphNode.Position);
 				newElement.dataset.nodetype = node.id.id.Node.Kind;
 				newElement.dataset.nodename = node.Properties.Name;
 				newElement.dataset.nodelabel = node.Properties.Label;
@@ -311,7 +311,7 @@ export class Flow {
 				// let defaultCoord = [];
 			
 				function initialize(parent, tparentSet) {
-					console.log('start initialize makeNodesDraggable');
+					// console.log('start initialize makeNodesDraggable');
 					if (isInitialized) return; // Prevent multiple initializations
 					isInitialized = true;
 
@@ -334,7 +334,7 @@ export class Flow {
 			
 					// Mousedown event
 					globalEventHandler("mousedown", ".card-header-icon", (e, target) => {
-						console.log("Node drag start");
+						// console.log("Node drag start");
 						isDragging = true;
 						draggedElement = target.closest(".graph-node");
 						nodeID = [];
@@ -372,10 +372,10 @@ export class Flow {
 						} else {
 							qstr = `select *  from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
 						}
-						console.log('qstr for dbedges on mousedown:>> ', qstr);
-						ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
-							dbedges = edges[0];
-							console.log('dbedges :>> ', dbedges);
+						// console.log('qstr for dbedges on mousedown:>> ', qstr);
+						// ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
+							// dbedges = edges[0];
+							// console.log('dbedges :>> ', dbedges);
 							// if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
 							// 	this.Graph.Events.createGutterDotsAndConnect(
 							// 		parentSet.graphCanvas.element.querySelector(`div[id="${edge.OutputPin.nodeID}"]`),
@@ -392,8 +392,8 @@ export class Flow {
 							// 		parentSet.graphCanvas.graph_surface.parentElement
 							// 	);
 							// });
-						});
-						console.log('defaultCoord :>>', coord);
+						// });
+						// console.log('defaultCoord :>>', coord);
 					});
 			
 					// Mousemove event
@@ -441,7 +441,7 @@ export class Flow {
 					// Mouseup event
 					globalEventHandler("mouseup", ".graph_surfaces", (e) => {
 						if (isDragging) {
-							console.log("Node drag end");
+							// console.log("Node drag end");
 
 							// console.log('flow.DragSelect before set to true', flow.DragSelect);
 							flow.DragSelect = true;
@@ -452,65 +452,65 @@ export class Flow {
 							let qstrUpdate = "";
 							let promises = [];
 							ArrOffsetMap.forEach((Tnode, idx) => {
-								console.log(idx, Tnode);
-								console.log('nodeID', nodeID[idx]);
-								console.log('coord', coord[idx]);
+								// console.log(idx, Tnode);
+								// console.log('nodeID', nodeID[idx]);
+								// console.log('coord', coord[idx]);
 
 								let qstr = `select * from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} where id.ID = '${nodeID[idx]}';`;
-								console.log('qstr :>> ', qstr);
+								// console.log('qstr :>> ', qstr);
 								let promise = ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then(node => { 
 									if (node[0].length == 0) return;
 									node = node[0][0];
-									console.log('node', node);
+									// console.log('node', node);
 									node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType] = coord[idx];
-									console.log('node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]', parentSet.tab.tabType, node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]);
+									// console.log('node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]', parentSet.tab.tabType, node.Presentation.Perspectives.GraphNode.Position[parentSet.tab.tabType]);
 
 									if (node.id.id) node.id = node.id.id;
-									console.log('node.id :>> ', node.id);
+									// console.log('node.id :>> ', node.id);
 
 									let tnode = JSON.parse(JSON.stringify(node));
 									delete tnode.id;
-									console.log('tnode :>> ', tnode);
+									// console.log('tnode :>> ', tnode);
 									
 									qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
 									// qstrUpdate += `update ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name} content ${JSON.stringify(tnode)} where id.ID = '${node.id.ID}';\n\n`;
-									console.log('qstrUpdate --------------:>> ', qstrUpdate);
+									// console.log('qstrUpdate --------------:>> ', qstrUpdate);
 									// qstrUpdate += `upsert ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.Datastore.Namespaces.ParadigmREVOLUTION.Databases.SystemDB.Tables.Graph.Name}:${JSON.stringify(node.id)} content ${JSON.stringify(tnode)};\n\n`;
 								}).catch(error => {
 									console.error('Coordinate update failed', error);
 								});
 								promises.push(promise);
 							});
-							Promise.all(promises).then(() => {
-								console.log('completed qstrUpdate :>> ', qstrUpdate);
-								ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstrUpdate)
-								.then((result) => { 
-									console.log(`Coordinate UPDATED!`, result);
-									// console.log('flow.DragSelect on promise done', flow.DragSelect);
-									// console.log('dbedges', dbedges);
-									// setTimeout(() => { 
-									// 	console.log('reflow edge connections');
-									// 	dbedges.forEach((edge, edgeIndex) => {
-									// 		flow.Graph.Events.connectNodes(
-									// 			edge,
-									// 			parentSet.graphCanvas.graph_connection_surface,
-									// 			parentSet.graphCanvas.graph_surface.parentElement
-									// 		);
-									// 	});
-									// 	// console.log('flow.DragSelect after 400ms', flow.DragSelect);
-									// 	flow.DragSelect = false;
-									// 	// console.log('flow.DragSelect after 400ms', flow.DragSelect);
-									// }, 400);
-								})
-								.catch(error => { 
-									console.error(`Coordinate update FAILED!`, error);
-								});
-							}).catch(error => {
-								console.error('Promises FAILED', error);
-							});
+							// Promise.all(promises).then(() => {
+							// 	// console.log('completed qstrUpdate :>> ', qstrUpdate);
+							// 	ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstrUpdate)
+							// 	.then((result) => { 
+							// 		console.log(`Coordinate UPDATED!`, result);
+							// 		console.log('flow.DragSelect on promise done', flow.DragSelect);
+							// 		console.log('dbedges', dbedges);
+							// 		setTimeout(() => { 
+							// 			console.log('reflow edge connections');
+							// 			dbedges.forEach((edge, edgeIndex) => {
+							// 				flow.Graph.Events.connectNodes(
+							// 					edge,
+							// 					parentSet.graphCanvas.graph_connection_surface,
+							// 					parentSet.graphCanvas.graph_surface.parentElement
+							// 				);
+							// 			});
+							// 			// console.log('flow.DragSelect after 400ms', flow.DragSelect);
+							// 			flow.DragSelect = false;
+							// 			// console.log('flow.DragSelect after 400ms', flow.DragSelect);
+							// 		}, 400);
+							// 	})
+							// 	.catch(error => { 
+							// 		console.error(`Coordinate update FAILED!`, error);
+							// 	});
+							// }).catch(error => {
+							// 	console.error('Promises FAILED', error);
+							// });
 						}
 					});
-					console.log('done initialize makeNodesDraggable');
+					// console.log('done initialize makeNodesDraggable');
 				}
 			
 				function destroy() {
@@ -523,7 +523,7 @@ export class Flow {
 					});
 			
 					eventCallbacks = []; // Clear stored callbacks
-					console.log("makeNodesDraggable destroyed");
+					// console.log("makeNodesDraggable destroyed");
 				}
 			
 				return { initialize, destroy };
@@ -545,14 +545,14 @@ export class Flow {
 
 				let aX, aY;
 				parentSet.graphCanvas.element.addEventListener("mousedown", (e) => { //NOTE - makeNodeDraggable mousedown
-					console.log('makeNodeDraggable mousedown');
+					// console.log('makeNodeDraggable mousedown');
 					// Check if the clicked element is the .card-header
 					const graphCanvasParent = e.target.closest('.scroll_content');
 					// const graphCanvasParentId = graphCanvasParent.id;
-					console.log('graphCanvasParent', graphCanvasParent);
+					// console.log('graphCanvasParent', graphCanvasParent);
 
 					if (!e.target.closest('.card-header-icon')) return;
-					console.log('================================================================================================ MakeNodeDraggable mousedown start');
+					// console.log('================================================================================================ MakeNodeDraggable mousedown start');
 					isDragging = true;
 
 					this.DragSelect = true;
@@ -566,7 +566,7 @@ export class Flow {
 					} else {
 						qstr = `select *  from ${ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.ConnectionArray.map(option => `${option.Type}`).join(', ')} where (in.id.ID = "${nodeID}" or out.id.ID = "${nodeID}")`;
 					}
-					console.log('qstr for dbedges on mousedown:>> ', qstr);
+					// console.log('qstr for dbedges on mousedown:>> ', qstr);
 					ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
 						dbedges = edges[0];
 						// console.log('dbedges :>> ', dbedges);
@@ -579,7 +579,7 @@ export class Flow {
 							);
 						});
 						if (edges[0]) if (Array.isArray(edges[0])) if (edges[0].length > 0) edges[0].forEach((edge, edgeIndex) => {
-							console.log('edge >>>>>>>>>>>>>>>>>>> :>> ', edge);
+							// console.log('edge >>>>>>>>>>>>>>>>>>> :>> ', edge);
 							this.Graph.Events.connectNodes(
 								edge,
 								parentSet.graphCanvas.graph_connection_surface,
@@ -609,7 +609,7 @@ export class Flow {
 					const parentScrollTop = parent.scrollTop;
 		
 					// Access the live ScrollPosition dynamically
-					console.log('what is THIS', this);
+					// console.log('what is THIS', this);
 					const { app_root_container, app_container } = this.ScrollPosition;
 		
 					const rect = draggedElement.getBoundingClientRect();
@@ -621,13 +621,13 @@ export class Flow {
 
 					aX = (e.clientX - offsetX - parentRect.left + (parentScrollLeft * 2) + (app_root_container.left * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 					aY = (e.clientY - offsetY - parentRect.top + (parentScrollTop * 2) + (app_container.top * 2)) / this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
-					console.log('================================================================================================ MakeNodeDraggable mousedown done');
+					// console.log('================================================================================================ MakeNodeDraggable mousedown done');
 					
 				});
 			
 				parentSet.graphCanvas.element.addEventListener("mousemove", (e) => { //NOTE - makeNodeDraggable mousemove
 					if (!isDragging || !draggedElement) return;
-					console.log('MakeNodeDraggable mousemove');
+					// console.log('MakeNodeDraggable mousemove');
 ''			
 					const parentScrollLeft = parent.scrollLeft;
 					const parentScrollTop = parent.scrollTop;
@@ -657,7 +657,7 @@ export class Flow {
 							
 						fx = aX;
 						fy = aY;
-						console.log('dbedges on mousemove before foreach', dbedges);
+						// console.log('dbedges on mousemove before foreach', dbedges);
 						dbedges.forEach((edge, edgeIndex) => {
 							// console.log('dbedge each:>> ', edge.id, edge.OutputPin.nodeID, edge.InputPin.nodeID);
 							this.Graph.Events.createGutterDotsAndConnect(
@@ -667,7 +667,7 @@ export class Flow {
 								parentSet
 							);
 						});
-						console.log('dbedge on mouse move', dbedges);
+						// console.log('dbedge on mouse move', dbedges);
 						dbedges.forEach((edge, edgeIndex) => {
 							// console.log('dbedge each:>> ', edge);
 							this.Graph.Events.connectNodes(
@@ -689,7 +689,7 @@ export class Flow {
 			
 				parentSet.graphCanvas.element.addEventListener("mouseup", (e) => { //NOTE - makeNodeDraggable mouseup
 					if (isDragging) {
-						console.log('================================================================================================ MakeNodeDraggable mouseup start');
+						// console.log('================================================================================================ MakeNodeDraggable mouseup start');
 
 						let graphCanvas = e.target.closest('.app_configurator_containers');
 						let tabtype = graphCanvas.dataset.tabtype;
@@ -757,12 +757,12 @@ export class Flow {
 							this.DragSelect = false;
 						}, 200);
 
-						console.log('================================================================================================ MakeNodeDraggable mouseup done');
+						// console.log('================================================================================================ MakeNodeDraggable mouseup done');
 					}
 				});
 			},
 			renderNodes: ((nodes, edges, parentSet, callback, cr = 0) => { //SECTION - renderNodes
-				console.log('================= Start Render Nodes');
+				// console.log('================= Start Render Nodes');
 				let temp;
 				// Clear out the nodes and connections
 				parentSet.graphCanvas.graph_node_surface.innerHTML = "";
@@ -772,7 +772,7 @@ export class Flow {
 				if (nodes) if (Array.isArray(nodes)) nodes.forEach((node, nodeIndex) => {
 					const nodeID = node.id.ID ? node.id.ID : node.id.id.ID;
 					const nodeKind = node.id.ID ? node.id.Node.Kind : node.id.id.Node.Kind;
-					console.log('nodeKind :>> ', nodeKind);
+					// console.log('nodeKind :>> ', nodeKind);
 					function findKindObject(kindArray, targetKind) {
 						for (const option of kindArray) {
 							if (option.Kind === targetKind) {
@@ -803,14 +803,14 @@ export class Flow {
 					if (kind.Footer) { 
 						sfooter += `<footer class="card-footer">`;
 						kind.Footer.forEach((footer, footerIndex) => {
-							console.log('footer :>> ', footer);
+							// console.log('footer :>> ', footer);
 							sfooter += `<a href="#" class="card-footer-item ${footer.Class}" title="${footer.title}" data-actiontype="${footer.ActionType}" data-id="${nodeID}"><i class="${footer.Icon} ${footer.Class}" data-actiontype="${footer.ActionType}" data-id="${nodeID}"></i></a>`;
 						});
 						sfooter += `</footer>`;
 					}
 
 					let node_lock = `<i class="node-lock fa-solid fa-lock-open"></i>`;
-					console.log('node :>> ', node);
+					// console.log('node :>> ', node);
 					if (node.id.id.Node.isLocked) node_lock = `<i class="node-lock fa-solid fa-lock has-text-danger"></i>`;
 					const nodeContent = `
 					<div class="card is-selectable-box node-background-frosted" data-id="node-${nodeID}" style="margin: 5px; padding: 0px; width: fit-content;">
@@ -831,7 +831,7 @@ export class Flow {
 					// ${snodeControls}
 					// ${sfooter}
 					let ctrls = snodeControls + sfooter;
-					console.log('ctrls :>> ', ctrls);
+					// console.log('ctrls :>> ', ctrls);
 					temp = this.Graph.Elements.MakeDraggableNode(nodes, node, 'graph-node fade-in', nodeContent, snodeControls, sfooter, parentSet.tab.tabType);
 					parentSet.graphCanvas.graph_node_surface.append(temp);
 				});
@@ -840,8 +840,8 @@ export class Flow {
 				// this.Graph.Events.makeNodeDraggable(".graph-node", parentSet.graphCanvas.graph_surface.parentElement, parentSet);
 				this.Graph.Events.makeNodesDraggable.initialize(parentSet.graphCanvas.element.querySelector('.scroll_content'), parentSet); //NOTE - makeNodeDraggable CALLEE
 
-				console.log('================= Done Render Nodes');
-				console.log('=================Start Render Edges');
+				// console.log('================= Done Render Nodes');
+				// console.log('=================Start Render Edges');
 
 				// document.querySelector('#app_graph_content>.graph_connection_surface').innerHTML = "";
 				const container = document.querySelector('#app_graph_content > .graph_connection_surface');
@@ -871,7 +871,7 @@ export class Flow {
 				});
 
 				if (callback) callback();
-				console.log('================= Done Render Edges');
+				// console.log('================= Done Render Edges');
 			}).bind(this),
 			enableMiddleClickScroll: (rContainer) => { //SECTION - enableMiddleClickScroll
 				const scrollContent = rContainer;
@@ -1089,7 +1089,7 @@ export class Flow {
 					let data = {};
 					document.querySelector('.modal-form').querySelectorAll('input, button, select, textarea').forEach(input => {
 						const key = input.id.split('___')[1];
-						console.log('input :>> ', input.type);
+						// console.log('input :>> ', input.type);
 						switch (input.type) { 
 							case 'checkbox':
 								data[key] = input.checked;
@@ -1376,7 +1376,7 @@ export class Flow {
 				// console.log('======================================= done connectNodes');
 			},
 			createGutterDotsAndConnect: (node1, node2, rEdge, parentSet) => {
-				console.log('======================================= start createGutterDotsAndConnect');
+				// console.log('======================================= start createGutterDotsAndConnect');
 				// NOTE - This functions as connecting 2 nodes then assign those 2 nodes to the edge.
 				if (!rEdge) return;
 
@@ -1431,9 +1431,9 @@ export class Flow {
 				}
 				
 				if (gutters.length > 0) {
-					console.log('======================================= REMOVE GUTTERS');
+					// console.log('======================================= REMOVE GUTTERS');
 					if (gutters[0].dataset.edgedirection == direction) {
-						console.log('======================================= end createGutterDotsAndConnect: match direction');
+						// console.log('======================================= end createGutterDotsAndConnect: match direction');
 						return;
 					}else if (gutters[0].dataset.edgedirection != direction) {
 						gutters.forEach(gutter => gutter.remove());
@@ -1639,7 +1639,7 @@ export class Flow {
 							}
 							break;
 					}
-					console.log('======================================= end createGutterDotsAndConnect: new gutterDots');
+					// console.log('======================================= end createGutterDotsAndConnect: new gutterDots');
 					return [edge, gutterDot1, gutterDot2, direction];
 				}
 			},
@@ -1723,7 +1723,7 @@ export class Flow {
 						}
 					}
 					
-					console.log('ParadigmREVOLUTION.Application.Cursor', ParadigmREVOLUTION.Application.Cursor);
+					// console.log('ParadigmREVOLUTION.Application.Cursor', ParadigmREVOLUTION.Application.Cursor);
 					setTimeout(() => { self.DragSelect = false; }, 300);
 				}
 			
@@ -1839,7 +1839,7 @@ export class Flow {
 				function handleMouseUp() {
 					if (!isSelecting) return;
 					
-					console.log('handleMouseUp');
+					// console.log('handleMouseUp');
 					isSelecting = false;
 					selectionBox.remove();
 					selectionBox = null;
@@ -1860,7 +1860,7 @@ export class Flow {
 						}
 					}
 		
-					console.log('ParadigmREVOLUTION.Application.Cursor', ParadigmREVOLUTION.Application.Cursor);
+					// console.log('ParadigmREVOLUTION.Application.Cursor', ParadigmREVOLUTION.Application.Cursor);
 					setTimeout(() => {
 						self.DragSelect = false;
 					}, 300);
@@ -1956,7 +1956,7 @@ export class Flow {
 							elementRect.top / ZoomScale >= dragArea.y1 &&
 							elementRect.right / ZoomScale <= dragArea.x2 &&
 							elementRect.bottom / ZoomScale <= dragArea.y2;
-						console.log('isInside', isInside);
+						// console.log('isInside', isInside);
 						if (isInside) {
 							if (!selectedElements.has(element)) {
 								if (element.tagName === 'path') {
@@ -1992,14 +1992,14 @@ export class Flow {
 				document.addEventListener('mouseup', handleMouseUp);
 			},
 			enableDragSelectV0: ((parentSet) => {
-				console.log('Start enableDragSelect');
+				// console.log('Start enableDragSelect');
 				const container = parentSet.graphCanvas.graph_surface.closest(`.graph_surfaces`);
 				const containerRect = container.getBoundingClientRect();
 				const graphContainer = parentSet.graphCanvas.graph_surface.closest(`.app_configurator_groups`);
 				const graphContainerRect = graphContainer.getBoundingClientRect();
 				const scrollContainer = parentSet.graphCanvas.graph_surface.parentElement;
-				console.log('container', container);
-				console.log('containerRect', containerRect);
+				// console.log('container', container);
+				// console.log('containerRect', containerRect);
 	
 				// console.log('Start enableDragSelect :>> ', typeof selector, selector);
 				// let container;
@@ -2014,7 +2014,7 @@ export class Flow {
 				let startX, startY;
 				// const ZoomScale = this.GraphCanvas[this.CurrentActiveTab.app_container].ZoomScale;
 				const ZoomScale = this.GraphCanvas['Graph'].ZoomScale;
-				console.log('ZoomScale', ZoomScale);
+				// console.log('ZoomScale', ZoomScale);
 				
 				const selectedElements = new Set(); // Using Set to prevent duplicates
 				let highlightBox = null;
@@ -2047,27 +2047,27 @@ export class Flow {
 			
 				// Function to handle mouse down event
 				function onMouseDown(e) {
-					console.log('start mousedown on enableDragSelect')
-					console.log('ZoomScale :>> ', ZoomScale);
+					// console.log('start mousedown on enableDragSelect')
+					// console.log('ZoomScale :>> ', ZoomScale);
 					if (e.button !== 0) return;
 					if (!e.target.closest('.graph-node') && !e.target.closest('svg path')) {
 						isDragging = true;
-						console.log('container', container.scrollLeft, container.scrollTop, container);
+						// console.log('container', container.scrollLeft, container.scrollTop, container);
 
 						startX = (e.clientX - scrollContainer.scrollLeft) / ZoomScale;
 						startY = (e.clientY - scrollContainer.scrollTop) / ZoomScale;
 						
-						console.log('zoom scale', ZoomScale);
-						console.log('mouse', e.clientX, e.clientY);
-						console.log('coord', startX, startY);
-						console.log('scroll', container.scrollLeft, container.scrollTop);
+						// console.log('zoom scale', ZoomScale);
+						// console.log('mouse', e.clientX, e.clientY);
+						// console.log('coord', startX, startY);
+						// console.log('scroll', container.scrollLeft, container.scrollTop);
 
 						selectedElements.clear(); // Reset selected elements
 			
 						if (!highlightBox) createHighlightBox();
 						updateHighlightBox(startX , startY);
 					}
-					console.log('done mousedown on enableDragSelect')
+					// console.log('done mousedown on enableDragSelect')
 				}
 			
 				// Function to handle mouse move event
@@ -2153,7 +2153,7 @@ export class Flow {
 							}
 						}
 			
-						console.log('ParadigmREVOLUTION.Application.Cursor', ParadigmREVOLUTION.Application.Cursor);
+						// console.log('ParadigmREVOLUTION.Application.Cursor', ParadigmREVOLUTION.Application.Cursor);
 						setTimeout(() => {
 							self.DragSelect = false;
 						}, 300);
@@ -2299,7 +2299,7 @@ export class Flow {
 						footer = ""
 					}) => {
 						// Basic card structure
-						console.log('Components: Card', className);
+						// console.log('Components: Card', className);
 						const card = {
 							comment: "Card",
 							tag: "div",
@@ -2584,11 +2584,11 @@ export class Flow {
 				const flowSelf = this;
 				document.querySelectorAll(tabSelector).forEach((tab, index, tabs) => {
 					tab.addEventListener('click', (e) => {
-						console.log('CLICK!');
+						// console.log('CLICK!');
 						const AppDivID = e.target.closest('.application_divisions').id;
-						console.log('AppDivID :>> ', AppDivID);
+						// console.log('AppDivID :>> ', AppDivID);
 						const tabType = tab.dataset.tabtype;
-						console.log('tabType :>> ', tabType);
+						// console.log('tabType :>> ', tabType);
 						flowSelf.CurrentActiveTab[AppDivID] = tabType; // NOTE - SET CurrentActiveTab
 
 						// Remove 'is-active' class from all tabs
@@ -2602,7 +2602,7 @@ export class Flow {
 							? contentContainerSelector.split(',').map(s => s.trim())
 							: [contentContainerSelector];
 
-						console.log('arrSelector :>> ', arrSelector);
+						// console.log('arrSelector :>> ', arrSelector);
 						arrSelector.forEach(selector => {
 							document.querySelectorAll(selector).forEach((container, containerIndex) => {
 								container.classList.remove(showClass);
@@ -2672,7 +2672,7 @@ export class Flow {
 				});
 			},
 			addDataPreparationComponent: (id, componentType, generateContent) => { //NOTE - addDataPreparationComponent
-				console.log(`add Data Preperation ${componentType} clicked`);
+				// console.log(`add Data Preperation ${componentType} clicked`);
 				const appArea = document.querySelector('#app_data_preparation_area');
 				if (!appArea.classList.contains('show')) appArea.classList.add('show');
 			
@@ -2766,11 +2766,11 @@ export class Flow {
 				}, 1000);
 				setTimeout(() => {
 					let selectedBox = document.querySelector(`.${container_id}`)
-					console.log('container_id :>> ', container_id);
+					// console.log('container_id :>> ', container_id);
 					if (selectedBox) {
 						let scrollContainer = document.querySelector('#app_data_preparation_area');
 						let offsetLeft = selectedBox.offsetLeft + 24 + 'px';
-						console.log('offsetLeft :>> ', offsetLeft);
+						// console.log('offsetLeft :>> ', offsetLeft);
 						scrollContainer.scrollTo({
 							left: offsetLeft,
 							behavior: 'smooth'

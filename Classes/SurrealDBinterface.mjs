@@ -1,6 +1,5 @@
 export class SurrealDBinterface {
-	constructor(cr) {
-	};
+	constructor(cr) {};
 	initSurrealDB = async function (mode = 'Memory', Label, ShortLabel, Connect, SurrealDB, BlueprintsDATA, Modules, callback, callbackfailed, cr) {
 		let token = mode;
 		switch (mode) {
@@ -154,6 +153,6 @@ export class SurrealDBinterface {
 		console.log('Live Query action:', action);
 		console.log('Live Query result:', result);
 		console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Done Live Query from ${from} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<`);
-		if (callback) callback();
+		if (callback) callback(action, result);
 	};
 }

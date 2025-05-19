@@ -1922,7 +1922,7 @@ document.addEventListener('BlueprintsLoaded', () => {
 });
 
 //NOTE - ParadigmREVOLUTION STARTUP
-document.addEventListener('SurrealDBEnginesLoaded', async () => {
+document.addEventListener('SurrealDBLoaded', async () => {
 	let OK = true;
 	Object.keys(ParadigmREVOLUTION.SystemCore.CoreStatus).forEach((key) => {
 		if (ParadigmREVOLUTION.SystemCore.CoreStatus[key].Status == 'FAILED TO LOAD') OK = false;
@@ -1982,15 +1982,15 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 	window.chain = chain;
 
 	//NOTE - Datqastore Initialization
-	let ram_db = ParadigmREVOLUTION.Datastores.SurrealDB.Memory;
-	let local_systemdb = ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemDB;
-	let local_datadb = ParadigmREVOLUTION.Datastores.SurrealDB.LocalDataDB;
-	let test_db = ParadigmREVOLUTION.Datastores.SurrealDB.TestServer;
+	// let ram_db = ParadigmREVOLUTION.Datastores.SurrealDB.Memory;
+	// let local_systemdb = ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemDB;
+	// let local_datadb = ParadigmREVOLUTION.Datastores.SurrealDB.LocalDataDB;
+	// let test_db = ParadigmREVOLUTION.Datastores.SurrealDB.TestServer;
 
-	window.ram_db = ram_db;
-	window.local_systemdb = local_systemdb;
-	window.local_datadb = local_datadb;
-	window.test_db = test_db;
+	// window.ram_db = ram_db;
+	// window.local_systemdb = local_systemdb;
+	// window.local_datadb = local_datadb;
+	// window.test_db = test_db;
 
 	// NOTE - START LOGIN SEQUENCE
 	ParadigmREVOLUTION.Utility.DOMUtilities.showSchemaModal({
@@ -2019,6 +2019,13 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 			},
 			"Schema": [
 				{
+					"id": "signin",
+					"label": "Sign in",
+					"type": "label",
+					"field_class": "is-selectable-box",
+					"form": 1
+				},
+				{
 					"id": "username",
 					"label": "Nama",
 					"type": "text",
@@ -2035,11 +2042,28 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				}
 			]
 		}
-	}, {}, (dataset, modal) => {
-		let data = dataset.data;
-		let passedData = dataset.passedData;
+	}, {}, (modalContainer) => { 
+		modalContainer.querySelector('#id_modal_connection_type___password').addEventListener('keyup', (e) => {
+			if (e.key === 'Enter') { 
+				modalContainer.querySelector('#confirmButton').click();
+			}
+		});
+	}, (dataset, modal) => {
+		const data = dataset.data;
+		const passedData = dataset.passedData;
 		let login = false;
-		if (data.username == 'admin' && data.password == 'admin') {
+
+		// let testUser =
+		let testUsers = [
+			{ username: 'admin', password: 'admin' },
+			{ username: 'user1', password: 'password1' },
+			{ username: 'user2', password: 'password2' }
+		];
+
+		const currentUser = data;
+		const authUser = testUsers.find(u => u.username === data.username && u.password === data.password);
+		// if (data.username == testUser.username && data.password == testUser.password) {
+		if (authUser) {
 			// clean up
 			modal.modal.classList.remove('fade-in');
 			modal.modal.classList.add('fade-out');
@@ -2061,11 +2085,9 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 					test_db: ParadigmREVOLUTION.Datastores.SurrealDB.TestServer
 				}
 			);
-			window.Flow = Flow;
 
 			Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
 			if (Flow.FormContainer.innerHTML != '') {
-				console.log('masuk ke init all');
 				ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.forEach((tab) => { 
 					// console.log('tab :>> ', tab);
 					let temp = `
@@ -2093,6 +2115,19 @@ document.addEventListener('SurrealDBEnginesLoaded', async () => {
 				//Flow.Form.Events.InitializeFormControls();
 				
 				InitializeFormControls(Flow);
+
+				ParadigmREVOLUTION.MQTTclients = { "System": null };
+				ParadigmREVOLUTION.MQTTclients.default = ParadigmREVOLUTION.Utility.MQTT.setupMQTT(
+					ParadigmREVOLUTION.SystemCore.Modules.mqtt,
+					'ws://localhost:8000', // ✅ WebSocket-compatible URL
+					{
+						subscribeTopic: 'System/Login',
+						publishTopic: 'System/Login',
+						messageToPublish: `${currentUser.username} has logged in`,
+					},
+					currentUser
+				);
+				console.log('ParadigmREVOLUTION.MQTTclients :>> ', ParadigmREVOLUTION.MQTTclients);
 				document.dispatchEvent(new Event('ParadigmREVOLUTIONLoginSuccess'));
 			}
 			//NOTE - Chain execution!

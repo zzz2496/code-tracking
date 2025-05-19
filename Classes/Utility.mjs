@@ -3104,6 +3104,9 @@ export class Utility {
 				const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
 				let inputField = {};
 				switch (type) {
+					case 'label':
+						inputField = {};
+						break;
 					case 'action':
 						inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button form-action-button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
 						break;
@@ -3387,7 +3390,7 @@ export class Utility {
 			if (callback) callback();
 			return html;
 		}),
-		showSchemaModal: (schema, passedData, callback, buttons = {cancel: 'Cancel', confirm: 'Confirm', close:1 }) => {
+		showSchemaModal: (schema, passedData, events, callback, buttons = {cancel: 'Cancel', confirm: 'Confirm', close:1 }) => {
 			// Create modal HTML as a string with animation classes
 			let schemastr = this.DOMUtilities.traverseDOMProxyOBJ(this.DOMUtilities.GenerateSchemaToParadigmJSON('id_modal_connection_type', schema.Dataset.Schema, this, 1, ''));
 			let footer = '';
@@ -3403,7 +3406,7 @@ export class Utility {
 				<div id="connectionModal" class="modal is-active fade-in">
 					<div class="modal-background"></div>
 					<div class="modal-card" style="width: 60rem;">
-						<header class="modal-card-head" style="display: flex; align-items: center; ${buttons.close ? 'justify-content: space-between;' : 'justify-content: center;'}">
+						<header class="modal-card-head has-text-centered" style="display: flex; align-items: center; ${buttons.close ? 'justify-content: space-between;' : 'justify-content: center;'}">
 							<p class="modal-card-title" style="${buttons.close ? '' : 'flex-grow: 0;'} schema.style">${schema.label}</p>
 							${buttons.close ? `<button class="delete" aria-label="close" id="cancelButton"></button>` : ''}
 						</header>
@@ -3427,6 +3430,8 @@ export class Utility {
 			const cancelButton = modalContainer.querySelector('#cancelButton');
 			const cancelButtonFooter = modalContainer.querySelector('#cancelButtonFooter');
 		
+			if (events) events(modalContainer);
+
 			// // Add CSS for animations
 			// const style = document.createElement('style');
 			// document.head.appendChild(style);
@@ -5555,6 +5560,71 @@ export class Utility {
 		}
 	};
 	// NOTE - Datastore related methods
-	DataStore = {}
+	DataStore = {};
+	MQTT = {
+		setupMQTT: (mqtt, brokerUrl, data, userinfo) => {
+			const username = userinfo.username;
+			const password = userinfo.password;
+			const client = mqtt.connect(brokerUrl, {
+				username,
+				password,
+				reconnectPeriod: 2000,  // optional: auto-reconnect every 2s
+				connectTimeout: 5000,   // optional: timeout after 5s
+			});
+
+			let reconnectAttempts = 0;
+			const maxReconnects = 3;
+
+			client.on('connect', () => {
+			console.log('✅ Connected to MQTT broker:', brokerUrl);
+			reconnectAttempts = 0;
+
+			
+			if (data.subscribeTopic) client.subscribe(data.subscribeTopic, (err) => {
+				if (err) {
+					console.error('❌ Subscribe error:', err);
+				} else {
+					console.log(`📥 Subscribed to topic: ${data.subscribeTopic}`);
+				}
+			});
+
+			if (data.publishTopic && data.messageToPublish) client.publish(data.publishTopic, data.messageToPublish, (err) => {
+				if (err) {
+					console.error('❌ Publish error:', err);
+				} else {
+					console.log(`📤 Message published to ${data.publishTopic}: ${data.messageToPublish}`);
+				}
+			});
+			});
+
+			client.on('message', (topic, message) => {
+				console.log(`📨 Message received on ${topic}: ${message.toString()}`);
+			});
+
+			client.on('error', (err) => {
+				console.error('❌ MQTT Error:', err.message);
+				reconnectAttempts++;
+				if (reconnectAttempts >= maxReconnects) {
+					console.warn('⚠️ Max reconnect attempts reached. Stopping client.');
+					client.end();
+				}
+			});
+
+			client.on('offline', () => {
+				console.warn('📴 Client offline.');
+			});
+
+			client.on('close', () => {
+				console.warn('🔌 Connection closed.');
+				reconnectAttempts++;
+				if (reconnectAttempts >= maxReconnects) {
+					console.warn('⚠️ Max reconnect attempts reached. Stopping client.');
+					client.end();
+				}
+			});
+
+			return client;
+		}
+	};
 };
 if (cr) console.log('<<< Utility.mjs');
