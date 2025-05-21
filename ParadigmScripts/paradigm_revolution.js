@@ -774,7 +774,7 @@ function InitializeFormControls(oFlow) {
 				console.log('qstr sebelum unselect:>> ', qstr);
 				ParadigmREVOLUTION.Datastores.SurrealDB.Memory.Instance.query(qstr).then((edges) => {
 					const dbedges = edges[0];
-					const parentSet = flow.getActiveTab('tab-graph-selector-container');
+					const parentSet = oFlow.getActiveTab('tab-graph-selector-container');
 
 					console.log('reflow edge connections', parentSet, dbedges);
 					setTimeout(() => {
@@ -1996,35 +1996,49 @@ document.addEventListener('SurrealDBLoaded', async () => {
 	ParadigmREVOLUTION.Utility.DOMUtilities.showSchemaModal({
 		"id": "paradigmrevolution_login",
 		"label": `<span style="font-family: 'Rochester'; font-size:3rem;">Paradigm </span><span style="font-family: 'Bebas Neue'; font-weight: 100; font-style:italic; font-size:3.6rem;">REVOLUTION</span>`,
+		
 		"style": "",
 		"type": "record",
 		"typeSelection": ["record", "array"],
 		"icon": "",
 		"order": 100,
+		"is_horizontal_form": false,
 		"Dataset": {
 			"Layout": {
 				"Form": {},
 				"Properties": {
 					"FormEntry": {
 						"Show": 1,
-						"Label": "Form Select Connection Type",
-						"ShowLabel": 1
+						"Label": "Login form",
+						"ShowLabel": 1,
+						"Style": "width: 40rem; margin-left:10rem; margin-right:10rem;",
+						"Class": "mx-6 mb-4",
 					},
 					"Preview": {
 						"Show": 1,
-						"Label": "Form Select Connection Type",
+						"Label": "Login form",
 						"ShowLabel": 1
 					}
 				}
 			},
 			"Schema": [
-				{
-					"id": "signin",
-					"label": "Sign in",
-					"type": "label",
-					"field_class": "is-selectable-box",
-					"form": 1
-				},
+				// {
+				// 	"id": "login",
+				// 	"label": "Login",
+				// 	"type": "label",
+				// 	"style":"font-size: 2rem; font-weight: bold; text-align: center; margin-bottom: 1rem;",
+				// 	"field_class": "is-justify-content-center",
+				// 	"form": 1
+				// },
+				// {
+				// 	"id": "separator",
+				// 	"label": "separator",
+				// 	"type": "separator-fullwidth",
+				// 	"style": "",
+				// 	"element_class": "has-background-primary-dark",
+				// 	"field_class": "pb-6",
+				// 	"form": 1
+				// },
 				{
 					"id": "username",
 					"label": "Nama",
@@ -2039,103 +2053,152 @@ document.addEventListener('SurrealDBLoaded', async () => {
 					"value": "",
 					"field_class": "is-selectable-box",
 					"form": 1
+				},
+				{
+					"id": "masuk",
+					"label": "",
+					"type": "button",
+					"value": "Masuk",
+					"element_class": "is-success",
+					"field_class": "",
+					"form": 1
 				}
 			]
 		}
-	}, {}, (modalContainer) => { 
-		modalContainer.querySelector('#id_modal_connection_type___password').addEventListener('keyup', (e) => {
+	}, {}, (modalContainer) => {
+		modalContainer.querySelector('#paradigmrevolution_login___username').focus();
+		modalContainer.querySelector('#paradigmrevolution_login___password').addEventListener('keyup', (e) => {
 			if (e.key === 'Enter') { 
-				modalContainer.querySelector('#confirmButton').click();
+				modalContainer.querySelector('#paradigmrevolution_login___masuk').click();
 			}
 		});
 	}, (dataset, modal) => {
-		const data = dataset.data;
-		const passedData = dataset.passedData;
-		let login = false;
-
-		// let testUser =
-		let testUsers = [
-			{ username: 'admin', password: 'admin' },
-			{ username: 'user1', password: 'password1' },
-			{ username: 'user2', password: 'password2' }
-		];
-
-		const currentUser = data;
-		const authUser = testUsers.find(u => u.username === data.username && u.password === data.password);
-		// if (data.username == testUser.username && data.password == testUser.password) {
-		if (authUser) {
-			// clean up
-			modal.modal.classList.remove('fade-in');
-			modal.modal.classList.add('fade-out');
-			setTimeout(() => {
-				modal.modalContainer.remove(); // Remove the modal
-			}, 300); // Matches the animation duration
-			// clean up
-			login = true;
-			// NOTE - IF LOGIN SUCCESS, THEN Render Main Form, get something on the screen
-			let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(
-				document.querySelector('#ParadigmREVOLUTION'),
-				ParadigmREVOLUTION.Utility,
-				ParadigmREVOLUTION.Utility.BasicMath,
-				chain,
-				{
-					ram_db: ParadigmREVOLUTION.Datastores.SurrealDB.Memory,
-					local_systemdb: ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemDB,
-					local_datadb: ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB,
-					test_db: ParadigmREVOLUTION.Datastores.SurrealDB.TestServer
+		
+		console.log('modal :>> ', modal.modalContainer);
+		let buttonMasuk = modal.modalContainer.querySelector('#paradigmrevolution_login___masuk');
+		console.log('buttonMasuk :>> ', buttonMasuk);
+		buttonMasuk.addEventListener('click', (e) => {
+			let data = {};
+			modal.modalContainer.querySelector('.modal-form').querySelectorAll('input, button, select, textarea').forEach(input => {
+				const key = input.id.split('___')[1];
+				switch (input.type) {
+					case 'checkbox':
+						data[key] = input.checked;
+						break;
+					default:
+						data[key] = input.value;
+						break;
 				}
-			);
+			});
 
-			Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
-			if (Flow.FormContainer.innerHTML != '') {
-				ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.forEach((tab) => { 
-					// console.log('tab :>> ', tab);
-					let temp = `
-						<li class="${tab.LinkClass}">
-							<a class="${tab.AnchorClass}" data-tabtype="${tab.TabType}">${tab.Label}</a>
-						</li>
-					`;
-					Flow.FormContainer.querySelector('#tab-graph-selector-container').innerHTML += temp;
-				});
+			// const data = dataset.data;
+			console.log('data :>> ', data);
+			const passedData = dataset.passedData;
+			let login = false;
 
-				if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status in paradigm_revolution.js');
-				let datastore_status = '';
-				Object.entries(ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
-					datastore_status += `<button class="datastore-status-indicator button is-small p-2 m-0 mr-1" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>` ;
-				});
-				document.querySelector('#datastore_status').innerHTML = datastore_status;
-				if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status in paradigm_revolution.js');
+			// let testUser =
+			let testUsers = [
+				{ username: 'admin', password: 'admin' },
+				{ username: 'user1', password: 'password1' },
+				{ username: 'user2', password: 'password2' }
+			];
 
-				Flow.FormContainer.classList.remove('hide');
-				Flow.FormContainer.classList.add('show');
-
-				CurrentDocument.Dataset.Forms = [ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypes, ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypeDefinition];
-				Flow.Forms = CurrentDocument.Dataset.Forms;
-
-				//Flow.Form.Events.InitializeFormControls();
-				
-				InitializeFormControls(Flow);
-
-				ParadigmREVOLUTION.MQTTclients = { "System": null };
-				ParadigmREVOLUTION.MQTTclients.default = ParadigmREVOLUTION.Utility.MQTT.setupMQTT(
-					ParadigmREVOLUTION.SystemCore.Modules.mqtt,
-					'ws://localhost:8000', // ✅ WebSocket-compatible URL
+			const currentUser = data;
+			const authUser = testUsers.find(u => u.username === data.username && u.password === data.password);
+			// if (data.username == testUser.username && data.password == testUser.password) {
+			if (authUser) {
+				// clean up
+				modal.modal.classList.remove('fade-in');
+				modal.modal.classList.add('fade-out');
+				setTimeout(() => {
+					modal.modalContainer.remove(); // Remove the modal
+				}, 300); // Matches the animation duration
+				// clean up
+				login = true;
+				// NOTE - IF LOGIN SUCCESS, THEN Render Main Form, get something on the screen
+				let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(
+					document.querySelector('#ParadigmREVOLUTION'),
+					ParadigmREVOLUTION.Utility,
+					ParadigmREVOLUTION.Utility.BasicMath,
+					chain,
 					{
-						subscribeTopic: 'System/Login',
-						publishTopic: 'System/Login',
-						messageToPublish: `${currentUser.username} has logged in`,
-					},
-					currentUser
+						ram_db: ParadigmREVOLUTION.Datastores.SurrealDB.Memory,
+						local_systemdb: ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemDB,
+						local_datadb: ParadigmREVOLUTION.Datastores.SurrealDB.IndexedDB,
+						test_db: ParadigmREVOLUTION.Datastores.SurrealDB.TestServer
+					}
 				);
-				console.log('ParadigmREVOLUTION.MQTTclients :>> ', ParadigmREVOLUTION.MQTTclients);
-				document.dispatchEvent(new Event('ParadigmREVOLUTIONLoginSuccess'));
+
+				Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
+				if (Flow.FormContainer.innerHTML != '') {
+					ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.forEach((tab) => {
+						// console.log('tab :>> ', tab);
+						let temp = `
+							<li class="${tab.LinkClass}">
+								<a class="${tab.AnchorClass}" data-tabtype="${tab.TabType}">${tab.Label}</a>
+							</li>
+						`;
+						Flow.FormContainer.querySelector('#tab-graph-selector-container').innerHTML += temp;
+					});
+
+					if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status in paradigm_revolution.js');
+					let datastore_status = '';
+					Object.entries(ParadigmREVOLUTION.Datastores.SurrealDB).forEach(([idx, entry]) => {
+						datastore_status += `<button class="datastore-status-indicator button is-small p-2 m-0 mr-1" value="${idx}" title="${entry.Metadata.Label} DISABLED">${entry.Metadata.ShortLabel}</button>`;
+					});
+					document.querySelector('#datastore_status').innerHTML = datastore_status;
+					if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status in paradigm_revolution.js');
+
+					Flow.FormContainer.classList.remove('hide');
+					Flow.FormContainer.classList.add('show');
+
+					CurrentDocument.Dataset.Forms = [ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypes, ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypeDefinition];
+					Flow.Forms = CurrentDocument.Dataset.Forms;
+
+					//Flow.Form.Events.InitializeFormControls();
+					
+					InitializeFormControls(Flow);
+
+					console.log("Publising into MQTT");
+					ParadigmREVOLUTION.MQTTclients = {
+						"System": {
+							"Login": null
+						}
+					};
+					ParadigmREVOLUTION.MQTTclients.System.Login = ParadigmREVOLUTION.Utility.MQTT.setupMQTT(
+						ParadigmREVOLUTION.SystemCore.Modules.mqtt,
+						'wss://localhost:8888', // ✅ WebSocket-compatible URL
+						{
+							subscribeTopic: 'System/Login',
+							publishTopic: 'System/Login',
+							messageToPublish: `${currentUser.username} has logged in`,
+						},
+						currentUser
+					);
+					console.log('ParadigmREVOLUTION.MQTTclients :>> ', ParadigmREVOLUTION.MQTTclients);
+					document.dispatchEvent(new Event('ParadigmREVOLUTIONLoginSuccess'));
+				}
+				//NOTE - Chain execution!
+				Flow.Form.Run.executeChain();
+			} else {
+				// NOTE  -IF LOGIN FAILED, THEN ...
+				alert('Login Failed');
+				console.log('Login Failed');
 			}
-			//NOTE - Chain execution!
-			Flow.Form.Run.executeChain();		
-		} else {
-			// NOTE  -IF LOGIN FAILED, THEN ...
-			alert('Login Failed');
-			console.log('Login Failed');
-		}
-	}, { confirm: 'Masuk' });
+		});
+	}, {}
+		// {
+		// confirm: {
+		// 	label: 'Masuk',
+		// 	icon: 'fa-solid fa-right-to-bracket',
+		// 	class: 'is-primary',
+		// 	style: 'width: 100%;'
+		// },
+		// // cancel: {
+		// 	label: 'Batal',
+		// 	icon: 'fa-solid fa-xmark',
+		// 	class: 'is-danger'
+		// }
+		// }
+	);
 });

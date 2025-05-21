@@ -69,6 +69,10 @@ aedes.on('client', client => {
   console.log(`👤 Client connected: ${client?.id || 'unknown'}`);
 });
 
+aedes.on('clientReady', (client) => {
+  console.log(`✅ ${client.id} connected using MQTT v${client.version}`);
+});
+
 aedes.on('clientDisconnect', client => {
   console.log(`❌ Client disconnected: ${client?.id || 'unknown'}`);
 });

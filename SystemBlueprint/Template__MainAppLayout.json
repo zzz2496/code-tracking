@@ -300,7 +300,8 @@
 					{ "comment": "Core Status Container", "tag": "div",     "id": "", "innerHTML": "", "style":"", "class": "", "content": [] }
 				]},
 				{ "comment": "Helper Container",      "tag": "div", "id": "debug_helper_status", "innerHTML": "", "style":"width:100%;", "class": "app_graph_controls_containers is-gapless my-3 p-0 is-flex is-flex-wrap-wrap is-justify-content-center is-full", "content": [
-					{ "comment": "SuQL", "tag": "textarea", "id":"console_suql_input", "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:fit-content;", "innerHTML": ""},								{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
+					{ "comment": "SuQL", "tag": "textarea", "id":"console_suql_input", "class":"textarea app_graph_controls_containers is-gapless is-flex is-flex-wrap-wrap is-full", "style":"height:fit-content;", "innerHTML": ""},
+					{ "comment": "Select Storage", "tag":"div", "class":"select", "content":[
 						{"tag": "select", "type":"select", "class":"select", "id":"console_datastorage_select", "content":[
 							{ "tag": "option", "value": "Memory", "innerHTML": "Memory" },
 							{ "tag": "option", "value": "LocalSystemStorage", "innerHTML": "LocalSystemStorage" },
@@ -308,7 +309,7 @@
 							{ "tag": "option", "value": "TestServer", "innerHTML": "TestServer" }
 						]}
 					]},
-					{ "comment": "Go button", "tag": "div",    "id":"console_suql_execute", "class":"button", "innerHTML":"Run<i class=\"ml-2 fa-solid fa-play\"></i>"}
+					{ "comment": "Go button", "tag": "div",    "id":"console_suql_execute", "class":"button", "innerHTML":"SuQL Run<i class=\"ml-2 fa-solid fa-play\"></i>"}
 				] },
 				{ "comment": "Debugging", "tag": "div", "class":"box", "id": "debugging", "style":"min-height:30rem; max-height:30rem; overflow:auto;", "innerHTML": "", "content": [] }
 			]

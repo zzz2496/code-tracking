@@ -3097,21 +3097,23 @@ export class Utility {
 	};
 	// NOTE - DOMElements related methods
 	DOMUtilities = {
-		GenerateSchemaToParadigmJSON: (function ($id, $schema, $util, is_horizontal = false, form_container = "") {
+		GenerateSchemaToParadigmJSON: (function ($schema, $util, form_container = "") {
 			// console.log('generateSchemaToParadigmJSON', form_container);
 			function makeFieldParadigmJSON($id, field, utilily, form_container) {
-				// console.log('makeFieldParadigmJSON', form_container);
-				const { id, type, label = '', form, readonly = false, value = '', class: d_class = '', head, tail } = field;
+				console.log('makeFieldParadigmJSON', form_container, field);
+				const { id, type, label = '', form, readonly = false, value = '', class: element_class = '', head, tail, style = '' } = field;
 				let inputField = {};
 				switch (type) {
 					case 'label':
 						inputField = {};
 						break;
 					case 'action':
-						inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button form-action-button ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+						inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button form-action-button ${element_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
 						break;
 					case 'button':
-						inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button paradigm-form-element in-form-button is-fullwidth ${d_class} `, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')) };
+						console.log('masuk button!');
+						console.log('field :>> ', field);
+						inputField = { comment: "Button", tag: "button", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `button paradigm-form-element in-form-button is-fullwidth ${field.element_class} `, style: style, value: value, readonly: readonly, type: 'button', innerHTML: label || utilily.Strings.UCwords(value.replace(/\_/g, ' ')) };
 						break;
 					case 'separator':
 						inputField = { comment: "HR", tag: "hr" };
@@ -3120,33 +3122,33 @@ export class Utility {
 						inputField = {
 							comment: "label", tag: "label", class: "checkbox  mt-2", content: [
 								{
-									comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `paradigm-form-element ${d_class}`, value: value, readonly: readonly, type: 'checkbox', content: [
+									comment: "Checkbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `paradigm-form-element ${element_class}`, value: value, readonly: readonly, type: 'checkbox', content: [
 										{tag:"label", class:"m-1" } //innerHTML: label || utilily.Strings.UCwords(id.replace(/\_/g, ' '))
 								] }
 							]
 						};
 						break;
 					case 'number':
-						inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `input paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), autocomplete: 'off'};
+						inputField = { comment: "Number inputbox", tag: "input", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `input paradigm-form-element ${element_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), autocomplete: 'off'};
 						break;
 					case 'textarea':
-						inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `textarea paradigm-form-element ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), autocomplete: 'off'};
+						inputField = { comment: "Textarea box", tag: "textarea", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `textarea paradigm-form-element ${element_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), autocomplete: 'off'};
 						break;
 					case 'select':
 						inputField = {
 							comment: "Select container", tag: "div", class: "select is-link is-fullwidth ", content: [
-								{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `select_input paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : value}` }
+								{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, data: {form_container: form_container}, class: `select_input paradigm-form-element ${element_class}`, innerHTML: `${Array.isArray(value) ? value.map(option => `<option value="${option}">${option}</option>`).join('') : value}` }
 							]
 						};
 						break;
 					case 'text_select':
-						inputField = { comment: "Searchable textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, data: {form_container: form_container}, class: `input paradigm-form-element text_select is-link ${d_class} `, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container } };
+						inputField = { comment: "Searchable textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, data: {form_container: form_container}, class: `input paradigm-form-element text_select is-link ${element_class} `, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container } };
 						break;
 					case 'password':
-						inputField = { comment: "Password", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${d_class} `, value: value, readonly: readonly, type: 'password', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container }};
+						inputField = { comment: "Password", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${element_class} `, value: value, readonly: readonly, type: 'password', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container }};
 						break;
 					default:
-						inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${d_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container }};
+						inputField = { comment: "Textbox", tag: "input", id: `${$id}___${id}`, autocomplete:"off", name: id, class: `input text_input paradigm-form-element is-info ${element_class} `, value: value, readonly: readonly, type: 'text', label: label || utilily.Strings.UCwords(id.replace(/\_/g, ' ')), data: { selectValues: value, form_container: form_container }};
 						break;
 				}
 				// Handle $head and $tail cases
@@ -3183,7 +3185,7 @@ export class Utility {
 								comment: "Container form", tag: "p", class: "control ", content: [
 									{
 										comment: "Container form", tag: "div", class: "select", content: [
-											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${head.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input head-paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${head.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input head-paradigm-form-element ${element_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
 										]
 									}
 								]
@@ -3229,7 +3231,7 @@ export class Utility {
 									comment: "Container form", tag: "p", class: "control ", content: [
 										{
 											comment: "Container form", tag: "div", class: "select", content: [
-												{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${tail.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input tail-paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+												{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${tail.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input tail-paradigm-form-element ${element_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
 											]
 										}
 									]
@@ -3266,7 +3268,7 @@ export class Utility {
 								comment: "Container form", tag: "p", class: "control", content: [
 									{
 										comment: "Container form", tag: "div", class: "select", content: [
-											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${head.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input head-paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${head.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input head-paradigm-form-element ${element_class}`, innerHTML: `${Array.isArray(head.value) ? head.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
 										]
 									}
 								]
@@ -3302,7 +3304,7 @@ export class Utility {
 								comment: "Container form", tag: "p", class: "control", content: [
 									{
 										comment: "Container form", tag: "div", class: "select", content: [
-											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${tail.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input tail-paradigm-form-element ${d_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
+											{ comment: "Select", tag: "select", id: `${$id}___${id}`, name: id, style: `${tail.width == 'short' ? 'width: 2rem;' : 'auto'}`, class: `select_input tail-paradigm-form-element ${element_class}`, innerHTML: `${Array.isArray(tail.value) ? tail.value.map(option => `<option value="${option}">${option}</option>`).join('') : ''}` }
 										]
 									}
 								]
@@ -3312,18 +3314,102 @@ export class Utility {
 					return tObj;
 				}
 			}
-			let Obj = { comment: "Paradigm Form", tag: "form", class: "paradigm-form", style: "", content: [] };
+			let Obj = { comment: "Paradigm Form", tag: "form", class: `paradigm-form ${$schema.Dataset.Layout.Properties.FormEntry.Class}`, style: "", content: [] };
 			let tObj = {};
 			let tfield = {};
 			let Util = $util;
-			$schema.forEach((field, index) => {
-				const { id, label = '', form, field_class } = field;
-	
+			let tlabel = '';
+			let temp;
+			let $id = $schema.id;
+			let is_horizontal = $schema.is_horizontal_form === undefined ? true : $schema.is_horizontal_form;
+			$schema.Dataset.Schema.forEach((field, index) => {
+				const { id, label = '', form, field_class, element_class = '', style } = field;
+				// console.log('start');
 				if (form === 1) {
-					if (label || field.type !== 'separator') {
+					// console.log('ada form');
+					if (label) {
+						// console.log('ada label');
+						switch (field.type) {
+							case 'label':
+								// console.log('masuk label');
+								tfield = {comment: "Field", tag: "div", class: `field m-0 p-0 ${field_class} ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
+
+								tlabel = field.label || (field.type === 'action' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
+								tObj = { comment: "Label", tag: "label", class: "label m-0 p-0", id: `id_label___${$id}___${id}`, style: style ? style : "", innerHTML: `${tlabel}`, content: [] };
+								tfield.content.push(tObj);
+
+								Obj.content.push(tfield);
+
+								break;
+							case 'separator':
+								// console.log('masuk separator');
+								tfield = {comment: "Field", tag: "div", class: `field m-0 py-4 ${field_class} ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
+								if (is_horizontal) {
+									tObj = {comment: "Field label", tag: "div", class: `field-label is-normal `, style: "", innerHTML: "", content: []};
+								} else {
+									tObj = { comment: "Label", tag: "label", class: `label`, id: `id_label___${$id}___${id}`, style: "", innerHTML: "", content: [] };
+								}
+								tfield.content.push(tObj);
+
+								tObj = {
+									comment: "Field body", tag: "div", class: `field-body`, style: "", innerHTML: "", content: [
+										{ comment: "Separator", tag: "div", class: `${element_class}`, id: `id_separator___${$id}___${id}`, style: style ? style : "height: 2px; width: 100%; margin: 0; padding:0; border: none;", content: [] }
+								] };
+								tfield.content.push(tObj);
+
+								Obj.content.push(tfield);
+								break;
+							case 'separator-fullwidth':
+								// console.log('masuk separator-fullwidth');
+								tfield = {comment: "Field", tag: "div", class: `separator-fullwidth field m-0 py-4 ${field_class} ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
+
+								tObj = {
+									comment: "Field body", tag: "div", class: `field-body`, style: "", innerHTML: "", content: [
+										{ comment: "Separator", tag: "div", class: `${element_class}`, id: `id_separator___${$id}___${id}`, style: style ? style : "height: 2px; width: 100%; margin: 0; padding:0; border: none;", content: [] }
+								] };
+								tfield.content.push(tObj);
+
+								Obj.content.push(tfield);
+								break;
+							default:
+								// console.log('masuk default');
+								tfield = {comment: "Field", tag: "div", class: `field ${field_class} ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
+
+								tlabel = field.label || (field.type === 'action' ? '' : label || Util.Strings.UCwords(label.replace(/_/g, ' ')));
+								if (is_horizontal) {
+									tObj = {
+										comment: "Field label", tag: "div", class: `field-label is-normal `, style: "", innerHTML: "", content: [
+											{ comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] }
+										]
+									};
+								} else {
+									tObj = { comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] };
+								}
+								tfield.content.push(tObj);
+
+								temp = makeFieldParadigmJSON($id, field, $util, form_container);
+								if (Array.isArray(temp)) {
+									temp = [...temp];
+								} else {
+									temp = [temp];
+								}
+								tObj = {
+									comment: "Field body", tag: "div", class: `field-body`, style: "", innerHTML: "", content: [
+										{ comment: "Field", tag: "div", class: `field has-addons has-addons-centered `, style: "", innerHTML: "", content: temp }
+								] };
+								tfield.content.push(tObj);
+								Obj.content.push(tfield);
+
+								break;
+						}
+					} else {
+						console.log('masuk else!');
 						tfield = {comment: "Field", tag: "div", class: `field ${field_class} ${is_horizontal ? 'is-horizontal' : ''}`, style: "", innerHTML: "", content: []};
 
-						let tlabel = field.label || (field.type === 'action' ? '' : label || Util.Strings.UCwords(id.replace(/_/g, ' ')));
+						tlabel = field.label || (field.type === 'action' ? '' : label || Util.Strings.UCwords(label.replace(/_/g, ' ')));
+						if (tlabel === '') tlabel = '&nbsp;';
+						console.log('tlabel :>> ', tlabel);
+
 						if (is_horizontal) {
 							tObj = {
 								comment: "Field label", tag: "div", class: `field-label is-normal `, style: "", innerHTML: "", content: [
@@ -3333,21 +3419,24 @@ export class Utility {
 						} else {
 							tObj = { comment: "Label", tag: "label", class: "label", id: `id_label___${$id}___${id}`, style: "", innerHTML: `${tlabel}`, content: [] };
 						}
+						console.log('tObj :>> ', tObj);
 						tfield.content.push(tObj);
+
+						temp = makeFieldParadigmJSON($id, field, $util, form_container);
+						if (Array.isArray(temp)) {
+							temp = [...temp];
+						} else {
+							temp = [temp];
+						}
+						tObj = {
+							comment: "Field body", tag: "div", class: `field-body`, style: "", innerHTML: "", content: [
+								{ comment: "Field", tag: "div", class: `field has-addons has-addons-centered `, style: "", innerHTML: "", content: temp }
+						] };
+						tfield.content.push(tObj);
+						Obj.content.push(tfield);
 					}
-					let temp = makeFieldParadigmJSON($id, field, $util, form_container);
-					if (Array.isArray(temp)) {
-						temp = [...temp];
-					} else {
-						temp = [temp];
-					}
-					tObj = {
-						comment: "Field body", tag: "div", class: `field-body`, style: "", innerHTML: "", content: [
-							{ comment: "Field", tag: "div", class: `field has-addons has-addons-centered `, style: "", innerHTML: "", content: temp }
-					] };
-					tfield.content.push(tObj);
-					Obj.content.push(tfield);
 				}
+				// console.log('end');
 			});
 			// Obj.content.push(tObj);
 			return Obj;
@@ -3390,27 +3479,27 @@ export class Utility {
 			if (callback) callback();
 			return html;
 		}),
-		showSchemaModal: (schema, passedData, events, callback, buttons = {cancel: 'Cancel', confirm: 'Confirm', close:1 }) => {
+		showSchemaModal: (schema, passedData, events, callback, buttons = { cancel: { label: 'Cancel' }, confirm: { label: 'Confirm' }, close:1 }) => {
 			// Create modal HTML as a string with animation classes
-			let schemastr = this.DOMUtilities.traverseDOMProxyOBJ(this.DOMUtilities.GenerateSchemaToParadigmJSON('id_modal_connection_type', schema.Dataset.Schema, this, 1, ''));
+			let schemastr = this.DOMUtilities.traverseDOMProxyOBJ(this.DOMUtilities.GenerateSchemaToParadigmJSON(schema, this, 1, ''));
 			let footer = '';
-			if (buttons) { 
+			if (buttons && (buttons.cancel || buttons.confirm)) {
 				footer = `
-						<footer class="modal-card-foot" style="${buttons.cancel && buttons.confirm ? 'justify-content: space-between;' : 'justify-content: center;'}; display: flex; gap: 20px;">
-							${buttons.cancel ? `<button class="button" id="cancelButtonFooter">${buttons.cancel}</button>` : ''}
-							${buttons.confirm ? `<button class="button is-success" id="confirmButton">${buttons.confirm}</button>` : ''}
+						<footer class="modal-card-foot ${schema.Dataset.Layout.Properties.FormEntry.Class}" style="${buttons.cancel && buttons.confirm ? 'justify-content: space-between;' : 'justify-content: center;'}; display: flex; gap: 20px;">
+							${buttons.cancel ? ` <button class="button"            id="cancelButtonFooter" style="${buttons.cancel.style}">${buttons.cancel.label}</button>` : ''}
+							${buttons.confirm ? `<button class="button is-success" id="confirmButton"      style="${buttons.confirm.style}">${buttons.confirm.label}</button>` : ''}
 						</footer>
 				`;
 			}
 			const modalHTML = `
 				<div id="connectionModal" class="modal is-active fade-in">
 					<div class="modal-background"></div>
-					<div class="modal-card" style="width: 60rem;">
+					<div class="modal-card" style="${schema.Dataset.Layout.Properties.FormEntry.Style === undefined ? 'width 60rem;' : schema.Dataset.Layout.Properties.FormEntry.Style};">
 						<header class="modal-card-head has-text-centered" style="display: flex; align-items: center; ${buttons.close ? 'justify-content: space-between;' : 'justify-content: center;'}">
 							<p class="modal-card-title" style="${buttons.close ? '' : 'flex-grow: 0;'} schema.style">${schema.label}</p>
 							${buttons.close ? `<button class="delete" aria-label="close" id="cancelButton"></button>` : ''}
 						</header>
-						<section class="modal-card-body modal-form">
+						<section class="modal-card-body modal-form" style="display: flex; flex-direction: column; gap: 10px;">
 							${schemastr}
 						</section>
 						${footer}
@@ -3447,21 +3536,25 @@ export class Utility {
 			}
 		
 			// Handle confirm button click
-			confirmButton.onclick = () => {
-				let data = {};
-				document.querySelector('.modal-form').querySelectorAll('input, button, select, textarea').forEach(input => {
-					const key = input.id.split('___')[1];
-					switch (input.type) { 
-						case 'checkbox':
-							data[key] = input.checked;
-							break;
-						default:
-							data[key] = input.value;
-							break;
-					}
-				});
-				// cleanUp(); // Clean up modal
-				callback({ data: data, passedData: passedData }, {modal: modal, modalContainer: modalContainer}); // Execute the callback with the selected type	
+			if (buttons.confirm) { 
+				confirmButton.onclick = () => {
+					let data = {};
+					document.querySelector('.modal-form').querySelectorAll('input, button, select, textarea').forEach(input => {
+						const key = input.id.split('___')[1];
+						switch (input.type) {
+							case 'checkbox':
+								data[key] = input.checked;
+								break;
+							default:
+								data[key] = input.value;
+								break;
+						}
+					});
+					// cleanUp(); // Clean up modal
+					callback({ data: data, passedData: passedData }, { modal: modal, modalContainer: modalContainer }); // Execute the callback with the selected type	
+				}
+			} else {
+				callback({ passedData: passedData }, { modal: modal, modalContainer: modalContainer }); // Execute the callback with the selected type	
 			};
 			// Handle cancel button clicks
 			if (buttons.close) cancelButton.onclick = cleanUp;
@@ -5570,10 +5663,12 @@ export class Utility {
 				password,
 				reconnectPeriod: 2000,  // optional: auto-reconnect every 2s
 				connectTimeout: 5000,   // optional: timeout after 5s
+				rejectUnauthorized: false,
+				keepalive:30
 			});
 
 			let reconnectAttempts = 0;
-			const maxReconnects = 3;
+			const maxReconnects = 5;
 
 			client.on('connect', () => {
 			console.log('✅ Connected to MQTT broker:', brokerUrl);

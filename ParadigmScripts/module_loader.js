@@ -72,9 +72,9 @@ let ParadigmREVOLUTION = {
 			},
 			"mqtt": {
 				"Status": "NOT LOADED",
-				"Icon": "link",
-				"Label": "mqtt",
-				"ShortLabel": "mqtt"
+				"Icon": "bell",
+				"Label": "Notification System",
+				"ShortLabel": "NOTIF"
 			},
 		},
 		"Modules": {
