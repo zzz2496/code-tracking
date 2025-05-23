@@ -2108,6 +2108,13 @@ document.addEventListener('SurrealDBLoaded', async () => {
 			// if (data.username == testUser.username && data.password == testUser.password) {
 			if (authUser) {
 				// clean up
+				// NOTE - LOGGED IN !! IF LOGIN SUCCESS, THEN Render Main Form, get something on the screen
+
+				window.addEventListener("beforeunload", function (e) {
+					e.preventDefault();
+					e.returnValue = ''; // Required for Chrome		
+				});
+
 				modal.modal.classList.remove('fade-in');
 				modal.modal.classList.add('fade-out');
 				setTimeout(() => {
@@ -2186,6 +2193,7 @@ document.addEventListener('SurrealDBLoaded', async () => {
 				console.log('Login Failed');
 			}
 		});
+
 	}, {}
 		// {
 		// confirm: {

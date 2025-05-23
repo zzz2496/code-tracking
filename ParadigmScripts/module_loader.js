@@ -94,29 +94,29 @@ let ParadigmREVOLUTION = {
 				// 	"Params": { name: 'some name', number: 1234 },
 				// 	"ContentType": 'application/json'
 				// },
-				"System": { "URL": "./SystemBlueprint/Blueprint__System.json" },
-				"Datastore": { "URL": "./SystemBlueprint/Blueprint__Datastore.json" },
-				"Node": { "URL": "./SystemBlueprint/Blueprint__Node.json" },
-				"NodeMetadata": { "URL": "./SystemBlueprint/Blueprint__Node__Metadata.json" },
-				"Template__Node__DataStatus": { "URL": "./SystemBlueprint/Blueprint__Template__Node__DataStatus.json" },
-				"Edge": { "URL": "./SystemBlueprint/Blueprint__Edge.json" },
-				"Schema": { "URL": "./SystemBlueprint/Validator__Schema.json" },
+				"System": { "URL": "../SystemBlueprint/Blueprint__System.json" },
+				"Datastore": { "URL": "../SystemBlueprint/Blueprint__Datastore.json" },
+				"Node": { "URL": "../SystemBlueprint/Blueprint__Node.json" },
+				"NodeMetadata": { "URL": "../SystemBlueprint/Blueprint__Node__Metadata.json" },
+				"Template__Node__DataStatus": { "URL": "../SystemBlueprint/Blueprint__Template__Node__DataStatus.json" },
+				"Edge": { "URL": "../SystemBlueprint/Blueprint__Edge.json" },
+				"Schema": { "URL": "../SystemBlueprint/Validator__Schema.json" },
 			},
 			"Data": {}
 		},
 		"Schema": {
 			"URL": {
-				"FormInputTypes": { "URL": "./SystemBlueprint/Schema__FormInputTypes.json" },
-				"FormInputTypeDefinition": { "URL": "./SystemBlueprint/Schema__FormInputTypeDefinition.json" },
-				"Node__Datasets": { "URL": "./SystemBlueprint/Schema__Node__Datasets.json" }
+				"FormInputTypes": { "URL": "../SystemBlueprint/Schema__FormInputTypes.json" },
+				"FormInputTypeDefinition": { "URL": "../SystemBlueprint/Schema__FormInputTypeDefinition.json" },
+				"Node__Datasets": { "URL": "../SystemBlueprint/Schema__Node__Datasets.json" }
 			},
 			"Data": {}
 		},
 		"Template": {
 			"URL": {
-				"MainAppLayout": { "URL": "./SystemBlueprint/Template__MainAppLayout.json" },
-				"ComponentCanvas": { "URL": "./SystemBlueprint/Template__ComponentCanvas.json" },
-				"GraphCanvas": { "URL": "./SystemBlueprint/Template__GraphCanvas.json" },
+				"MainAppLayout": { "URL": "../SystemBlueprint/Template__MainAppLayout.json" },
+				"ComponentCanvas": { "URL": "../SystemBlueprint/Template__ComponentCanvas.json" },
+				"GraphCanvas": { "URL": "../SystemBlueprint/Template__GraphCanvas.json" },
 			},
 			"Data": {}
 		},

@@ -20,6 +20,8 @@ app.use(express.static(path.join(__dirname, '..'), {
   index: 'index.html'
 }));
 
+app.use('/surrealdb.wasm', express.static('../node_modules/@surrealdb/wasm/dist/surreal'));
+
 // Prevent access to sensitive files
 app.use((req, res, next) => {
   const forbidden = ['server.js', 'package.json', 'package-lock.json'];
