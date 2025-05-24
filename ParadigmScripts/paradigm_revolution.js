@@ -2073,10 +2073,17 @@ document.addEventListener('SurrealDBLoaded', async () => {
 			}
 		});
 	}, (dataset, modal) => {
-		
-		console.log('modal :>> ', modal.modalContainer);
+		let btnconfirm = modal.modalContainer.querySelector('#confirmButton');
+		if (btnconfirm) btnconfirm.addEventListener('click', (e) => { 
+			unregisterSW();
+		});
+
+		let btncancel = modal.modalContainer.querySelector('#cancelButtonFooter');
+		if (btncancel) btncancel.addEventListener('click', (e) => {
+			clearCache();
+		});
+
 		let buttonMasuk = modal.modalContainer.querySelector('#paradigmrevolution_login___masuk');
-		console.log('buttonMasuk :>> ', buttonMasuk);
 		buttonMasuk.addEventListener('click', (e) => {
 			let data = {};
 			modal.modalContainer.querySelector('.modal-form').querySelectorAll('input, button, select, textarea').forEach(input => {
@@ -2196,17 +2203,16 @@ document.addEventListener('SurrealDBLoaded', async () => {
 
 	}, {}
 		// {
-		// confirm: {
-		// 	label: 'Masuk',
-		// 	icon: 'fa-solid fa-right-to-bracket',
-		// 	class: 'is-primary',
-		// 	style: 'width: 100%;'
-		// },
-		// // cancel: {
-		// 	label: 'Batal',
-		// 	icon: 'fa-solid fa-xmark',
-		// 	class: 'is-danger'
-		// }
+		// 	confirm: {
+		// 		label: 'Reset Service Worker',
+		// 		icon: 'fa-solid fa-right-to-bracket',
+		// 		class: ''
+		// 	},
+		// 	cancel: {
+		// 		label: 'Clear Service Worker Cache',
+		// 		icon: 'fa-solid fa-xmark',
+		// 		class: 'is-danger'
+		// 	}
 		// }
 	);
 });

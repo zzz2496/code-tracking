@@ -3485,9 +3485,9 @@ export class Utility {
 			let footer = '';
 			if (buttons && (buttons.cancel || buttons.confirm)) {
 				footer = `
-						<footer class="modal-card-foot ${schema.Dataset.Layout.Properties.FormEntry.Class}" style="${buttons.cancel && buttons.confirm ? 'justify-content: space-between;' : 'justify-content: center;'}; display: flex; gap: 20px;">
-							${buttons.cancel ? ` <button class="button"            id="cancelButtonFooter" style="${buttons.cancel.style}">${buttons.cancel.label}</button>` : ''}
-							${buttons.confirm ? `<button class="button is-success" id="confirmButton"      style="${buttons.confirm.style}">${buttons.confirm.label}</button>` : ''}
+						<footer class="modal-card-foot" style="${buttons.cancel && buttons.confirm ? 'justify-content: space-between;' : 'justify-content: center;'}; display: flex; gap: 20px;">
+							${buttons.cancel ? ` <button class="button ${buttons.cancel.class}""            id="cancelButtonFooter" style="${buttons.cancel.style}">${buttons.cancel.label}</button>` : ''}
+							${buttons.confirm ? `<button class="button ${buttons.confirm.class}" id="confirmButton"      style="${buttons.confirm.style}">${buttons.confirm.label}</button>` : ''}
 						</footer>
 				`;
 			}
@@ -3558,7 +3558,7 @@ export class Utility {
 			};
 			// Handle cancel button clicks
 			if (buttons.close) cancelButton.onclick = cleanUp;
-			if (buttons.cancel) cancelButtonFooter.onclick = cleanUp;
+			// if (buttons.cancel) cancelButtonFooter.onclick = cleanUp;
 		},
 		"viewToggle": ((element, callback) => {
 			// Check if the element is currently hidden
