@@ -2130,11 +2130,9 @@ document.addEventListener('SurrealDBLoaded', async () => {
 				// clean up
 				login = true;
 				// NOTE - IF LOGIN SUCCESS, THEN Render Main Form, get something on the screen
-				let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(
+				let Graph = new ParadigmREVOLUTION.SystemCore.Modules.Graph(
 					document.querySelector('#ParadigmREVOLUTION'),
 					ParadigmREVOLUTION.Utility,
-					ParadigmREVOLUTION.Utility.BasicMath,
-					chain,
 					{
 						ram_db: ParadigmREVOLUTION.Datastores.SurrealDB.Memory,
 						local_systemdb: ParadigmREVOLUTION.Datastores.SurrealDB.LocalSystemDB,
@@ -2143,8 +2141,8 @@ document.addEventListener('SurrealDBLoaded', async () => {
 					}
 				);
 
-				Flow.FormContainer.innerHTML = Flow.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
-				if (Flow.FormContainer.innerHTML != '') {
+				Graph.FormContainer.innerHTML = Graph.Form.Render.traverseDOMProxyOBJ(CurrentDocument.Dataset.Layout);
+				if (Graph.FormContainer.innerHTML != '') {
 					ParadigmREVOLUTION.SystemCore.Blueprints.Data.NodeMetadata.TabsArray.forEach((tab) => {
 						// console.log('tab :>> ', tab);
 						let temp = `
@@ -2152,7 +2150,7 @@ document.addEventListener('SurrealDBLoaded', async () => {
 								<a class="${tab.AnchorClass}" data-tabtype="${tab.TabType}">${tab.Label}</a>
 							</li>
 						`;
-						Flow.FormContainer.querySelector('#tab-graph-selector-container').innerHTML += temp;
+						Graph.FormContainer.querySelector('#tab-graph-selector-container').innerHTML += temp;
 					});
 
 					if (cr) console.log('>>> >>> >>> >>> >>> ||| Detecting Datastore Status in paradigm_revolution.js');
@@ -2163,15 +2161,15 @@ document.addEventListener('SurrealDBLoaded', async () => {
 					document.querySelector('#datastore_status').innerHTML = datastore_status;
 					if (cr) console.log('<<< <<< <<< <<< <<< ||| Detecting Datastore Status in paradigm_revolution.js');
 
-					Flow.FormContainer.classList.remove('hide');
-					Flow.FormContainer.classList.add('show');
+					Graph.FormContainer.classList.remove('hide');
+					Graph.FormContainer.classList.add('show');
 
 					CurrentDocument.Dataset.Forms = [ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypes, ParadigmREVOLUTION.SystemCore.Schema.Data.FormInputTypeDefinition];
-					Flow.Forms = CurrentDocument.Dataset.Forms;
+					Graph.Forms = CurrentDocument.Dataset.Forms;
 
-					//Flow.Form.Events.InitializeFormControls();
+					//Graph.Form.Events.InitializeFormControls();
 					
-					InitializeFormControls(Flow);
+					InitializeFormControls(Graph);
 
 					console.log("Publising into MQTT");
 					ParadigmREVOLUTION.MQTTclients = {
@@ -2193,7 +2191,8 @@ document.addEventListener('SurrealDBLoaded', async () => {
 					document.dispatchEvent(new Event('ParadigmREVOLUTIONLoginSuccess'));
 				}
 				//NOTE - Chain execution!
-				Flow.Form.Run.executeChain();
+				let Flow = new ParadigmREVOLUTION.SystemCore.Modules.Flow(chain, ParadigmREVOLUTION.Utility.BasicMath);
+				Flow.Runtime.executeChain();
 			} else {
 				// NOTE  -IF LOGIN FAILED, THEN ...
 				alert('Login Failed');

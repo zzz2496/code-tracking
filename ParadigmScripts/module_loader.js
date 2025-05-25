@@ -10,7 +10,7 @@ if (cr) console.log('>>> Module Loader');
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 // import { Flow } from "../Classes/Flow.mjs";
 
-let Utility, ulid, Connection, WorkerThread, Flow, Surreal, surrealdbWasmEngines, SurrealDBinterface, mqtt;
+let Utility, ulid, Connection, WorkerThread, Graph, Flow, Surreal, surrealdbWasmEngines, SurrealDBinterface, mqtt;
 // let Utility, GraphSurface, Connection, WorkerThread, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
@@ -28,11 +28,17 @@ let ParadigmREVOLUTION = {
 				"Label": "Utility",
 				"ShortLabel": "UTL"
 			},
-			"Flow": {
+			"Graph": {
 				"Status": "NOT LOADED",
 				"Icon": "diagram-project",
+				"Label": "Graph",
+				"ShortLabel": "GPH"
+			},
+			"Flow": {
+				"Status": "NOT LOADED",
+				"Icon": "bars-staggered",
 				"Label": "Flow",
-				"ShortLabel": "FCH"
+				"ShortLabel": "FLW"
 			},
 			"Surreal": {
 				"Status": "NOT LOADED",
@@ -80,6 +86,7 @@ let ParadigmREVOLUTION = {
 		"Modules": {
 			"Utility": Utility,
 			"ULID": ulid,
+			"Graph": Graph,
 			"Flow": Flow,
 			"Surreal": Surreal,
 			"surrealdbWasmEngines": surrealdbWasmEngines,
@@ -144,6 +151,7 @@ loader.max = Object.keys(ParadigmREVOLUTION.SystemCore.Modules).length + 1;
 let key = 'FinderJS';
 let loadingstatus = `<p>Import module <span id='${key.toLowerCase()}' class=''><b>${key}</b> <span id='${key.toLowerCase()}_status' style='font-weight: bold;'>Loading...</span></span></p>\n`;;
 Object.keys(ParadigmREVOLUTION.SystemCore.Modules).forEach((key) => {
+	console.log('key :>> ', key);
 	loadingstatus += `<p>Import module <span id='${key.toLowerCase()}' class=''><b>${key == 'surrealdbWasmEngines' ?  'SurrealDB.wasm' : key}</b> <span id='${key.toLowerCase()}_status' style='font-weight: bold;'>Loading...</span></span></p>\n`;
 });
 // console.log(loadingstatus);
@@ -262,6 +270,26 @@ if (typeof finder !== 'undefined') {
 })();
 (async () => {
 	const moduleHandlers = [
+		{
+			importPromise: import("../Classes/Graph.mjs"),
+			onSuccess: (module) => {
+				const { Graph } = module;
+				if (cr) console.log(">>> ||| Graph imported successfully.");
+				ParadigmREVOLUTION.SystemCore.CoreStatus.Graph.Status = "LOADED";
+				ParadigmREVOLUTION.SystemCore.Modules.Graph = Graph;
+				ParadigmREVOLUTION.Graph = new Graph();
+				loader.value++;
+				document.querySelector('#graph').classList.add('has-text-success');
+				document.querySelector('#graph_status').innerHTML = "<li class='fa fa-check'></li>";
+				document.dispatchEvent(new Event('GraphLoaded'));
+			},
+			onFailure: () => {
+				document.querySelector('#graph').classList.add('has-text-danger');
+				document.querySelector('#graph_status').innerHTML = "<li class='fa fa-xmark'></li>";
+				ParadigmREVOLUTION.SystemCore.CoreStatus.Graph.Status = "FAILED TO LOAD";
+				console.error("Failed to import Graph.");
+			}
+		},
 		{
 			importPromise: import("../Classes/Flow.mjs"),
 			onSuccess: (module) => {
