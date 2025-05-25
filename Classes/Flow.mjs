@@ -110,4 +110,131 @@ export class Flow {
 			}
 		};
 	}
+
+	CoreProcessFunctions = {
+		"math": {
+			"add": () => {
+
+			}, 
+			"subtract":() =>{
+
+			}, 
+			"multiply":() =>{
+
+			}, 
+			"divide":() =>{
+
+			}, 
+			"modulus":() =>{
+
+			}, 
+			"power":() =>{
+
+			}, 
+			"sqr": () => { 
+
+			},
+			"sqrt":() =>{
+
+			}, 
+			"abs":() =>{
+
+			}, 
+			"round":() =>{
+
+			}, 
+			"ceil":() =>{
+
+			}, 
+			"floor":() =>{
+
+			}, 
+			"random":() =>{
+
+			}, 
+		},
+		"math_array": {
+			"average":() =>{
+
+			}, 
+			"sum":() =>{
+
+			}, 
+			"min":() =>{
+
+			}, 
+			"max":() =>{
+
+			},
+		},
+		"datetime": {
+			"now": {},
+			"today": {},
+			"tomorrow": {},
+			"yesterday": {},
+			"next week": {},
+			"last week": {},
+			"next month": {},
+			"last month": {},
+			"next year": {},
+			"last year": {},
+			"this week": {},
+			"this month": {},
+			"this year": {},
+		},
+		"string": {
+			"concat": {},
+			"split":{},
+			"replace":{},
+			"toUpperCase":{},
+			"toLowerCase":{},
+			"trim":{},
+			"length":{},
+			"substring":{},
+			"indexOf":{},
+			"lastIndexOf":{},
+			"includes":{},
+			"startsWith":{},
+			"endsWith":{},
+			"match":{},
+			"search":{},
+			"slice":{},
+			"padStart":{},
+			"padEnd":{},
+		},
+		"boolean": {
+			"and": {},
+			"or":{},
+			"not":{},
+			"xor":{},
+			"nand":{},
+			"nor":{},
+			"xnor":{},
+		},
+		"array": {
+			"push": {},
+			"pop":{},
+			"shift":{},
+			"unshift":{},
+			"empty":{},
+			"length":{},
+			"sort":{},
+			"filter":{},
+			"map":{},
+			"count":{},
+			"find":{},
+			"includes":{},
+			"indexOf":{},
+			"lastIndexOf":{},
+			"join":{},
+			"slice":{},
+			"splice":{},
+			"reverse":{},
+			"concat":{},
+			"forEach":{},
+			"every":{},
+			 "some":{},
+			"reduce":{},
+		},
+	};
 }
