@@ -1,10 +1,11 @@
-// broker.js
-const fs = require('fs');
-const aedes = require('aedes')();
-const net = require('net');
-const http = require('http');
-const https = require('https');
-const WebSocket = require('ws');
+import fs from 'fs';
+import aedesFactory from 'aedes';
+import net from 'net';
+import http from 'http';
+import https from 'https';
+import { WebSocketServer, createWebSocketStream } from 'ws';
+
+const aedes = aedesFactory();
 
 // TLS certs for WSS
 const tlsOptions = {
@@ -14,15 +15,14 @@ const tlsOptions = {
 
 // ==== USERS TABLE ====
 const users = [
-	{ username: 'admin', password: 'admin' },
-	{ username: 'user1', password: 'password1' },
-	{ username: 'user2', password: 'password2' }
+  { username: 'admin', password: 'admin' },
+  { username: 'user1', password: 'password1' },
+  { username: 'user2', password: 'password2' }
 ];
 
 // ==== AUTHENTICATION ====
 aedes.authenticate = function (client, username, password, callback) {
   const pw = password ? password.toString() : '';
-
   const user = users.find(u => u.username === username && u.password === pw);
 
   if (user) {
@@ -31,7 +31,7 @@ aedes.authenticate = function (client, username, password, callback) {
   } else {
     console.log(`⛔ Auth failed for user: ${username}`);
     const error = new Error('Authentication failed');
-    error.returnCode = 4; // MQTT "Bad username or password"
+    error.returnCode = 4;
     callback(error, false);
   }
 };
@@ -44,9 +44,9 @@ tcpServer.listen(1883, () => {
 
 // ==== 2. HTTP + WebSocket (ws://localhost:8000) ====
 const httpServer = http.createServer();
-const wsServer = new WebSocket.Server({ server: httpServer });
+const wsServer = new WebSocketServer({ server: httpServer });
 wsServer.on('connection', (ws) => {
-  const stream = WebSocket.createWebSocketStream(ws);
+  const stream = createWebSocketStream(ws);
   aedes.handle(stream);
 });
 httpServer.listen(8000, () => {
@@ -55,9 +55,9 @@ httpServer.listen(8000, () => {
 
 // ==== 3. HTTPS + Secure WebSocket (wss://localhost:8888) ====
 const httpsServer = https.createServer(tlsOptions);
-const wssServer = new WebSocket.Server({ server: httpsServer });
+const wssServer = new WebSocketServer({ server: httpsServer });
 wssServer.on('connection', (ws) => {
-  const stream = WebSocket.createWebSocketStream(ws);
+  const stream = createWebSocketStream(ws);
   aedes.handle(stream);
 });
 httpsServer.listen(8888, () => {

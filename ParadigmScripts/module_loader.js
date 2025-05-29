@@ -10,7 +10,7 @@ if (cr) console.log('>>> Module Loader');
 // import { Surreal } from '../../paradigm_modules/surrealdb.wasm/dist/full/index.js'; // SurrealDB.wasm v0.9
 // import { Flow } from "../Classes/Flow.mjs";
 
-let Utility, ulid, Connection, WorkerThread, Graph, Flow, Surreal, surrealdbWasmEngines, SurrealDBinterface, mqtt;
+let Utility, ulid, Connection, WorkerThread, Graph, Flow, CoreProcessFunctions, Surreal, surrealdbWasmEngines, SurrealDBinterface, mqtt;
 // let Utility, GraphSurface, Connection, WorkerThread, Surreal, surrealdbWasmEngines, mqtt;
 
 let ParadigmREVOLUTION = {
@@ -39,6 +39,12 @@ let ParadigmREVOLUTION = {
 				"Icon": "bars-staggered",
 				"Label": "Flow",
 				"ShortLabel": "FLW"
+			},
+			"CoreProcessFunctions": {
+				"Status": "NOT LOADED",
+				"Icon": "",
+				"Label": "Core Process Functions",
+				"ShortLabel": "CPF"
 			},
 			"Surreal": {
 				"Status": "NOT LOADED",
@@ -88,6 +94,7 @@ let ParadigmREVOLUTION = {
 			"ULID": ulid,
 			"Graph": Graph,
 			"Flow": Flow,
+			"CoreProcessFunctions": CoreProcessFunctions,
 			"Surreal": Surreal,
 			"surrealdbWasmEngines": surrealdbWasmEngines,
 			"SurrealDBinterface": SurrealDBinterface,
@@ -293,15 +300,21 @@ if (typeof finder !== 'undefined') {
 		{
 			importPromise: import("../Classes/Flow.mjs"),
 			onSuccess: (module) => {
-				const { Flow } = module;
+				const { Flow, CoreProcessFunctions } = module;
 				if (cr) console.log(">>> ||| Flow imported successfully.");
 				ParadigmREVOLUTION.SystemCore.CoreStatus.Flow.Status = "LOADED";
+				ParadigmREVOLUTION.SystemCore.CoreStatus.CoreProcessFunctions.Status = "LOADED";
 				ParadigmREVOLUTION.SystemCore.Modules.Flow = Flow;
+				ParadigmREVOLUTION.SystemCore.Modules.CoreProcessFunctions = CoreProcessFunctions;
 				ParadigmREVOLUTION.Flow = new Flow();
+				ParadigmREVOLUTION.CoreProcessFunctions = new CoreProcessFunctions();
 				loader.value++;
 				document.querySelector('#flow').classList.add('has-text-success');
 				document.querySelector('#flow_status').innerHTML = "<li class='fa fa-check'></li>";
-				document.dispatchEvent(new Event('FlowLoaded'));
+				document.querySelector('#coreprocessfunctions').classList.add('has-text-success');
+				document.querySelector('#coreprocessfunctions_status').innerHTML = "<li class='fa fa-check'></li>";
+				document.dispatchEvent(new Event('Flow Loaded'));
+				document.dispatchEvent(new Event('CoreProcessFunctions Loaded'));
 			},
 			onFailure: () => {
 				document.querySelector('#flow').classList.add('has-text-danger');

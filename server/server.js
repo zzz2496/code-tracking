@@ -1,13 +1,16 @@
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const http = require('http');
-const https = require('https');
-const serveIndex = require('serve-index');
-const { v4: uuidv4 } = require('uuid');
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
+import serveIndex from 'serve-index';
+import { v4 as uuidv4 } from 'uuid';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const sessionStore = new Map();
-
-
 const app = express();
 const PORT = process.env.PORT || 443;
 

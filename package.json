@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "Flow programming based application generator",
 	"main": "index.js",
+	"type": "module",
 	"scripts": {
 		"start-server": "node server/server.js",
 		"start-broker": "node notification/broker.js",
