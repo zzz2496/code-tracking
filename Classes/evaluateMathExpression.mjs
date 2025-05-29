@@ -9,76 +9,98 @@ const DEFAULT_CONFIG = {
 const ALLOWED_CHAR_REGEX = /^[a-zA-Z0-9\s.+\-*/%^().,_]+$/;
 
 const ALLOWED_FUNCTIONS = {
-    'square': { /* ... (no change) ... */ },
-    'sqrt': { /* ... (no change) ... */ },
-    'abs': { /* ... (no change) ... */ },
-    'log': { /* ... (no change) ... */ },
-};
-// Copy existing ALLOWED_FUNCTIONS definitions here
-ALLOWED_FUNCTIONS['square'] = {
-    fn: (x) => {
-        if (typeof x !== 'number') throw new Error("Invalid argument for square: must be a number.");
-        return x * x;
+    'square': {
+        fn: (x) => {
+            if (typeof x !== 'number') throw new Error("Invalid argument for square: must be a number.");
+            return x * x;
+        },
+        arity: 1
     },
-    arity: 1
-};
-ALLOWED_FUNCTIONS['sqrt'] = {
-    fn: (x) => {
-        if (typeof x !== 'number') throw new Error("Invalid argument for sqrt: must be a number.");
-        if (x < 0) throw new Error("sqrt of negative number is not supported by this evaluator.");
-        return Math.sqrt(x);
+    'sqrt': {
+        fn: (x) => {
+            if (typeof x !== 'number') throw new Error("Invalid argument for sqrt: must be a number.");
+            if (x < 0) throw new Error("sqrt of negative number is not supported by this evaluator.");
+            return Math.sqrt(x);
+        },
+        arity: 1
     },
-    arity: 1
-};
-ALLOWED_FUNCTIONS['abs'] = {
-    fn: (x) => {
-        if (typeof x !== 'number') throw new Error("Invalid argument for abs: must be a number.");
-        return Math.abs(x);
+    'abs': {
+        fn: (x) => {
+            if (typeof x !== 'number') throw new Error("Invalid argument for abs: must be a number.");
+            return Math.abs(x);
+        },
+        arity: 1
     },
-    arity: 1
-};
-ALLOWED_FUNCTIONS['log'] = {
-    fn: (x) => {
-        if (typeof x !== 'number') throw new Error("Invalid argument for log: must be a number.");
-        if (x <= 0) throw new Error("log (base 10) of non-positive number is not supported.");
-        return Math.log10(x);
+    'log': { // Log base 10
+        fn: (x) => {
+            if (typeof x !== 'number') throw new Error("Invalid argument for log: must be a number.");
+            if (x <= 0) throw new Error("log (base 10) of non-positive number is not supported.");
+            return Math.log10(x);
+        },
+        arity: 1
     },
-    arity: 1
+    'sin': { // Sine function (argument in radians)
+        fn: (x) => {
+            if (typeof x !== 'number') throw new Error("Invalid argument for sin: must be a number.");
+            return Math.sin(x);
+        },
+        arity: 1
+    },
+    'cos': { // Cosine function (argument in radians)
+        fn: (x) => {
+            if (typeof x !== 'number') throw new Error("Invalid argument for cos: must be a number.");
+            return Math.cos(x);
+        },
+        arity: 1
+    },
+    'tan': { // Tangent function (argument in radians)
+        fn: (x) => {
+            if (typeof x !== 'number') throw new Error("Invalid argument for tan: must be a number.");
+            // Handle cases where tan is undefined (e.g., tan(PI/2))
+            // Math.tan(Math.PI/2) gives a very large number, not Infinity.
+            // Depending on precision needs, this might be acceptable or require specific checks.
+            const result = Math.tan(x);
+            // if (Math.abs(Math.cos(x)) < 1e-15) { // cos(x) is close to 0
+            //     throw new Error("Tangent undefined for this input (e.g., PI/2 + k*PI).");
+            // }
+            return result;
+        },
+        arity: 1
+    },
+    // Consider adding PI as a constant if trig functions are used often
+    // 'PI': { value: Math.PI } // This would require changes to how constants are handled
 };
 
-
-const OPERATORS = { /* ... (no change) ... */ };
-// Copy existing OPERATORS definitions here
-OPERATORS['+'] = { precedence: 1, associativity: 'Left', fn: (a, b) => a + b };
-OPERATORS['-'] = { precedence: 1, associativity: 'Left', fn: (a, b) => a - b };
-OPERATORS['*'] = { precedence: 2, associativity: 'Left', fn: (a, b) => a * b };
-OPERATORS['/'] = {
-    precedence: 2,
-    associativity: 'Left',
-    fn: (a, b) => {
-        if (b === 0) throw new Error("Division by zero.");
-        return a / b;
-    }
+const OPERATORS = {
+    '+': { precedence: 1, associativity: 'Left', fn: (a, b) => a + b },
+    '-': { precedence: 1, associativity: 'Left', fn: (a, b) => a - b },
+    '*': { precedence: 2, associativity: 'Left', fn: (a, b) => a * b },
+    '/': {
+        precedence: 2,
+        associativity: 'Left',
+        fn: (a, b) => {
+            if (b === 0) throw new Error("Division by zero.");
+            return a / b;
+        }
+    },
+    '%': { // Modulo operator
+        precedence: 2,
+        associativity: 'Left',
+        fn: (a, b) => {
+            if (b === 0) throw new Error("Modulo by zero.");
+            return a % b;
+        }
+    },
+    '_PERCENTOF_': { // Added for "X percent of Y"
+        precedence: 2, // Same as multiply/divide
+        associativity: 'Left',
+        fn: (percentageValue, baseValue) => (percentageValue / 100) * baseValue
+    },
+    '^': { precedence: 3, associativity: 'Right', fn: (a, b) => Math.pow(a, b) },
 };
-OPERATORS['%'] = {
-    precedence: 2,
-    associativity: 'Left',
-    fn: (a, b) => {
-        if (b === 0) throw new Error("Modulo by zero.");
-        return a % b;
-    }
-};
-OPERATORS['_PERCENTOF_'] = {
-    precedence: 2,
-    associativity: 'Left',
-    fn: (percentageValue, baseValue) => (percentageValue / 100) * baseValue
-};
-OPERATORS['^'] = { precedence: 3, associativity: 'Right', fn: (a, b) => Math.pow(a, b) };
-
 
 // --- Sanitization ---
 function sanitizeInput(expression) {
-    // ... (no structural change, but ALLOWED_CHAR_REGEX updated) ...
     if (typeof expression !== 'string') {
         throw new Error("Invalid input: Expression must be a string.");
     }
@@ -110,71 +132,57 @@ function sanitizeInput(expression) {
 }
 
 // --- Number Parsing with Localization ---
-/**
- * Parses a string token into a number, handling preferred decimal and thousand separators.
- * @param {string} tokenString The string token to parse.
- * @param {string} preferredDecimalSeparator The character to treat as decimal (',' or '.').
- * @returns {number} The parsed number, or NaN if invalid.
- */
 function parseNumberToken(tokenString, preferredDecimalSeparator) {
     if (typeof tokenString !== 'string' || tokenString.trim() === '') return NaN;
 
     let s = tokenString.trim();
     const thousandSeparator = preferredDecimalSeparator === ',' ? '.' : ',';
 
-    // 1. Remove all occurrences of the determined thousand separator.
-    // Escape the separator if it's a period for regex.
     const thousandSeparatorRegex = new RegExp(thousandSeparator === '.' ? '\\.' : thousandSeparator, 'g');
     s = s.replace(thousandSeparatorRegex, '');
 
-    // 2. If the preferred decimal separator is not '.', convert it to '.'
     if (preferredDecimalSeparator === ',') {
         s = s.replace(',', '.');
     }
 
-    // 3. Validate: After normalization, the string should have at most one '.'
-    //    and should not contain the original thousandSeparator char (unless it was also the preferredDecimalSeparator initially).
-    //    The second condition (s.includes(thousandSeparator)) is implicitly handled if step 1 & 2 are correct
-    //    and the input wasn't malformed like "1.2,3.4" where both are used as decimals.
     if ((s.match(/\./g) || []).length > 1) {
-        return NaN; // Invalid format: multiple decimal points after normalization (e.g., "1.2.3" or "1,2,3" becoming "1.2.3")
+        return NaN;
     }
 
-    // 4. Use parseFloat for the final conversion.
-    const result = parseFloat(s);
-
-    // Ensure that the entire string was a valid number structure.
-    // parseFloat can be lenient (e.g. "1.2abc" -> 1.2). We want stricter.
-    // A simple check: if 's' after normalization still contains non-numeric characters (excluding a single leading '-' and single '.'), it's likely not purely a number.
-    if (!/^-?[0-9]*\.?[0-9]+$/.test(s) && !/^-?[0-9]+$/.test(s)) {
-         if (!isNaN(result)) { // If parseFloat got something but our stricter check fails
-            // This can happen for "1.2.3" if the multiple dot check was bypassed, or "1..2"
-            // The multiple dot check should catch most of this.
+    // Test if the string is a valid number format after cleaning
+    // Allows for optional leading minus, digits, optional single dot, then more digits.
+    if (!/^-?([0-9]+(\.[0-9]*)?|\.[0-9]+)$/.test(s) && !/^-?[0-9]+$/.test(s)) {
+         // If s is just "-" or "+", it's not a number here.
+         if (s === '-' || s === '+') return NaN;
+         // If parseFloat gets something but our stricter check fails, it might be something like "1.2.3"
+         // which should have been caught by multiple dot check. Or "1..2" etc.
+         // If parse_float can get number but regex test fails -> this case is possible if regex is not perfect
+         const temp_val = parseFloat(s);
+         if (isNaN(temp_val)) return NaN; // if parseFloat also fail, confirmed NaN
+         // if parseFloat success, but string is like "1.2abc", parseFloat will return 1.2
+         // So we need to check if original cleaned string `s` *only* contains valid numeric parts
+         // This regex is more robust than the previous one:
+         if(!/^-?((\d+(\.\d*)?)|(\.\d+))$/.test(s)) { // stricter check for number format
+            return NaN;
          }
-         // If result is NaN, it's already caught.
     }
-
+    const result = parseFloat(s);
     return isNaN(result) ? NaN : result;
 }
 
 
 // --- Tokenizer ---
-// Regex to capture:
-// 1. Function names/Keywords (alphanumeric with underscores)
-// 2. Number-like patterns (digits, dots, commas). parseNumberToken will validate.
-// 3. Operators, Parentheses, Comma (for function args)
-const TOKEN_REGEX = /\s*([a-zA-Z_][a-zA-Z0-9_]*|[0-9][0-9.,]*|[0-9]+|[\+\-\*\/\%\^\(\)\,])\s*/g;
-// Explanation of number part:
-// - [0-9][0-9.,]* : A digit followed by any sequence of digits, dots, or commas. Catches "1,234.56", "1.000", "1,2" etc.
-// - [0-9]+ : Catches simple integers like "123" if not caught by the above.
-// The order matters. [a-zA-Z_] for functions first.
+const TOKEN_REGEX = /\s*([a-zA-Z_][a-zA-Z0-9_]*|[0-9][0-9.,]*|[0-9]*\.[0-9]+|[0-9]+|[\+\-\*\/\%\^\(\)\,])\s*/g;
+// Updated number part:
+// - [0-9][0-9.,]* : Digit followed by digits, dots, or commas (e.g., "1,234.56", "1.000.000", "1,2")
+// - [0-9]*\.[0-9]+ : Optional digits, dot, then digits (e.g., ".5", "0.5", "123.45")
+// - [0-9]+ : Integers (e.g., "123")
 
 function tokenize(expression) {
-    // ... (no structural change, but TOKEN_REGEX updated) ...
     const tokens = [];
     let match;
     let lastIndex = 0;
-    TOKEN_REGEX.lastIndex = 0; // Reset regex state for multiple calls
+    TOKEN_REGEX.lastIndex = 0;
 
     while ((match = TOKEN_REGEX.exec(expression)) !== null) {
         if (match.index > lastIndex) {
@@ -197,8 +205,7 @@ function tokenize(expression) {
 }
 
 // --- Preprocess for Unary Minus/Plus ---
-function preprocessUnaryOperators(tokens, config) { // Pass config for parseNumberToken
-    // ... (logic needs to use parseNumberToken if combining unary with number) ...
+function preprocessUnaryOperators(tokens, config) {
     const processedTokens = [];
     for (let i = 0; i < tokens.length; i++) {
         const token = tokens[i];
@@ -206,24 +213,30 @@ function preprocessUnaryOperators(tokens, config) { // Pass config for parseNumb
 
         if ((token === '-' || token === '+') &&
             (i === 0 || prevToken === '(' || prevToken === ',' || OPERATORS[prevToken])) {
-            // It's a unary operator
-            const nextToken = tokens[i + 1];
-            if (nextToken !== undefined) {
-                const potentialNum = parseNumberToken(token + nextToken, config.preferredDecimalSeparator);
-                if (!isNaN(potentialNum)) { // Successfully combined like "-5" or "+3.14"
-                    processedTokens.push(potentialNum); // Push the combined number
-                    i++; // Skip the nextToken as it's now part of the number
-                    continue;
+            const nextTokenStr = tokens[i + 1];
+            if (nextTokenStr !== undefined) {
+                // Try to form a number like "-5" or "+3.14"
+                // We need to check if nextTokenStr itself is number-like, not just an operator/function
+                // A quick check: if nextTokenStr starts with a digit or a decimal separator for the current config
+                const isNextPotentiallyNumeric = /^[0-9]/.test(nextTokenStr) ||
+                                               (config.preferredDecimalSeparator === '.' && nextTokenStr.startsWith('.')) ||
+                                               (config.preferredDecimalSeparator === ',' && nextTokenStr.startsWith(','));
+
+                if (isNextPotentiallyNumeric) {
+                    const potentialNum = parseNumberToken(token + nextTokenStr, config.preferredDecimalSeparator);
+                    if (!isNaN(potentialNum)) {
+                        processedTokens.push(potentialNum);
+                        i++; // Skip the nextToken as it's now part of the number
+                        continue;
+                    }
                 }
             }
             // If not combinable into a single number (e.g., "-sqrt(4)" or "-(5+2)")
             if (token === '-') {
-                processedTokens.push(0); // Represent as 0 - next
+                processedTokens.push(0);
                 processedTokens.push('-');
             } else if (token === '+') {
-                // Unary plus can often be ignored if it's not forming a number like "+5"
-                // If it's "+(expression)", it effectively becomes (expression) or 0+(expression)
-                // Let's choose to ignore it unless it forms a number (handled above)
+                // Unary plus can be ignored if not forming a number
             }
         } else {
             processedTokens.push(token);
@@ -234,7 +247,7 @@ function preprocessUnaryOperators(tokens, config) { // Pass config for parseNumb
 
 
 // --- Shunting-yard Algorithm (Infix to RPN) ---
-function infixToRpn(tokens, config) { // Pass config for parseNumberToken
+function infixToRpn(tokens, config) {
     const outputQueue = [];
     const operatorStack = [];
 
@@ -242,8 +255,7 @@ function infixToRpn(tokens, config) { // Pass config for parseNumberToken
     const getFunctionInfo = (token) => ALLOWED_FUNCTIONS[token];
 
     for (const token of tokens) {
-        // If token is already a number (from unary preprocessing), push it.
-        if (typeof token === 'number') {
+        if (typeof token === 'number') { // Already parsed by unary preprocessor
             outputQueue.push(token);
         } else if (getFunctionInfo(token)) {
             operatorStack.push(token);
@@ -283,7 +295,7 @@ function infixToRpn(tokens, config) { // Pass config for parseNumberToken
                 outputQueue.push(operatorStack.pop());
             }
         } else {
-            // Not an operator, function, or parenthesis, try parsing as a number
+            // Not an operator, function, or parenthesis, try parsing as a number string
             const numValue = parseNumberToken(token, config.preferredDecimalSeparator);
             if (!isNaN(numValue)) {
                 outputQueue.push(numValue);
@@ -305,12 +317,11 @@ function infixToRpn(tokens, config) { // Pass config for parseNumberToken
 
 // --- RPN Evaluator ---
 function evaluateRpn(rpnTokens) {
-    // ... (no change) ...
     const stack = [];
     for (const token of rpnTokens) {
         if (typeof token === 'number') {
             stack.push(token);
-        } else if (ALLOWED_FUNCTIONS[token]) { // Token is a function name
+        } else if (ALLOWED_FUNCTIONS[token]) {
             const funcData = ALLOWED_FUNCTIONS[token];
             if (stack.length < funcData.arity) {
                 throw new Error(`Invalid expression: Not enough arguments for function '${token}'. Expected ${funcData.arity}, found ${stack.length}.`);
@@ -324,7 +335,7 @@ function evaluateRpn(rpnTokens) {
             } catch (e) {
                 throw new Error(`Error during function '${token}' execution: ${e.message}`);
             }
-        } else if (OPERATORS[token]) { // Token is an operator symbol
+        } else if (OPERATORS[token]) {
             const opData = OPERATORS[token];
             if (stack.length < 2) {
                 throw new Error(`Invalid expression: Not enough operands for operator '${token}'. Needs 2, found ${stack.length}.`);
@@ -370,11 +381,26 @@ export function evaluateMathExpression(expression, userConfig = {}) {
         const rpn = infixToRpn(tokens, config);
 
         if (rpn.length === 0 && tokens.length > 0 && !(tokens.length ===1 && typeof tokens[0] === 'number') ) {
-            throw new Error("Invalid expression: Expression resulted in no operations.");
+            // Check if the single token is a number that successfully parsed
+            if (tokens.length === 1 && typeof rpn[0] === 'number') {
+                // This is fine, e.g., "5" or "-5"
+            } else {
+                throw new Error("Invalid expression: Expression resulted in no operations or is incomplete.");
+            }
         }
-         if (rpn.length === 0 && tokens.length === 0) {
+         if (rpn.length === 0 && tokens.length === 0) { // Empty string
             throw new Error("Invalid expression: Expression is empty.");
          }
+          if (rpn.length === 0 && !(tokens.length === 1 && typeof tokens[0] === 'number') ) {
+            // This case catches scenarios like "()" or just operators "+" which are invalid
+            // unless the original expression was a single valid number that became a single RPN token.
+            if (rpn.length === 1 && typeof rpn[0] === 'number') {
+                 // This is valid, e.g. input "5"
+            } else {
+                throw new Error("Invalid expression: Expression is incomplete or results in no operations.");
+            }
+         }
+
 
         const result = evaluateRpn(rpn);
 
