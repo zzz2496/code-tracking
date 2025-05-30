@@ -1,6 +1,9 @@
 console.time("runtime");
 import { Flow, CoreProcessFunctions } from "../Classes/Flow.mjs";
 import { evaluateMathExpression } from '../Classes/evaluateMathExpression.mjs';
+import Surreal from "surrealdb";
+
+console.log(Surreal);
 
 const coreFunctions = new CoreProcessFunctions();
 // console.log('coreFunctions', coreFunctions);

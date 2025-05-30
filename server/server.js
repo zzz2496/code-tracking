@@ -6,6 +6,7 @@ import https from 'https';
 import serveIndex from 'serve-index';
 import { v4 as uuidv4 } from 'uuid';
 import { fileURLToPath } from 'url';
+import Surreal from 'surrealdb';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

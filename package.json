@@ -24,6 +24,7 @@
 		"serve-index": "^1.9.1",
 		"surrealdb": "^1.2.1",
 		"ulid": "^2.3.0",
+		"web-push": "^3.6.7",
 		"ws": "^8.18.2"
 	},
 	"devDependencies": {
